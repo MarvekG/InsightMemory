@@ -12,7 +12,7 @@
 ### 方式一：镜像版 Docker Compose（首推）
 
 这是最推荐的部署方式，使用 [docker-compose.image.yml](../docker-compose.image.yml) 启动服务。Compose 会拉取
-`ghcr.io/marvekw/insightmemory:latest`，并同时启动专用的 PostgreSQL/pgvector 数据库：
+`ghcr.io/marvekg/insightmemory:latest`，并同时启动专用的 PostgreSQL/pgvector 数据库：
 
 - `memory-postgres`：PostgreSQL 17 + pgvector，宿主机端口 `5433`。
 - `memory`：FastAPI memory 服务，宿主机端口 `8010`。

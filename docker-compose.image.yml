@@ -22,7 +22,7 @@ services:
       - memory_network
 
   memory:
-    image: ghcr.io/marvekw/insightmemory:latest
+    image: ghcr.io/marvekg/insightmemory:latest
     restart: unless-stopped
     env_file:
       - ./.env

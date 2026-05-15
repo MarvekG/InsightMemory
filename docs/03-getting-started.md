@@ -14,7 +14,7 @@ directly from `.env`; there are no uvicorn command-line flags to keep in sync.
 ### Option 1: Image Docker Compose (Recommended)
 
 This is the preferred deployment path. [docker-compose.image.yml](../docker-compose.image.yml) pulls
-`ghcr.io/marvekw/insightmemory:latest` and starts a dedicated PostgreSQL/pgvector database:
+`ghcr.io/marvekg/insightmemory:latest` and starts a dedicated PostgreSQL/pgvector database:
 
 - `memory-postgres`: PostgreSQL 17 + pgvector, exposed on host port `5433`.
 - `memory`: FastAPI memory service, exposed on host port `8010`.
