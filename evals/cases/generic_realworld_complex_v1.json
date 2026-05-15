@@ -1,0 +1,244 @@
+[
+  {
+    "case_id": "home_renovation_permit_chain",
+    "category": "realworld_complex_renovation",
+    "description": "家庭装修场景中，开工状态、许可证材料和家电送达是相邻但不同的真实记忆。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_complex_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Willow kitchen renovation 当前不能开工，因为 building permit 还缺 contractor insurance certificate。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Willow contractor packet 显示 insurance certificate 还需要 broker stamp。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Willow appliance delivery 已确认周四上午到达。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Willow kitchen renovation 为什么还不能开工？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "building permit",
+          "contractor insurance certificate",
+          "broker stamp || Willow contractor packet"
+        ],
+        "judge_forbidden_facts": [
+          "appliance delivery",
+          "周四上午"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Willow appliance delivery 什么时候到？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "周四上午"
+        ],
+        "judge_forbidden_facts": [
+          "building permit",
+          "broker stamp"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "family_care_schedule_overlap",
+    "category": "realworld_complex_family",
+    "description": "家庭照护排班、药盒提醒和亲属个人事务相互靠近，查询照护对象时不能把亲属个人事务带入答案。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_complex_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Grandma Li 的周一陪诊由 Aunt Mei 负责，9:30 在社区诊所门口集合。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Grandma Li 的药盒补充提醒改到周日晚上，由 cousin Hao 确认是否装好。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aunt Mei 周一下午还要去银行取 pension statement。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Grandma Li 周一陪诊谁负责，几点集合？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Aunt Mei",
+          "9:30",
+          "社区诊所门口"
+        ],
+        "judge_forbidden_facts": [
+          "pension statement",
+          "银行"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Grandma Li 的药盒提醒改到什么时候，谁确认？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "周日晚上",
+          "cousin Hao"
+        ],
+        "judge_forbidden_facts": [
+          "银行",
+          "pension statement"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "travel_documents_multi_person",
+    "category": "realworld_complex_travel",
+    "description": "同一旅行目的地里不同人的材料缺口要并行回答，不能把接机安排当成材料缺失。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_complex_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Rina 的 Barcelona trip 还缺 hotel confirmation PDF，签证预约需要打印版。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Owen 的 Barcelona trip 已经上传 travel insurance，仍缺 train reservation number。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Rina 的 airport pickup（接机）改由 Carla 负责。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Rina 和 Owen 去 Barcelona 各自还缺什么？",
+        "expected_status": "ok",
+        "expected_result_count": 2,
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Rina",
+          "hotel confirmation PDF",
+          "Owen",
+          "train reservation number"
+        ],
+        "judge_forbidden_facts": [
+          "Carla",
+          "airport pickup"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Rina 的接机谁负责？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Carla"
+        ],
+        "judge_forbidden_facts": [
+          "train reservation number",
+          "travel insurance"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "event_planning_correction_and_vendor",
+    "category": "realworld_complex_event",
+    "description": "活动排练发生更正，同时供应商还有独立待确认内容；查询实际排练信息时应使用更正后的版本。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_complex_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Juniper wedding rehearsal 初版写成周五 18:00 在 East hall。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Juniper wedding rehearsal 更正：实际时间是周六 10:30，地点改到 Garden room。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Juniper florist 还需要最终确认 peony count。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Juniper wedding rehearsal 实际是什么时间和地点？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "周六 10:30",
+          "Garden room"
+        ],
+        "judge_forbidden_facts": [
+          "周五 18:00",
+          "East hall"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Juniper florist 还要确认什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "peony count"
+        ],
+        "judge_forbidden_facts": [
+          "Garden room",
+          "East hall"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

@@ -1,0 +1,359 @@
+[
+  {
+    "case_id": "shared_surface_router_vs_child_schedule",
+    "category": "realworld_edge_identity_boundary",
+    "description": "同一个表面名 Nova 同时指孩子课表和路由器设备，查询时必须按对象类型分离。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_edge_cases_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Nova 的 after-school robotics club 本周改到周四 16:30，接送地点在 west gate。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Nova router 的 guest Wi-Fi 需要在周五前关闭 WPS，并把 admin password 交给 office manager。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Nova 的 lunch order 已经取消了周三的 chicken wrap。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Nova 这个孩子本周 robotics club 改到什么时候，在哪里接？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "周四 16:30",
+          "west gate"
+        ],
+        "judge_forbidden_facts": [
+          "WPS",
+          "admin password",
+          "chicken wrap"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Nova router 还有什么安全设置要处理？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "关闭 WPS",
+          "admin password",
+          "office manager"
+        ],
+        "judge_forbidden_facts": [
+          "robotics club",
+          "west gate",
+          "chicken wrap"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "clinic_previsit_forms_multi_person",
+    "category": "realworld_edge_multi_subject",
+    "description": "同一诊所安排中不同人的材料缺口不同，停车提醒不应污染材料答案。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_edge_cases_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Ari 的 dental pre-visit packet 还缺 allergy form，诊所要求 appointment 前 24 小时上传。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mina 的 dental pre-visit packet 已经上传 allergy form，但还缺 insurance card back side。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Maple Dental 的停车入口在 Pine Street，不要走 Oak Avenue。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Ari 和 Mina 去牙科前各自还缺什么资料？",
+        "expected_status": "ok",
+        "expected_result_count": 2,
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Ari",
+          "allergy form",
+          "Mina",
+          "insurance card back side"
+        ],
+        "judge_forbidden_facts": [
+          "Pine Street",
+          "Oak Avenue"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Maple Dental 停车应该从哪里进？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Pine Street"
+        ],
+        "judge_forbidden_facts": [
+          "allergy form",
+          "insurance card"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "field_sensor_dependency_chain",
+    "category": "realworld_edge_dependency",
+    "description": "现场设备不能上线的直接原因和上游校准要求分属不同记录，查询 why 时应串联但不混入巡检餐饮安排。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_edge_cases_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Ridge station 的 river sensor 还不能上线，因为 calibration label 没贴到 enclosure door。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Ridge calibration sheet 规定 label 只有在 conductivity probe 通过 saline check 后才能打印。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Ridge station 巡检当天午餐由 north crew 自行携带，不走供应商配送。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Ridge station 的 river sensor 为什么还不能上线？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "calibration label",
+          "enclosure door",
+          "conductivity probe",
+          "saline check"
+        ],
+        "judge_forbidden_facts": [
+          "午餐",
+          "north crew",
+          "供应商配送"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "archive_box_accession_dependency",
+    "category": "realworld_edge_archive",
+    "description": "档案盒移交状态依赖登记单和环境记录，查询缺口时不应带入参观预约噪声。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_edge_cases_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Archive Box K-17 不能移交给 reading room，因为 accession slip 缺 donor initials。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "K-17 的 cold storage log 已确认 humidity excursion 已关闭，不再阻塞移交。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "K-17 gallery tour 预约在周六 11:00，由 docent Mira 接待。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Archive Box K-17 现在移交 reading room 还差什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "accession slip",
+          "donor initials"
+        ],
+        "judge_forbidden_facts": [
+          "humidity excursion",
+          "gallery tour",
+          "docent Mira"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "K-17 的湿度异常还阻塞移交吗？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "已关闭",
+          "不再阻塞 || 不阻塞"
+        ],
+        "judge_forbidden_facts": [
+          "周六 11:00",
+          "docent Mira"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "subscription_policy_exception",
+    "category": "realworld_edge_condition_exception",
+    "description": "订阅取消规则里存在条件例外，系统应保留条件，不把例外误答成普遍允许。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_edge_cases_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Harbor Gym family plan 默认不允许 mid-cycle cancellation，除非账户里有 relocation letter。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Harbor Gym 的 Sam account 已上传 relocation letter，但 Lia account 只上传了 travel itinerary。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Harbor Gym towel service 下月起单独收费。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Harbor Gym 哪个账号现在满足中途取消的例外条件？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Sam",
+          "relocation letter"
+        ],
+        "judge_forbidden_facts": [
+          "Lia",
+          "travel itinerary",
+          "towel service"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Lia account 能因为已上传材料直接 mid-cycle cancellation 吗？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "不能 || 不满足",
+          "travel itinerary",
+          "relocation letter"
+        ],
+        "judge_forbidden_facts": [
+          "towel service"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "venue_correction_vendor_boundary",
+    "category": "realworld_edge_correction",
+    "description": "活动地点发生更正，押金和供应商信息属于邻近但不同的事实，查询实际地点时不能返回旧地点。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_edge_cases_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Cedar book club meetup 初版安排在 Room 204，时间是周二 19:00。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cedar book club meetup 更正：实际地点改到 Garden Annex，时间仍是周二 19:00。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cedar book club 的 snack vendor 还没退 60 元押金。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Cedar book club meetup 实际在哪里，时间有没有变？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Garden Annex",
+          "周二 19:00",
+          "时间仍是 || 时间没有变"
+        ],
+        "judge_forbidden_facts": [
+          "Room 204",
+          "60 元押金",
+          "snack vendor"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Cedar book club 供应商还欠什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "snack vendor",
+          "60 元押金"
+        ],
+        "judge_forbidden_facts": [
+          "Room 204",
+          "Garden Annex"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

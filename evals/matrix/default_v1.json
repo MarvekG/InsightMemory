@@ -1,0 +1,201 @@
+{
+  "matrix_id": "default_v1",
+  "description": "Official generic memory evaluation matrix.",
+  "suites": [
+    {
+      "suite_id": "generic",
+      "description": "Core generic accuracy suite.",
+      "cases": "../cases/generic_accuracy_v1.json"
+    },
+    {
+      "suite_id": "hard",
+      "description": "Hard generalization and multi-hop suite.",
+      "cases": "../cases/generic_hard_generalization_v1.json"
+    },
+    {
+      "suite_id": "expansion",
+      "description": "Generalization and associative-query suite.",
+      "cases": "../cases/generic_generalization_association_v1.json"
+    },
+    {
+      "suite_id": "noise",
+      "description": "Noisy context and cross-entity dependency suite.",
+      "cases": "../cases/generic_noise_dependency_v1.json"
+    },
+    {
+      "suite_id": "extreme",
+      "description": "Extreme dependency and same-surface suite.",
+      "cases": "../cases/generic_extreme_dependency_v1.json"
+    },
+    {
+      "suite_id": "stress",
+      "description": "Stress and open-world suite.",
+      "cases": "../cases/generic_stress_openworld_v1.json"
+    },
+    {
+      "suite_id": "long_horizon",
+      "description": "Long-horizon drift and entity-scale suite.",
+      "cases": "../cases/generic_long_horizon_v1.json"
+    },
+    {
+      "suite_id": "rule_evolution",
+      "description": "Rule evolution suite covering history/current/supplement transitions and cross-entity governing artifacts.",
+      "cases": "../cases/generic_rule_evolution_matrix_v1.json"
+    },
+    {
+      "suite_id": "cross_format_longform",
+      "description": "Cross-format longform suite covering markdown, email, YAML-ish, bilingual, prose-checklist, and correction-note inputs.",
+      "cases": "../cases/generic_cross_format_longform_v1.json"
+    },
+    {
+      "suite_id": "multi_subject_document",
+      "description": "Multi-subject long-document suite covering primary subject extraction, side-subject filtering, same-prefix artifact splitting, and single-document cross-entity reasoning.",
+      "cases": "../cases/generic_multi_subject_document_v1.json"
+    },
+    {
+      "suite_id": "openworld",
+      "description": "Unknown-domain and unfamiliar-artifact suite.",
+      "cases": "../cases/generic_openworld_unknown_v1.json"
+    },
+    {
+      "suite_id": "broad",
+      "description": "Broader coverage suite for long docs, deeper associations, and larger same-scope mixes.",
+      "cases": "../cases/generic_broad_coverage_v1.json"
+    },
+    {
+      "suite_id": "farfield",
+      "description": "Far-field unfamiliar-domain suite with archive, herbarium, orbital, vessel, theater, and chart-manual scenarios.",
+      "cases": "../cases/generic_farfield_openworld_v1.json"
+    },
+    {
+      "suite_id": "deep_graph",
+      "description": "Deeper multi-hop association, history, conflict, and external-requirement suite.",
+      "cases": "../cases/generic_deep_association_v1.json"
+    },
+    {
+      "suite_id": "heterogeneous",
+      "description": "Heterogeneous mixed long-doc, same-surface, history-rule, and mixed-language suite.",
+      "cases": "../cases/generic_heterogeneous_coverage_v1.json"
+    },
+    {
+      "suite_id": "concurrency",
+      "description": "Concurrent ingest consistency suite.",
+      "cases": "../cases/generic_concurrency_consistency_v1.json"
+    },
+    {
+      "suite_id": "ultralong",
+      "description": "Ultra-long single-document multi-entity suite.",
+      "cases": "../cases/generic_ultralong_multientity_v1.json"
+    },
+    {
+      "suite_id": "format_shift",
+      "description": "Format-shift suite covering email threads, YAML-ish records, tables, field records, and transcript-style inputs.",
+      "cases": "../cases/generic_format_shift_v1.json"
+    },
+    {
+      "suite_id": "real_debate_longform",
+      "description": "Captured real longform debate records for out-of-template generalization checks.",
+      "cases": "../cases/real_debate_longform_v1.json"
+    },
+    {
+      "suite_id": "market",
+      "description": "Stock-market flavored generic memory suite covering equity risk recall, same-surface note disambiguation, and market why-query chains.",
+      "cases": "../cases/generic_market_memory_v1.json"
+    },
+    {
+      "suite_id": "finance",
+      "description": "Broader finance-domain suite covering ETF, sector note, portfolio review, macro calendar, cross-asset why queries, and noisy related gaps.",
+      "cases": "../cases/generic_finance_generalization_v1.json"
+    },
+    {
+      "suite_id": "cross_domain_transfer",
+      "description": "Cross-domain knowledge transfer suite covering analogous structures, role mappings, causality chains, hierarchy analogies, metric analogies, and procedure analogies.",
+      "cases": "../cases/generic_cross_domain_transfer_v1.json"
+    },
+    {
+      "suite_id": "temporal_reasoning",
+      "description": "Temporal reasoning suite covering sequence order, duration constraints, before/after updates, deadline reasoning, overlapping events, and cyclic patterns.",
+      "cases": "../cases/generic_temporal_reasoning_v1.json"
+    },
+    {
+      "suite_id": "negation_conflict",
+      "description": "Negation and conflict handling suite covering explicit rejection, permission denial, update overrides, contradictory sources, double negatives, and conditional exceptions.",
+      "cases": "../cases/generic_negation_conflict_v1.json"
+    },
+    {
+      "suite_id": "numerical_reasoning",
+      "description": "Numerical reasoning suite covering threshold comparisons, range interpretations, ratio proportions, trend directions, unit conversions, and priority rankings.",
+      "cases": "../cases/generic_numerical_reasoning_v1.json"
+    },
+    {
+      "suite_id": "implicit_relation",
+      "description": "Implicit relation inference suite covering hierarchy inheritance, causality chains, role substitution, location containment, symmetric relations, and precondition inference.",
+      "cases": "../cases/generic_implicit_relation_v1.json"
+    },
+    {
+      "suite_id": "large_scope_graph",
+      "description": "Large-scope graph suite covering 12-20 entities per scope, same-prefix artifact splitting, cross-entity shared blockers, and ambiguity resilience.",
+      "cases": "../cases/generic_large_scope_graph_v1.json"
+    },
+    {
+      "suite_id": "deeper_dependency_chain",
+      "description": "Deeper dependency chain suite covering 5-6 hop requirement chains, direct blocker plus co-required items, history disagreement with external rules, and noisy deep chains.",
+      "cases": "../cases/generic_deeper_dependency_chain_v1.json"
+    },
+    {
+      "suite_id": "out_of_distribution_domains",
+      "description": "Out-of-distribution domains suite covering shipping, archive, museum, geological survey, astronomical observatory, agriculture, public safety, and mixed-language laboratory scenarios.",
+      "cases": "../cases/generic_out_of_distribution_domains_v1.json"
+    },
+    {
+      "suite_id": "identity_boundary",
+      "description": "Identity-boundary suite covering same-prefix artifacts, role-vs-document separation, team-vs-manual dependencies, and explicit alias surface forms.",
+      "cases": "../cases/generic_identity_boundary_v1.json"
+    },
+    {
+      "suite_id": "answer_boundary",
+      "description": "Answer-boundary suite covering direct-vs-dependency answers, related background suppression, multi-subject parallel answers, and noisy direct-answer scope.",
+      "cases": "../cases/generic_answer_boundary_v1.json"
+    },
+    {
+      "suite_id": "semantic_paraphrase",
+      "description": "Semantic-paraphrase suite covering non-literal recall queries, missing-record wording, artifact defects, and dependency questions without exact source phrasing.",
+      "cases": "../cases/generic_semantic_paraphrase_v1.json"
+    },
+    {
+      "suite_id": "state_transition_boundary",
+      "description": "State-transition boundary suite covering current-vs-history blockers, additive supplements, explicit corrections, and historical allowance vs current gate changes.",
+      "cases": "../cases/generic_state_transition_boundary_v1.json"
+    },
+    {
+      "suite_id": "realworld_daily",
+      "description": "Real-world daily memory suite covering school forms, apartment maintenance, pet appointments, and neighborhood package pickup with ordinary distractors.",
+      "cases": "../cases/generic_realworld_daily_v1.json"
+    },
+    {
+      "suite_id": "realworld_complex",
+      "description": "Real-world complex memory suite covering renovation dependencies, family care schedules, multi-person travel documents, and event correction/vendor separation.",
+      "cases": "../cases/generic_realworld_complex_v1.json"
+    },
+    {
+      "suite_id": "realworld_work_ops",
+      "description": "Real-world work operations suite covering customer onboarding, hiring loops, procurement, contract redlines, and training/deck review boundaries.",
+      "cases": "../cases/generic_realworld_work_ops_v1.json"
+    },
+    {
+      "suite_id": "realworld_software_dev",
+      "description": "Real-world software development suite covering API contracts, CI failures, database migrations, feature rollouts, and PR/release-note boundaries.",
+      "cases": "../cases/generic_realworld_software_dev_v1.json"
+    },
+    {
+      "suite_id": "realworld_edge_cases",
+      "description": "Real-world edge cases for shared names, gaps, dependencies, archives, exceptions, and corrections.",
+      "cases": "../cases/generic_realworld_edge_cases_v1.json"
+    },
+    {
+      "suite_id": "realworld_adversarial",
+      "description": "Real-world adversarial cases for aliases, table tickets, final decisions, negation, and noise.",
+      "cases": "../cases/generic_realworld_adversarial_v1.json"
+    }
+  ]
+}

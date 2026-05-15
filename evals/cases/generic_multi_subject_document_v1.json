@@ -1,0 +1,261 @@
+[
+  {
+    "case_id": "multi_subject_primary_with_side_mentions",
+    "category": "multi_subject_primary",
+    "description": "长 briefing 里只应为主主体和有独立 durable fact 的副主体落记忆，顺手提到的主体不应单独生成垃圾记忆。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_multi_subject_document_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Quarterly transfer briefing: Briarwatch rollout 当前仍不能进入 turnover，因为 berth packet 还没有补齐。周会里顺手提到 Mossledger service 近期也在调整批处理窗口，但没有给出它的独立结论。另有一条明确更新：Drumlin review 当前负责人是 Mila Song。其余段落只是在背景中提到 Harborlane checklist、Harborlane bulletin 和旧的 shift note，没有给出这些对象新的独立 durable fact。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Briarwatch rollout 当前为什么还不能进入 turnover？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "berth packet"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Drumlin review 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Mila Song"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "multi_subject_same_prefix_artifacts_split",
+    "category": "multi_subject_same_prefix",
+    "description": "同前缀 plan/review/bulletin/register/checklist 混在一篇文档里时，不应被错误合并。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_multi_subject_document_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Field operations digest: Latchmere plan 当前目标是周五前补齐 berth packet；Latchmere review 当前负责人是 Noor Patel；Latchmere bulletin 当前要求 every berth packet include quay tag；Latchmere register 之前允许 quay tag 在 departure 后 8 hours 内补录；Latchmere checklist 当前要求 quay tag 和 seal memo 一起提交。以上五个对象名称相近，但分别是 plan、review、bulletin、register、checklist。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Latchmere review 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Noor Patel"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Latchmere bulletin 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "quay tag"
+        ],
+        "judge_forbidden_facts": [
+          "Noor Patel"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 5,
+        "memory_count": 5,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    },
+    "settle_timeout_seconds": 60
+  },
+  {
+    "case_id": "multi_subject_secondary_subject_with_own_fact",
+    "category": "multi_subject_secondary_fact",
+    "description": "副主体若被明确赋予独立 durable fact，应单独落记忆而不是被主主体吞掉。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_multi_subject_document_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Marine change report: Oxbrook rollout 当前主阻塞是 dispatch annex 缺失。报告同时确认 Willowtrace service 当前负责人是 Han Wu，并补充说这个服务只是为 Oxbrook rollout 提供日志转发。文末还顺手提到旧的 ferry packet 术语，但没有提供新的 durable fact。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Oxbrook rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "dispatch annex"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Willowtrace service 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Han Wu"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "multi_subject_history_current_inside_long_doc",
+    "category": "multi_subject_history_current",
+    "description": "长文里同一 artifact 的 earlier/current 规则演进应仍稳定形成历史与当前两条记忆。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_multi_subject_document_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Archive briefing for Grayshore bulletin: earlier, teams could file berth note within 14 hours after release. The current section now says every berth note must be filed before release. The appendix adds that every berth note must include quay owner signature. The rest of the document mentions Tidebeam review and Tidebeam plan as background only, without new durable claims.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Grayshore bulletin 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "before release",
+          "quay owner signature"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Grayshore bulletin 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "14 hours"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "memory_status_counts": {
+          "active": 1,
+          "superseded": 1
+        },
+        "edge_type_counts": {
+          "updates": 1
+        },
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "multi_subject_cross_entity_requirement_in_single_doc",
+    "category": "multi_subject_cross_entity",
+    "description": "单篇长文中的主主体 blocker、直接 checklist 和上游 handbook 应能跨实体解释。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_multi_subject_document_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Integrated turnover packet: Moorfield rollout 当前仍不能进入 cutover，因为 berth memo 缺失。Moorfield checklist 当前要求每个 turnover packet 先补 berth memo 和 quay ledger。Stoneharbor handbook 当前要求 every quay ledger carry reviewer stamp before release. The same memo also mentions Marshfield roster and old invoice labels, but only as unrelated background references.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Moorfield rollout 现在还不能进入 cutover？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "berth memo",
+          "Moorfield checklist || checklist",
+          "reviewer stamp || Stoneharbor handbook || handbook"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    },
+    "settle_timeout_seconds": 60
+  },
+  {
+    "case_id": "multi_subject_side_mentions_do_not_create_artifacts",
+    "category": "multi_subject_side_mentions_only",
+    "description": "若多条 artifact 仅作为背景被顺手提到，不应因为同前缀或长文噪声而生成额外 memory。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_multi_subject_document_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Review note: Crestline review 当前负责人是 Ivo Tan。文中还顺手提到 Crestline checklist、Crestline register、Crestline bulletin 和 Crestline plan 曾在旧文档里出现，但这里没有给这些对象新的 durable fact；它们只是背景名词，不应该各自生成新记忆。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Crestline review 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Ivo Tan"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

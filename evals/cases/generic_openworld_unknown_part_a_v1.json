@@ -1,0 +1,184 @@
+[
+  {
+    "case_id": "openworld_archive_finding_aid_requirement",
+    "category": "openworld_unknown_domain",
+    "description": "档案馆 finding aid 与馆藏 digitization request 属于不同主体，why 查询应能拉出跨主体 requirement。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_openworld_unknown_part_a_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Kite archive digitization request 当前还不能提交，因为 provenance note 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Reference finding aid 要求所有 digitization request 在提交前补齐 provenance note。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Kite archive digitization request 还不能提交？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "provenance note",
+          "Reference finding aid || finding aid"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "openworld_restoration_plan_history_current",
+    "category": "openworld_history",
+    "description": "修复计划的 earlier/current 状态应都能被问到，当前查询和历史查询要区分。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_openworld_unknown_part_a_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Morrow restoration plan 之前卡在 pigment sample missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Morrow restoration plan 当前主阻塞已经变成 humidity log missing。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Morrow restoration plan 当前卡在什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "humidity log"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Morrow restoration plan 之前卡过什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "pigment sample"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "openworld_specimen_lab_same_surface_split",
+    "category": "openworld_same_surface",
+    "description": "同名 lab/checklist/review 在陌生领域里也应稳定区分。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_openworld_unknown_part_a_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Aviary lab 当前 blocker 是 chain-of-custody note missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aviary checklist 当前要求补 chain-of-custody note 和 freezer log。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aviary review 当前负责人是 Yara Lin。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Aviary checklist 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "chain-of-custody note",
+          "freezer log"
+        ],
+        "judge_forbidden_facts": [
+          "Yara Lin",
+          "blocker"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "openworld_field_station_noise_dependency",
+    "category": "openworld_noisy_context",
+    "description": "带大量旁支噪声时，系统应保留主主体和外部 requirement，不被闲聊主体污染。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_openworld_unknown_part_a_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "站务简报里顺手提到 Marlin truck、Delta freezer 和几个访客名字，但真正结论是 Ember field station 当前不能转运样本，因为 transfer manifest 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Transfer protocol 要求所有样本转运前补齐 transfer manifest。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Ember field station 当前不能转运样本？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "transfer manifest",
+          "Transfer protocol || protocol"
+        ],
+        "judge_forbidden_facts": [
+          "Marlin truck",
+          "Delta freezer"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "supports": 1
+        }
+      }
+    }
+  }
+]

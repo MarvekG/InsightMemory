@@ -1,0 +1,90 @@
+[
+  {
+    "case_id": "farfield_herbarium_accession_requirement",
+    "category": "farfield_unknown_domain",
+    "description": "陌生领域 accession request 的 why 查询。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_far_deep_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Marlowe herbarium accession request 当前还不能归档，因为 specimen custody folio 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Custody register 要求所有 herbarium accession request 在归档前补齐 specimen custody folio。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Marlowe herbarium accession request 还不能归档？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "specimen custody folio",
+          "Custody register || register"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deep_four_hop_requirement_chain",
+    "category": "deep_requirement_chain",
+    "description": "四层 requirement chain 的 why 查询。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_far_deep_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Sundial rollout 当前还不能进入执行阶段，因为 release packet 缺少 rollback annex。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Release checklist 要求所有 release packet 在进入执行阶段前补齐 rollback annex。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Control handbook 规定所有 rollback annex 还必须附 reviewer charter。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Uplink register 要求所有 reviewer charter 记录补齐 on-call roster。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Sundial rollout 还不能进入执行阶段？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback annex",
+          "Release checklist || checklist",
+          "reviewer charter || Control handbook || handbook",
+          "on-call roster || Uplink register || register"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

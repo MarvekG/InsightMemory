@@ -1,0 +1,21 @@
+{
+  "matrix_id": "semantic_tail_v1",
+  "description": "Focused regression matrix for the remaining deep/noise/stress semantic tail suites.",
+  "suites": [
+    {
+      "suite_id": "deep_graph",
+      "description": "Deeper multi-hop association, history, conflict, and external-requirement suite.",
+      "cases": "../cases/generic_deep_association_v1.json"
+    },
+    {
+      "suite_id": "noise",
+      "description": "Noisy context and cross-entity dependency suite.",
+      "cases": "../cases/generic_noise_dependency_v1.json"
+    },
+    {
+      "suite_id": "stress",
+      "description": "Stress and open-world suite.",
+      "cases": "../cases/generic_stress_openworld_v1.json"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "matrix_id": "rule_evolution_v1",
+  "description": "Rule-evolution generic memory suite.",
+  "suites": [
+    {
+      "suite_id": "rule_evolution",
+      "description": "History/current/supplement rule evolution suite covering handbook, manual, structured record, same-surface artifact, mixed-language, and cross-entity why scenarios.",
+      "cases": "../cases/generic_rule_evolution_matrix_v1.json"
+    }
+  ]
+}

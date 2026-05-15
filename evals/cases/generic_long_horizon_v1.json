@@ -1,0 +1,475 @@
+[
+  {
+    "case_id": "long_horizon_tracked_blocker_chain",
+    "category": "long_horizon_drift",
+    "description": "同一主体跨多次写入时，系统应区分 earlier/current，并在当前查询与历史查询中都保持稳定。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_long_horizon_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Rook rollout 之前卡在 schema note missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Rook rollout 当前主阻塞已经变成 approval appendix missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Rook rollout 最新更新：schema note 问题已关闭，当前仍因 approval appendix missing 无法切换。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Rook rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "approval appendix"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Rook rollout 之前卡过什么，现在又卡什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "schema note",
+          "approval appendix"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "long_horizon_document_rule_evolution",
+    "category": "long_horizon_drift",
+    "description": "同一 handbook 的规则经过多次补充后，应能回答当前规则与之前规则。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_long_horizon_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Violet handbook 之前允许团队自行修改 fallback schedule。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Violet handbook 当前要求 fallback schedule 变更必须先经 incident lead 审批。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Violet handbook 最新补充：所有审批记录还必须附在 change packet 中。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Violet handbook 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "incident lead",
+          "change packet"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Violet handbook 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "自行修改 fallback schedule"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "entity_scale_parallel_subjects_isolation",
+    "category": "entity_scale",
+    "description": "同一 scope 下并行写入多个主体时，查询应稳定命中目标实体，不串记忆。",
+    "settle_timeout_seconds": 480,
+    "memory_scope_templates": {
+      "primary": "eval:generic_long_horizon_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Pioneer rollout 当前主阻塞是 approval note missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mosaic checklist 要求补 approval note 和 rollback note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Tangent review 当前 owner 是 Mei Chen。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Ivory handbook 当前要求 incident lead 签字。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Northwind dashboard 当前数据延迟 20 分钟。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Falcon service 当前 error budget 已耗尽。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Driftline team 当前 oncall 是 Leo Sun。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Keystone plan 当前目标是下周完成 cutover rehearsal。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Northwind dashboard 当前怎么了？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "数据延迟 20 分钟"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Driftline team 当前 oncall 是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Leo Sun"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 8,
+        "memory_count": 8,
+        "observation_count": 8,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "entity_scale_same_surface_multi_artifact",
+    "category": "entity_scale",
+    "description": "同名 project/checklist/plan/review 并存时，应分别回答对应 artifact 的问题。",
+    "settle_timeout_seconds": 480,
+    "memory_scope_templates": {
+      "primary": "eval:generic_long_horizon_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Summerset project 当前 blocker 是 access note missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Summerset checklist 当前要求补 access note 和 rollback note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Summerset plan 当前目标是本周完成 cutover rehearsal。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Summerset review 当前 owner 是 Nia Qiao。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Summerset checklist 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "access note",
+          "rollback note"
+        ],
+        "judge_forbidden_facts": [
+          "Nia Qiao",
+          "blocker"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Summerset plan 当前目标是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "cutover rehearsal"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "long_horizon_cross_entity_requirement_evolution",
+    "category": "long_horizon_drift",
+    "description": "跨实体 requirement 历史演进与主 rollout blocker 并存时，应同时回答当前 why 与文档历史。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_long_horizon_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Rivet rollout 当前仍不能切换，因为 recovery appendix missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Gate checklist 要求切换前必须补 recovery appendix。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Assurance memo 之前只要求 rollback note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Assurance memo 当前要求 recovery appendix。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Rivet rollout 现在还不能切换？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "recovery appendix",
+          "Gate checklist || checklist"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Assurance memo 之前和当前分别要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback note",
+          "recovery appendix"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "observation_count": 4,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "long_horizon_owner_drift_and_history",
+    "category": "long_horizon_drift",
+    "description": "同一 review 的 owner 多次变更后，应能区分当前 owner 与之前 owner。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_long_horizon_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Canyon review 之前 owner 是 Iris Gao。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Canyon review 当前 owner 已变成 Omar Lin。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Canyon review 最新补充：handoff note 已记录给 Omar Lin。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Canyon review 当前 owner 是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Omar Lin"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Canyon review 之前 owner 是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Iris Gao"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "large_scope_multi_day_dependency_chain",
+    "category": "entity_scale",
+    "description": "较大 scope 下跨多天 blocker 变化与外部 requirement 并存时，应答当前 why 和历史变化。",
+    "settle_timeout_seconds": 480,
+    "memory_scope_templates": {
+      "primary": "eval:generic_long_horizon_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Quartz rollout 昨天卡在 runbook section missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Quartz rollout 当前主阻塞已经变成 approval packet missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cutover runbook 要求补 runbook section。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Approval handbook 要求进入切换前补 approval packet。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Ops dashboard 只是显示待办数量，不构成正式要求。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Quartz rollout 当前为什么还不能切换？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "approval packet",
+          "Approval handbook || handbook"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Quartz rollout 昨天卡什么，今天又卡什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "runbook section",
+          "approval packet"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "observation_count": 5,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "large_scope_document_project_checklist_with_noise",
+    "category": "entity_scale",
+    "description": "同 scope 下 project/document/checklist/service 与噪声记录混合时，应稳定区分 artifact 和记忆归属。",
+    "settle_timeout_seconds": 480,
+    "memory_scope_templates": {
+      "primary": "eval:generic_long_horizon_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Axiom project 当前 blocker 是 tax template checklist 缺失。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Axiom document 记录了 billing migration 的回顾摘要。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Axiom checklist 当前要求补 tax template checklist 和 rollback summary。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Billing service 当前 blocker 是 tax template checklist 缺失。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "闲聊记录：午饭改到一点，不要写入正式结论。",
+        "expected_status": "rejected"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Axiom checklist 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "tax template checklist",
+          "rollback summary"
+        ],
+        "judge_forbidden_facts": [
+          "Billing service"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Billing service 当前 blocker 是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "tax template checklist"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

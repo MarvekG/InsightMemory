@@ -1,0 +1,216 @@
+[
+  {
+    "case_id": "direct_vs_dependency_answer_split",
+    "category": "answer_direct_vs_dependency",
+    "description": "同一目标的窄问题只回答直接缺失项；原因问题才带出上游合规要求。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_answer_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Briar release card 当前还需要补齐 gate stamp 和 load receipt。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Briar compliance guide 要求所有 gate stamp 必须包含 approver code。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Briar training roster 显示周二完成 forklift drill。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Briar release card 当前还需要补齐什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "gate stamp",
+          "load receipt"
+        ],
+        "judge_forbidden_facts": [
+          "forklift drill"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "为什么 Briar release card 的 gate stamp 还不算完整？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "gate stamp",
+          "approver code",
+          "Briar compliance guide || compliance guide"
+        ],
+        "judge_forbidden_facts": [
+          "forklift drill"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "related_background_not_promoted",
+    "category": "answer_related_background",
+    "description": "直接查询只回答目标阻塞；解释查询才带出相邻背景来源。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_answer_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Calder field survey 当前主阻塞是 sample courier backlog。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Calder equipment log 记录 spare battery 已经更换。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Calder courier brief 显示 courier backlog 来源是 route freeze。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Calder field survey 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "sample courier backlog"
+        ],
+        "judge_forbidden_facts": [
+          "route freeze",
+          "spare battery"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "为什么 Calder field survey 还被 courier backlog 卡住？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "sample courier backlog",
+          "route freeze",
+          "Calder courier brief || courier brief"
+        ],
+        "judge_forbidden_facts": [
+          "spare battery"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "multi_subject_parallel_answer_boundary",
+    "category": "answer_multi_subject",
+    "description": "多主体查询应返回多条独立答案，不应把不同主体的缺失项混成一条。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_answer_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Northbay dredge plan 当前缺少 tide model。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Northbay permit packet 当前缺少 agency signature。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Northbay lunch memo 记录 catering 已确认。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Northbay dredge plan 和 Northbay permit packet 分别缺少什么？",
+        "expected_status": "ok",
+        "expected_result_count": 2,
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "tide model",
+          "agency signature"
+        ],
+        "judge_forbidden_facts": [
+          "catering"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "noisy_direct_answer_scope",
+    "category": "answer_noisy_direct",
+    "description": "长噪声输入里只抽取目标 durable fact，回答不能带入无关会议细节。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_answer_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "晨会记录包含咖啡供应、会议室灯光、访客签到和旧打印机维修；真正结论是：Mica kiln batch 当前不能入炉，因为 glaze checklist 缺少 firing curve。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mica glaze checklist 要求 firing curve 在入炉前必须由 senior ceramicist 确认。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Mica kiln batch 当前为什么不能入炉？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "glaze checklist",
+          "firing curve",
+          "senior ceramicist || Mica glaze checklist"
+        ],
+        "judge_forbidden_facts": [
+          "咖啡",
+          "会议室灯光",
+          "旧打印机"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

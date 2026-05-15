@@ -1,0 +1,11 @@
+{
+  "matrix_id": "finance_v1",
+  "description": "Broader finance-domain generic memory suite.",
+  "suites": [
+    {
+      "suite_id": "finance",
+      "description": "Finance-domain suite covering ETF, sector note, portfolio review, macro calendar, cross-asset why queries, and noisy related gaps.",
+      "cases": "../cases/generic_finance_generalization_v1.json"
+    }
+  ]
+}

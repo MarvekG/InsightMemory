@@ -1,0 +1,372 @@
+[
+  {
+    "case_id": "mixed_language_requirement_runbook",
+    "category": "mixed_language",
+    "description": "中英混合 runbook 条件应可稳定召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_hard_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Database failover runbook 要求 before cutover 必须完成 shadow replay。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Database failover runbook before cutover 必须做什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "shadow replay"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "mixed_language_policy_gap",
+    "category": "mixed_language",
+    "description": "中英混合 policy 缺口应可召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_hard_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Access recovery policy 当前缺少 on-call escalation path。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Access recovery policy 当前缺什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "on-call escalation path"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "mixed_language_history_review",
+    "category": "mixed_language",
+    "description": "中英混合历史记录应能回答 earlier vs current。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_hard_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Phoenix review 之前卡在 database migration timeout。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Phoenix review 当前主阻塞已经变成 rollback approval missing。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Phoenix review 之前卡过什么，当前又变成什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "database migration timeout",
+          "rollback approval missing"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 1,
+          "superseded": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 2,
+          "updates": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "multi_hop_support_chain_why_query",
+    "category": "multi_hop_association",
+    "description": "主结论加日志证据再加操作缺口，应支持 why 查询。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_hard_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Orion rollout 当前主阻塞是配置漂移。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orion rollout 的部署日志显示配置漂移导致签名校验失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orion rollout 缺少配置基线校验流程。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么说 Orion rollout 现在被配置漂移阻塞，而且还有哪些相关缺口？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "配置漂移",
+          "签名校验失败",
+          "配置基线校验流程"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 3,
+          "supports": 1,
+          "related_to": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "multi_hop_conflict_and_history_query",
+    "category": "multi_hop_association",
+    "description": "历史链与冲突立场应可同时被查询消费。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_hard_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Launch review\nSession: review-9\nStage: decision\nRound: 1\nPosition: supportive\nSummary: 可以先按原窗口上线。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Launch review\nSession: review-9\nStage: decision\nRound: 2\nPosition: opposing\nSummary: 必须先补回滚说明，不能直接上线。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Launch review 当前决定已经变成先补回滚说明再排期上线。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Launch review 历史上有哪些分歧，当前又收敛到什么结论？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "required_uncertainty_prefixes": [
+          "contradicting_memory:"
+        ],
+        "judge_required_facts": [
+          "原窗口上线",
+          "回滚说明",
+          "先补回滚说明再排期上线"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 3,
+          "contradicts": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "multi_entity_mixed_context_split",
+    "category": "multi_entity_mixed",
+    "description": "同一 scope 下两个不同实体的混合写入后，应能分别查询。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_hard_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Billing service 当前负责人是 Owen Tan。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "数据库迁移失败"
+        ],
+        "judge_forbidden_facts": [
+          "Owen Tan"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Billing service 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Owen Tan"
+        ],
+        "judge_forbidden_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2,
+        "edge_type_counts": {
+          "derived_from": 2
+        }
+      }
+    }
+  },
+  {
+    "case_id": "multi_entity_same_name_role_split_hard",
+    "category": "multi_entity_mixed",
+    "description": "同名不同角色的主体在更复杂上下文下应保持拆分。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_hard_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas 是发布项目，当前主阻塞是数据库迁移失败，需要先回滚。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas 是审计报告，当前缺少审批链说明。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas 发布项目 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "数据库迁移失败"
+        ],
+        "judge_forbidden_facts": [
+          "审批链说明"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Atlas 审计报告 当前缺什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批链说明"
+        ],
+        "judge_forbidden_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "long_mixed_language_conditions",
+    "category": "mixed_language",
+    "description": "更长的 mixed-language 历史记录应能提炼操作条件。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_hard_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Identity gateway review\nSession: gateway-review-12\nStage: decision\nRound: 3\nPosition: supportive\nNotes: 会议认为 Identity gateway review can continue, but only under explicit operating conditions. 第一，旧令牌 replay samples 必须已经补齐，用来确认 old token paths 在 new gateway 下不会批量失效。第二，灰度组必须有明确的 manual watch list，知道要盯哪些 alerts 和哪些 user samples。第三，正式 cutover 前必须先做一次 small-batch replay。第四，cutover 后前四小时必须持续盯住 login failure rate 和 token refresh latency，只要任一指标异常就停止扩容。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Identity gateway review 继续推进依赖哪些 operating conditions？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "small-batch replay",
+          "login failure rate"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  }
+]

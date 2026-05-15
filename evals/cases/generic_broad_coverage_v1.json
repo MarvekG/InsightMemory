@@ -1,0 +1,281 @@
+[
+  {
+    "case_id": "broad_multi_entity_long_briefing_split",
+    "category": "broad_multi_entity_long_doc",
+    "description": "长简报混入多个实体和噪声时，应保留真正有持久事实的主体，并能对主主体准确查询。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_broad_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "运营长简报里提到旧货架、访客 badge、午餐安排、North Wharf 灯光测试和几位实习生的名字，但真正的持久结论有三条：Quartz relay service 当前主阻塞是 token rotation note missing；Silverline checklist 当前要求上线前补齐 token rotation note 和 rollback contact；Palisade review 当前负责人是 Mira Song。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Quartz relay service 当前为什么还不能上线？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "token rotation note"
+        ],
+        "judge_forbidden_facts": [
+          "午餐安排",
+          "访客 badge"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "broad_three_hop_requirement_chain",
+    "category": "broad_deep_association",
+    "description": "多层 requirement chain 下，why 查询应能把主主体、直接要求和更上游约束串起来。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_broad_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Driftwood rollout 当前还不能进入执行阶段，因为 readiness packet 还没有补齐 approval matrix。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Readiness checklist 要求所有 readiness packet 在进入执行阶段前补齐 approval matrix。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Control handbook 规定所有 approval matrix 还必须附上 escalation owner。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Driftwood rollout 还不能进入执行阶段？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "approval matrix",
+          "Readiness checklist || checklist",
+          "escalation owner || Control handbook || handbook"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "broad_four_way_same_surface_disambiguation",
+    "category": "broad_same_surface",
+    "description": "同一 surface form 下四种不同 artifact/service 应稳定拆开。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_broad_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Aurora service 当前主阻塞是 cert rotation missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aurora manual 当前要求所有 cert rotation 记录附上 reviewer signature。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aurora plan 当前负责人是 Devin Cole。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aurora review 当前结论是先补 cert inventory 再继续排期。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Aurora manual 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "reviewer signature"
+        ],
+        "judge_forbidden_facts": [
+          "Devin Cole",
+          "cert rotation missing"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "broad_current_and_history_rule_evolution",
+    "category": "broad_rule_evolution",
+    "description": "同一手册经过多次补充后，当前问题应答当前规则，历史问题应答旧规则。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_broad_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Northstar handbook 之前允许团队在值班变更后 24 小时内补录 contact chain。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Northstar handbook 当前要求所有值班变更必须在切换前补齐 contact chain。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Northstar handbook 最新补充：所有 contact chain 记录还必须附在 handoff packet 中。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Northstar handbook 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "切换前补齐 contact chain",
+          "handoff packet"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Northstar handbook 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "24 小时内补录 contact chain"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "broad_mixed_language_cross_entity_dependency",
+    "category": "broad_mixed_language_dependency",
+    "description": "中英混合的跨实体依赖在长文本下也应能正确回答 why。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_broad_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Bluefin rollout 当前 still cannot proceed，因为 export packet 里缺少 signed vessel manifest。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Dockside customs guide 要求 every export packet must include a signed vessel manifest before departure approval.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Why can’t Bluefin rollout proceed now?",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "signed vessel manifest",
+          "Dockside customs guide || customs guide"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "broad_large_scope_parallel_subjects",
+    "category": "broad_entity_scale",
+    "description": "单 scope 下多个并行主体同时存在时，查询某一个主体不应串到其他主体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_broad_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Oakframe service 当前负责人是 Lena Wu。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Redcliff service 当前负责人是 Ivo Hart。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Keystone service 当前负责人是 Sana Bell。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mosaic service 当前负责人是 Priya Nair。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Ridgeway service 当前负责人是 Omar Hale。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Mosaic service 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Priya Nair"
+        ],
+        "judge_forbidden_facts": [
+          "Lena Wu",
+          "Ivo Hart",
+          "Sana Bell",
+          "Omar Hale"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 5,
+        "memory_count": 5,
+        "observation_count": 5,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

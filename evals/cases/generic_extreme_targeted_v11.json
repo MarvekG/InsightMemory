@@ -1,0 +1,43 @@
+[
+  {
+    "case_id": "noisy_meeting_note_with_second_entity",
+    "category": "noisy_cross_entity",
+    "description": "噪声上下文顺手提到另一主体时，主查询不应串到无关实体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_targeted_v11:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "周会里顺手提到 Billing service，但主结论是 Atlas rollout 当前主阻塞是审批链说明缺失。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Billing service 当前负责人是 Owen Tan。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批链说明缺失 || 审批链说明"
+        ],
+        "judge_forbidden_facts": [
+          "Owen Tan"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

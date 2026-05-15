@@ -1,0 +1,204 @@
+[
+  {
+    "case_id": "openworld_exhibit_manual_rule_evolution",
+    "category": "openworld_unknown_domain",
+    "description": "展陈 manual 的当前规则和补充规则应被聚合回答，历史规则也能单独问出。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_openworld_unknown_part_b_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Coral exhibit manual 之前允许团队自行调整 light cycle。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Coral exhibit manual 当前要求所有 light cycle 调整先经 conservation lead 审批。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Coral exhibit manual 最新补充：审批记录还必须附在 maintenance packet 中。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Coral exhibit manual 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "conservation lead",
+          "maintenance packet"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Coral exhibit manual 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "自行调整 light cycle"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "openworld_vessel_log_cross_entity_why",
+    "category": "openworld_cross_entity",
+    "description": "航次准备和港务规则属于不同主体，why 查询应能拉出外部约束。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_openworld_unknown_part_b_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Tidal vessel departure plan 当前还不能确认，因为 customs appendix 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Dockside departure protocol 要求所有 departure plan 在确认前补齐 customs appendix。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Tidal vessel departure plan 还不能确认？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "customs appendix",
+          "Dockside departure protocol || protocol"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "openworld_manuscript_conflict_and_current",
+    "category": "openworld_history",
+    "description": "同一 manuscript review 的历史分歧与当前收敛结论应能同时回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_openworld_unknown_part_b_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Solstice manuscript review round 1 认为可以按现有注释提交。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Solstice manuscript review round 2 认为必须先补齐 provenance appendix。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Solstice manuscript review 当前结论是先补齐 provenance appendix，再安排提交。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Solstice manuscript review 历史上有哪些分歧，现在结论是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "可以按现有注释提交",
+          "provenance appendix",
+          "当前结论"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "contradicts": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "openworld_observatory_multi_entity_scale",
+    "category": "openworld_unknown_domain",
+    "description": "陌生领域里并行写入多个不同 artifact，应保持 scope 内稳定隔离。",
+    "settle_timeout_seconds": 360,
+    "memory_scope_templates": {
+      "primary": "eval:generic_openworld_unknown_part_b_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Umber observatory schedule 当前 blocker 是 weather appendix missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Starpath checklist 当前要求补 weather appendix 和 safety note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Nocturne review 当前 owner 是 Pema Xu。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Zenith calibration log 当前 drift 超出允许范围。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aperture manual 当前要求 calibration drift 超标时先停机复测。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Zenith calibration log 当前怎么了？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "drift 超出允许范围"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Nocturne review 当前 owner 是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Pema Xu"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 5,
+        "memory_count": 5,
+        "observation_count": 5,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

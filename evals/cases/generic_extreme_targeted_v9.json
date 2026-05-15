@@ -1,0 +1,51 @@
+[
+  {
+    "case_id": "cross_entity_upstream_with_distractor_handbook",
+    "category": "noisy_cross_entity",
+    "description": "上游依赖与无关 handbook 并存时，外部影响查询应命中真正的 upstream memory。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_targeted_v9:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是依赖数据源迟迟没有恢复。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Data sync service 当前仍处于批量补数状态，尚未恢复稳定输出。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Recovery handbook 当前缺少 on-call escalation path。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 现在还被什么外部问题影响？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Data sync service || 批量补数 || 稳定输出"
+        ],
+        "judge_forbidden_facts": [
+          "on-call escalation path"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 3,
+          "related_to": 1
+        }
+      }
+    }
+  }
+]

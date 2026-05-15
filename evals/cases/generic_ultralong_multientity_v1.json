@@ -1,0 +1,166 @@
+[
+  {
+    "case_id": "ultralong_single_document_multi_entity_split",
+    "category": "ultralong_multi_entity",
+    "description": "超长单文档里包含多个主体和大量噪声时，应保留真正可检索的持久事实。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_ultralong_multientity_v1:{run_id}:{case_id}"
+    },
+    "settle_timeout_seconds": 120,
+    "writes": [
+      {
+        "context": "超长周报记录：前半段反复提到旧白板、访客登记、照明巡检、会议室门卡、走廊摄像头、临时工位、午餐统计和几位旁听者姓名。中段真正形成的持久结论有五条：Oakspan rollout 当前主阻塞是 rollback annex missing；Ridgepath checklist 当前要求所有 cutover 先补 rollback annex 和 approver signature；Talon review 当前负责人是 Mira Chen；Quarry dashboard 当前数据延迟 18 分钟；Westbay handbook 当前要求 incident timeline 记录附在 handoff packet 中。后半段仍然是闲聊、排班、访客 badge 和仓库灯光测试，这些都不应成为单独记忆。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Oakspan rollout 当前为什么还不能切换？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback annex"
+        ],
+        "judge_forbidden_facts": [
+          "午餐统计",
+          "访客 badge"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 5,
+        "memory_count": 5,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "ultralong_same_surface_many_artifacts",
+    "category": "ultralong_same_surface",
+    "description": "超长文档里同名 project/checklist/plan/review/manual 并存时，应稳定拆开。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_ultralong_multientity_v1:{run_id}:{case_id}"
+    },
+    "settle_timeout_seconds": 120,
+    "writes": [
+      {
+        "context": "长文档先回顾一堆历史闲聊，再给出真正结论：Juniper project 当前 blocker 是 access appendix missing；Juniper checklist 当前要求补 access appendix 和 rollback owner；Juniper plan 当前目标是下周完成 rehearsal；Juniper review 当前负责人是 Nia Zhen；Juniper manual 当前要求所有 rehearsal record 附 reviewer signature。文档里还多次重复工位调整、外卖名单和临时 badge，不应作为持久主体。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Juniper manual 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "reviewer signature"
+        ],
+        "judge_forbidden_facts": [
+          "Nia Zhen",
+          "access appendix missing"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 5,
+        "memory_count": 5,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "ultralong_history_plus_cross_entity_chain",
+    "category": "ultralong_history_dependency",
+    "description": "超长文档中同时出现历史 blocker 演进和外部 requirement 时，应答出当前 blocker 和外部约束。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_ultralong_multientity_v1:{run_id}:{case_id}"
+    },
+    "settle_timeout_seconds": 120,
+    "writes": [
+      {
+        "context": "长评审纪要里先提到大量旁支事项，真正和主体相关的演进是：Marlowe review 之前卡在 schema note missing；后来当前主阻塞已经变成 approval packet missing；同一份纪要还确认 Beacon handbook 要求所有 review 在进入执行前必须补齐 approval packet；末尾又补了一句 approval packet 还必须附 incident owner。其余关于工位、电视墙、白板照片和来访登记都只是背景。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Marlowe review 当前主阻塞是什么，外部还受什么要求约束？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "approval packet",
+          "Beacon handbook || handbook",
+          "incident owner"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Marlowe review 之前卡过什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "schema note"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "ultralong_multi_entity_mixed_language",
+    "category": "ultralong_mixed_language",
+    "description": "超长中英混合文档下，也应稳定保留主主体和跨实体约束。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_ultralong_multientity_v1:{run_id}:{case_id}"
+    },
+    "settle_timeout_seconds": 120,
+    "writes": [
+      {
+        "context": "The extended operations memo mixes English and Chinese. It mentions spare cables, lunch logistics, temporary seating, and visitor escort details, but the durable facts are: Cinder rollout still cannot proceed because the export packet is missing a signed harbor manifest; Harbor customs manual says every export packet must include a signed harbor manifest before departure approval; Slate review owner is Mina Cho. The rest of the memo is chatter and should not become separate durable memories.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Why can’t Cinder rollout proceed now?",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "signed harbor manifest",
+          "Harbor customs manual || customs manual"
+        ],
+        "judge_forbidden_facts": [
+          "lunch logistics",
+          "temporary seating"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

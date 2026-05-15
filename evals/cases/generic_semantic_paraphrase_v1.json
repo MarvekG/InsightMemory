@@ -1,0 +1,208 @@
+[
+  {
+    "case_id": "ferry_dossier_material_paraphrase",
+    "category": "semantic_paraphrase_dependency",
+    "description": "查询不用原句的“不能归档/缺少”表述，也应召回 ferry dossier 的材料阻塞和上游 registry 规则。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_semantic_paraphrase_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Lumen ferry dossier 当前不能归档，因为 mooring certificate 缺少 harbor seal。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Lumen harbor seal registry 要求 mooring certificate 在归档前附上 quay verifier stamp。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Lumen catering note 显示 dockside lunch 已经确认。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Lumen ferry dossier 卡在哪个材料上？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "mooring certificate",
+          "harbor seal"
+        ],
+        "judge_forbidden_facts": [
+          "dockside lunch"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "为什么 Lumen ferry dossier 的 mooring certificate 还不能过归档？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "mooring certificate",
+          "quay verifier stamp",
+          "Lumen harbor seal registry || harbor seal registry"
+        ],
+        "judge_forbidden_facts": [
+          "dockside lunch"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "archive_crate_nonliteral_readiness",
+    "category": "semantic_paraphrase_readiness",
+    "description": "用“入库前少了哪项记录”询问，应命中 humidity ledger，而不是相邻设备记录。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_semantic_paraphrase_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Cobalt archive crate 当前无法入库，因为 humidity ledger 未完成。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cobalt climate protocol 要求 humidity ledger 包含 sensor drift note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cobalt equipment card 记录 scanner battery 已更换。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Cobalt archive crate 入库前少了哪项记录？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "humidity ledger"
+        ],
+        "judge_forbidden_facts": [
+          "scanner battery"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Cobalt archive crate 的 humidity ledger 还差什么上游说明？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "humidity ledger",
+          "sensor drift note",
+          "Cobalt climate protocol || climate protocol"
+        ],
+        "judge_forbidden_facts": [
+          "scanner battery"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "bird_survey_signature_paraphrase",
+    "category": "semantic_paraphrase_missing_signature",
+    "description": "查询“差哪个签字信息”应从 nest map 缺 observer initials 的事实中泛化出来。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_semantic_paraphrase_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Nacre bird survey 当前无法关闭，因为 nest map 缺少 observer initials。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Nacre weather log 显示周五风速已经低于巡查阈值。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Nacre bird survey 还差哪个签字信息？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "observer initials",
+          "nest map"
+        ],
+        "judge_forbidden_facts": [
+          "风速",
+          "weather log"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "rail_permit_diagram_paraphrase",
+    "category": "semantic_paraphrase_artifact_defect",
+    "description": "查询“图纸问题”应命中 crossing diagram 的具体缺项，而不被维护日志干扰。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_semantic_paraphrase_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Palisade rail permit 当前暂停，因为 crossing diagram 没有 sightline measurement。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Palisade rail maintenance log 记录 ballast sweep 已完成。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Palisade rail permit 被什么图纸问题挡住？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "crossing diagram",
+          "sightline measurement"
+        ],
+        "judge_forbidden_facts": [
+          "ballast sweep"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

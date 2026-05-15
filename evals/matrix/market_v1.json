@@ -1,0 +1,11 @@
+{
+  "matrix_id": "market_v1",
+  "description": "Stock-market flavored generic memory suite.",
+  "suites": [
+    {
+      "suite_id": "market",
+      "description": "Stock-market themed generic memory suite covering equity risk recall, same-surface disambiguation, cross-entity rationale, and history/current transitions.",
+      "cases": "../cases/generic_market_memory_v1.json"
+    }
+  ]
+}

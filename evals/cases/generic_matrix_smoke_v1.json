@@ -1,0 +1,217 @@
+[
+  {
+    "case_id": "gate_ingest_accept_service",
+    "category": "gate_ingest",
+    "description": "具名服务主体应成功写入。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_matrix_smoke_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败，需要先回滚。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "memory_status_counts": {
+          "active": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 1
+        },
+        "required_memory_texts": [
+          "数据库迁移失败"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "single_fact_owner",
+    "category": "single_fact_recall",
+    "description": "单条负责人记忆应可直接召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_matrix_smoke_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Billing service 当前负责人是 Nina Park。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Billing service 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Nina Park"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "multi_subject_two_results",
+    "category": "multi_subject_recall",
+    "description": "一条问题同时询问两个稳定主体时，应返回两条独立结果。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_matrix_smoke_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Ridgeway rollout 当前主阻塞是身份同步失败。Ridgeway runbook 当前缺少回滚步骤。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Ridgeway rollout 当前主阻塞是什么？Ridgeway runbook 当前缺什么？",
+        "expected_status": "ok",
+        "expected_result_count": 2,
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "身份同步失败",
+          "回滚步骤"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "multi_subject_three_results",
+    "category": "multi_subject_recall",
+    "description": "一条问题同时询问三个稳定主体时，应返回三条独立结果。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_matrix_smoke_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Northpier service 当前负责人是 Lena Ortiz。Northpier dashboard 当前缺少延迟告警。Northpier playbook 当前要求发布前完成灰度审批。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Northpier service 当前负责人是谁？Northpier dashboard 当前缺什么？Northpier playbook 当前要求什么？",
+        "expected_status": "ok",
+        "expected_result_count": 3,
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Lena Ortiz",
+          "延迟告警",
+          "灰度审批"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "multi_subject_four_results",
+    "category": "multi_subject_recall",
+    "description": "一条问题同时询问四个稳定主体时，应返回四条独立结果。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_matrix_smoke_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Copperline gateway 当前主阻塞是证书轮换失败。Copperline checklist 当前要求双人审批。Copperline register 当前负责人是 Omar Li。Copperline handbook 当前缺少应急联系方式。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Copperline gateway 当前主阻塞是什么？Copperline checklist 当前要求什么？Copperline register 当前负责人是谁？Copperline handbook 当前缺什么？",
+        "expected_status": "ok",
+        "expected_result_count": 4,
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "证书轮换失败",
+          "双人审批",
+          "Omar Li",
+          "应急联系方式"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "multi_subject_five_results",
+    "category": "multi_subject_recall",
+    "description": "一条问题同时询问五个稳定主体时，应返回五条独立结果。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_matrix_smoke_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Fairwater pipeline 当前主阻塞是队列积压。Fairwater monitor 当前缺少消费延迟面板。Fairwater review 当前负责人是 Priya Shah。Fairwater policy 当前要求变更前完成风险评审。Fairwater runbook 当前缺少恢复校验步骤。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Fairwater pipeline 当前主阻塞是什么？Fairwater monitor 当前缺什么？Fairwater review 当前负责人是谁？Fairwater policy 当前要求什么？Fairwater runbook 当前缺什么？",
+        "expected_status": "ok",
+        "expected_result_count": 5,
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "队列积压",
+          "消费延迟面板",
+          "Priya Shah",
+          "风险评审",
+          "恢复校验步骤"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 5,
+        "memory_count": 5,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

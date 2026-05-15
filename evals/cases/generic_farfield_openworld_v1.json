@@ -1,0 +1,290 @@
+[
+  {
+    "case_id": "farfield_herbarium_accession_requirement",
+    "category": "farfield_unknown_domain",
+    "description": "陌生领域的 accession request 与 register 属于不同主体，why 查询应能拉出外部 requirement。",
+    "settle_timeout_seconds": 60,
+    "memory_scope_templates": {
+      "primary": "eval:generic_farfield_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Marlowe herbarium accession request 当前还不能归档，因为 specimen custody folio 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Custody register 要求所有 herbarium accession request 在归档前补齐 specimen custody folio。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Marlowe herbarium accession request 还不能归档？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "specimen custody folio",
+          "Custody register || register"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "farfield_orbital_docket_history_current",
+    "category": "farfield_history",
+    "description": "陌生领域的 earlier/current 状态变化应能被区分回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_farfield_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Perigee survey docket 之前卡在 lens calibration note missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Perigee survey docket 当前主阻塞已经变成 thermal drift appendix missing。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Perigee survey docket 当前卡在什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "thermal drift appendix"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Perigee survey docket 之前卡过什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "lens calibration note"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "farfield_same_surface_vessel_artifacts",
+    "category": "farfield_same_surface",
+    "description": "同名 vessel/log/review 在远域场景下也应稳定拆开。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_farfield_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Calder vessel 当前 blocker 是 berth clearance slip missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Calder berth log 当前要求补 berth clearance slip 和 departure seal record。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Calder departure review 当前负责人是 Nila Voss。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Calder berth log 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "berth clearance slip",
+          "departure seal record"
+        ],
+        "judge_forbidden_facts": [
+          "Nila Voss",
+          "blocker"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "farfield_theater_briefing_noise_dependency",
+    "category": "farfield_noisy_context",
+    "description": "旁支噪声很多时，应保留主主体和外部 requirement，不被闲聊污染。",
+    "settle_timeout_seconds": 60,
+    "memory_scope_templates": {
+      "primary": "eval:generic_farfield_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "舞台技术简报里顺手提到旧幕布、观众席照明、走位彩排、咖啡采购和几位来访演员名字，但真正结论是：Lattice stage restoration 当前不能进入下一阶段，因为 rigging tension ledger 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Rigging protocol 要求所有 stage restoration 在进入下一阶段前补齐 rigging tension ledger。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Lattice stage restoration 当前不能进入下一阶段？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rigging tension ledger",
+          "Rigging protocol || protocol"
+        ],
+        "judge_forbidden_facts": [
+          "咖啡采购",
+          "观众席照明"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "farfield_chart_manual_rule_evolution",
+    "category": "farfield_rule_evolution",
+    "description": "远域 manual 的当前规则和历史规则应能分别回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_farfield_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "North Quill chart manual 之前允许 crew 在 departure 后 12 小时内补录 tidal variance note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "North Quill chart manual 当前要求所有 tidal variance note 必须在 departure 前补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "North Quill chart manual 最新补充：所有 tidal variance note 还必须附在 route packet 中。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "North Quill chart manual 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "departure 前补齐",
+          "route packet"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "North Quill chart manual 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "departure 后 12 小时内补录"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "farfield_large_scope_unknown_subjects",
+    "category": "farfield_entity_scale",
+    "description": "多个陌生领域主体共存于同一 scope 时，查询不应串主体。",
+    "settle_timeout_seconds": 90,
+    "memory_scope_templates": {
+      "primary": "eval:generic_farfield_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Parallax observatory docket 当前负责人是 Iris Vale。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Sable conservatory ledger 当前负责人是 Niko Stern。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mooring customs register 当前负责人是 Oren Pike。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Velum restoration queue 当前负责人是 Mara Flint。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Mooring customs register 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Oren Pike"
+        ],
+        "judge_forbidden_facts": [
+          "Iris Vale",
+          "Niko Stern",
+          "Mara Flint"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

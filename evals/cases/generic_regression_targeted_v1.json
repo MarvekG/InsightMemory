@@ -1,0 +1,129 @@
+[
+  {
+    "case_id": "single_fact_team_plan",
+    "category": "single_fact_recall",
+    "description": "团队计划类记忆应可直接召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_regression_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Operations team 接下来先补监控告警，再做回归演练。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Operations team 接下来准备怎么做？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "补监控告警",
+          "回归演练"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "multi_hop_support_chain_why_query",
+    "category": "multi_hop_association",
+    "description": "主结论加日志证据再加操作缺口，应支持 why 查询。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_regression_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Orion rollout 当前主阻塞是配置漂移。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orion rollout 的部署日志显示配置漂移导致签名校验失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orion rollout 缺少配置基线校验流程。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么说 Orion rollout 现在被配置漂移阻塞，而且还有哪些相关缺口？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "配置漂移",
+          "签名校验失败",
+          "配置基线校验流程"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 3,
+          "supports": 1,
+          "related_to": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "associative_policy_with_supporting_note",
+    "category": "associative_query",
+    "description": "规则与审计说明应形成 supports 并支持 why 查询。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_regression_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Access recovery policy 要求所有临时权限在24小时内回收。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Access recovery policy 的审计备注显示临时权限回收经常超时。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Access recovery policy 会强调临时权限回收？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "24小时内回收",
+          "经常超时"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "supports": 1
+        }
+      }
+    }
+  }
+]

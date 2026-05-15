@@ -1,0 +1,85 @@
+[
+  {
+    "case_id": "format_email_thread_multi_subjects",
+    "category": "format_email_thread",
+    "description": "邮件线程格式中的多主体长文应拆出真正持久主体。",
+    "settle_timeout_seconds": 120,
+    "memory_scope_templates": {
+      "primary": "eval:generic_format_shift_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "From: ops@port.example\nTo: shift@port.example\nSubject: Juniper quay follow-up\n\nHi team,\n旧箱号、临时耳机、访客座位和茶歇安排都不用记。真正需要记住的只有四条：\n- Juniper quay docket 当前还不能归档，因为 mooring appendix 还没有补齐。\n- Juniper quay manual 当前要求所有 quay docket 在归档前补齐 mooring appendix 和 slip witness note。\n- Juniper quay review 当前负责人是 Orin Vale。\n- Juniper quay plan 当前目标是周五前补完 berth packet。\n\nRegards,\nOps coordinator",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Juniper quay docket 当前还不能归档？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "mooring appendix"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "format_chat_history_with_requirement",
+    "category": "format_chat_transcript",
+    "description": "聊天记录中的历史分歧、当前收敛与外部规则应一起回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_format_shift_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "[09:40] lead: Subject = Kestrel transit review\n[09:41] analyst: round 2 says the ballast memo must be attached before transfer\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "[10:20] coordinator: Kestrel transit review current decision has shifted to attach the ballast memo before re-scheduling transfer\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "[10:25] rule: Lagoon statute requires every transfer decision to include a ballast memo before execution\n",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Kestrel transit review 历史上有哪些分歧，当前又为什么收敛到现在的结论？",
+        "expected_status": "ok",
+        "citations_min": 1,
+      "non_empty_answer": true,
+      "judge_required_facts": [
+        "original window || 按 original window 进行 || proceeding on the original window || 原定窗口 || 原窗口",
+        "ballast memo",
+        "Lagoon statute"
+      ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

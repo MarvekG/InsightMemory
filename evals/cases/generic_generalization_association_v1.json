@@ -1,0 +1,484 @@
+[
+  {
+    "case_id": "generalization_policy_requirement",
+    "category": "generalization",
+    "description": "规则类主体应可稳定写入并回答明确要求。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Access recovery policy 要求所有临时权限在24小时内回收。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Access recovery policy 有什么要求？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "24小时内回收"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "generalization_runbook_condition",
+    "category": "generalization",
+    "description": "runbook 类主体应可回答恢复前条件。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Database failover runbook 恢复前必须完成只读流量切换演练。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Database failover runbook 恢复前必须满足什么条件？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "只读流量切换演练"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "generalization_person_preference",
+    "category": "generalization",
+    "description": "人物偏好在新场景下也应可召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Mina Chen 偏好在周四下午处理容量复盘。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Mina Chen 的偏好是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "周四下午",
+          "容量复盘"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "generalization_team_owner",
+    "category": "generalization",
+    "description": "团队主体应可稳定回答当前负责人。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Release coordination team 当前负责人是 Arjun Mehta。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Release coordination team 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Arjun Mehta"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "generalization_document_gap",
+    "category": "generalization",
+    "description": "文档缺口类记忆应可回答缺少什么。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Disaster recovery checklist 当前缺少数据库回切步骤。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Disaster recovery checklist 当前缺什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "数据库回切步骤"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "generalization_project_blocker",
+    "category": "generalization",
+    "description": "项目主体应可稳定回答当前 blocker。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Phoenix migration 当前主阻塞是审批单未签字。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Phoenix migration 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批单未签字"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "associative_supports_reason_query",
+    "category": "associative_query",
+    "description": "支持性证据应能被关联查询消费。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Orion deployment 当前主阻塞是配置漂移。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orion deployment 的部署日志显示配置漂移导致签名校验失败。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么说 Orion deployment 当前被配置漂移阻塞？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "配置漂移",
+          "签名校验失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "associative_related_context_query",
+    "category": "associative_query",
+    "description": "同主题相邻缺口应通过 related_to 被关联查询到。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Billing service 当前主阻塞是税率映射缺失。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Billing service 缺少税率模板校验流程。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Billing service 除了主阻塞外还有什么相关缺口？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "税率模板校验流程"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "related_to": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "associative_contradiction_uncertainty_query",
+    "category": "associative_query",
+    "description": "冲突记录应触发 uncertainty，并能在查询中表达分歧。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Launch review\nSession: review-7\nStage: decision\nRound: 1\nPosition: supportive\nSummary: 可以按原窗口上线。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Launch review\nSession: review-7\nStage: decision\nRound: 2\nPosition: opposing\nSummary: 必须先补回滚说明，不能直接上线。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Launch review 有什么分歧？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "required_uncertainty_prefixes": [
+          "contradicting_memory:"
+        ],
+        "judge_required_facts": [
+          "原窗口",
+          "回滚说明"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "contradicts": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "associative_history_chain_query",
+    "category": "associative_query",
+    "description": "更新链应支持历史演进查询。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Phoenix migration 当前主阻塞是审批单未签字。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Phoenix migration 当前主阻塞已经变成权限清单未确认。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Phoenix migration 之前卡过什么，后来又变成什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批单未签字",
+          "权限清单未确认"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 1,
+          "superseded": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 2,
+          "updates": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "associative_conditions_query",
+    "category": "associative_query",
+    "description": "长记录里的操作条件应能被聚合查询提取。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Identity migration review\nSession: identity-review-9\nStage: decision\nRound: 2\nPosition: supportive\nNotes: 会议认为 Identity migration 可以继续推进，但前提条件必须明确列出。第一，认证链路的回放样本需要已经补齐，用来确认旧令牌在新网关下不会大面积失效。第二，灰度组需要有明确的人工观察名单，知道要盯哪些告警和哪些用户样本。第三，正式切流前必须完成一次小批次回放。第四，切流后前四小时必须持续盯住登录失败率和令牌刷新延迟，只要任一指标异常就停止扩容。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Identity migration review 继续推进依赖哪些操作条件？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "小批次回放",
+          "登录失败率"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "associative_policy_with_supporting_note",
+    "category": "associative_query",
+    "description": "规则与审计说明应形成 supports 并支持 why 查询。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_generalization_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Access recovery policy 要求所有临时权限在24小时内回收。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Access recovery policy 的审计备注显示临时权限回收经常超时。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Access recovery policy 会强调临时权限回收？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "24小时内回收",
+          "经常超时"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "supports": 1
+        }
+      }
+    }
+  }
+]

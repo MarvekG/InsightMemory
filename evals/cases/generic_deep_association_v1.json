@@ -1,0 +1,294 @@
+[
+  {
+    "case_id": "deep_four_hop_requirement_chain",
+    "category": "deep_requirement_chain",
+    "description": "四层 requirement chain 下，why 查询应能串出主缺失项、直接要求和更上游要求。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_deep_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Sundial rollout 当前还不能进入执行阶段，因为 release packet 缺少 rollback annex。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Release checklist 要求所有 release packet 在进入执行阶段前补齐 rollback annex。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Control handbook 规定所有 rollback annex 还必须附 reviewer charter。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Uplink register 要求所有 reviewer charter 记录补齐 on-call roster。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Sundial rollout 还不能进入执行阶段？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback annex",
+          "Release checklist || checklist",
+          "reviewer charter || Control handbook || handbook",
+          "on-call roster || Uplink register || register"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deep_history_current_external_requirement",
+    "category": "deep_history_dependency",
+    "description": "earlier/current blocker 与外部 requirement 同时存在时，应能分别回答历史和当前 why。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_deep_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Torchline review 之前卡在 schema digest missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Torchline review 当前主阻塞已经变成 approval packet missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Approval checklist 要求所有 review 在进入执行前补齐 approval packet。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Torchline review 当前为什么还不能进入执行？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "approval packet",
+          "Approval checklist || checklist"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Torchline review 之前卡过什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "schema digest"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "deep_same_surface_multi_artifact_dependency",
+    "category": "deep_same_surface",
+    "description": "同名 project/checklist/plan/manual 并存并带外部依赖时，应稳定拆分并回答 why。",
+    "settle_timeout_seconds": 90,
+    "memory_scope_templates": {
+      "primary": "eval:generic_deep_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Mariner project 当前 blocker 是 export roster missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mariner checklist 当前要求补 export roster 和 seal ledger。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mariner plan 当前目标是下周完成 rehearsal packet。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mariner manual 当前要求所有 seal ledger 记录附 reviewer seal。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Mariner project 现在还不能推进？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "export roster",
+          "Mariner checklist || checklist",
+          "reviewer seal || Mariner manual || manual"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deep_conflict_history_with_requirement",
+    "category": "deep_conflict_history",
+    "description": "历史分歧、当前收敛结论和外部 requirement 同时存在时，应能答出分歧和当前约束。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_deep_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Dock review\nSession: dock-4\nStage: decision\nRound: 1\nPosition: supportive\nSummary: 可以按原窗口发船。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Dock review\nSession: dock-4\nStage: decision\nRound: 2\nPosition: opposing\nSummary: 必须先补 cargo variance ledger，不能直接发船。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Dock review 当前决定已经变成先补 cargo variance ledger 再重新排期发船。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Departure handbook 要求所有发船前决策补齐 cargo variance ledger。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Dock review 历史上有哪些分歧，当前又为什么收敛到现在的结论？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "required_uncertainty_prefixes": [
+          "contradicting_memory:"
+        ],
+        "judge_required_facts": [
+          "原窗口发船",
+          "cargo variance ledger",
+          "Departure handbook || handbook"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deep_noisy_long_chain",
+    "category": "deep_noisy_association",
+    "description": "长噪声文本里多层依赖链仍应能被 why 查询拉出。",
+    "settle_timeout_seconds": 90,
+    "memory_scope_templates": {
+      "primary": "eval:generic_deep_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "长操作纪要里提到旧货架、气味记录、午餐清单、走道温度和几位来访者名字，但真正结论是：Palisade transfer queue 当前还不能放行，因为 release folio 缺少 harbor annex。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Transfer checklist 要求所有 release folio 在放行前补齐 harbor annex。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Harbor manual 要求所有 harbor annex 再附 vessel duty roster。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Palisade transfer queue 还不能放行？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "harbor annex",
+          "Transfer checklist || checklist",
+          "vessel duty roster || Harbor manual || manual"
+        ],
+        "judge_forbidden_facts": [
+          "午餐清单",
+          "走道温度"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deep_mixed_language_requirement_history",
+    "category": "deep_mixed_language",
+    "description": "中英混合下，历史 blocker 与外部 requirement 应同时可问。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_deep_association_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Silverwake docket 之前卡在 deck seal note missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Silverwake docket 当前 still cannot proceed，因为 harbor packet 缺少 signed departure ledger。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Departure guide says every harbor packet must include a signed departure ledger before release.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Why can’t Silverwake docket proceed now, and what blocked it earlier?",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "signed departure ledger",
+          "Departure guide || guide",
+          "deck seal note"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

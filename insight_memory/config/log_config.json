@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "json": {
+      "()": "insight_memory.utils.logger.JsonFormatter",
+      "datefmt": "%Y-%m-%d %H:%M:%S"
+    },
+    "standard": {
+      "format": "[%(asctime)s %(process)d %(filename)s:%(lineno)d %(funcName)s %(levelname)s %(request_id)s] - %(message)s",
+      "datefmt": "%Y-%m-%d %H:%M:%S"
+    },
+    "access_standard": {
+      "()": "uvicorn.logging.AccessFormatter",
+      "format": "[%(asctime)s %(process)d %(levelprefix)s %(client_addr)s] - \"%(request_line)s\" %(status_code)s",
+      "datefmt": "%Y-%m-%d %H:%M:%S",
+      "use_colors": false
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "formatter": "standard",
+      "stream": "ext://sys.stdout"
+    },
+    "memory_file": {
+      "()": "insight_memory.utils.logger.create_runtime_file_handler",
+      "formatter": "standard",
+      "filename": "memory.log",
+      "max_bytes": 10485760,
+      "backup_count": 5,
+      "encoding": "utf-8",
+      "delay": false
+    },
+    "memory_access_file": {
+      "()": "insight_memory.utils.logger.create_runtime_file_handler",
+      "formatter": "access_standard",
+      "filename": "memory.log",
+      "max_bytes": 10485760,
+      "backup_count": 5,
+      "encoding": "utf-8",
+      "delay": false
+    },
+    "uvicorn_console": {
+      "class": "logging.StreamHandler",
+      "formatter": "standard",
+      "stream": "ext://sys.stdout"
+    },
+    "uvicorn_access_console": {
+      "class": "logging.StreamHandler",
+      "formatter": "access_standard",
+      "stream": "ext://sys.stdout"
+    }
+  },
+  "loggers": {
+    "uvicorn": {
+      "level": "INFO",
+      "handlers": [
+        "uvicorn_console",
+        "memory_file"
+      ],
+      "propagate": false
+    },
+    "uvicorn.error": {
+      "level": "INFO",
+      "handlers": [
+        "uvicorn_console",
+        "memory_file"
+      ],
+      "propagate": false
+    },
+    "uvicorn.access": {
+      "level": "WARNING",
+      "handlers": [],
+      "propagate": false
+    },
+    "insight_memory": {
+      "level": "DEBUG",
+      "handlers": [
+        "console",
+        "memory_file"
+      ],
+      "propagate": false
+    },
+    "memory": {
+      "level": "DEBUG",
+      "handlers": [
+        "console",
+        "memory_file"
+      ],
+      "propagate": false
+    }
+  },
+  "root": {
+    "level": "INFO",
+    "handlers": [
+      "console",
+      "memory_file"
+    ]
+  }
+}

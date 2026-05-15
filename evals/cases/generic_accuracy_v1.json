@@ -1,0 +1,1507 @@
+[
+  {
+    "case_id": "gate_ingest_accept_service",
+    "category": "gate_ingest",
+    "description": "具名服务主体应成功写入。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败，需要先回滚。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "memory_status_counts": {
+          "active": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 1
+        },
+        "required_memory_texts": [
+          "数据库迁移失败"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gate_ingest_accept_person",
+    "category": "gate_ingest",
+    "description": "具名人物主体应成功写入。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Jordan Lee 偏好把事故复盘安排在周一上午。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "memory_status_counts": {
+          "active": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 1
+        },
+        "required_memory_texts": [
+          "周一上午"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gate_ingest_reject_subjectless",
+    "category": "gate_ingest",
+    "description": "没有稳定主体时应拒绝写入。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "现在的情况比较复杂，需要尽快处理。",
+        "expected_status": "rejected"
+      }
+    ],
+    "queries": [],
+    "expected": {
+      "primary": {
+        "entity_count": 0,
+        "memory_count": 0,
+        "observation_count": 0
+      }
+    }
+  },
+  {
+    "case_id": "gate_ingest_reject_noise",
+    "category": "gate_ingest",
+    "description": "只有抽象噪声描述时应拒绝写入。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "流程、规范、注意事项都还没统一，但这里没有明确主体。",
+        "expected_status": "rejected"
+      }
+    ],
+    "queries": [],
+    "expected": {
+      "primary": {
+        "entity_count": 0,
+        "memory_count": 0,
+        "observation_count": 0
+      }
+    }
+  },
+  {
+    "case_id": "gate_query_accept_issue",
+    "category": "gate_query",
+    "description": "具名主体 query 应进入 recall 并返回答案。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败，需要先回滚。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "gate_query_reject_subjectless",
+    "category": "gate_query",
+    "description": "没有主体的 query 应直接拒绝。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败，需要先回滚。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "现在怎么样？",
+        "expected_status": "rejected",
+        "expected_error_code": "cannot_resolve_query_identity"
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "single_fact_preference",
+    "category": "single_fact_recall",
+    "description": "单条偏好记忆应可直接召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Jordan Lee 偏好每周一上午看事故复盘。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Jordan Lee 的偏好是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "周一上午",
+          "事故复盘"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "single_fact_requirement",
+    "category": "single_fact_recall",
+    "description": "单条要求记忆应可直接召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Quarterly planning doc 恢复前必须补充回滚说明。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Quarterly planning doc 恢复前必须满足什么要求？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "回滚说明"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "single_fact_owner",
+    "category": "single_fact_recall",
+    "description": "单条负责人记忆应可直接召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Billing service 当前负责人是 Nina Park。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Billing service 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Nina Park"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "update_replace_blocker",
+    "category": "update_replace",
+    "description": "新 blocker 应替换旧 blocker。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas rollout 当前主阻塞已经变成签名校验失败。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "签名校验失败"
+        ],
+        "judge_forbidden_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 1,
+          "superseded": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 2,
+          "updates": 1
+        },
+        "required_memory_texts": [
+          "数据库迁移失败",
+          "签名校验失败"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "update_replace_owner",
+    "category": "update_replace",
+    "description": "新负责人应替换旧负责人。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Billing service 当前负责人是 Nina Park。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Billing service 当前负责人现在改成 Owen Tan。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Billing service 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Owen Tan"
+        ],
+        "judge_forbidden_facts": [
+          "Nina Park"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 1,
+          "superseded": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 2,
+          "updates": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "coexist_history_session_notes",
+    "category": "coexist_history",
+    "description": "会话有界历史记录应并存。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Atlas retrospective\nSession: retro-1\nStage: review\nRound: 1\nPosition: supportive\nSummary: 可以按原窗口推进。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Atlas retrospective\nSession: retro-1\nStage: review\nRound: 2\nPosition: neutral\nSummary: 先确认回滚说明再决定是否推进。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas retrospective 历史记录是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "历史记录"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 2
+        },
+        "edge_type_counts": {
+          "derived_from": 2
+        }
+      }
+    }
+  },
+  {
+    "case_id": "coexist_history_meeting_rounds",
+    "category": "coexist_history",
+    "description": "不同轮次的会议记录应并存。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Launch review\nSession: review-1\nStage: alignment\nRound: 1\nPosition: supportive\nSummary: 先按原计划上线。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Launch review\nSession: review-1\nStage: alignment\nRound: 2\nPosition: opposing\nSummary: 必须先补回滚说明，不能直接上线。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Launch review 历史记录是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 2
+        },
+        "edge_type_counts": {
+          "derived_from": 2
+        }
+      }
+    }
+  },
+  {
+    "case_id": "relation_supports",
+    "category": "relation_graph",
+    "description": "补充证据型记忆应形成 supports 关系。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Orion release 当前主阻塞是配置漂移。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orion release 的部署日志显示配置漂移导致签名校验失败。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Orion release 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "配置漂移"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "relation_contradicts",
+    "category": "relation_graph",
+    "description": "相反立场记录应形成 contradicts 并在 recall 中暴露 uncertainty。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Launch review\nSession: review-1\nStage: decision\nRound: 1\nPosition: supportive\nSummary: 可以按原计划上线。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Launch review\nSession: review-1\nStage: decision\nRound: 2\nPosition: opposing\nSummary: 不应按原计划上线，必须先补回滚说明。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Launch review 最新记录是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "required_uncertainty_prefixes": [
+          "contradicting_memory:"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "contradicts": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "relation_related_to",
+    "category": "relation_graph",
+    "description": "同主题但不相互支持或冲突的记录应形成 related_to。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Billing service 当前主阻塞是税率映射缺失。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Billing service 缺少税率模板校验流程。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Billing service 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "税率"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "related_to": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "same_name_disambiguation_project",
+    "category": "same_name_disambiguation",
+    "description": "同名主体在不同上下文下应拆成不同 entity。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas 是发布项目，当前主阻塞是数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas 是知识文档，当前缺少回滚说明。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas 发布项目 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "数据库迁移失败"
+        ],
+        "judge_forbidden_facts": [
+          "回滚说明"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "same_name_disambiguation_document",
+    "category": "same_name_disambiguation",
+    "description": "同名主体的另一个上下文也应可被正确召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas 是发布项目，当前主阻塞是数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas 是知识文档，当前缺少回滚说明。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas 文档 当前缺什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "回滚说明"
+        ],
+        "judge_forbidden_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "scope_isolation_primary",
+    "category": "scope_isolation",
+    "description": "不同 scope 下相同主体的记忆不得串用，primary 应返回自己的内容。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}:primary",
+      "secondary": "eval:generic_accuracy_v1:{run_id}:{case_id}:secondary"
+    },
+    "writes": [
+      {
+        "scope": "primary",
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "scope": "secondary",
+        "context": "Atlas rollout 当前主阻塞是签名校验失败。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "scope": "primary",
+        "query": "Atlas rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "数据库迁移失败"
+        ],
+        "judge_forbidden_facts": [
+          "签名校验失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      },
+      "secondary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 0
+      }
+    }
+  },
+  {
+    "case_id": "scope_isolation_secondary",
+    "category": "scope_isolation",
+    "description": "不同 scope 下相同主体的记忆不得串用，secondary 应返回自己的内容。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}:primary",
+      "secondary": "eval:generic_accuracy_v1:{run_id}:{case_id}:secondary"
+    },
+    "writes": [
+      {
+        "scope": "primary",
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "scope": "secondary",
+        "context": "Atlas rollout 当前主阻塞是签名校验失败。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "scope": "secondary",
+        "query": "Atlas rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "签名校验失败"
+        ],
+        "judge_forbidden_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 0
+      },
+      "secondary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "citation_grounding_issue",
+    "category": "citation_grounding",
+    "description": "单条事实 recall 必须带 observation citation。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Orion release 当前主阻塞是配置漂移。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Orion release 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "配置漂移"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "citation_grounding_history",
+    "category": "citation_grounding",
+    "description": "历史记录 recall 也必须带 citation。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Atlas retrospective\nSession: retro-7\nStage: notes\nRound: 1\nPosition: supportive\nSummary: 先修数据库映射再推进。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas retrospective 最新历史记录是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "history_vs_current_current_query",
+    "category": "history_vs_current",
+    "description": "问当前时应优先返回当前记忆。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 之前卡在数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas rollout 当前主阻塞是签名校验失败。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "签名校验失败"
+        ],
+        "judge_forbidden_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "history_vs_current_history_query",
+    "category": "history_vs_current",
+    "description": "问历史时应能提到之前的记录。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 之前卡在数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas rollout 当前主阻塞是签名校验失败。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 之前卡过什么问题？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "gate_query_accept_document",
+    "category": "gate_query",
+    "description": "具名文档 query 应进入 recall。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Quarterly planning doc 当前缺少回滚说明。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Quarterly planning doc 当前缺什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "回滚说明"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "gate_query_reject_abstract",
+    "category": "gate_query",
+    "description": "抽象 query 不应退化成全库检索。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Billing service 当前负责人是 Nina Park。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "还有什么要注意？",
+        "expected_status": "rejected",
+        "expected_error_code": "cannot_resolve_query_identity"
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "single_fact_policy",
+    "category": "single_fact_recall",
+    "description": "规则类记忆应可直接召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Access policy 要求所有临时权限在24小时内回收。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Access policy 有什么要求？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "24小时内回收"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "single_fact_team_plan",
+    "category": "single_fact_recall",
+    "description": "团队计划类记忆应可直接召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Operations team 接下来先补监控告警，再做回归演练。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Operations team 接下来准备怎么做？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "补监控告警",
+          "回归演练"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "update_replace_requirement",
+    "category": "update_replace",
+    "description": "要求更新后应返回最新约束。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Access policy 当前要求所有临时权限在24小时内回收。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Access policy 当前要求所有临时权限在12小时内回收。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Access policy 当前要求是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "12小时内回收"
+        ],
+        "judge_forbidden_facts": [
+          "24小时内回收"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 1,
+          "superseded": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 2,
+          "updates": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "history_person_records",
+    "category": "coexist_history",
+    "description": "人物会话历史记录也应并存。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Jordan Lee\nSession: coaching-1\nStage: notes\nRound: 1\nPosition: supportive\nSummary: 同意先补告警再发版。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Jordan Lee\nSession: coaching-1\nStage: notes\nRound: 2\nPosition: opposing\nSummary: 反对直接发版，要求先补回滚演练。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Jordan Lee 最新历史记录是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 2
+        },
+        "edge_type_counts": {
+          "derived_from": 2
+        }
+      }
+    }
+  },
+  {
+    "case_id": "longform_history_extract_latest_position",
+    "category": "coexist_history",
+    "description": "长段历史记录里应能提炼出最新立场和关键点。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Atlas rollout review\nSession: rollout-review-9\nStage: cross_review\nRound: 1\nPosition: supportive\nNotes: 在第一轮复盘里，参与者普遍认为 Atlas rollout 仍然可以按原窗口推进，核心理由是数据库迁移脚本已经修完、监控项也补齐了，唯一需要注意的是在灰度前再做一次抽样回归，避免把旧配置误带到新批次里。大家当时倾向于先保留原窗口，但要求上线前补一轮抽样验证和灰度观察。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Atlas rollout review\nSession: rollout-review-9\nStage: cross_review\nRound: 2\nPosition: opposing\nNotes: 到第二轮时，结论发生了变化。新的反对意见认为 Atlas rollout 现在不应按原窗口推进，原因不是数据库脚本本身，而是回滚演练还没有完成，同时注册链路的告警压测结果也没有补齐。如果在这两个前提都缺失的情况下直接推进，一旦上线后出现签名错误或注册流量抖动，现场将很难快速回退。因此本轮更倾向于先补回滚演练和注册链路压测，再重新评估发布时间。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout review 最新历史记录的关键点是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "回滚演练",
+          "注册链路压测"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 2
+        },
+        "edge_type_counts": {
+          "derived_from": 2
+        }
+      }
+    }
+  },
+  {
+    "case_id": "longform_history_extract_support_points",
+    "category": "relation_graph",
+    "description": "长段支持性记录里应能提炼出支持点。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Billing cutover discussion\nSession: billing-cutover-4\nStage: review\nRound: 1\nPosition: supportive\nNotes: 这轮讨论整体偏支持继续推进 Billing cutover，但支持的前提讲得比较细。记录里反复提到，之所以还能继续推进，是因为现有异常已经集中在少数税率模板，主账单链路本身没有再出现重复结算；另外，财务侧已经完成抽样对账，说明核心账单口径没有被破坏。支持方真正强调的推进条件其实有两个：一是仍然必须分批切换，不能一次性全量放开；二是在每一批切换前，都要先抽样核验账单和税率映射，确保问题范围被限制在可回滚窗口内。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Billing cutover discussion 这条历史记录里的支持点是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "分批切换",
+          "抽样核验账单"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "longform_history_extract_opposing_points",
+    "category": "relation_graph",
+    "description": "长段反对性记录里应能提炼出主要反对点。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Launch review board\nSession: launch-board-12\nStage: decision\nRound: 3\nPosition: opposing\nNotes: 这轮记录明确反对按当前窗口直接发版。反对意见不是泛泛而谈，而是集中在两个未解决的点上：第一，补偿审批链路还没有在预发走通，意味着一旦上线后出现误扣费或邀请失败，现场没有可靠的补救路径；第二，注册链路虽然功能能跑通，但高峰压测还没有补齐，无法确认告警阈值和扩容动作是否能覆盖真实流量。如果在这种状态下直接放量，团队将同时面对补偿、注册和回滚三条线的压力，因此这条历史记录最后建议先补审批链路验证和高峰压测，再考虑是否继续发版。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Launch review board 这条历史记录里主要反对点是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "补偿审批链路",
+          "高峰压测"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "longform_history_extract_operational_conditions",
+    "category": "coexist_history",
+    "description": "长段历史记录里应能提炼继续推进所依赖的操作条件。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Identity migration review\nSession: identity-review-5\nStage: decision\nRound: 2\nPosition: supportive\nNotes: 这轮会议对继续推进 Identity migration 持谨慎支持态度，但支持并不是无条件的。记录里反复强调，能够继续推进的前提首先是认证链路的回放样本已经补齐，说明旧令牌在新网关下不会出现大面积失效；其次是灰度组已经有明确的人工观察名单，现场知道要盯哪些告警和哪些用户样本。除此之外，会议还强调两个执行条件不能省略：一是在正式切流前必须做一次小批次回放，二是在切流后前四小时必须由值班同学持续盯住登录失败率和令牌刷新延迟，只要这两个指标异常就立刻停止扩容。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Identity migration review 这条长历史记录里继续推进依赖哪些操作条件？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "小批次回放",
+          "登录失败率"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "longform_history_extract_pause_reason",
+    "category": "coexist_history",
+    "description": "长段历史记录里应能提炼暂停推进的核心原因。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Archive cleanup board\nSession: cleanup-board-2\nStage: review\nRound: 4\nPosition: opposing\nNotes: 这条记录最后建议暂停 Archive cleanup board 当前窗口下的清理动作。原因不是磁盘本身不够，而是对象恢复链路还没有在真实样本上走通，一旦误删了带有合规保留要求的旧对象，现场没有可靠的方法在限定时间内恢复；另外，归档分层策略虽然已经写进文档，但真正的目录级豁免列表还没有经过业务确认，这意味着批量清理时很可能把仍在被审计流程引用的目录一起删掉。会议最后把暂停原因收束成两点：恢复演练缺失，以及豁免清单未确认。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Archive cleanup board 这条历史记录里为什么建议暂停推进？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "恢复演练",
+          "豁免清单"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "longform_history_extract_recovery_plan",
+    "category": "coexist_history",
+    "description": "长段历史记录里应能提炼建议的恢复计划。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Messaging rollback review\nSession: rollback-review-7\nStage: followup\nRound: 3\nPosition: supportive\nNotes: 在这轮 followup 记录里，团队没有主张立刻恢复全量流量，而是给出了一套较长的恢复计划。记录中提到，首先需要把失败样本按模板错误和超时错误分成两组，分别回放，确认新的重试策略不会把同一批消息重复投递；其次，恢复顺序必须从内部通知通道开始，再逐步扩到外部通道，过程中每扩一批都要核对消息去重率和补偿队列长度。会议最后给出的建议是：先做分组回放，再做内部通道灰度，最后再扩到外部通道，并且每一步都要带去重率和补偿队列监控。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Messaging rollback review 这条历史记录里建议的恢复计划是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "分组回放",
+          "内部通道灰度"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "longform_history_extract_tradeoff_summary",
+    "category": "coexist_history",
+    "description": "长段历史记录里应能提炼主要取舍。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Docs portal redesign\nSession: portal-redesign-11\nStage: cross_review\nRound: 2\nPosition: supportive\nNotes: 这条记录并不是简单地支持 Docs portal redesign，而是把主要取舍讲得很长。会议认为继续推进的价值在于统一入口和降低维护成本，尤其是现有多套导航已经让新成员很难快速找到版本说明；但同时也承认，推进后的短期代价是迁移脚本和内容校验工作量都会上升，编辑团队需要在未来两周承担额外校对成本。最终记录把取舍总结成一句话：接受短期迁移和校对成本，以换取统一入口、减少重复维护和更清晰的版本导航。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Docs portal redesign 这条历史记录里的主要取舍是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "短期迁移和校对成本",
+          "统一入口"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "longform_history_extract_open_questions",
+    "category": "coexist_history",
+    "description": "长段历史记录里应能提炼尚未解决的问题。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Team onboarding refresh\nSession: onboarding-refresh-6\nStage: review\nRound: 1\nPosition: neutral\nNotes: 这条记录没有直接给出推进或暂停结论，而是把 Team onboarding refresh 还没解决的问题列得很清楚。记录里提到，现有清单虽然已经覆盖账号开通、环境准备和值班说明，但仍然缺两类关键材料：第一，新人第一周常见故障清单还没有整理，导致很多问题只能靠口头传递；第二，跨团队联系人和升级路径没有写进统一入口，新人在遇到权限、监控或发布问题时仍然不知道应该联系谁。会议最后把未解决问题归纳成两点：缺少常见故障清单，以及缺少跨团队联系人和升级路径。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Team onboarding refresh 这条历史记录里还有哪些未解决问题？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "常见故障清单",
+          "升级路径"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "longform_history_latest_round_overrides_earlier_round",
+    "category": "coexist_history",
+    "description": "多轮长历史记录下，询问最新记录时应更偏向最后一轮关键点。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_accuracy_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Payments fallback review\nSession: payments-fallback-8\nStage: decision\nRound: 1\nPosition: supportive\nNotes: 在第一轮里，团队基本支持继续推进 Payments fallback review，理由是当前主链路的超时率已经下降，熔断阈值也重新校准过。记录当时认为，只要把兜底模板再做一次抽样回放，就可以按原计划在本周内推进。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Payments fallback review\nSession: payments-fallback-8\nStage: decision\nRound: 2\nPosition: opposing\nNotes: 第二轮长记录把结论改成了暂停。新的反对意见集中在两个后来暴露的问题上：一是客服补偿工具还没有跟新的兜底模板打通，意味着如果出现误触发，现场处理会很慢；二是外部通道的峰值压测结果还没补齐，无法判断扩容规则在真实流量下是否足够保守。最终这轮建议先补客服补偿工具联调和峰值压测，再决定是否继续推进。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Payments fallback review 最新这轮历史记录的关键点是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "客服补偿工具",
+          "峰值压测"
+        ],
+        "judge_forbidden_facts": [
+          "按原计划在本周内推进"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 2
+        },
+        "edge_type_counts": {
+          "derived_from": 2
+        }
+      }
+    }
+  }
+]

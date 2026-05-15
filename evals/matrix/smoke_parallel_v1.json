@@ -1,0 +1,18 @@
+{
+  "matrix_id": "smoke_parallel_v1",
+  "description": "Two-suite smoke matrix for validating concurrent suite execution.",
+  "suites": [
+    {
+      "suite_id": "smoke_a",
+      "description": "Tiny smoke suite A.",
+      "cases": "../cases/generic_matrix_smoke_v1.json",
+      "settle_timeout_seconds": 60
+    },
+    {
+      "suite_id": "smoke_b",
+      "description": "Tiny smoke suite B.",
+      "cases": "../cases/generic_matrix_smoke_v1.json",
+      "settle_timeout_seconds": 60
+    }
+  ]
+}

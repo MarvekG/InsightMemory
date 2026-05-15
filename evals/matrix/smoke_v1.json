@@ -1,0 +1,12 @@
+{
+  "matrix_id": "smoke_v1",
+  "description": "Real-service smoke matrix for single-subject and multi-subject recall.",
+  "suites": [
+    {
+      "suite_id": "smoke",
+      "description": "Smoke suite for ingest, single recall, and 2-5 subject recall.",
+      "cases": "../cases/generic_matrix_smoke_v1.json",
+      "settle_timeout_seconds": 60
+    }
+  ]
+}

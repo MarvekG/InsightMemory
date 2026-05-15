@@ -1,0 +1,300 @@
+[
+  {
+    "case_id": "customer_onboarding_handoff",
+    "category": "realworld_work_customer_onboarding",
+    "description": "客户 onboarding、billing、support 三条真实协作记忆相邻，查询资料缺失时不能混入账单联系人或支持负责人。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_work_ops_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "KiteWorks onboarding 的 kickoff 资料还缺 signed DPA，客户要求下周一前放到 shared drive。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "KiteWorks billing setup 已经确认 invoice contact 是 Dana Lee。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "KiteWorks support channel 由 Priya 负责监控首周问题。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "KiteWorks onboarding 还缺什么资料？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "signed DPA",
+          "shared drive || 下周一"
+        ],
+        "judge_forbidden_facts": [
+          "Dana Lee",
+          "Priya",
+          "support channel"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "KiteWorks billing setup 的 invoice contact 是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Dana Lee"
+        ],
+        "judge_forbidden_facts": [
+          "signed DPA",
+          "Priya"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "hiring_loop_feedback",
+    "category": "realworld_work_hiring",
+    "description": "招聘面试流里 backend、frontend、take-home repo 都有 Orchid 前缀，查询时要按具体对象回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_work_ops_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Orchid backend interview loop 还缺系统设计面试官的 written feedback，recruiter 想在周二中午前收齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orchid frontend interview loop 已经完成 debrief，next step 是 offer calibration。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orchid backend take-home repo 的评分 rubric 已经锁定。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Orchid backend interview loop 现在缺哪条反馈？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "written feedback",
+          "系统设计面试官"
+        ],
+        "judge_forbidden_facts": [
+          "frontend interview loop",
+          "offer calibration",
+          "评分 rubric"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Orchid frontend interview loop 的下一步是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "offer calibration"
+        ],
+        "judge_forbidden_facts": [
+          "written feedback",
+          "take-home repo"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "vendor_procurement_shipping",
+    "category": "realworld_work_procurement",
+    "description": "采购、收货 dock、财务规则属于同一办公流程，但直接查询 PO 阻塞时不能带入收货时间。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_work_ops_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Harbor printer procurement 还不能下 PO，因为 vendor W-9 form 没收到。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Harbor delivery dock 周四 13:00-15:00 给大件设备预留了 slot。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Harbor finance note 说 PO 超过 5000 美元需要 department approval。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Harbor printer procurement 为什么还不能下 PO？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "vendor W-9 form"
+        ],
+        "judge_forbidden_facts": [
+          "delivery dock",
+          "13:00-15:00"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Harbor delivery dock 的 slot 是什么时候？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "周四 13:00-15:00"
+        ],
+        "judge_forbidden_facts": [
+          "vendor W-9 form",
+          "department approval"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "legal_contract_redline_update",
+    "category": "realworld_work_contract",
+    "description": "合同初版和红线更新要体现当前版本，同时不能把相邻 security questionnaire 的缺项混入合同答案。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_work_ops_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Nova vendor contract 初版要求 30-day termination notice。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Nova vendor contract 红线更新：termination notice 改成 45 days，且需要 mutual written approval。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Nova security questionnaire 还缺 data retention answer。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Nova vendor contract 现在 termination notice 是什么要求？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "45 days",
+          "mutual written approval"
+        ],
+        "judge_forbidden_facts": [
+          "30-day",
+          "data retention answer"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Nova security questionnaire 还缺什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "data retention answer"
+        ],
+        "judge_forbidden_facts": [
+          "termination notice",
+          "45 days"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "training_policy_and_deck_review",
+    "category": "realworld_work_training",
+    "description": "培训资料、入职清单、QBR deck 是真实职场里常见的邻近记忆，查询时要按对象边界回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_work_ops_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Mercury sales enablement session 的 replay recording 还没上传到 LMS。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mercury new-hire checklist 要求入职前三天完成 security briefing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mercury QBR deck 已经由 Leo 做 final review。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Mercury sales enablement session 还缺什么上传？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "replay recording",
+          "LMS"
+        ],
+        "judge_forbidden_facts": [
+          "security briefing",
+          "QBR deck",
+          "Leo"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Mercury new-hire checklist 对入职前三天有什么要求？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "security briefing",
+          "入职前三天"
+        ],
+        "judge_forbidden_facts": [
+          "replay recording",
+          "final review"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

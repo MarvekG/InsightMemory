@@ -1,0 +1,91 @@
+[
+  {
+    "case_id": "heterogeneous_single_document_four_subjects",
+    "category": "heterogeneous_long_doc",
+    "description": "单篇长文里混合四个同前缀主体和大量噪声时，应拆出真正持久的四个主体。",
+    "settle_timeout_seconds": 60,
+    "memory_scope_templates": {
+      "primary": "eval:generic_heterogeneous_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "长维修纪要里提到旧桌签、观众耳机、零食箱、走道灯泡和几位访客名字，但真正的持久结论有四条：Nacre berth queue 当前不能进入下一阶段，因为 hatch seal appendix 还没有补齐；Nacre berth manual 当前要求所有 berth packet 补齐 hatch seal appendix 和 dock witness tag；Nacre berth review 当前负责人是 Elian March；Nacre berth plan 当前目标是下周补完 ballast packet。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Nacre berth queue 当前不能进入下一阶段？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "hatch seal appendix"
+        ],
+        "judge_forbidden_facts": [
+          "零食箱",
+          "观众耳机"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "heterogeneous_history_disagreement_with_rule",
+    "category": "heterogeneous_history_rule",
+    "description": "历史分歧、当前收敛和外部规则同时存在时，应答出分歧和收敛原因。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_heterogeneous_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Mica transit review\nSession: mica-7\nStage: decision\nRound: 1\nPosition: supportive\nSummary: 可以按原窗口转运。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Mica transit review\nSession: mica-7\nStage: decision\nRound: 2\nPosition: opposing\nSummary: 必须先补 ballast variance note，不能直接转运。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mica transit review 当前决定已经变成先补 ballast variance note 再重新排期转运。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Departure ordinance 要求所有转运前决策补齐 ballast variance note。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Mica transit review 历史上有哪些分歧，当前又为什么收敛到现在的结论？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "required_uncertainty_prefixes": [
+          "contradicting_memory:"
+        ],
+        "judge_required_facts": [
+          "原窗口转运",
+          "ballast variance note",
+          "Departure ordinance || ordinance"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

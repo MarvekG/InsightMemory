@@ -1,0 +1,320 @@
+[
+  {
+    "case_id": "large_scope_dense_entity_field",
+    "category": "large_scope_density",
+    "description": "单 scope 下 12 个独立主体同时写入，查询任一主体时应精准命中，不混淆。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_large_scope_graph_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {"context": "Verdant project 当前 blocker 是 migration script 未通过 staging 验证。", "expected_status": "accepted"},
+      {"context": "Pinnacle rollout 计划在下周二进入 cutover，前提是 rollback packet 已准备。", "expected_status": "accepted"},
+      {"context": "Cresthaven transfer 当前还需要补齐 harbor annex 和 duty roster。", "expected_status": "accepted"},
+      {"context": "Ironfield handbook 当前要求所有 release packet 在进入执行前补齐 seal ledger。", "expected_status": "accepted"},
+      {"context": "Meadowgate roster 本周值班负责人是 Lena Ortiz。", "expected_status": "accepted"},
+      {"context": "Brookside ledger 记录显示 Q3 的 cargo variance 仍在审核中。", "expected_status": "accepted"},
+      {"context": "Thornwood charter 最新修订要求所有 departure note 附 reviewer seal。", "expected_status": "accepted"},
+      {"context": "Willowmere guide 当前版本缺少 emergency contact 章节。", "expected_status": "accepted"},
+      {"context": "Stonehaven manual 规定所有 equipment check 必须每 48 小时执行一次。", "expected_status": "accepted"},
+      {"context": "Clearwater record 显示上周的 audit finding 已经关闭。", "expected_status": "accepted"},
+      {"context": "Redwood register 要求所有 visitor log 在进入 facility 前签字确认。", "expected_status": "accepted"},
+      {"context": "Northgate packet 当前还需要补充 risk assessment annex。", "expected_status": "accepted"}
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Verdant project 当前 blocker 是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "migration script",
+          "staging 验证"
+        ],
+        "judge_forbidden_facts": [
+          "cutover",
+          "harbor annex",
+          "seal ledger"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Ironfield handbook 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "seal ledger",
+          "release packet"
+        ],
+        "judge_forbidden_facts": [
+          "Lena Ortiz",
+          "cargo variance",
+          "emergency contact"
+        ]
+      },
+      {
+        "query_id": "q3",
+        "query": "Stonehaven manual 对 equipment check 有什么规定？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "48 小时"
+        ],
+        "judge_forbidden_facts": [
+          "risk assessment",
+          "visitor log",
+          "departure note"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 12,
+        "memory_count": 12,
+        "observation_count": 12,
+        "recall_audit_count": 3
+      }
+    }
+  },
+  {
+    "case_id": "large_scope_same_prefix_split",
+    "category": "large_scope_same_surface",
+    "description": "多组同前缀 artifact 同时存在时不应塌缩或合并，查询应命中正确 artifact。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_large_scope_graph_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {"context": "Verdant project 当前 blocker 是 migration script 未通过 staging 验证。", "expected_status": "accepted"},
+      {"context": "Verdant checklist 当前要求补齐 migration script、rollback note 和 seal ledger。", "expected_status": "accepted"},
+      {"context": "Verdant handbook 规定所有 rollback note 必须附 incident owner 签名。", "expected_status": "accepted"},
+      {"context": "Verdant plan 当前目标是下周完成 rehearsal packet。", "expected_status": "accepted"},
+      {"context": "Verdant register 要求所有 rehearsal packet 在进入执行前补齐 duty roster。", "expected_status": "accepted"}
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Verdant handbook 当前规定什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "incident owner",
+          "rollback note"
+        ],
+        "judge_forbidden_facts": [
+          "migration script",
+          "rehearsal packet",
+          "duty roster"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Verdant checklist 当前要求补齐什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "migration script",
+          "rollback note",
+          "seal ledger"
+        ],
+        "judge_forbidden_facts": [
+          "incident owner",
+          "rehearsal packet"
+        ]
+      },
+      {
+        "query_id": "q3",
+        "query": "Verdant plan 当前目标是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rehearsal packet"
+        ],
+        "judge_forbidden_facts": [
+          "migration script",
+          "incident owner"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 5,
+        "memory_count": 5,
+        "observation_count": 5,
+        "recall_audit_count": 3
+      }
+    }
+  },
+  {
+    "case_id": "large_scope_cross_entity_shared_blocker",
+    "category": "large_scope_cross_entity",
+    "description": "多个主体共享同一外部 requirement，但不应串记忆或误合并。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_large_scope_graph_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {"context": "Pinnacle rollout 当前还不能进入 cutover，因为 transfer packet 缺少 harbor annex。", "expected_status": "accepted"},
+      {"context": "Cresthaven transfer 当前也不能放行，因为 release folio 同样缺少 harbor annex。", "expected_status": "accepted"},
+      {"context": "Meadowgate roster 要求所有涉及 harbor annex 的 packet 在进入执行前补齐 reviewer seal。", "expected_status": "accepted"},
+      {"context": "Ironfield handbook 当前要求所有 release packet 在进入执行前补齐 seal ledger。", "expected_status": "accepted"},
+      {"context": "Brookside ledger 记录显示 Q3 的 cargo variance 仍在审核中。", "expected_status": "accepted"}
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Pinnacle rollout 现在还不能进入 cutover？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "harbor annex",
+          "transfer packet",
+          "reviewer seal || Meadowgate roster || roster"
+        ],
+        "judge_forbidden_facts": [
+          "release folio",
+          "Cresthaven transfer",
+          "cargo variance"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "为什么 Cresthaven transfer 现在还不能放行？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "harbor annex",
+          "release folio",
+          "reviewer seal || Meadowgate roster || roster"
+        ],
+        "judge_forbidden_facts": [
+          "transfer packet",
+          "Pinnacle rollout",
+          "cargo variance"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 5,
+        "memory_count": 5,
+        "observation_count": 5,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "large_scope_ambiguity_resilience",
+    "category": "large_scope_ambiguity",
+    "description": "大量候选主体存在时，明确命名的查询不应退化到 ambiguous。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_large_scope_graph_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {"context": "Thornwood charter 最新修订要求所有 departure note 附 reviewer seal。", "expected_status": "accepted"},
+      {"context": "Willowmere guide 当前版本缺少 emergency contact 章节。", "expected_status": "accepted"},
+      {"context": "Stonehaven manual 规定所有 equipment check 必须每 48 小时执行一次。", "expected_status": "accepted"},
+      {"context": "Clearwater record 显示上周的 audit finding 已经关闭。", "expected_status": "accepted"},
+      {"context": "Redwood register 要求所有 visitor log 在进入 facility 前签字确认。", "expected_status": "accepted"},
+      {"context": "Northgate packet 当前还需要补充 risk assessment annex。", "expected_status": "accepted"},
+      {"context": "Pinnacle rollout 计划在下周二进入 cutover，前提是 rollback packet 已准备。", "expected_status": "accepted"},
+      {"context": "Cresthaven transfer 当前还需要补齐 harbor annex 和 duty roster。", "expected_status": "accepted"},
+      {"context": "Verdant project 当前 blocker 是 migration script 未通过 staging 验证。", "expected_status": "accepted"},
+      {"context": "Meadowgate roster 本周值班负责人是 Lena Ortiz。", "expected_status": "accepted"}
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Willowmere guide 当前版本缺少什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "emergency contact"
+        ],
+        "judge_forbidden_facts": [
+          "audit finding",
+          "visitor log",
+          "risk assessment"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Redwood register 对 visitor log 有什么要求？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "签字确认",
+          "facility"
+        ],
+        "judge_forbidden_facts": [
+          "equipment check",
+          "departure note",
+          "harbor annex"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 10,
+        "memory_count": 10,
+        "observation_count": 10,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "large_scope_multi_hop_with_noise",
+    "category": "large_scope_multi_hop",
+    "description": "大量无关主体噪声中，跨多跳依赖链的 why 查询仍能稳定拉出。",
+    "settle_timeout_seconds": 90,
+    "memory_scope_templates": {
+      "primary": "eval:generic_large_scope_graph_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {"context": "Willowmere guide 当前版本缺少 emergency contact 章节。", "expected_status": "accepted"},
+      {"context": "Stonehaven manual 规定所有 equipment check 必须每 48 小时执行一次。", "expected_status": "accepted"},
+      {"context": "Clearwater record 显示上周的 audit finding 已经关闭。", "expected_status": "accepted"},
+      {"context": "Redwood register 要求所有 visitor log 在进入 facility 前签字确认。", "expected_status": "accepted"},
+      {"context": "Northgate packet 当前还不能推进，因为 risk assessment annex 缺少 duty roster。", "expected_status": "accepted"},
+      {"context": "Pinnacle checklist 要求所有 risk assessment annex 在进入执行前补齐 duty roster 和 reviewer seal。", "expected_status": "accepted"},
+      {"context": "Cresthaven handbook 规定所有 reviewer seal 必须由 on-call supervisor 签署。", "expected_status": "accepted"},
+      {"context": "Meadowgate roster 要求所有 on-call supervisor 的任命必须经 facility manager 确认。", "expected_status": "accepted"}
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Northgate packet 现在还不能推进？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "risk assessment annex",
+          "duty roster",
+          "reviewer seal || Pinnacle checklist || checklist",
+          "on-call supervisor || Cresthaven handbook || handbook",
+          "facility manager || Meadowgate roster || roster"
+        ],
+        "judge_forbidden_facts": [
+          "emergency contact",
+          "equipment check",
+          "visitor log"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 8,
+        "memory_count": 8,
+        "observation_count": 8,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

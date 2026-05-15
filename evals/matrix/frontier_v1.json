@@ -1,0 +1,21 @@
+{
+  "matrix_id": "frontier_v1",
+  "description": "Frontier matrix for concurrent-ingest and ultra-long multi-entity suites.",
+  "suites": [
+    {
+      "suite_id": "frontier_targeted",
+      "description": "Targeted frontier validation for concurrent same-surface ingest and ultra-long multi-entity extraction.",
+      "cases": "../cases/generic_frontier_targeted_v1.json"
+    },
+    {
+      "suite_id": "concurrency",
+      "description": "Concurrent ingest consistency suite.",
+      "cases": "../cases/generic_concurrency_consistency_v1.json"
+    },
+    {
+      "suite_id": "ultralong",
+      "description": "Ultra-long single-document multi-entity suite.",
+      "cases": "../cases/generic_ultralong_multientity_v1.json"
+    }
+  ]
+}

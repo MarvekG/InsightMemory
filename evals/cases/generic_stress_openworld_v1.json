@@ -1,0 +1,359 @@
+[
+  {
+    "case_id": "stress_long_context_primary_subject",
+    "category": "stress_long_context",
+    "description": "长上下文里夹杂多个旁支主体时，应保留主主体结论，不为顺手提到的对象生成多余记忆。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_stress_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "项目例会摘要：顺手提到 Nimbus service 和 Quarry dashboard 这两个名字，但本次真正结论是 Aster rollout 当前仍不能进入发布窗口，因为 rollback note 还没有补齐。其余闲聊不用当成正式结论。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Aster rollout 当前为什么还不能进入发布窗口？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback note"
+        ],
+        "judge_forbidden_facts": [
+          "Nimbus service",
+          "Quarry dashboard"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "stress_three_way_same_surface_split",
+    "category": "stress_same_surface",
+    "description": "同名 rollout/checklist/review 三者并存时，查询应稳定指向目标 artifact。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_stress_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Orbit rollout 当前主阻塞是审批链说明缺失。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orbit checklist 明确要求切换前补齐审批链说明和回滚说明。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orbit review 当前负责人是 Nia Luo。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Orbit checklist 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批链说明 || 回滚说明"
+        ],
+        "judge_forbidden_facts": [
+          "Nia Luo",
+          "主阻塞"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "stress_multi_hop_requirement_chain",
+    "category": "stress_multi_hop",
+    "description": "主 blocker、直接 checklist、上层 governance guide 同时存在时，应能回答 why 查询并保持跨实体链路。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_stress_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Helix rollout 当前还不能切换，因为 access note 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cutover checklist 要求切换前必须补齐 access note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Release governance guide 要求所有 cutover checklist 项逐项完成后才能切换。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Helix rollout 还不能切换？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "access note",
+          "Cutover checklist || checklist"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "stress_history_with_external_requirement_current",
+    "category": "stress_history_dependency",
+    "description": "主体当前状态变化与外部 handbook 约束并存时，当前查询应答当前 blocker 和外部 requirement。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_stress_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Nova review 之前卡在 schema freeze mismatch。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Nova review 当前主阻塞已经变成 approval packet missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Approval handbook 要求进入评审前必须补齐 approval packet。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Nova review 当前主阻塞是什么，外部还受什么要求约束？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "approval packet",
+          "Approval handbook || handbook"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "updates": 1,
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "stress_mixed_language_cross_entity",
+    "category": "stress_mixed_language",
+    "description": "中英混合 requirement + blocker 应保持跨实体关联和 grounded answer。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_stress_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Lumen rollout 当前仍然 blocked，因为 recovery appendix is missing.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Recovery checklist says every rollout must include a recovery appendix before go-live.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Why is Lumen rollout still blocked?",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "recovery appendix",
+          "Recovery checklist || checklist"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "stress_document_history_current",
+    "category": "stress_document_history",
+    "description": "同一 handbook 的历史规则和当前规则都可被问到，当前查询与历史查询要区分。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_stress_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Juniper charter 之前允许团队自行修改 fallback schedule。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Juniper charter 当前要求所有 fallback schedule 变更必须先经 incident lead 审批。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Juniper charter 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "incident lead",
+          "fallback schedule"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Juniper charter 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "自行修改 || manual",
+          "fallback schedule"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2,
+        "edge_type_counts": {
+          "updates": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "stress_noisy_multi_entity_with_real_dependency",
+    "category": "stress_noisy_dependency",
+    "description": "噪声里顺手提到无关 UI，但真实 blocker 来自另一实体的恢复状态。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_stress_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "周会里有人顺手提到 Quartz UI 和 old mockups，但真正结论是 Quarry rollout 当前被 Delta bridge rebuild 卡住。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Delta bridge 当前仍处于 rebuild 状态，尚未恢复稳定输出。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Quarry rollout 当前被什么卡住？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Delta bridge || rebuild"
+        ],
+        "judge_forbidden_facts": [
+          "Quartz UI",
+          "mockups"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "stress_same_surface_document_project_requirement",
+    "category": "stress_same_surface",
+    "description": "同名 plan/checklist/project 三者并存时，why 查询要指向正确 artifact，不要串到 owner 信息。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_stress_openworld_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Prism plan 当前不能进入审批，因为 owner note 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Prism checklist 明确要求审批前补齐 owner note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Prism project 当前负责人是 Aria Zhou。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Prism plan 现在不能进入审批？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "owner note",
+          "Prism checklist || checklist"
+        ],
+        "judge_forbidden_facts": [
+          "Aria Zhou"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

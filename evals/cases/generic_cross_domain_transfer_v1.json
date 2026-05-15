@@ -1,0 +1,356 @@
+[
+  {
+    "case_id": "cross_domain_analogous_structure",
+    "category": "cross_domain_analogy",
+    "description": "系统应能识别不同领域但结构相似的知识模式，并在查询时正确召回对应领域的事实。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_domain_transfer_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "软件开发中，Code review pipeline 要求所有提交在合并前必须通过自动化测试和人工审查两道关卡。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "制造业里，Quality gate process 规定所有成品在出厂前必须通过机器检测和人工抽检两道关卡。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Code review pipeline 在合并前要求通过几道关卡？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "自动化测试",
+          "人工审查"
+        ],
+        "judge_forbidden_facts": [
+          "机器检测",
+          "人工抽检"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Quality gate process 在出厂前要求通过什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "机器检测",
+          "人工抽检"
+        ],
+        "judge_forbidden_facts": [
+          "自动化测试",
+          "人工审查"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "cross_domain_role_mapping",
+    "category": "cross_domain_role",
+    "description": "不同领域中角色名称不同但职责相似时，查询应落到正确主体，不混淆。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_domain_transfer_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "在项目管理中，Scrum Master 负责移除团队障碍并确保流程顺畅。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "在游戏开发中，Dungeon Master 负责设计关卡规则并维持游戏平衡。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Scrum Master 的职责是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "移除团队障碍",
+          "流程顺畅"
+        ],
+        "judge_forbidden_facts": [
+          "关卡规则",
+          "游戏平衡"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Dungeon Master 在游戏中做什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "关卡规则",
+          "游戏平衡"
+        ],
+        "judge_forbidden_facts": [
+          "移除团队障碍",
+          "流程顺畅"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "cross_domain_causality_transfer",
+    "category": "cross_domain_causality",
+    "description": "系统应理解跨领域的因果链，不因领域差异而混淆因果主体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_domain_transfer_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "生态系统中，Beaver pond 的形成导致周边湿地面积扩大，进而吸引更多水鸟栖息。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "城市发展中，Tech park 的建设导致周边商业配套增加，进而吸引更多人才流入。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Beaver pond 的形成带来了什么连锁影响？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "湿地面积扩大",
+          "水鸟栖息"
+        ],
+        "judge_forbidden_facts": [
+          "商业配套",
+          "人才流入"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Tech park 的建设带来了什么连锁影响？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "商业配套",
+          "人才流入"
+        ],
+        "judge_forbidden_facts": [
+          "湿地面积扩大",
+          "水鸟栖息"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "cross_domain_hierarchy_analogy",
+    "category": "cross_domain_hierarchy",
+    "description": "系统应能处理跨领域的层级类比，不因层级名称相似而错误合并实体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_domain_transfer_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "军事组织中，Command hierarchy 分为战略层、战役层和战术层三个层级。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "企业管理中，Decision hierarchy 分为战略层、管理层和执行层三个层级。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "军事 Command hierarchy 包含哪些层级？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "战略层",
+          "战役层",
+          "战术层"
+        ],
+        "judge_forbidden_facts": [
+          "管理层",
+          "执行层"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "企业 Decision hierarchy 包含哪些层级？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "战略层",
+          "管理层",
+          "执行层"
+        ],
+        "judge_forbidden_facts": [
+          "战役层",
+          "战术层"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "cross_domain_metric_analogy",
+    "category": "cross_domain_metric",
+    "description": "系统应区分不同领域中名称相似但含义不同的指标。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_domain_transfer_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "在物理实验中，Temperature threshold 是指材料发生相变的临界温度点，超过该温度材料会从固态转为液态。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "在服务器运维中，Temperature threshold 是指 CPU 触发降频保护的温度上限，超过该温度系统会自动降低性能。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "物理实验中的 Temperature threshold 代表什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "相变",
+          "固态转为液态"
+        ],
+        "judge_forbidden_facts": [
+          "降频保护",
+          "降低性能"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "服务器运维中的 Temperature threshold 代表什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "降频保护",
+          "降低性能"
+        ],
+        "judge_forbidden_facts": [
+          "相变",
+          "固态转为液态"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "cross_domain_procedure_analogy",
+    "category": "cross_domain_procedure",
+    "description": "系统应区分不同领域中步骤名称相同但操作内容不同的流程。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_domain_transfer_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "在软件开发中，System rollback procedure 要求先停止服务、恢复数据库快照、重新部署上一个稳定版本、验证核心功能。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "在手术医疗中，Surgical rollback procedure 要求先稳定患者生命体征、移除植入物、恢复原始生理结构、监测术后反应。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "软件开发中的 System rollback procedure 包含哪些步骤？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "停止服务",
+          "数据库快照",
+          "稳定版本"
+        ],
+        "judge_forbidden_facts": [
+          "生命体征",
+          "植入物",
+          "生理结构"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "手术医疗中的 Surgical rollback procedure 包含哪些步骤？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "生命体征",
+          "植入物",
+          "生理结构"
+        ],
+        "judge_forbidden_facts": [
+          "停止服务",
+          "数据库快照",
+          "稳定版本"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

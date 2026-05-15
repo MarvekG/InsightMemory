@@ -1,0 +1,480 @@
+[
+  {
+    "case_id": "real_debate_conservative_summary_002142",
+    "category": "real_debate_longform",
+    "description": "真实保守派长历史记录应能提炼主要风险结论。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "14982bd5-8662-48f4-8425-d1629974a110",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "002142.SZ 这条保守分析历史记录的主要风险结论是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "消费贷风险",
+          "流动性完全丧失"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_policy_summary_601318",
+    "category": "real_debate_longform",
+    "description": "真实政策长历史记录应能提炼关键政策驱动。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "79bbfda3-312f-4a8f-b954-00bfcd9ac6d7",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "601318.SH 这条政策分析历史记录里最关键的政策驱动是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "养老金融",
+          "偿付能力监管 || 资本监管优化 || 偿付能力监管标准"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_risk_report_002142",
+    "category": "real_debate_longform",
+    "description": "真实风险评估长文本应能提炼核心风险。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "cb2a3b83-b4bc-4594-85e8-288209231cb7",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "002142.SZ 这条风险评估历史记录里的核心风险是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "高杠杆",
+          "流动性 || 流动性风险 || 持仓流动性风险 || 持仓流动性完全锁定"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_neutral_tradeoff_002142",
+    "category": "real_debate_longform",
+    "description": "真实中性长历史记录应能提炼主要取舍。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "204e8e6d-2b80-4b29-8d5c-1ff77611c589",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "002142.SZ 这条中性分析历史记录如何在估值、消费贷风险和流动性之间取舍？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "估值 || PB",
+          "消费贷风险 || 风险集中",
+          "流动性 || 5-8%"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_conservative_technical_601318",
+    "category": "real_debate_longform",
+    "description": "真实保守长历史记录应能提炼技术面和基本面风险。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "d1df05a0-d443-427c-b98f-3021223fa62c",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "601318.SH 这条保守分析历史记录为什么偏向回避？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "技术面",
+          "风险暴露期"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_latest_round_002142",
+    "category": "real_debate_longform",
+    "description": "真实多轮保守历史记录下，询问最新结论时应偏向最终轮。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "1cff80cf-69c6-4b35-867b-3aa2b0c58a50",
+        "expected_status": "accepted"
+      },
+      {
+        "raw_sample_id": "14982bd5-8662-48f4-8425-d1629974a110",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "002142.SZ 最新的保守分析历史记录强调了哪些风险？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "历史警戒线",
+          "流动性完全丧失"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 1,
+          "superseded": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 2,
+          "updates": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_power_policy_600795",
+    "category": "real_debate_longform",
+    "description": "真实电力行业政策长文本应能提炼核心政策框架。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "c9cb3bc6-59ab-4cad-9461-4b995a79efa5",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "600795.SH 这条政策分析历史记录里的电力市场政策重点是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "全国统一电力市场体系",
+          "煤电容量电价机制"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_technical_signal_002142",
+    "category": "real_debate_longform",
+    "description": "真实技术分析长文本应能提炼核心技术信号。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "5f069814-59e9-4713-9da4-96232325802c",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "002142.SZ 这条技术分析历史记录里最核心的技术面信号是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "空头排列",
+          "MACD死叉 || MACD 死叉 || 死叉"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_cross_role_divergence_601318",
+    "category": "real_debate_longform",
+    "description": "同一股票真实多角色最终记录应能回答立场分歧。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "d1df05a0-d443-427c-b98f-3021223fa62c",
+        "expected_status": "accepted"
+      },
+      {
+        "raw_sample_id": "693657a2-2b34-431f-a1f3-bcdfcc5f9e16",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "601318.SH 最新保守和中性分析历史记录的主要分歧是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "required_uncertainty_prefixes": [
+          "contradicting_memory:"
+        ],
+        "judge_required_facts": [
+          "估值陷阱 || 技术面破位 || 技术破位",
+          "估值极度低估",
+          "分批建仓"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "contradicts": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_policy_transmission_002142",
+    "category": "real_debate_longform",
+    "description": "真实银行政策分析长文本应能提炼政策传导路径。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "057e930d-7a37-4ae5-9146-cddf72b2e9df",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "002142.SZ 这条政策分析历史记录里的政策传导重点是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "金融五篇大文章 || 五篇大文章",
+          "普惠金融 || 数字金融",
+          "消费贷风险 || 消费金融监管"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_neutral_round1_balance_002142",
+    "category": "real_debate_longform",
+    "description": "真实早期中性长文本应能提炼估值与风险的平衡思路。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "65be019c-56bd-4286-a8cd-a9fabb37f1cd",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "002142.SZ 这条早期中性分析历史记录如何平衡估值和风险？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "PB 0.8933 || 历史61.39%分位 || 历史61%分位",
+          "消费贷风险",
+          "5-8% || 5% || 8%"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "real_debate_early_conservative_601318",
+    "category": "real_debate_longform",
+    "description": "真实早期保守长文本应能提炼回避逻辑。",
+    "memory_scope_templates": {
+      "primary": "eval:real_debate_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "raw_sample_id": "c2ec49b2-641e-48d1-9306-9e0cb0a7a8e3",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "601318.SH 这条早期保守分析历史记录为什么建议回避？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "技术面破位 || 空头排列",
+          "经营活动现金流 || 现金流",
+          "代理人"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  }
+]

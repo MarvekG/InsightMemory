@@ -1,0 +1,202 @@
+[
+  {
+    "case_id": "concurrency_same_entity_parallel_facts",
+    "category": "concurrency_same_entity",
+    "description": "同一主体的两个持久事实并发写入后，应落到同一 entity 下且都能被召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_concurrency_consistency_v1:{run_id}:{case_id}"
+    },
+    "settle_timeout_seconds": 60,
+    "writes": [
+      {
+        "context": "Deltaframe service 当前负责人是 Juno Park。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      },
+      {
+        "context": "Deltaframe service 当前主阻塞是 cert bundle missing。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Deltaframe service 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Juno Park"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Deltaframe service 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "cert bundle"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "concurrency_same_surface_split_parallel",
+    "category": "concurrency_same_surface",
+    "description": "同名 service/checklist/review 并发写入时，也应稳定拆成不同主体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_concurrency_consistency_v1:{run_id}:{case_id}"
+    },
+    "settle_timeout_seconds": 90,
+    "writes": [
+      {
+        "context": "Seaborne service 当前主阻塞是 rollback packet missing。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      },
+      {
+        "context": "Seaborne checklist 当前要求上线前补齐 rollback packet 和 owner signature。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      },
+      {
+        "context": "Seaborne review 当前负责人是 Kara Yin。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Seaborne checklist 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback packet",
+          "owner signature"
+        ],
+        "judge_forbidden_facts": [
+          "Kara Yin",
+          "主阻塞"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "concurrency_cross_entity_dependency_parallel",
+    "category": "concurrency_cross_entity",
+    "description": "主主体 blocker 和记忆约束主体并发写入后，why 查询仍应能拉出跨实体 requirement。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_concurrency_consistency_v1:{run_id}:{case_id}"
+    },
+    "settle_timeout_seconds": 90,
+    "writes": [
+      {
+        "context": "Ironclad rollout 当前还不能进入执行阶段，因为 release packet 缺少 rollback annex。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      },
+      {
+        "context": "Switchboard checklist 要求所有 release packet 在执行前补齐 rollback annex。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Ironclad rollout 还不能进入执行阶段？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback annex",
+          "Switchboard checklist || checklist"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "concurrency_parallel_subject_isolation",
+    "category": "concurrency_entity_scale",
+    "description": "多个主体并发写入同一 scope 时，查询命中不应串主体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_concurrency_consistency_v1:{run_id}:{case_id}"
+    },
+    "settle_timeout_seconds": 90,
+    "writes": [
+      {
+        "context": "Verdant service 当前负责人是 Lina West。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      },
+      {
+        "context": "Pinecrest service 当前负责人是 Omar Reed。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      },
+      {
+        "context": "Solstice service 当前负责人是 Niko Vale。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      },
+      {
+        "context": "Riverside service 当前负责人是 Ada Snow。",
+        "expected_status": "accepted",
+        "concurrency_group": "wave_1"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Solstice service 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Niko Vale"
+        ],
+        "judge_forbidden_facts": [
+          "Lina West",
+          "Omar Reed",
+          "Ada Snow"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

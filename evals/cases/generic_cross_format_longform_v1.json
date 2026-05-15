@@ -1,0 +1,300 @@
+[
+  {
+    "case_id": "cross_format_markdown_history_current_supplement",
+    "category": "cross_format_markdown",
+    "description": "Markdown 多级标题中的历史规则、当前规则和补充规则应稳定抽取并分别可问。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_format_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "# Pinewick manual\n## Earlier rule\nTeams could file berth adjustment within 24 hours after dock shift.\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "# Pinewick manual\n## Current rule\nEvery berth adjustment must be approved by duty marshal before dock close.\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "# Pinewick manual\n## Supplement\nEvery approval record must also be attached to harbor packet.\n",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Pinewick manual 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "duty marshal",
+          "harbor packet"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Pinewick manual 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "24 hours"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "cross_format_email_thread_why_chain",
+    "category": "cross_format_email_thread",
+    "description": "邮件线程和引用块中的 blocker、checklist 和 handbook 规则链应能通过 why 查询一起解释。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_format_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Ravenhall rollout handoff\n\nCurrent blocker: we still cannot start turnover because the berth memo is missing.\n\n> Prior note\n> turnover stays blocked until berth memo is added.\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Ravenhall checklist\n\nChecklist update:\n- every turnover packet must include berth memo\n- every turnover packet must include quay ledger\n\n> quoted reminder\n> do not clear turnover without both items\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Northquay handbook\n\nCurrent rule: every quay ledger must carry reviewer stamp before release.\n\n> reference\n> reviewer stamp is mandatory for the ledger record.\n",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Ravenhall rollout 现在还不能进入 turnover？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "berth memo",
+          "Ravenhall checklist || checklist",
+          "reviewer stamp || Northquay handbook || handbook"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "cross_format_yamlish_phase_record",
+    "category": "cross_format_yamlish",
+    "description": "YAML-ish 字段记录中的历史规则、当前规则和补充规则应稳定落成历史与当前两条记忆。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_format_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "artifact: Siltmere bulletin\nphase: history\nrule: teams could attach berth sheet within 18 hours after shift\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "artifact: Siltmere bulletin\nphase: current\nrule: every berth sheet must be completed before handoff\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "artifact: Siltmere bulletin\nphase: supplement\nrule: every berth sheet must also be attached to dispatch ledger\n",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Siltmere bulletin 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "before handoff",
+          "dispatch ledger"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Siltmere bulletin 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "18 hours"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "cross_format_bilingual_long_summary",
+    "category": "cross_format_bilingual",
+    "description": "中英混排长摘要里的历史规则和当前补充规则应可稳定回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_format_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Junebay bulletin 之前允许 teams 在 departure 后 12 hours 内补录 route note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Junebay bulletin 当前要求 every route note must be completed before departure.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Junebay bulletin 最新补充：所有 route note 还必须附在 cargo packet 中。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Junebay bulletin 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "before departure",
+          "cargo packet"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Junebay bulletin 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "12 hours"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "cross_format_checklist_prose_same_surface",
+    "category": "cross_format_same_surface",
+    "description": "checklist 与 manual 的 prose 混排记录并存时，查询应命中正确 artifact。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_format_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Kestrel checklist\n- current requirement: add access note\n- current requirement: add rollback note\nNarrative: operators should not clear the packet until both notes are attached.\n",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Kestrel manual\nCurrent rule: every rollback note record must include incident owner.\nNarrative: the checklist and the manual govern different layers.\n",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Kestrel manual 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "incident owner"
+        ],
+        "judge_forbidden_facts": [
+          "access note"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    },
+    "settle_timeout_seconds": 60
+  },
+  {
+    "case_id": "cross_format_correction_note_amendment",
+    "category": "cross_format_correction_note",
+    "description": "correction note 与 appendix 叠加时，历史规则和当前规则应稳定区分，当前规则应聚合补充要求。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_cross_format_longform_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Morrowfield register earlier allowed teams to file quay note within 10 hours after release.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Correction note for Morrowfield register: the earlier 10-hour grace window is withdrawn; every quay note must be filed before release.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Appendix to Morrowfield register: every quay note must also include berth owner signature.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Morrowfield register 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "before release",
+          "berth owner signature"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Morrowfield register 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "10 hours"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

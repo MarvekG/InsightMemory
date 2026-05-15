@@ -1,0 +1,31 @@
+{
+  "matrix_id": "generalization_extended_v1",
+  "description": "Extended generalization evaluation matrix covering cross-domain transfer, temporal reasoning, negation/conflict handling, numerical reasoning, and implicit relation inference.",
+  "suites": [
+    {
+      "suite_id": "cross_domain_transfer",
+      "description": "Cross-domain knowledge transfer suite covering analogous structures, role mappings, causality chains, hierarchy analogies, metric analogies, and procedure analogies.",
+      "cases": "../cases/generic_cross_domain_transfer_v1.json"
+    },
+    {
+      "suite_id": "temporal_reasoning",
+      "description": "Temporal reasoning suite covering sequence order, duration constraints, before/after updates, deadline reasoning, overlapping events, and cyclic patterns.",
+      "cases": "../cases/generic_temporal_reasoning_v1.json"
+    },
+    {
+      "suite_id": "negation_conflict",
+      "description": "Negation and conflict handling suite covering explicit rejection, permission denial, update overrides, contradictory sources, double negatives, and conditional exceptions.",
+      "cases": "../cases/generic_negation_conflict_v1.json"
+    },
+    {
+      "suite_id": "numerical_reasoning",
+      "description": "Numerical reasoning suite covering threshold comparisons, range interpretations, ratio proportions, trend directions, unit conversions, and priority rankings.",
+      "cases": "../cases/generic_numerical_reasoning_v1.json"
+    },
+    {
+      "suite_id": "implicit_relation",
+      "description": "Implicit relation inference suite covering hierarchy inheritance, causality chains, role substitution, location containment, symmetric relations, and precondition inference.",
+      "cases": "../cases/generic_implicit_relation_v1.json"
+    }
+  ]
+}

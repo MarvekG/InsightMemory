@@ -1,0 +1,449 @@
+[
+  {
+    "case_id": "ood_shipping_vessel",
+    "category": "ood_shipping",
+    "description": "航运场景中，vessel、manifest、logbook 的主体识别和跨实体依赖应保持稳定。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_out_of_distribution_domains_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Seaford vessel 当前还不能离港，因为 cargo manifest 缺少 customs seal。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Seaford manifest 要求所有离港 vessel 的 cargo manifest 在进入执行前补齐 customs seal。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Seaford logbook 记录显示上周的 engine check 已经完成。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Seaford vessel 现在还不能离港？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "cargo manifest",
+          "customs seal",
+          "Seaford manifest || manifest"
+        ],
+        "judge_forbidden_facts": [
+          "engine check"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Seaford logbook 记录了什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "engine check"
+        ],
+        "judge_forbidden_facts": [
+          "customs seal",
+          "cargo manifest"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "ood_archive_museum",
+    "category": "ood_archive",
+    "description": "档案与博物馆场景中，catalog、accession record、exhibit、conservation 的主体拆分和依赖链应稳定。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_out_of_distribution_domains_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Archive Hall catalog 当前还需要补充 acquisition note 和 provenance record。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Archive Hall accession record 要求所有 catalog 在进入执行前补齐 provenance record。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Westgate museum 当前 exhibit 还需要 conservation assessment。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Westgate conservation 要求所有 exhibit 在进入展出前补齐 conservation assessment。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Archive Hall catalog 当前还需要补充什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "acquisition note",
+          "provenance record"
+        ],
+        "judge_forbidden_facts": [
+          "conservation assessment",
+          "Westgate museum"
+        ]
+      },
+      {
+        "query_id": "q1_dependency",
+        "query": "为什么 Archive Hall catalog 当前需要补充 provenance record？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "provenance record",
+          "Archive Hall accession record || accession record"
+        ],
+        "judge_forbidden_facts": [
+          "conservation assessment",
+          "Westgate museum"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "为什么 Westgate museum 当前 exhibit 还不能展出？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "conservation assessment",
+          "Westgate conservation || conservation"
+        ],
+        "judge_forbidden_facts": [
+          "provenance record",
+          "Archive Hall"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 3
+      }
+    }
+  },
+  {
+    "case_id": "ood_geological_survey",
+    "category": "ood_geology",
+    "description": "地质勘测场景中，survey、sample、map 的主体识别和跨实体依赖应稳定。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_out_of_distribution_domains_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Northridge survey 当前还不能结束，因为 sample log 缺少 field annotation。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Northridge sample 要求所有 sample log 在归档前补齐 field annotation。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Northridge map 当前版本缺少 contour interval 标注。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Northridge survey 现在还不能结束？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "sample log",
+          "field annotation",
+          "Northridge sample || sample"
+        ],
+        "judge_forbidden_facts": [
+          "contour interval"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Northridge map 当前版本缺少什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "contour interval"
+        ],
+        "judge_forbidden_facts": [
+          "field annotation",
+          "sample log"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "ood_astronomical_observatory",
+    "category": "ood_astronomy",
+    "description": "天文观测场景中，observatory、telescope、schedule 的主体识别和 why 查询应稳定。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_out_of_distribution_domains_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Southpoint observatory 当前还不能开始观测，因为 telescope alignment 还没完成。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Southpoint telescope 要求所有观测前 alignment 必须经 senior observer 确认。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Southpoint schedule 显示本周的 weather window 在周三晚上。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Southpoint observatory 现在还不能开始观测？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "telescope alignment",
+          "senior observer || Southpoint telescope || telescope"
+        ],
+        "judge_forbidden_facts": [
+          "weather window"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Southpoint schedule 显示了什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "weather window",
+          "周三晚上"
+        ],
+        "judge_forbidden_facts": [
+          "telescope alignment",
+          "senior observer"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "ood_agricultural_public_safety",
+    "category": "ood_agriculture_safety",
+    "description": "农务与公共安全场景中，farm、irrigation、patrol、dispatch 的主体拆分和跨实体依赖应稳定。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_out_of_distribution_domains_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Greenfield farm 当前还不能播种，因为 irrigation schedule 缺少 water allocation permit。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Greenfield irrigation 要求所有 irrigation schedule 在执行前补齐 water allocation permit。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Central district patrol 当前还需要补充 incident report 和 dispatch log。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Central district dispatch 要求所有 patrol 在进入执行前补齐 incident report。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Greenfield farm 现在还不能播种？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "irrigation schedule",
+          "water allocation permit",
+          "Greenfield irrigation || irrigation"
+        ],
+        "judge_forbidden_facts": [
+          "incident report",
+          "Central district"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Central district patrol 当前还需要补充什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "incident report",
+          "dispatch log",
+          "Central district dispatch || dispatch"
+        ],
+        "judge_forbidden_facts": [
+          "water allocation permit",
+          "Greenfield farm"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "ood_mixed_language_lab",
+    "category": "ood_mixed_language",
+    "description": "实验室场景中 mixed-language 输入下，主体识别、历史与当前区分应稳定。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_out_of_distribution_domains_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Eastfield lab 上一轮实验显示 cell culture 的 contamination 已经解决。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Eastfield lab 当前还不能开始下一轮实验，因为 protocol 缺少 safety clearance。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Eastfield protocol 要求所有实验前 safety clearance 必须经 principal investigator 确认。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Eastfield lab 最新补充：所有 safety clearance 还必须附在 experiment log 中。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Eastfield lab 当前还不能开始实验的原因是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "protocol",
+          "safety clearance",
+          "principal investigator || Eastfield protocol || protocol",
+          "experiment log"
+        ],
+        "judge_forbidden_facts": [
+          "contamination"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Eastfield lab 上一轮实验解决了什么问题？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "cell culture",
+          "contamination"
+        ],
+        "judge_forbidden_facts": [
+          "safety clearance",
+          "principal investigator"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 3,
+        "observation_count": 4,
+        "recall_audit_count": 2,
+        "required_memory_texts": [
+          "safety clearance",
+          "experiment log"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "ood_noisy_farfield_context",
+    "category": "ood_noisy_farfield",
+    "description": "远域噪声上下文中，核心 durable fact 仍应稳定抽取和回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_out_of_distribution_domains_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "长会议记录里提到了午餐菜单、会议室温度、来访者的名字和几件无关的设备维护事项，但真正结论是：Seaford vessel 当前还不能离港，因为 cargo manifest 缺少 customs seal。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Seaford manifest 要求所有离港 vessel 的 cargo manifest 在进入执行前补齐 customs seal。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Seaford vessel 现在还不能离港？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "cargo manifest",
+          "customs seal",
+          "Seaford manifest || manifest"
+        ],
+        "judge_forbidden_facts": [
+          "午餐菜单",
+          "会议室温度"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

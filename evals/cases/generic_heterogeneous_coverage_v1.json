@@ -1,0 +1,281 @@
+[
+  {
+    "case_id": "heterogeneous_single_document_four_subjects",
+    "category": "heterogeneous_long_doc",
+    "description": "单篇长文里混合四个同前缀主体和大量噪声时，应拆出真正持久的四个主体。",
+    "settle_timeout_seconds": 120,
+    "memory_scope_templates": {
+      "primary": "eval:generic_heterogeneous_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "长维修纪要里提到旧桌签、观众耳机、零食箱、走道灯泡和几位访客名字，但真正的持久结论有四条：Nacre berth queue 当前不能进入下一阶段，因为 hatch seal appendix 还没有补齐；Nacre berth manual 当前要求所有 berth packet 补齐 hatch seal appendix 和 dock witness tag；Nacre berth review 当前负责人是 Elian March；Nacre berth plan 当前目标是下周补完 ballast packet。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Nacre berth queue 当前不能进入下一阶段？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "hatch seal appendix"
+        ],
+        "judge_forbidden_facts": [
+          "零食箱",
+          "观众耳机"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "heterogeneous_same_surface_artifact_chain",
+    "category": "heterogeneous_same_surface",
+    "description": "同前缀 docket、guide、register 在陌生领域下也应拆开，并回答 why 链。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_heterogeneous_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Rill custody docket 当前还不能归档，因为 crate transfer slip 缺失。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Rill custody guide 要求所有 custody docket 在归档前补齐 crate transfer slip。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Rill custody register 要求所有 crate transfer slip 记录再附 watch roster。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Rill custody docket 还不能归档？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "crate transfer slip",
+          "Rill custody guide || guide",
+          "watch roster || Rill custody register || register"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "heterogeneous_history_disagreement_with_rule",
+    "category": "heterogeneous_history_rule",
+    "description": "历史分歧、当前收敛和外部规则同时存在时，应答出分歧和收敛原因。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_heterogeneous_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Mica transit review\nSession: mica-7\nStage: decision\nRound: 1\nPosition: supportive\nSummary: 可以按原窗口转运。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Mica transit review\nSession: mica-7\nStage: decision\nRound: 2\nPosition: opposing\nSummary: 必须先补 ballast variance note，不能直接转运。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mica transit review 当前决定已经变成先补 ballast variance note 再重新排期转运。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Departure ordinance 要求所有转运前决策补齐 ballast variance note。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Mica transit review 历史上有哪些分歧，当前又为什么收敛到现在的结论？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "required_uncertainty_prefixes": [
+          "contradicting_memory:"
+        ],
+        "judge_required_facts": [
+          "原窗口转运",
+          "ballast variance note",
+          "Departure ordinance || ordinance"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "heterogeneous_mixed_language_rule_evolution",
+    "category": "heterogeneous_rule_evolution",
+    "description": "mixed-language 手册规则演进下，当前规则和历史规则应能分别回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_heterogeneous_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Quarry handover bulletin 之前允许 teams 在 shift 后 18 小时内补录 bridge contact note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Quarry handover bulletin 当前要求 all bridge contact note must be completed before handover.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Quarry handover bulletin 最新补充：所有 bridge contact note 还必须附在 dispatch packet 中。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Quarry handover bulletin 当前要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "before handover",
+          "dispatch packet"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Quarry handover bulletin 之前允许什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "18 小时内补录 bridge contact note"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "heterogeneous_noisy_multilingual_dependency",
+    "category": "heterogeneous_mixed_dependency",
+    "description": "长噪声 mixed-language 文本里，主主体和外部 requirement 应被稳定拉出。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_heterogeneous_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "长交接记录里提到旧箱号、茶水安排、访客 badge、备用电话和几位实习生名字，但真正结论是：Fjord relay corridor 当前 still cannot proceed，因为 corridor packet 缺少 signed seal manifest。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Channel dispatch protocol 要求 every corridor packet must include a signed seal manifest before release approval.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Why can’t Fjord relay corridor proceed now?",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "signed seal manifest",
+          "Channel dispatch protocol || dispatch protocol"
+        ],
+        "judge_forbidden_facts": [
+          "茶水安排",
+          "访客 badge"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "heterogeneous_large_scope_parallel_artifacts",
+    "category": "heterogeneous_entity_scale",
+    "description": "单 scope 下多个平行 artifact 并存时，查询指定主体不应串主体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_heterogeneous_coverage_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Cinder observatory docket 当前负责人是 Ilya North。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cinder observatory ledger 当前负责人是 Mara Pike。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cinder observatory queue 当前负责人是 Soren Vale。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cinder observatory bulletin 当前负责人是 Nira Holt。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Cinder observatory bulletin 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Nira Holt"
+        ],
+        "judge_forbidden_facts": [
+          "Ilya North",
+          "Mara Pike",
+          "Soren Vale"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

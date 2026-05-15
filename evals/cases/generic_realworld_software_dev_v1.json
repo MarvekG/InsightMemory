@@ -1,0 +1,300 @@
+[
+  {
+    "case_id": "api_contract_breaking_change",
+    "category": "realworld_software_api_contract",
+    "description": "API 发布、移动端适配、评审要求相邻，但查询发布阻塞和客户端适配时要按具体开发对象回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_software_dev_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas checkout API v2 当前不能发布，因为 response schema 还缺 idempotency_key 字段。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas mobile client 已经适配 checkout API 的 amount_cents 字段。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas API review note 要求 v2 发布前补齐 backward compatibility test。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas checkout API v2 现在为什么不能发布？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "response schema",
+          "idempotency_key"
+        ],
+        "judge_forbidden_facts": [
+          "mobile client",
+          "amount_cents"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Atlas mobile client 已经适配了哪个字段？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "amount_cents"
+        ],
+        "judge_forbidden_facts": [
+          "idempotency_key",
+          "backward compatibility test"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "ci_failure_flaky_test",
+    "category": "realworld_software_ci",
+    "description": "CI 失败、flaky quarantine、部署窗口都属于代码交付场景，查询失败点时不能混入部署窗口或已移除的测试。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_software_dev_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Beacon repo 的 CI 失败点是 payments integration test 在 retry path 上超时。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Beacon repo 的 flaky quarantine list 已经移除了 login banner test。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Beacon deploy window 改到周三晚上 21:00。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Beacon repo 的 CI 当前失败在哪里？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "payments integration test",
+          "retry path",
+          "超时"
+        ],
+        "judge_forbidden_facts": [
+          "login banner test",
+          "deploy window",
+          "21:00"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Beacon deploy window 改到什么时候？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "周三晚上 21:00"
+        ],
+        "judge_forbidden_facts": [
+          "payments integration test",
+          "retry path"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "database_migration_backfill_dependency",
+    "category": "realworld_software_database",
+    "description": "数据库迁移、backfill、dashboard 缓存属于同一工程项目，查询迁移阻塞和 backfill 顺序时要保持边界。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_software_dev_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Cedar user migration 不能 merge，因为 rollback script 还没有覆盖 null email rows。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cedar backfill job 需要先跑 dry-run report，再打开 production write flag。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cedar dashboard refresh 已经切到 5 分钟缓存。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Cedar user migration 为什么不能 merge？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback script",
+          "null email rows"
+        ],
+        "judge_forbidden_facts": [
+          "dashboard refresh",
+          "5 分钟缓存"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Cedar backfill job 打开 production write flag 前要先做什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "dry-run report"
+        ],
+        "judge_forbidden_facts": [
+          "dashboard refresh",
+          "rollback script"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "feature_flag_rollout_incident",
+    "category": "realworld_software_rollout",
+    "description": "灰度 rollout、feature flag、文档 typo 都在同一产品上下文里，查询 rollout 时不能混入文档小修。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_software_dev_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Delta search ranking rollout 当前停在 25%，因为 click-through metric 出现 abnormal dip。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Delta feature flag search_rank_v3 只对 beta cohort 开启。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Delta docs site 的 footer typo 已经修好。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Delta search ranking rollout 为什么停在 25%？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "25%",
+          "click-through metric",
+          "abnormal dip"
+        ],
+        "judge_forbidden_facts": [
+          "footer typo",
+          "docs site"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Delta 的 search_rank_v3 flag 现在对谁开启？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "beta cohort"
+        ],
+        "judge_forbidden_facts": [
+          "footer typo",
+          "abnormal dip"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "pr_owner_and_release_note",
+    "category": "realworld_software_pr_review",
+    "description": "PR owner approval、release note、低优先级 bug 三条开发记忆需要按问题范围分开回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_software_dev_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Echo analytics PR 482 还缺 data platform owner approval，不能合入 main。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Echo analytics release note 已补充 cohort filter behavior change。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Echo analytics dashboard export bug 已标记为 low priority。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Echo analytics PR 482 为什么还不能合入 main？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "data platform owner approval"
+        ],
+        "judge_forbidden_facts": [
+          "release note",
+          "low priority"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Echo analytics release note 补充了什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "cohort filter behavior change"
+        ],
+        "judge_forbidden_facts": [
+          "PR 482",
+          "owner approval",
+          "dashboard export bug"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

@@ -1,0 +1,323 @@
+[
+  {
+    "case_id": "deeper_five_hop_requirement_chain",
+    "category": "deep_requirement_chain",
+    "description": "五到六跳 requirement chain 下，why 查询应能串出主缺失项、直接要求、handbook、bulletin、register 和 roster 约束。",
+    "settle_timeout_seconds": 90,
+    "memory_scope_templates": {
+      "primary": "eval:generic_deeper_dependency_chain_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Aetherpoint rollout 当前还不能进入 cutover，因为 release packet 缺少 dock seal note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aetherpoint checklist 要求所有 release packet 在进入 cutover 前补齐 dock seal note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Beaconfield handbook 规定所有 dock seal note 必须附 harbor annex。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Crestline bulletin 要求所有 harbor annex 在进入执行前补齐 reviewer charter。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Dawnfield register 要求所有 reviewer charter 记录补齐 on-call roster。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Eastmere roster 规定所有 on-call roster 的任命必须经 facility manager 确认。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Aetherpoint rollout 现在还不能进入 cutover？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "dock seal note",
+          "Aetherpoint checklist || checklist",
+          "harbor annex || Beaconfield handbook || handbook",
+          "reviewer charter || Crestline bulletin || bulletin",
+          "on-call roster || Dawnfield register || register",
+          "facility manager || Eastmere roster || roster"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 6,
+        "memory_count": 6,
+        "observation_count": 6,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deeper_direct_plus_co_required",
+    "category": "deep_co_required",
+    "description": "direct blocker、co-required item 和 upstream prerequisite 同时存在时，why 查询应说全三者。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_deeper_dependency_chain_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Fallowgate transfer 当前还不能放行，因为 cargo manifest 缺少 customs seal。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Fallowgate checklist 要求所有 transfer 放行前补齐 cargo manifest 和 route packet。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Highwatch manual 规定所有 route packet 必须附 weather brief。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Fallowgate transfer 现在还不能放行？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "cargo manifest",
+          "customs seal",
+          "route packet || Fallowgate checklist || checklist",
+          "weather brief || Highwatch manual || manual"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deeper_history_disagreement_external_rule",
+    "category": "deep_history_external",
+    "description": "历史分歧、当前收敛结论和外部 governing artifact 同时存在时，应能答出分歧和当前约束。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_deeper_dependency_chain_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Subject: Westbridge review\nSession: wb-7\nStage: decision\nRound: 1\nPosition: supportive\nSummary: 可以按原计划执行。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Subject: Westbridge review\nSession: wb-7\nStage: decision\nRound: 2\nPosition: opposing\nSummary: 必须先补 risk assessment，不能直接执行。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Westbridge review 当前决定已经变成先补 risk assessment 再重新排期执行。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Southport bulletin 要求所有执行前决策补齐 risk assessment。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Westbridge review 历史上有哪些分歧，当前又为什么收敛到现在的结论？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "required_uncertainty_prefixes": [
+          "contradicting_memory:"
+        ],
+        "judge_required_facts": [
+          "原计划执行",
+          "risk assessment",
+          "Southport bulletin || bulletin"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deeper_noisy_deep_chain",
+    "category": "deep_noisy_chain",
+    "description": "大量无关噪声文本中，四到五跳依赖链仍应能被 why 查询拉出。",
+    "settle_timeout_seconds": 90,
+    "memory_scope_templates": {
+      "primary": "eval:generic_deeper_dependency_chain_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "长操作纪要里提到旧设备清单、温度记录、午餐安排、走道照明和几位来访者名字，但真正结论是：Northwind rollout 当前还不能推进，因为 deployment packet 缺少 signed charter。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Northwind checklist 要求所有 deployment packet 在进入执行前补齐 signed charter。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Ironclad roster 要求所有 signed charter 必须由 on-call lead 签署。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Amberwell docket 要求所有 on-call lead 的任命必须经 safety officer 确认。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Northwind rollout 现在还不能推进？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "deployment packet",
+          "signed charter",
+          "Northwind checklist || checklist",
+          "on-call lead || Ironclad roster || roster",
+          "safety officer || Amberwell docket || docket"
+        ],
+        "judge_forbidden_facts": [
+          "午餐安排",
+          "走道照明"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deeper_mixed_language_six_hop",
+    "category": "deep_mixed_language",
+    "description": "中英混合下，六跳 requirement chain 仍应稳定回答。",
+    "settle_timeout_seconds": 90,
+    "memory_scope_templates": {
+      "primary": "eval:generic_deeper_dependency_chain_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Blackthorn packet 当前还不能 release，因为 transfer note 缺少 customs stamp。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Blackthorn checklist 要求所有 transfer note 在 release 前补齐 customs stamp。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Coldwater ledger 规定所有 customs stamp 必须附 export permit。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Highwatch manual 要求所有 export permit 在进入执行前补齐 safety clearance。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Eastmere roster 要求所有 safety clearance 由 certified inspector 签署。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Dawnfield register 要求所有 certified inspector 的任命必须经 operations director 确认。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Why can’t Blackthorn packet release now?",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "customs stamp",
+          "transfer note || Blackthorn checklist || checklist",
+          "export permit || Coldwater ledger || ledger",
+          "safety clearance || Highwatch manual || manual",
+          "certified inspector || Eastmere roster || roster",
+          "operations director || Dawnfield register || register"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 6,
+        "memory_count": 6,
+        "observation_count": 6,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "deeper_same_surface_with_chain",
+    "category": "deep_same_surface",
+    "description": "同名 project/checklist/manual 并存并带深链依赖时，应稳定拆分并回答 why。",
+    "settle_timeout_seconds": 90,
+    "memory_scope_templates": {
+      "primary": "eval:generic_deeper_dependency_chain_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Aetherpoint project 当前 blocker 是 deployment note 缺少 facility seal。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aetherpoint checklist 要求所有 deployment note 在进入执行前补齐 facility seal。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Aetherpoint manual 规定所有 facility seal 必须由 duty officer 签署。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Beaconfield handbook 要求所有 duty officer 的任命必须经 shift supervisor 确认。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Aetherpoint project 现在还不能推进？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "deployment note",
+          "facility seal",
+          "Aetherpoint checklist || checklist",
+          "duty officer || Aetherpoint manual || manual",
+          "shift supervisor || Beaconfield handbook || handbook"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 4,
+        "memory_count": 4,
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

@@ -1,0 +1,371 @@
+[
+  {
+    "case_id": "same_surface_project_vs_checklist_why_query",
+    "category": "same_surface_cross_entity",
+    "description": "同名项目与 checklist 同时存在时，why 查询应保持主体边界并引用外部 artifact。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前还不能切换到新流程，因为回滚说明还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas checklist 明确要求切换前必须补齐回滚说明。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Atlas rollout 还不能切换到新流程？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "回滚说明",
+          "Atlas checklist || checklist"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "same_surface_checklist_query_after_project_context",
+    "category": "same_surface_cross_entity",
+    "description": "先写项目再写同名 checklist，查询 checklist 时不应串到项目主体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Atlas checklist 当前缺少回滚附录。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas checklist 当前缺什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "回滚附录"
+        ],
+        "judge_forbidden_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "cross_entity_policy_with_distractor",
+    "category": "noisy_cross_entity",
+    "description": "存在无关 policy 干扰时，why 查询仍应只引用真正相关的外部约束。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Northstar rollout 当前仍不能上线，因为审批链说明还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Deployment approval policy 要求所有生产发布在执行前必须补齐审批链说明。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Access retention policy 要求所有临时访问权限在24小时内回收。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Northstar rollout 还不能上线？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批链说明"
+        ],
+        "judge_forbidden_facts": [
+          "24小时内回收"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 3,
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "cross_entity_upstream_with_distractor_handbook",
+    "category": "noisy_cross_entity",
+    "description": "上游依赖与无关 handbook 并存时，外部影响查询应命中真正的 upstream memory。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是依赖数据源迟迟没有恢复。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Data sync service 当前仍处于批量补数状态，尚未恢复稳定输出。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Recovery handbook 当前缺少 on-call escalation path。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 现在还被什么外部问题影响？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Data sync service || 批量补数 || 稳定输出"
+        ],
+        "judge_forbidden_facts": [
+          "on-call escalation path"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 3,
+          "related_to": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "history_plus_external_requirement_current_query",
+    "category": "history_plus_constraint",
+    "description": "当前 blocker 变化叠加外部 handbook 约束时，应同时表达当前状态和外部要求。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Phoenix review 之前卡在 database migration timeout。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Phoenix review 当前主阻塞已经变成 rollback approval missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Release approval handbook 要求上线前必须补齐 rollback approval。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Phoenix review 当前主阻塞是什么，外部还受什么要求约束？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback approval missing",
+          "rollback approval"
+        ],
+        "judge_forbidden_facts": [
+          "database migration timeout"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 2,
+          "superseded": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 3,
+          "updates": 1,
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "mixed_language_same_surface_checklist_vs_service",
+    "category": "same_surface_cross_entity",
+    "description": "中英混合同名 service 与 checklist 并存时，应能稳定查询 checklist 本身的要求。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Mercury service 当前缺少 failover checklist sign-off。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Mercury checklist 明确要求 before failover 必须完成 sign-off。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Mercury checklist before failover 要求什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "sign-off"
+        ],
+        "judge_forbidden_facts": [
+          "Mercury service 当前缺少"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "noisy_meeting_note_with_second_entity",
+    "category": "noisy_cross_entity",
+    "description": "噪声上下文顺手提到另一主体时，主查询不应串到无关实体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "周会里顺手提到 Billing service，但主结论是 Atlas rollout 当前主阻塞是审批链说明缺失。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Billing service 当前负责人是 Owen Tan。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批链说明缺失 || 审批链说明"
+        ],
+        "judge_forbidden_facts": [
+          "Owen Tan"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "document_blocked_by_external_checklist_with_owner_distractor",
+    "category": "noisy_cross_entity",
+    "description": "文档自身受 checklist 约束且有无关 owner 干扰时，why 查询应保持文档主体并引用 checklist。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_extreme_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Quarterly planning doc 当前不能进入审批，因为 fallback section 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Fallback checklist 明确要求审批前必须补齐 fallback section。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Quarterly planning project 当前负责人是 Mina。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Quarterly planning doc 还不能进入审批？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "fallback section",
+          "Fallback checklist || checklist"
+        ],
+        "judge_forbidden_facts": [
+          "Mina"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 3,
+          "supports": 1
+        }
+      }
+    }
+  }
+]

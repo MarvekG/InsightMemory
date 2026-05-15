@@ -1,0 +1,252 @@
+[
+  {
+    "case_id": "finance_etf_rebalance_requirement",
+    "category": "finance_etf",
+    "description": "ETF 调仓要求应可稳定召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_finance_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Stonebridge ETF rebalance memo 要求调仓前确认 tracking error band。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Stonebridge ETF rebalance memo 调仓前要确认什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "tracking error band"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "finance_same_surface_stock_vs_sector_note",
+    "category": "finance_same_surface",
+    "description": "同名 stock 与 sector note 并存时，应稳定拆分。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_finance_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Everpoint stock 当前主风险是渠道库存压力。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Everpoint sector note 当前结论是半导体库存去化仍慢，先维持中性。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Everpoint sector note 当前结论是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "半导体库存去化仍慢 || 库存去化仍慢",
+          "维持中性"
+        ],
+        "judge_forbidden_facts": [
+          "渠道库存压力"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    },
+    "settle_timeout_seconds": 60
+  },
+  {
+    "case_id": "finance_cross_asset_why_query",
+    "category": "finance_cross_asset",
+    "description": "股票仓位判断与外部 hedge note 的约束应能通过 why 查询拉出。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_finance_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Copperline miner 当前还不能上调仓位，因为 hedge coverage ratio 还没有确认。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Commodity hedge note 要求所有增持前先确认 hedge coverage ratio。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Copperline miner 现在还不能上调仓位？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "hedge coverage ratio",
+          "Commodity hedge note || hedge note"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    },
+    "settle_timeout_seconds": 60
+  },
+  {
+    "case_id": "finance_portfolio_history_current",
+    "category": "finance_portfolio_history",
+    "description": "portfolio review 的 earlier/current 风险变化应能分别回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_finance_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Pinecrest portfolio review 之前主风险是 duration mismatch。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Pinecrest portfolio review 当前主风险已经变成 liquidity buffer drawdown。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Pinecrest portfolio review 当前主风险是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "liquidity buffer drawdown"
+        ],
+        "judge_forbidden_facts": [
+          "duration mismatch"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Pinecrest portfolio review 之前主风险是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "duration mismatch"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "finance_macro_mixed_language_condition",
+    "category": "finance_macro",
+    "description": "mixed-language 的 macro calendar 条件应能被稳定提取。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_finance_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Riverbend macro calendar before CPI week 必须先确认 shelter inflation revision path。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Riverbend macro calendar before CPI week 必须确认什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "shelter inflation revision path"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "finance_related_gap_with_noise",
+    "category": "finance_related_gap",
+    "description": "噪声下，金融主体主风险之外的相关缺口也应能被拉出。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_finance_generalization_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "记录里有很多闲聊，但真正结论是：Cloudspan semiconductor basket 当前主风险是 channel inventory overhang。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Supply discipline memo 目前还缺 distributor inventory validation workflow，这也是分析会上提到的邻接缺口。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "除了当前主风险外，Cloudspan semiconductor basket 还有什么相关缺口？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "distributor inventory validation workflow || validation workflow",
+          "Supply discipline memo || memo"
+        ],
+        "judge_forbidden_facts": [
+          "没有其他缺口"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    },
+    "settle_timeout_seconds": 60
+  }
+]

@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=69", "wheel>=0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "InsightMemory"
+version = "0.1.6"
+description = "InsightMemory service for Best-AI-Trader"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Best-AI-Trader contributors" }
+]
+dependencies = [
+  "fastapi>=0.128.0",
+  "uvicorn[standard]>=0.40.0",
+  "pydantic>=2.12.5",
+  "pydantic-settings>=2.12.0",
+  "sqlalchemy>=2.0.45",
+  "asyncpg>=0.30.0",
+  "httpx>=0.28.1",
+  "openai>=2.15.0",
+  "sentence-transformers>=5.3.0",
+  "langgraph>=0.2.60",
+  "llama-index-core>=0.12.0",
+  "llama-index-retrievers-bm25>=0.3.0",
+  "llama-index-vector-stores-postgres>=0.4.0",
+  "concurrent-log-handler>=0.9.29"
+]
+
+[project.scripts]
+insight_memory = "insight_memory.cli:main"
+
+[project.urls]
+Repository = "https://github.com/Best-AI-Trader/Best-AI-Trader"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["insight_memory*"]
+
+[tool.setuptools.package-data]
+insight_memory = ["config/log_config.json"]

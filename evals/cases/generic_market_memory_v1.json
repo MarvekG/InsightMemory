@@ -1,0 +1,252 @@
+[
+  {
+    "case_id": "market_equity_risk_recall",
+    "category": "market_equity",
+    "description": "股票主体的当前主风险应可直接召回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_market_memory_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Bluepeak Holdings 当前主风险是库存周转天数上升。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Bluepeak Holdings 当前主风险是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "库存周转天数上升"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "market_same_surface_stock_vs_note",
+    "category": "market_same_surface",
+    "description": "同名股票与 earnings note 并存时，应稳定拆分主体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_market_memory_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Northfield stock 当前主风险是渠道库存压力。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Northfield earnings note 当前结论是先观察毛利率修复，再考虑加仓。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Northfield earnings note 当前结论是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "毛利率修复 || 观察毛利率修复",
+          "加仓"
+        ],
+        "judge_forbidden_facts": [
+          "渠道库存压力"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    },
+    "settle_timeout_seconds": 60
+  },
+  {
+    "case_id": "market_cross_entity_guidance_requirement",
+    "category": "market_cross_entity",
+    "description": "股票判断与外部 guidance memo 的约束应能通过 why 查询拉出。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_market_memory_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Seabridge Components 当前还不能上调评级，因为 gross margin floor 还没有确认。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Q2 guidance memo 要求所有评级上调前先确认 gross margin floor。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Seabridge Components 现在还不能上调评级？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "gross margin floor",
+          "Q2 guidance memo || guidance memo"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    },
+    "settle_timeout_seconds": 60
+  },
+  {
+    "case_id": "market_history_current_thesis",
+    "category": "market_history",
+    "description": "股票 earlier/current 风险变化应能分别回答。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_market_memory_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Halcyon Battery 之前主风险是 wafer yield slip。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Halcyon Battery 当前主风险已经变成 channel inventory pressure。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Halcyon Battery 当前主风险是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "channel inventory pressure"
+        ],
+        "judge_forbidden_facts": [
+          "wafer yield slip"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Halcyon Battery 之前主风险是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "wafer yield slip"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "market_mixed_language_earnings_checklist",
+    "category": "market_mixed_language",
+    "description": "mixed-language 的 earnings checklist 条件应能被稳定提取。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_market_memory_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Ironcrest Metals earnings checklist before call 必须先确认 free cash flow bridge。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Ironcrest Metals earnings checklist before call 必须确认什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "free cash flow bridge"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "market_related_gap_with_noise",
+    "category": "market_related_gap",
+    "description": "带噪声时，股票主风险之外的相关缺口也应能被拉出。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_market_memory_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "周报里有很多闲聊，但真正结论是：Redstone Retail 当前主风险是 commodity hedge missing。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Commodity risk handbook 目前还缺 hedge validation workflow，这也是分析会上提到的邻接缺口。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "除了当前主风险外，Redstone Retail 还有什么相关缺口？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "hedge validation workflow || validation workflow",
+          "Commodity risk handbook || handbook"
+        ],
+        "judge_forbidden_facts": [
+          "没有其他缺口"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    },
+    "settle_timeout_seconds": 60
+  }
+]

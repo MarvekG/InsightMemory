@@ -1,0 +1,11 @@
+{
+  "matrix_id": "cross_format_longform_v1",
+  "description": "Cross-format longform suite covering markdown, email, YAML-ish, bilingual, prose-checklist, and correction-note inputs.",
+  "suites": [
+    {
+      "suite_id": "cross_format_longform",
+      "description": "Cross-format longform suite.",
+      "cases": "../cases/generic_cross_format_longform_v1.json"
+    }
+  ]
+}

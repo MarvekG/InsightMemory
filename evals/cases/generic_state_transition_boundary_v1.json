@@ -1,0 +1,208 @@
+[
+  {
+    "case_id": "current_blocker_replaces_previous",
+    "category": "state_current_vs_previous",
+    "description": "同一主体的当前阻塞变化后，当前查询应回答新阻塞，历史查询仍能回答旧阻塞。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_state_transition_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Sable clinic review 之前卡在 intake form 缺少 triage stamp。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Sable clinic review 当前主阻塞已经变成 lab consent 缺少 guardian signature。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Sable clinic review 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "lab consent",
+          "guardian signature"
+        ],
+        "judge_forbidden_facts": [
+          "triage stamp"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Sable clinic review 之前卡在哪里？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "intake form",
+          "triage stamp"
+        ],
+        "judge_forbidden_facts": [
+          "guardian signature"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 2,
+        "recall_audit_count": 2,
+        "required_memory_texts": [
+          "guardian signature",
+          "triage stamp"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "supplement_accumulates_current_rule",
+    "category": "state_supplement_accumulation",
+    "description": "当前规则的补充要求应被保留；查询当前规则时应同时看到原要求和补充要求。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_state_transition_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Beryl orchard notice 当前要求 spray log 在采摘前提交。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Beryl orchard notice 最新补充：所有 spray log 还必须附上 wind reading。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Beryl orchard picnic note 显示志愿者午餐已经安排。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Beryl orchard notice 当前对 spray log 有什么要求？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "采摘前提交",
+          "wind reading"
+        ],
+        "judge_forbidden_facts": [
+          "志愿者午餐"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "observation_count": 3,
+        "recall_audit_count": 1,
+        "required_memory_texts": [
+          "spray log",
+          "wind reading"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "correction_overrides_wrong_missing_item",
+    "category": "state_correction_override",
+    "description": "更正记录应覆盖误写的当前缺项，当前查询不能继续回答被更正的旧缺项。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_state_transition_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Marble vault manifest 初版误写为缺少 wax label。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Marble vault manifest 更正：当前实际缺少 isotope tag，不是 wax label。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Marble vault manifest 当前实际缺少什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "isotope tag"
+        ],
+        "judge_forbidden_facts": [
+          "wax label"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "required_memory_texts": [
+          "isotope tag"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "historical_allowance_vs_current_gate",
+    "category": "state_history_current_rule",
+    "description": "同一文档从历史允许变成当前管控时，当前查询不能被历史允许污染。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_state_transition_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Umber depot charter 之前允许 crew 直接修改 bay ledger。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Umber depot charter 当前要求 bay ledger 变更必须先获得 yard captain approval。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Umber depot charter 当前对 bay ledger 变更有什么要求？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "yard captain approval"
+        ],
+        "judge_forbidden_facts": [
+          "直接修改"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Umber depot charter 之前允许 crew 怎么处理 bay ledger？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "直接修改",
+          "bay ledger"
+        ],
+        "judge_forbidden_facts": [
+          "yard captain approval"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 2,
+        "recall_audit_count": 2,
+        "required_memory_texts": [
+          "直接修改",
+          "yard captain approval"
+        ]
+      }
+    }
+  }
+]

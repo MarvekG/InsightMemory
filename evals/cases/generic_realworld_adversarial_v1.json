@@ -1,0 +1,358 @@
+[
+  {
+    "case_id": "alias_after_correction_not_old_name",
+    "category": "realworld_adversarial_alias",
+    "description": "别名和更正同时出现时，简称查询应落到更正后的当前事实，而不是旧名称或邻近公告。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_adversarial_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "North Pier intake binder（简称 NPI）初版写成需要 blue receipt。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "NPI binder 更正：当前实际缺少的是 signed dock waiver，不是 blue receipt。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "North Pier incident bulletin 今天只更新了 visitor badge color。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "NPI binder 当前实际缺少什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "signed dock waiver"
+        ],
+        "judge_forbidden_facts": [
+          "blue receipt",
+          "visitor badge color"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "North Pier incident bulletin 今天更新了什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "visitor badge color"
+        ],
+        "judge_forbidden_facts": [
+          "signed dock waiver",
+          "blue receipt"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2,
+        "required_memory_texts": [
+          "signed dock waiver",
+          "visitor badge color"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "table_like_input_ticket_split",
+    "category": "realworld_adversarial_format_shift",
+    "description": "表格式输入中的相似工单号和相似字段应保持分离，查询一个工单不能带出另一个工单。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_adversarial_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Ops table row: ticket=MX-17A; asset=freezer bay; blocker=missing gasket photo; owner=Rui.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Ops row: ticket=MX-17B; asset=checklist; blocker=supervisor initials absent; owner=Tala.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Ops table note: freezer bay lunch delivery moved to side entrance.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "MX-17A 这个 ticket 卡在哪里，owner 是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "missing gasket photo",
+          "Rui"
+        ],
+        "judge_forbidden_facts": [
+          "supervisor initials",
+          "Tala",
+          "lunch delivery"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "MX-17B 需要补什么，owner 是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "supervisor initials",
+          "Tala || owner"
+        ],
+        "judge_forbidden_facts": [
+          "gasket photo",
+          "Rui",
+          "side entrance"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "email_thread_latest_decision",
+    "category": "realworld_adversarial_thread",
+    "description": "邮件线程中早期建议和最终决定冲突时，当前查询应使用最终决定，不能返回旧建议。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_adversarial_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Email thread for Lark permit: earlier suggestion was to submit the noise affidavit first.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Lark permit final decision: submit fire lane sketch first; noise affidavit waits until inspection booking.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Lark catering thread chose pear tart for the volunteer table.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Lark permit 现在应该先提交什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "fire lane sketch"
+        ],
+        "judge_forbidden_facts": [
+          "noise affidavit first",
+          "pear tart"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Lark permit 的 noise affidavit 要什么时候再处理？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "inspection booking"
+        ],
+        "judge_forbidden_facts": [
+          "pear tart"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2,
+        "required_memory_texts": [
+          "fire lane sketch",
+          "inspection booking"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "negative_permission_with_exception",
+    "category": "realworld_adversarial_negation",
+    "description": "否定规则和例外条件同时存在时，系统不能把不合格材料当成满足例外。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_adversarial_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Cobalt coworking pass 不允许 remote handoff，除非账户有 notarized proxy letter。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cobalt account Theo 上传了 notarized proxy letter；Cobalt account Una 只上传了 email approval screenshot。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Cobalt coffee bar 下周暂停 oat milk option。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Theo account 可以走 Cobalt remote handoff 例外吗？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Theo",
+          "notarized proxy letter"
+        ],
+        "judge_forbidden_facts": [
+          "email approval screenshot",
+          "oat milk"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Una account 可以只凭 email approval screenshot remote handoff 吗？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "不可以 || 不能",
+          "notarized proxy letter",
+          "email approval screenshot"
+        ],
+        "judge_forbidden_facts": [
+          "oat milk"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "similar_prefix_manual_form_task",
+    "category": "realworld_adversarial_same_prefix",
+    "description": "同一前缀下 manual、form、task 三类主体相邻，窄查询应只回答目标主体，why 查询才带出上游手册要求。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_adversarial_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Pine relay task 当前无法关闭，因为 voltage form 缺 reviewer initials。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Pine relay manual 规定 reviewer initials 必须来自 shift lead，不接受 automated stamp。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Pine relay picnic task 已经确认 folding chairs 数量。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Pine relay task 当前无法关闭的直接原因是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "voltage form",
+          "reviewer initials"
+        ],
+        "judge_forbidden_facts": [
+          "shift lead",
+          "folding chairs"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "为什么 Pine relay task 的 reviewer initials 还不合格？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "shift lead",
+          "automated stamp",
+          "Pine relay manual || manual"
+        ],
+        "judge_forbidden_facts": [
+          "folding chairs"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "multi_noise_direct_boundary",
+    "category": "realworld_adversarial_answer_boundary",
+    "description": "同一 scope 内多条噪声事实共用地点名，直接查询取件码时只应返回取件事实。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_realworld_adversarial_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Elm lobby package for Unit 9C is in locker H4; pickup code is 7132 and expires tonight 21:00.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Elm lobby board game night moved from Thursday to Friday.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Elm lobby plant shelf needs watering every Monday morning.",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Elm garage gate remote for Unit 9C is stored with building manager Dana.",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Unit 9C 的 Elm lobby 包裹取件码是什么，什么时候过期？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "7132",
+          "tonight 21:00 || 21:00"
+        ],
+        "judge_forbidden_facts": [
+          "board game",
+          "watering",
+          "Dana",
+          "garage gate"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "observation_count": 4,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]

@@ -1,0 +1,247 @@
+[
+  {
+    "case_id": "negation_explicit_rejection",
+    "category": "negation_rejection",
+    "description": "系统应能识别显式否定信息，并在查询时不将否定内容当作肯定事实返回。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_negation_conflict_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Project Titan 当前不采用微服务架构，仍保持单体应用模式。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Project Titan 采用什么架构？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "单体应用"
+        ],
+        "judge_forbidden_facts": [
+          "微服务"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "negation_permission_denial",
+    "category": "negation_permission",
+    "description": "系统应理解权限否定描述，不因包含肯定词汇而误判为授权。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_negation_conflict_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Guest account 没有权限访问生产数据库，不能执行写操作，也不能查看用户敏感信息。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Guest account 能访问生产数据库吗？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "没有权限",
+          "不能"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Guest account 有什么限制？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "不能执行写操作",
+          "不能查看用户敏感信息"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "conflict_update_override",
+    "category": "conflict_override",
+    "description": "系统应能处理事实冲突，新信息覆盖旧信息后，查询应返回最新状态。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_negation_conflict_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "月初，Region East 的销售目标是每月 500 万。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "月中，Region East 的销售目标上调到每月 800 万，原 500 万目标已作废。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Region East 当前的销售目标是多少？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "800万"
+        ],
+        "judge_forbidden_facts": [
+          "500万"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "conflict_contradictory_sources",
+    "category": "conflict_sources",
+    "description": "系统应能处理来自不同来源的矛盾信息，不随意合并冲突事实。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_negation_conflict_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "根据财务部的数据，Atlas 项目 Q3 财务报告显示净利润同比增长 15%。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "根据审计部的复核，Atlas 项目 Q3 财务报告中的净利润同比增长实际为 8%，存在统计口径差异。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas 项目 Q3 财务报告中，不同部门对净利润增长的说法有什么差异？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "财务部",
+          "15%",
+          "审计部",
+          "8%"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "negation_double_negative",
+    "category": "double_negative",
+    "description": "系统应能理解双重否定表达，正确还原为肯定含义。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_negation_conflict_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "新安全策略规定：未经审批不得不可访问核心系统，即所有访问必须经过审批流程。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "新安全策略中，访问核心系统需要什么条件？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批",
+          "必须经过审批流程"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "conflict_conditional_exception",
+    "category": "conditional_exception",
+    "description": "系统应能理解带条件例外规则，不因一般规则而忽略例外情况。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_negation_conflict_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Remote access policy 规定：常规情况下，普通员工不能远程访问内网。但紧急故障处理时，经值班经理口头授权可以临时接入。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Remote access policy 中，普通员工在什么情况下可以远程访问内网？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "紧急故障处理",
+          "值班经理口头授权"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Remote access policy 中，普通员工常规情况下能远程访问内网吗？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "不能"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

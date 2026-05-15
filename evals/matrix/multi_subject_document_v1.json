@@ -1,0 +1,11 @@
+{
+  "matrix_id": "multi_subject_document_v1",
+  "description": "Multi-subject long-document suite covering primary subject extraction, side-subject filtering, same-prefix artifact splitting, and single-document cross-entity reasoning.",
+  "suites": [
+    {
+      "suite_id": "multi_subject_document",
+      "description": "Multi-subject long-document suite.",
+      "cases": "../cases/generic_multi_subject_document_v1.json"
+    }
+  ]
+}

@@ -1,0 +1,334 @@
+[
+  {
+    "case_id": "noisy_policy_requirement_with_chatty_context",
+    "category": "noisy_context",
+    "description": "带噪声说明的规则主体仍应稳定写入并回答要求。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_noise_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "补充说明：这段话来自周会整理，前半段有闲聊可以忽略。Access retention policy 的正式要求是：所有临时访问权限必须在24小时内回收，特殊延期要单独审批。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Access retention policy 有什么要求？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "24小时内回收"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "noisy_same_name_artifact_split",
+    "category": "artifact_disambiguation",
+    "description": "同名项目与报告在带噪声上下文下仍应拆成不同主体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_noise_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "先记一个背景：Atlas 这个名字最近在多个讨论里都出现过。Atlas 是发布项目，当前主阻塞是数据库迁移失败。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "另一个同名对象要单独记：Atlas 是审计报告，当前缺少审批链说明和回滚说明。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas 审计报告 当前缺什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批链说明 || 回滚说明"
+        ],
+        "judge_forbidden_facts": [
+          "数据库迁移失败"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1
+      }
+    }
+  },
+  {
+    "case_id": "cross_entity_policy_explains_blocker",
+    "category": "cross_entity_dependency",
+    "description": "项目 blocker 与外部政策要求之间应能建立跨主体解释关系。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_noise_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Northstar rollout 当前仍不能上线，因为审批链说明还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Deployment approval policy 要求所有生产发布在执行前必须补齐审批链说明。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Northstar rollout 还不能上线？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "审批链说明"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "cross_entity_upstream_related_dependency",
+    "category": "cross_entity_dependency",
+    "description": "当前 blocker 与上游服务故障应形成跨主体相关关系。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_noise_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Atlas rollout 当前主阻塞是依赖数据源迟迟没有恢复。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Data sync service 当前仍处于批量补数状态，尚未恢复稳定输出。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Atlas rollout 现在还被什么外部问题影响？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Data sync service || 批量补数 || 稳定输出"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "related_to": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "noisy_history_current_transition",
+    "category": "noisy_context",
+    "description": "带噪声上下文的 earlier/current blocker 变化仍应形成 replace。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_noise_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "记录一下旧状态，别的闲聊可忽略：Phoenix review 之前卡在 database migration timeout。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "更新一下当前状态：Phoenix review 当前主阻塞已经变成 rollback approval missing，之前那个 timeout 不再是当前主阻塞。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Phoenix review 当前主阻塞是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "rollback approval missing"
+        ],
+        "judge_forbidden_facts": [
+          "database migration timeout"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "memory_status_counts": {
+          "active": 1,
+          "superseded": 1
+        },
+        "edge_type_counts": {
+          "derived_from": 2,
+          "updates": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "cross_entity_document_requirement_why_query",
+    "category": "cross_entity_dependency",
+    "description": "文档要求应能作为另一个主体当前限制的解释依据。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_noise_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Billing service 当前还不能切换到新模板，因为税率模板校验流程没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Tax template checklist 明确要求切换前必须完成税率模板校验流程。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Billing service 还不能切换到新模板？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "税率模板校验流程"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "supports": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "artifact_query_with_background_noise",
+    "category": "noisy_context",
+    "description": "带背景闲聊的文档主体 query 仍应稳定通过。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_noise_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "背景：这份材料在周会上被顺手提了一句。Quarterly planning doc 当前缺少 capacity fallback 章节。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Quarterly planning doc 当前缺什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "capacity fallback 章节"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "cross_entity_related_gap_with_noise",
+    "category": "cross_entity_dependency",
+    "description": "带噪声描述的主 blocker 与外部缺口应形成 related_to。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_noise_dependency_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "口头记录里有不少闲聊，但主结论很清楚：Orion rollout 当前主阻塞是配置漂移。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Configuration baseline handbook 目前还缺少配置基线校验流程，这也是周会上反复提到的邻接缺口。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "除了当前主阻塞外，Orion rollout 还有什么相关缺口？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "配置基线校验流程"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 1,
+        "edge_type_counts": {
+          "derived_from": 2,
+          "related_to": 1
+        }
+      }
+    }
+  }
+]

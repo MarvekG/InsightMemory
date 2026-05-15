@@ -1,0 +1,237 @@
+[
+  {
+    "case_id": "same_prefix_project_checklist_handbook",
+    "category": "identity_same_prefix_artifacts",
+    "description": "同一前缀下 project、checklist、handbook 应保持主体边界，窄查询不应混入上游 handbook 细节。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_identity_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Orchid transfer project 当前主阻塞是 staging window 未确认。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orchid transfer checklist 当前要求补齐 seal note 和 cargo tag。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Orchid transfer handbook 要求所有 seal note 必须包含 reviewer initials。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Orchid transfer checklist 当前要求补齐什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "seal note",
+          "cargo tag"
+        ],
+        "judge_forbidden_facts": [
+          "staging window",
+          "reviewer initials"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "为什么 Orchid transfer checklist 的 seal note 还不完整？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "seal note",
+          "reviewer initials",
+          "Orchid transfer handbook || handbook"
+        ],
+        "judge_forbidden_facts": [
+          "staging window"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "role_vs_schedule_same_surface",
+    "category": "identity_role_boundary",
+    "description": "scheduler 和 schedule 共享前缀但身份不同，查询应落到正确主体。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_identity_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Harborline scheduler 当前负责人是 Mira，负责协调夜间换轨窗口。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Harborline schedule 显示本周可用窗口是 Friday 23:00。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Harborline safety note 要求夜间换轨前必须完成 lockout checklist。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Harborline schedule 显示了什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Friday 23:00"
+        ],
+        "judge_forbidden_facts": [
+          "Mira",
+          "lockout checklist"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Harborline scheduler 当前负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Mira"
+        ],
+        "judge_forbidden_facts": [
+          "Friday 23:00",
+          "lockout checklist"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "team_vs_manual_dependency_boundary",
+    "category": "identity_team_artifact_boundary",
+    "description": "团队主体和手册主体应分开；why 查询可以带出手册要求，历史完成项不能混入当前阻塞。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_identity_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Kite ops team 当前无法交付巡检包，因为 drone battery audit 未完成。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Kite ops manual 要求所有 drone battery audit 在交付前附上 cell variance table。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Kite ops team 上周已经完成 spare propeller inventory。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Kite ops team 当前无法交付巡检包的原因是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "drone battery audit"
+        ],
+        "judge_forbidden_facts": [
+          "spare propeller inventory"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Kite ops manual 要求 drone battery audit 附上什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "drone battery audit",
+          "cell variance table"
+        ],
+        "judge_forbidden_facts": [
+          "spare propeller inventory"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "explicit_alias_surface_form",
+    "category": "identity_alias_surface",
+    "description": "输入显式给出简称后，查询简称应能召回完整主体，同时不混入同前缀公告。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_identity_boundary_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Raven harbor beacon（简称 RHB）当前校准缺少 tide offset table。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Raven harbor bulletin 当前发布窗口是 Sunday dawn。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "RHB 当前校准缺少什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "tide offset table"
+        ],
+        "judge_forbidden_facts": [
+          "Sunday dawn"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Raven harbor bulletin 当前发布窗口是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Sunday dawn"
+        ],
+        "judge_forbidden_facts": [
+          "tide offset table"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 2,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

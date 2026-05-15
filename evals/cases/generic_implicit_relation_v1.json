@@ -1,0 +1,270 @@
+[
+  {
+    "case_id": "implicit_hierarchy_inheritance",
+    "category": "hierarchy_inheritance",
+    "description": "系统应能推断层级关系中的隐含继承，不仅依赖显式陈述。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_implicit_relation_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Engineering Department 下属 Backend Team 和 Frontend Team。Backend Team 的负责人是 Sarah Lin。Frontend Team 的负责人是 Mike Chen。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Backend Team 隶属于哪个部门？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Engineering Department"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Engineering Department 有哪些团队负责人？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Sarah Lin",
+          "Mike Chen"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "implicit_causality_chain",
+    "category": "causality_chain",
+    "description": "系统应能推断未明确陈述的因果链中间环节。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_implicit_relation_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Payment Service 依赖 Order Database。Order Database 当前存在主从同步延迟问题。该延迟导致 Payment Service 的缓存命中率下降，进而导致支付接口响应变慢。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Payment Service 的支付接口响应变慢的根本原因是什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Order Database",
+          "主从同步延迟"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Order Database 的主从同步延迟对 Payment Service 产生了哪些影响？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "缓存命中率下降",
+          "支付接口响应变慢"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "implicit_role_substitution",
+    "category": "role_substitution",
+    "description": "系统应能理解角色替代关系，在人员变动时推断新人员的职责继承。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_implicit_relation_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Project Orion 的安全审计负责人原本是 David Wang。David Wang 调离后，Lisa Zhang 接任安全审计负责人。Lisa Zhang 的职责包括定期漏洞扫描和合规报告。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Project Orion 当前的安全审计负责人是谁？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Lisa Zhang"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "David Wang 调离后，谁负责定期漏洞扫描？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Lisa Zhang"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "implicit_location_containment",
+    "category": "location_containment",
+    "description": "系统应能推断空间包含关系，理解未显式陈述的地理位置层级。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_implicit_relation_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "East Data Center 位于 Singapore Region。Singapore Region 是 APAC Zone 的一部分。East Data Center 当前正在进行网络升级。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "哪个数据中心正在进行网络升级？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "East Data Center"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "正在进行网络升级的数据中心属于哪个大洲区域？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "APAC Zone"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 3,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "implicit_symmetric_relation",
+    "category": "symmetric_relation",
+    "description": "系统应能推断对称关系，理解未显式陈述的双向关联。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_implicit_relation_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Service A 依赖 Service B 提供的用户认证接口。Service B 的认证接口响应时间直接影响 Service A 的登录流程。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Service B 的认证接口被哪个服务依赖？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Service A"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "如果 Service B 的认证接口变慢，会影响哪个服务？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "Service A"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 2,
+        "memory_count": 2,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  },
+  {
+    "case_id": "implicit_precondition_inference",
+    "category": "precondition_inference",
+    "description": "系统应能推断未显式陈述的前提条件，理解操作的依赖关系。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_implicit_relation_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Database migration 要求先关闭写流量、再创建快照备份、最后执行 schema 变更。Schema 变更完成后需要验证数据一致性，然后才能恢复写流量。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "Database migration 中，执行 schema 变更之前必须先完成什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "关闭写流量",
+          "快照备份"
+        ]
+      },
+      {
+        "query_id": "q2",
+        "query": "Database migration 中，恢复写流量之前必须先完成什么？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "验证数据一致性"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 1,
+        "memory_count": 1,
+        "observation_count": 1,
+        "recall_audit_count": 2
+      }
+    }
+  }
+]

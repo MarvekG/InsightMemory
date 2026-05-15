@@ -1,0 +1,48 @@
+[
+  {
+    "case_id": "stress_same_surface_document_project_requirement",
+    "category": "stress_same_surface",
+    "description": "同名 plan/checklist/project 三者并存时，why 查询要指向正确 artifact，不要串到 owner 信息。",
+    "memory_scope_templates": {
+      "primary": "eval:generic_stress_targeted_v1:{run_id}:{case_id}"
+    },
+    "writes": [
+      {
+        "context": "Prism plan 当前不能进入审批，因为 owner note 还没有补齐。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Prism checklist 明确要求审批前补齐 owner note。",
+        "expected_status": "accepted"
+      },
+      {
+        "context": "Prism project 当前负责人是 Aria Zhou。",
+        "expected_status": "accepted"
+      }
+    ],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "为什么 Prism plan 现在不能进入审批？",
+        "expected_status": "ok",
+        "citations_min": 1,
+        "non_empty_answer": true,
+        "judge_required_facts": [
+          "owner note",
+          "Prism checklist || checklist"
+        ],
+        "judge_forbidden_facts": [
+          "Aria Zhou"
+        ]
+      }
+    ],
+    "expected": {
+      "primary": {
+        "entity_count": 3,
+        "memory_count": 3,
+        "observation_count": 3,
+        "recall_audit_count": 1
+      }
+    }
+  }
+]
