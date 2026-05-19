@@ -24,6 +24,12 @@ from insight_memory.utils.ids import new_prefixed_id
 from insight_memory.utils.request_context import get_request_id
 
 
+def _cache_hit_rate(cached_tokens: int, input_tokens: int) -> float:
+    if input_tokens <= 0:
+        return 0.0
+    return cached_tokens / input_tokens
+
+
 class MemoryRepository:
     """Async repository used by the FastAPI application runtime."""
 
@@ -452,6 +458,8 @@ class MemoryRepository:
         latency_ms: int | None,
         input_tokens: int | None,
         output_tokens: int | None,
+        cached_tokens: int | None = None,
+        reasoning_tokens: int | None = None,
         task_id: str | None = None,
     ) -> MemoryLLMRun:
         row = MemoryLLMRun(
@@ -467,6 +475,8 @@ class MemoryRepository:
             latency_ms=latency_ms,
             input_tokens=input_tokens,
             output_tokens=output_tokens,
+            cached_tokens=cached_tokens,
+            reasoning_tokens=reasoning_tokens,
             request_id=request_id,
         )
         self.db.add(row)
@@ -490,6 +500,8 @@ class MemoryRepository:
 
         input_tokens = func.coalesce(MemoryLLMRun.input_tokens, 0)
         output_tokens = func.coalesce(MemoryLLMRun.output_tokens, 0)
+        cached_tokens = func.coalesce(MemoryLLMRun.cached_tokens, 0)
+        reasoning_tokens = func.coalesce(MemoryLLMRun.reasoning_tokens, 0)
         total_tokens = input_tokens + output_tokens
 
         total_stmt = select(
@@ -497,6 +509,8 @@ class MemoryRepository:
             func.coalesce(func.sum(input_tokens), 0),
             func.coalesce(func.sum(output_tokens), 0),
             func.coalesce(func.sum(total_tokens), 0),
+            func.coalesce(func.sum(cached_tokens), 0),
+            func.coalesce(func.sum(reasoning_tokens), 0),
         ).select_from(MemoryLLMRun)
         by_operation_stmt = (
             select(
@@ -505,6 +519,8 @@ class MemoryRepository:
                 func.coalesce(func.sum(input_tokens), 0),
                 func.coalesce(func.sum(output_tokens), 0),
                 func.coalesce(func.sum(total_tokens), 0),
+                func.coalesce(func.sum(cached_tokens), 0),
+                func.coalesce(func.sum(reasoning_tokens), 0),
             )
             .select_from(MemoryLLMRun)
             .group_by(MemoryLLMRun.worker_type)
@@ -515,7 +531,14 @@ class MemoryRepository:
             by_operation_stmt = by_operation_stmt.where(condition)
 
         total_result = await self.db.execute(total_stmt)
-        total_calls, total_input_tokens, total_output_tokens, summed_tokens = total_result.one()
+        (
+            total_calls,
+            total_input_tokens,
+            total_output_tokens,
+            summed_tokens,
+            total_cached_tokens,
+            total_reasoning_tokens,
+        ) = total_result.one()
         by_operation_result = await self.db.execute(by_operation_stmt)
         by_operation = {
             str(worker_type): {
@@ -523,6 +546,12 @@ class MemoryRepository:
                 "input_tokens": int(operation_input_tokens or 0),
                 "output_tokens": int(operation_output_tokens or 0),
                 "total_tokens": int(operation_total_tokens or 0),
+                "cached_tokens": int(operation_cached_tokens or 0),
+                "reasoning_tokens": int(operation_reasoning_tokens or 0),
+                "cache_hit_rate": _cache_hit_rate(
+                    int(operation_cached_tokens or 0),
+                    int(operation_input_tokens or 0),
+                ),
             }
             for (
                 worker_type,
@@ -530,15 +559,29 @@ class MemoryRepository:
                 operation_input_tokens,
                 operation_output_tokens,
                 operation_total_tokens,
+                operation_cached_tokens,
+                operation_reasoning_tokens,
             ) in by_operation_result.all()
         }
+        input_token_count = int(total_input_tokens or 0)
+        cached_token_count = int(total_cached_tokens or 0)
         return {
             "total_calls": int(total_calls or 0),
-            "input_tokens": int(total_input_tokens or 0),
+            "input_tokens": input_token_count,
             "output_tokens": int(total_output_tokens or 0),
             "total_tokens": int(summed_tokens or 0),
+            "cached_tokens": cached_token_count,
+            "reasoning_tokens": int(total_reasoning_tokens or 0),
+            "cache_hit_rate": _cache_hit_rate(cached_token_count, input_token_count),
             "by_operation": by_operation,
         }
+
+    async def delete_old_llm_runs(self, *, retention_days: int, now: float | None = None) -> int:
+        """Delete LLM run audit rows older than the retention window."""
+
+        cutoff = (self.timestamp_now() if now is None else now) - retention_days * 24 * 60 * 60
+        result = await self.db.execute(delete(MemoryLLMRun).where(MemoryLLMRun.created_at < cutoff))
+        return int(result.rowcount or 0)
 
     async def create_task(
         self,

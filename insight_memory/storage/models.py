@@ -239,6 +239,8 @@ class MemoryLLMRun(Base):
     latency_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
     input_tokens: Mapped[int | None] = mapped_column(Integer, nullable=True)
     output_tokens: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    cached_tokens: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    reasoning_tokens: Mapped[int | None] = mapped_column(Integer, nullable=True)
     request_id: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
     created_at: Mapped[float] = mapped_column(Float, default=timestamp_now, nullable=False)
 

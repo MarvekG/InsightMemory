@@ -76,6 +76,9 @@ class UsageStatsResponse(BaseModel):
     input_tokens: int = 0
     output_tokens: int = 0
     total_tokens: int = 0
+    cached_tokens: int = 0
+    reasoning_tokens: int = 0
+    cache_hit_rate: float = 0.0
     by_operation: dict = Field(default_factory=dict)
 
 
