@@ -30,11 +30,11 @@ class _FakeStatsSession:
     async def execute(self, _stmt):
         self.calls += 1
         if self.calls == 1:
-            return _FakeExecuteResult((2, 150, 30, 180, 75, 8))
+            return _FakeExecuteResult((2, 150, 30, 180, 75, 75, 8))
         return _FakeExecuteResult(
             all_result=[
-                ("extractor", 1, 100, 20, 120, 60, 5),
-                ("answer_composer", 1, 50, 10, 60, 15, 3),
+                ("extractor", 1, 100, 20, 120, 60, 40, 5),
+                ("answer_composer", 1, 50, 10, 60, 15, 35, 3),
             ]
         )
 
@@ -61,15 +61,18 @@ def test_memory_llm_usage_stats_include_cached_reasoning_and_hit_rate() -> None:
     assert stats["output_tokens"] == 30
     assert stats["total_tokens"] == 180
     assert stats["cached_tokens"] == 75
+    assert stats["cache_miss_tokens"] == 75
     assert stats["reasoning_tokens"] == 8
     assert stats["cache_hit_rate"] == 0.5
     assert stats["by_operation"]["extractor"]["cached_tokens"] == 60
+    assert stats["by_operation"]["extractor"]["cache_miss_tokens"] == 40
     assert stats["by_operation"]["extractor"]["reasoning_tokens"] == 5
     assert stats["by_operation"]["extractor"]["cache_hit_rate"] == 0.6
+    assert stats["by_operation"]["answer_composer"]["cache_miss_tokens"] == 35
     assert stats["by_operation"]["answer_composer"]["cache_hit_rate"] == 0.3
 
 
-def test_memory_record_llm_run_persists_cached_and_reasoning_tokens() -> None:
+def test_memory_record_llm_run_persists_cache_miss_cached_and_reasoning_tokens() -> None:
     repository = MemoryRepository.__new__(MemoryRepository)
     repository.db = _FakeRecordSession()
 
@@ -87,11 +90,13 @@ def test_memory_record_llm_run_persists_cached_and_reasoning_tokens() -> None:
             input_tokens=100,
             output_tokens=20,
             cached_tokens=40,
+            cache_miss_tokens=60,
             reasoning_tokens=7,
         )
     )
 
     assert row.cached_tokens == 40
+    assert row.cache_miss_tokens == 60
     assert row.reasoning_tokens == 7
     assert repository.db.rows == [row]
 
@@ -135,6 +140,7 @@ def test_memory_llm_provider_extracts_cached_and_reasoning_tokens() -> None:
     assert result.input_tokens == 100
     assert result.output_tokens == 20
     assert result.cached_tokens == 40
+    assert result.cache_miss_tokens == 60
     assert result.reasoning_tokens == 7
 
 
@@ -173,6 +179,7 @@ def test_memory_llm_provider_extracts_deepseek_cache_hit_tokens() -> None:
 
     assert result.input_tokens == 100
     assert result.cached_tokens == 55
+    assert result.cache_miss_tokens == 45
     assert result.reasoning_tokens == 9
 
 

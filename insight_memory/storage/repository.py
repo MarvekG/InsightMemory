@@ -459,6 +459,7 @@ class MemoryRepository:
         input_tokens: int | None,
         output_tokens: int | None,
         cached_tokens: int | None = None,
+        cache_miss_tokens: int | None = None,
         reasoning_tokens: int | None = None,
         task_id: str | None = None,
     ) -> MemoryLLMRun:
@@ -476,6 +477,7 @@ class MemoryRepository:
             input_tokens=input_tokens,
             output_tokens=output_tokens,
             cached_tokens=cached_tokens,
+            cache_miss_tokens=cache_miss_tokens,
             reasoning_tokens=reasoning_tokens,
             request_id=request_id,
         )
@@ -501,6 +503,7 @@ class MemoryRepository:
         input_tokens = func.coalesce(MemoryLLMRun.input_tokens, 0)
         output_tokens = func.coalesce(MemoryLLMRun.output_tokens, 0)
         cached_tokens = func.coalesce(MemoryLLMRun.cached_tokens, 0)
+        cache_miss_tokens = func.coalesce(MemoryLLMRun.cache_miss_tokens, 0)
         reasoning_tokens = func.coalesce(MemoryLLMRun.reasoning_tokens, 0)
         total_tokens = input_tokens + output_tokens
 
@@ -510,6 +513,7 @@ class MemoryRepository:
             func.coalesce(func.sum(output_tokens), 0),
             func.coalesce(func.sum(total_tokens), 0),
             func.coalesce(func.sum(cached_tokens), 0),
+            func.coalesce(func.sum(cache_miss_tokens), 0),
             func.coalesce(func.sum(reasoning_tokens), 0),
         ).select_from(MemoryLLMRun)
         by_operation_stmt = (
@@ -520,6 +524,7 @@ class MemoryRepository:
                 func.coalesce(func.sum(output_tokens), 0),
                 func.coalesce(func.sum(total_tokens), 0),
                 func.coalesce(func.sum(cached_tokens), 0),
+                func.coalesce(func.sum(cache_miss_tokens), 0),
                 func.coalesce(func.sum(reasoning_tokens), 0),
             )
             .select_from(MemoryLLMRun)
@@ -537,6 +542,7 @@ class MemoryRepository:
             total_output_tokens,
             summed_tokens,
             total_cached_tokens,
+            total_cache_miss_tokens,
             total_reasoning_tokens,
         ) = total_result.one()
         by_operation_result = await self.db.execute(by_operation_stmt)
@@ -547,6 +553,7 @@ class MemoryRepository:
                 "output_tokens": int(operation_output_tokens or 0),
                 "total_tokens": int(operation_total_tokens or 0),
                 "cached_tokens": int(operation_cached_tokens or 0),
+                "cache_miss_tokens": int(operation_cache_miss_tokens or 0),
                 "reasoning_tokens": int(operation_reasoning_tokens or 0),
                 "cache_hit_rate": _cache_hit_rate(
                     int(operation_cached_tokens or 0),
@@ -560,6 +567,7 @@ class MemoryRepository:
                 operation_output_tokens,
                 operation_total_tokens,
                 operation_cached_tokens,
+                operation_cache_miss_tokens,
                 operation_reasoning_tokens,
             ) in by_operation_result.all()
         }
@@ -571,6 +579,7 @@ class MemoryRepository:
             "output_tokens": int(total_output_tokens or 0),
             "total_tokens": int(summed_tokens or 0),
             "cached_tokens": cached_token_count,
+            "cache_miss_tokens": int(total_cache_miss_tokens or 0),
             "reasoning_tokens": int(total_reasoning_tokens or 0),
             "cache_hit_rate": _cache_hit_rate(cached_token_count, input_token_count),
             "by_operation": by_operation,
