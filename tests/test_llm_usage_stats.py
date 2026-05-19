@@ -176,6 +176,44 @@ def test_memory_llm_provider_extracts_deepseek_cache_hit_tokens() -> None:
     assert result.reasoning_tokens == 9
 
 
+class _FakeMappingUsageCompletions:
+    async def create(self, **_kwargs):
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content='{"value":"ok"}'))],
+            usage={
+                "prompt_tokens": 100,
+                "completion_tokens": 20,
+                "input_token_details": {"cache_read": 35},
+                "output_token_details": {"reasoning_tokens": 6},
+            },
+        )
+
+
+class _FakeMappingUsageClient:
+    def __init__(self) -> None:
+        self.chat = SimpleNamespace(completions=_FakeMappingUsageCompletions())
+
+
+def test_memory_llm_provider_extracts_mapping_usage_cache_read_tokens() -> None:
+    provider = StructuredLLMProvider()
+    provider._client = _FakeMappingUsageClient()
+    provider._api_key = "test-key"
+
+    result = run_async(
+        provider.generate(
+            worker_type="extractor",
+            instructions="Return JSON.",
+            payload={"value": "input"},
+            schema_type=_SimpleSchema,
+        )
+    )
+
+    assert result.input_tokens == 100
+    assert result.output_tokens == 20
+    assert result.cached_tokens == 35
+    assert result.reasoning_tokens == 6
+
+
 class _FakeDeleteSession:
     def __init__(self) -> None:
         self.executed = []
