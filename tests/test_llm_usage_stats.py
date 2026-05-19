@@ -174,3 +174,22 @@ def test_memory_llm_provider_extracts_deepseek_cache_hit_tokens() -> None:
     assert result.input_tokens == 100
     assert result.cached_tokens == 55
     assert result.reasoning_tokens == 9
+
+
+class _FakeDeleteSession:
+    def __init__(self) -> None:
+        self.executed = []
+
+    async def execute(self, stmt):
+        self.executed.append(stmt)
+        return SimpleNamespace(rowcount=3)
+
+
+def test_memory_repository_deletes_old_llm_runs() -> None:
+    repository = MemoryRepository.__new__(MemoryRepository)
+    repository.db = _FakeDeleteSession()
+
+    deleted = run_async(repository.delete_old_llm_runs(retention_days=7, now=1_000_000.0))
+
+    assert deleted == 3
+    assert len(repository.db.executed) == 1

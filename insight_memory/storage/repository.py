@@ -576,6 +576,13 @@ class MemoryRepository:
             "by_operation": by_operation,
         }
 
+    async def delete_old_llm_runs(self, *, retention_days: int, now: float | None = None) -> int:
+        """Delete LLM run audit rows older than the retention window."""
+
+        cutoff = (self.timestamp_now() if now is None else now) - retention_days * 24 * 60 * 60
+        result = await self.db.execute(delete(MemoryLLMRun).where(MemoryLLMRun.created_at < cutoff))
+        return int(result.rowcount or 0)
+
     async def create_task(
         self,
         *,
