@@ -47,11 +47,27 @@ def _cached_tokens_from_usage(usage: Any) -> int | None:
     deepseek_cached_tokens = _usage_value(usage, "prompt_cache_hit_tokens")
     if deepseek_cached_tokens is not None:
         return deepseek_cached_tokens
-    return _usage_value(getattr(usage, "prompt_tokens_details", None), "cached_tokens")
+    if isinstance(usage, Mapping):
+        details = usage.get("prompt_tokens_details") or usage.get("input_token_details")
+    else:
+        details = getattr(usage, "prompt_tokens_details", None) or getattr(usage, "input_token_details", None)
+    return _first_usage_value(details, ("cached_tokens", "cache_read"))
 
 
 def _reasoning_tokens_from_usage(usage: Any) -> int | None:
-    return _usage_value(getattr(usage, "completion_tokens_details", None), "reasoning_tokens")
+    if isinstance(usage, Mapping):
+        details = usage.get("completion_tokens_details") or usage.get("output_token_details")
+    else:
+        details = getattr(usage, "completion_tokens_details", None) or getattr(usage, "output_token_details", None)
+    return _usage_value(details, "reasoning_tokens")
+
+
+def _first_usage_value(value: Any, keys: tuple[str, ...]) -> int | None:
+    for key in keys:
+        usage_value = _usage_value(value, key)
+        if usage_value is not None:
+            return usage_value
+    return None
 
 
 class StructuredLLMProvider:
@@ -124,8 +140,8 @@ class StructuredLLMProvider:
             model=self.model_name,
             prompt_version=self.prompt_version,
             latency_ms=latency_ms,
-            input_tokens=getattr(usage, "prompt_tokens", None),
-            output_tokens=getattr(usage, "completion_tokens", None),
+            input_tokens=_usage_value(usage, "prompt_tokens"),
+            output_tokens=_usage_value(usage, "completion_tokens"),
             cached_tokens=_cached_tokens_from_usage(usage),
             reasoning_tokens=_reasoning_tokens_from_usage(usage),
         )
