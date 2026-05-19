@@ -137,6 +137,7 @@ class MemoryWorkers:
         input_tokens: int | None,
         output_tokens: int | None,
         cached_tokens: int | None = None,
+        cache_miss_tokens: int | None = None,
         reasoning_tokens: int | None = None,
     ) -> None:
         try:
@@ -154,6 +155,7 @@ class MemoryWorkers:
                     input_tokens=input_tokens,
                     output_tokens=output_tokens,
                     cached_tokens=cached_tokens,
+                    cache_miss_tokens=cache_miss_tokens,
                     reasoning_tokens=reasoning_tokens,
                 )
         except Exception as exc:
@@ -753,6 +755,7 @@ class MemoryWorkers:
                 input_tokens=call.input_tokens,
                 output_tokens=call.output_tokens,
                 cached_tokens=call.cached_tokens,
+                cache_miss_tokens=call.cache_miss_tokens,
                 reasoning_tokens=call.reasoning_tokens,
             )
             logger.info(

@@ -632,12 +632,16 @@ flowchart TD
 | `latency_ms` | `int null` | 耗时 |
 | `input_tokens` | `int null` | 输入 token |
 | `output_tokens` | `int null` | 输出 token |
+| `cached_tokens` | `int null` | provider prompt cache 命中 token |
+| `cache_miss_tokens` | `int null` | provider prompt cache 未命中 token；缺失时可由 `input_tokens - cached_tokens` 派生 |
+| `reasoning_tokens` | `int null` | 推理 token |
 | `request_id` | `text null` | 串联整条链路 |
 | `created_at` | `timestamptz` | 创建时间 |
 
 实现要求：
 
 - 所有 LLM worker 都必须写 `memory_llm_runs`
+- 统计接口按 `worker_type` 聚合 `cached_tokens`、`cache_miss_tokens`、`reasoning_tokens` 和命中率
 - `schema_error` 不能静默吞掉，必须进入任务错误处理
 - `output_json` 即使校验失败，也应尽量保留原始返回，便于排障
 

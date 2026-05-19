@@ -28,6 +28,7 @@ class LLMCallResult(Generic[SchemaT]):
     input_tokens: int | None
     output_tokens: int | None
     cached_tokens: int | None
+    cache_miss_tokens: int | None
     reasoning_tokens: int | None
 
 
@@ -44,14 +45,31 @@ def _usage_value(value: Any, key: str) -> int | None:
 
 
 def _cached_tokens_from_usage(usage: Any) -> int | None:
-    deepseek_cached_tokens = _usage_value(usage, "prompt_cache_hit_tokens")
-    if deepseek_cached_tokens is not None:
-        return deepseek_cached_tokens
+    provider_cached_tokens = _usage_value(usage, "prompt_cache_hit_tokens")
+    if provider_cached_tokens is not None:
+        return provider_cached_tokens
     if isinstance(usage, Mapping):
         details = usage.get("prompt_tokens_details") or usage.get("input_token_details")
     else:
         details = getattr(usage, "prompt_tokens_details", None) or getattr(usage, "input_token_details", None)
     return _first_usage_value(details, ("cached_tokens", "cache_read"))
+
+
+def _cache_miss_tokens(input_tokens: int | None, cached_tokens: int | None) -> int | None:
+    if input_tokens is None:
+        return None
+    return max(input_tokens - int(cached_tokens or 0), 0)
+
+
+def _cache_miss_tokens_from_usage(usage: Any) -> int | None:
+    provider_miss_tokens = _first_usage_value(usage, ("prompt_cache_miss_tokens", "cache_miss_tokens"))
+    if provider_miss_tokens is not None:
+        return provider_miss_tokens
+    if isinstance(usage, Mapping):
+        details = usage.get("prompt_tokens_details") or usage.get("input_token_details")
+    else:
+        details = getattr(usage, "prompt_tokens_details", None) or getattr(usage, "input_token_details", None)
+    return _first_usage_value(details, ("cache_miss", "cache_write"))
 
 
 def _reasoning_tokens_from_usage(usage: Any) -> int | None:
@@ -126,6 +144,9 @@ class StructuredLLMProvider:
         output_json = json.loads(content)
         parsed = schema_type.model_validate(output_json)
         usage = getattr(response, "usage", None)
+        input_tokens = _usage_value(usage, "prompt_tokens")
+        cached_tokens = _cached_tokens_from_usage(usage)
+        explicit_cache_miss_tokens = _cache_miss_tokens_from_usage(usage)
         logger.info(
             "llm worker completed",
             extra={
@@ -140,9 +161,14 @@ class StructuredLLMProvider:
             model=self.model_name,
             prompt_version=self.prompt_version,
             latency_ms=latency_ms,
-            input_tokens=_usage_value(usage, "prompt_tokens"),
+            input_tokens=input_tokens,
             output_tokens=_usage_value(usage, "completion_tokens"),
-            cached_tokens=_cached_tokens_from_usage(usage),
+            cached_tokens=cached_tokens,
+            cache_miss_tokens=(
+                explicit_cache_miss_tokens
+                if explicit_cache_miss_tokens is not None
+                else _cache_miss_tokens(input_tokens, cached_tokens)
+            ),
             reasoning_tokens=_reasoning_tokens_from_usage(usage),
         )
 

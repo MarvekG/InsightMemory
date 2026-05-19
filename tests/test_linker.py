@@ -26,6 +26,9 @@ def test_linker_does_not_apply_query_side_exact_match_fallback(monkeypatch) -> N
             latency_ms=1,
             input_tokens=None,
             output_tokens=None,
+            cached_tokens=None,
+            cache_miss_tokens=None,
+            reasoning_tokens=None,
         )
     monkeypatch.setattr(workers, "_run", fake_run)
 
@@ -79,6 +82,9 @@ def test_linker_rejects_selected_entity_key_outside_candidates(monkeypatch) -> N
             latency_ms=1,
             input_tokens=None,
             output_tokens=None,
+            cached_tokens=None,
+            cache_miss_tokens=None,
+            reasoning_tokens=None,
         )
     monkeypatch.setattr(workers, "_run", fake_run)
 
@@ -131,6 +137,9 @@ def test_linker_corrects_single_near_match_candidate_key(monkeypatch) -> None:
             latency_ms=1,
             input_tokens=None,
             output_tokens=None,
+            cached_tokens=None,
+            cache_miss_tokens=None,
+            reasoning_tokens=None,
         )
     monkeypatch.setattr(workers, "_run", fake_run)
 
