@@ -583,6 +583,12 @@ class MemoryRepository:
         result = await self.db.execute(delete(MemoryLLMRun).where(MemoryLLMRun.created_at < cutoff))
         return int(result.rowcount or 0)
 
+    async def clear_llm_runs(self) -> int:
+        """Delete all LLM run audit rows."""
+
+        result = await self.db.execute(delete(MemoryLLMRun))
+        return int(result.rowcount or 0)
+
     async def create_task(
         self,
         *,

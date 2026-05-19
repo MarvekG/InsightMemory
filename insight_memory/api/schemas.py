@@ -82,6 +82,11 @@ class UsageStatsResponse(BaseModel):
     by_operation: dict = Field(default_factory=dict)
 
 
+class ClearUsageStatsResponse(BaseModel):
+    status: str
+    deleted: int
+
+
 class MemoryPreviewItem(BaseModel):
     memory_id: str
     memory_scope: str

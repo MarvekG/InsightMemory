@@ -71,5 +71,13 @@ class HealthService:
             **usage_stats,
         }
 
+    async def clear_usage_stats(self) -> dict:
+        async with MemoryRepository() as repository:
+            deleted = await repository.clear_llm_runs()
+        return {
+            "status": "ok",
+            "deleted": deleted,
+        }
+
 
 health_service = HealthService()
