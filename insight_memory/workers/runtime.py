@@ -136,6 +136,8 @@ class MemoryWorkers:
         latency_ms: int | None,
         input_tokens: int | None,
         output_tokens: int | None,
+        cached_tokens: int | None = None,
+        reasoning_tokens: int | None = None,
     ) -> None:
         try:
             async with MemoryRepository() as repository:
@@ -151,6 +153,8 @@ class MemoryWorkers:
                     latency_ms=latency_ms,
                     input_tokens=input_tokens,
                     output_tokens=output_tokens,
+                    cached_tokens=cached_tokens,
+                    reasoning_tokens=reasoning_tokens,
                 )
         except Exception as exc:
             logger.warning(
@@ -748,6 +752,8 @@ class MemoryWorkers:
                 latency_ms=call.latency_ms,
                 input_tokens=call.input_tokens,
                 output_tokens=call.output_tokens,
+                cached_tokens=call.cached_tokens,
+                reasoning_tokens=call.reasoning_tokens,
             )
             logger.info(
                 "llm worker call completed",

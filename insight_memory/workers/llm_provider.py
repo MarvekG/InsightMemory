@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass
 from time import perf_counter
 from typing import Any, Generic, TypeVar
@@ -26,6 +27,31 @@ class LLMCallResult(Generic[SchemaT]):
     latency_ms: int
     input_tokens: int | None
     output_tokens: int | None
+    cached_tokens: int | None
+    reasoning_tokens: int | None
+
+
+def _usage_value(value: Any, key: str) -> int | None:
+    if value is None:
+        return None
+    if isinstance(value, Mapping):
+        raw_value = value.get(key)
+    else:
+        raw_value = getattr(value, key, None)
+    if raw_value is None:
+        return None
+    return int(raw_value)
+
+
+def _cached_tokens_from_usage(usage: Any) -> int | None:
+    deepseek_cached_tokens = _usage_value(usage, "prompt_cache_hit_tokens")
+    if deepseek_cached_tokens is not None:
+        return deepseek_cached_tokens
+    return _usage_value(getattr(usage, "prompt_tokens_details", None), "cached_tokens")
+
+
+def _reasoning_tokens_from_usage(usage: Any) -> int | None:
+    return _usage_value(getattr(usage, "completion_tokens_details", None), "reasoning_tokens")
 
 
 class StructuredLLMProvider:
@@ -100,6 +126,8 @@ class StructuredLLMProvider:
             latency_ms=latency_ms,
             input_tokens=getattr(usage, "prompt_tokens", None),
             output_tokens=getattr(usage, "completion_tokens", None),
+            cached_tokens=_cached_tokens_from_usage(usage),
+            reasoning_tokens=_reasoning_tokens_from_usage(usage),
         )
 
 
