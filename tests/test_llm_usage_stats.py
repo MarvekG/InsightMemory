@@ -193,3 +193,13 @@ def test_memory_repository_deletes_old_llm_runs() -> None:
 
     assert deleted == 3
     assert len(repository.db.executed) == 1
+
+
+def test_memory_repository_clears_all_llm_runs() -> None:
+    repository = MemoryRepository.__new__(MemoryRepository)
+    repository.db = _FakeDeleteSession()
+
+    deleted = run_async(repository.clear_llm_runs())
+
+    assert deleted == 3
+    assert len(repository.db.executed) == 1

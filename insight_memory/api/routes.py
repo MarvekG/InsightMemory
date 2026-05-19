@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Query
 
 from insight_memory.api.schemas import (
+    ClearUsageStatsResponse,
     HealthResponse,
     IngestRequest,
     IngestResponse,
@@ -51,6 +52,10 @@ async def _health_impl() -> HealthResponse:
 
 async def _usage_stats_impl(*, hours: int | None = None) -> UsageStatsResponse:
     return UsageStatsResponse(**(await health_service.usage_stats(hours=hours)))
+
+
+async def _clear_usage_stats_impl() -> ClearUsageStatsResponse:
+    return ClearUsageStatsResponse(**(await health_service.clear_usage_stats()))
 
 
 async def _memory_preview_impl(
@@ -118,6 +123,16 @@ async def usage_stats_memory(hours: int | None = Query(default=None, ge=1, le=24
     return await _usage_stats_impl(hours=hours)
 
 
+@router.delete("/usage/stats", response_model=ClearUsageStatsResponse)
+async def clear_usage_stats() -> ClearUsageStatsResponse:
+    return await _clear_usage_stats_impl()
+
+
+@router.delete("/memory/usage/stats", response_model=ClearUsageStatsResponse)
+async def clear_usage_stats_memory() -> ClearUsageStatsResponse:
+    return await _clear_usage_stats_impl()
+
+
 @router.get("/memory/admin/memories/preview", response_model=MemoryPreviewResponse)
 async def preview_memories_memory(
     memory_scope: str | None = Query(default=None, max_length=255),
@@ -135,4 +150,3 @@ async def preview_memories_memory(
         limit=limit,
         offset=offset,
     )
-
