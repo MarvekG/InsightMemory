@@ -868,6 +868,44 @@ class MemoryRepository:
         )
         return total, list(rows_result.scalars().all())
 
+    async def preview_recall_audits(
+        self,
+        *,
+        memory_space: str | None = None,
+        memory_space_prefix: str | None = None,
+        memory_space_contains: str | None = None,
+        statuses: Iterable[str] | None = None,
+        error_code: str | None = None,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> tuple[int, list[MemoryRecallAudit]]:
+        """Return recall audit rows with lightweight admin filters."""
+
+        stmt = select(MemoryRecallAudit)
+        count_stmt = select(func.count()).select_from(MemoryRecallAudit)
+        conditions = []
+        if memory_space:
+            conditions.append(MemoryRecallAudit.memory_space == memory_space)
+        if memory_space_prefix:
+            conditions.append(MemoryRecallAudit.memory_space.like(f"{memory_space_prefix}%"))
+        if memory_space_contains:
+            conditions.append(MemoryRecallAudit.memory_space.like(f"%{memory_space_contains}%"))
+        if statuses:
+            conditions.append(MemoryRecallAudit.status.in_(list(statuses)))
+        if error_code:
+            conditions.append(MemoryRecallAudit.error_code == error_code)
+        for condition in conditions:
+            stmt = stmt.where(condition)
+            count_stmt = count_stmt.where(condition)
+        total_result = await self.db.execute(count_stmt)
+        total = int(total_result.scalar_one())
+        rows_result = await self.db.execute(
+            stmt.order_by(MemoryRecallAudit.created_at.desc())
+            .offset(max(0, offset))
+            .limit(max(1, min(limit, 200)))
+        )
+        return total, list(rows_result.scalars().all())
+
     async def merge_entities(
         self,
         *,

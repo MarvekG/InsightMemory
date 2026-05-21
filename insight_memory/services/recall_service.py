@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from time import perf_counter
+
 from insight_memory.api.schemas import RecallRequest
-from insight_memory.graph.recall_graph import recall_graph
+from insight_memory.graph.recall_graph import RecallGraph, recall_graph
 from insight_memory.storage.repository import MemoryRepository
 from insight_memory.utils.logger import get_logger
 from insight_memory.utils.request_context import get_or_create_request_id
@@ -16,6 +18,7 @@ class RecallService:
     async def recall(self, request: RecallRequest) -> dict:
         """Resolve one recall request against the durable memory state."""
 
+        started_at = perf_counter()
         request_id = get_or_create_request_id()
         if await self._has_pending_continuation(memory_space=request.memory_scope):
             result = self._build_not_ready_result()
@@ -24,6 +27,7 @@ class RecallService:
                 request_id=request_id,
                 query=request.query,
                 result=result,
+                latency_ms=max(0, round((perf_counter() - started_at) * 1000)),
             )
             logger.info(
                 "recall rejected as not ready",
@@ -78,9 +82,20 @@ class RecallService:
         request_id: str,
         query: str,
         result: dict,
+        latency_ms: int | None = None,
     ) -> None:
         """Persist one recall audit row for a not-ready response."""
 
+        result_item = dict(result["results"][0])
+        metadata = RecallGraph._build_audit_metadata(
+            query=query,
+            draft_runs=[{"result": result_item}],
+            result=result_item,
+            used_edges=[],
+            citations=[],
+            latency_ms=latency_ms,
+        )
+        metadata["draft_runs"] = []
         async with MemoryRepository() as repository:
             await repository.create_recall_audit(
                 memory_space=memory_space,
@@ -93,7 +108,7 @@ class RecallService:
                 uncertainties=["continue_ingest_pending"],
                 used_edges=[],
                 resolution_trace={"planner_gate_status": "not_ready"},
-                metadata={"draft_runs": []},
+                metadata=metadata,
             )
 
 
