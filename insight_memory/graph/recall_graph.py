@@ -700,7 +700,7 @@ class RecallGraph:
             "status": str(result.get("status") or "unknown"),
             "error_code": result.get("error_code"),
             "latency_ms": latency_ms,
-            "answer_preview": answer.replace("\n", " ").strip()[:240],
+            "answer_preview": answer.replace("\n", " ").strip()[:512],
             "answer_length": len(answer),
             "citation_count": len(citations),
             "uncertainty_count": len(uncertainties),
