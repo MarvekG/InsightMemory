@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from time import perf_counter
@@ -19,6 +20,29 @@ from insight_memory.workers.background import background_worker
 
 
 logger = get_logger(__name__)
+
+
+async def recover_pending_tasks_background() -> None:
+    """Recover pending tasks without blocking HTTP readiness."""
+
+    try:
+        result = await background_worker.recover_pending_tasks()
+    except Exception:
+        logger.exception("background recover_pending_tasks failed")
+        return
+    logger.info(
+        "background recover_pending_tasks completed",
+        extra={
+            "recovered": result.get("recovered", 0),
+            "retried": result.get("retried", 0),
+        },
+    )
+
+
+def schedule_pending_task_recovery() -> None:
+    """Schedule pending task recovery after startup work has begun."""
+
+    asyncio.create_task(recover_pending_tasks_background())
 
 
 async def run_startup() -> None:
@@ -46,11 +70,10 @@ async def run_startup() -> None:
         extra={"elapsed_ms": 0.0},
     )
 
-    step_start = perf_counter()
-    await background_worker.recover_pending_tasks()
+    schedule_pending_task_recovery()
     logger.info(
-        "step 3 recover_pending_tasks completed",
-        extra={"elapsed_ms": round((perf_counter() - step_start) * 1000, 2)},
+        "step 3 recover_pending_tasks scheduled",
+        extra={"elapsed_ms": 0.0},
     )
 
     step_start = perf_counter()

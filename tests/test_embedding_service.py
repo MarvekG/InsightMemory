@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import time
 
 import pytest
 
@@ -30,6 +31,40 @@ def test_embed_texts_honors_max_concurrency(monkeypatch: pytest.MonkeyPatch) -> 
     vectors = run_async(service.embed_texts(["a", "b", "c", "d"]))
 
     assert len(vectors) == 4
+    assert state["peak"] == 2
+
+
+def test_local_embedding_encode_uses_local_concurrency_limit(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(settings, "MEMORY_EMBEDDING_PROVIDER", "local")
+    monkeypatch.setattr(settings, "MEMORY_EMBEDDING_DIM", 3)
+    monkeypatch.setattr(settings, "MEMORY_LOCAL_EMBEDDING_MAX_CONCURRENCY", 2)
+
+    service = EmbeddingService()
+    state = {"active": 0, "peak": 0}
+
+    class FakeModel:
+        def encode(self, texts: list[str], **_: object) -> list[list[float]]:
+            state["active"] += 1
+            state["peak"] = max(state["peak"], state["active"])
+            time.sleep(0.02)
+            state["active"] -= 1
+            return [[1.0, 2.0, 3.0] for _ in texts]
+
+    async def fake_load_local_model() -> FakeModel:
+        return FakeModel()
+
+    monkeypatch.setattr(service, "_load_local_model", fake_load_local_model)
+
+    async def run_batches() -> list[list[list[float]]]:
+        return await asyncio.gather(
+            service._embed_local_batch(["a"]),
+            service._embed_local_batch(["b"]),
+            service._embed_local_batch(["c"]),
+        )
+
+    vectors = run_async(run_batches())
+
+    assert vectors == [[[1.0, 2.0, 3.0]], [[1.0, 2.0, 3.0]], [[1.0, 2.0, 3.0]]]
     assert state["peak"] == 2
 
 

@@ -19,6 +19,7 @@ class EmbeddingService:
         self._batch_size = int(settings.MEMORY_EMBEDDING_BATCH_SIZE or 1)
         self._semaphore = asyncio.Semaphore(int(settings.MEMORY_EMBEDDING_MAX_CONCURRENCY or 1))
         self._model_lock = asyncio.Lock()
+        self._local_encode_semaphore = asyncio.Semaphore(int(settings.MEMORY_LOCAL_EMBEDDING_MAX_CONCURRENCY or 1))
         self._prewarm_task: asyncio.Task[None] | None = None
         self._prewarm_status = "not_started"
         self._prewarm_error: str | None = None
@@ -226,14 +227,15 @@ class EmbeddingService:
 
     async def _embed_local_batch(self, texts: list[str]) -> list[list[float]]:
         model = await self._load_local_model()
-        vectors = await asyncio.to_thread(
-            model.encode,
-            texts,
-            batch_size=len(texts),
-            normalize_embeddings=True,
-            convert_to_numpy=False,
-            show_progress_bar=False,
-        )
+        async with self._local_encode_semaphore:
+            vectors = await asyncio.to_thread(
+                model.encode,
+                texts,
+                batch_size=len(texts),
+                normalize_embeddings=True,
+                convert_to_numpy=False,
+                show_progress_bar=False,
+            )
         return [self._coerce_vector(vector) for vector in vectors]
 
     async def _embed_openai_compatible_batch(self, texts: list[str]) -> list[list[float]]:
