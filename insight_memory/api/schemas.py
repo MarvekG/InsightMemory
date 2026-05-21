@@ -110,3 +110,31 @@ class MemoryPreviewResponse(BaseModel):
     limit: int
     offset: int
     items: list[MemoryPreviewItem] = Field(default_factory=list)
+
+
+class RecallAuditPreviewItem(BaseModel):
+    audit_id: str
+    memory_scope: str
+    request_id: str
+    query: str
+    query_preview: str
+    status: str
+    resolved_entity_key: str | None = None
+    error_code: str | None = None
+    answer_preview: str
+    answer_length: int
+    uncertainties: list[str] = Field(default_factory=list)
+    used_edge_count: int
+    citation_count: int
+    key_memory_ids: list[str] = Field(default_factory=list)
+    supporting_observation_ids: list[str] = Field(default_factory=list)
+    metadata: dict = Field(default_factory=dict)
+    created_at: float
+
+
+class RecallAuditPreviewResponse(BaseModel):
+    status: str
+    total: int
+    limit: int
+    offset: int
+    items: list[RecallAuditPreviewItem] = Field(default_factory=list)

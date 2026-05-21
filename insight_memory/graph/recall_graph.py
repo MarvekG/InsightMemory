@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from time import perf_counter
 from types import SimpleNamespace
 from typing import Any, TypedDict
 
@@ -28,6 +29,7 @@ class MainRecallState(TypedDict, total=False):
     memory_space: str
     query: str
     request_id: str
+    started_at: float
     workers: MemoryWorkers
     planner: Any
     draft_payloads: list[dict[str, Any]]
@@ -96,6 +98,7 @@ class RecallGraph:
                 "memory_space": memory_space,
                 "query": query,
                 "request_id": request_id,
+                "started_at": perf_counter(),
                 "workers": workers,
                 "resolution_trace": {},
             }
@@ -563,7 +566,17 @@ class RecallGraph:
     async def _write_audit_node(self, state: MainRecallState) -> dict[str, Any]:
         draft_runs = list(state.get("draft_runs") or [])
         audit_payload = self._build_audit_payload(draft_runs=draft_runs)
-        audit_metadata = {"draft_runs": draft_runs}
+        started_at = float(state.get("started_at") or perf_counter())
+        latency_ms = max(0, round((perf_counter() - started_at) * 1000))
+        audit_metadata = self._build_audit_metadata(
+            query=state["query"],
+            draft_runs=draft_runs,
+            result=audit_payload["result"],
+            used_edges=audit_payload["used_edges"],
+            citations=audit_payload["citations"],
+            latency_ms=latency_ms,
+        )
+        audit_metadata["draft_runs"] = draft_runs
         await self._write_recall_audit(
             memory_space=state["memory_space"],
             request_id=state["request_id"],
@@ -578,9 +591,10 @@ class RecallGraph:
         logger.info(
             "recall audit written",
             extra={
-                "memory_space": state["memory_space"],
+             "memory_space": state["memory_space"],
                 "request_id": state["request_id"],
                 "result_count": len(draft_runs),
+                "latency_ms": latency_ms,
                 "status": audit_payload["result"].get("status"),
                 "error_code": audit_payload["result"].get("error_code"),
                 "resolved_entity_key": audit_payload["resolved_entity_key"],
@@ -635,6 +649,65 @@ class RecallGraph:
                 "error_code": error_code,
                 "citations": [],
             },
+        }
+
+    @staticmethod
+    def _build_audit_metadata(
+        *,
+        query: str,
+        draft_runs: list[dict[str, Any]],
+        result: dict[str, Any],
+        used_edges: list[dict[str, Any]],
+        citations: list[dict[str, Any]],
+        latency_ms: int | None,
+    ) -> dict[str, Any]:
+        """Build recall audit metadata for debugging and retrieval-quality improvement."""
+
+        query_text = str(query or "").replace("\n", " ").strip()
+        result_items = [dict(item.get("result") or {}) for item in draft_runs]
+        if not result_items:
+            result_items = [dict(result or {})]
+        statuses = [str(item.get("status") or "unknown") for item in result_items]
+        answer = str(result.get("answer") or "")
+        uncertainties = list(result.get("uncertainties") or [])
+        key_memory_ids: list[str] = []
+        supporting_observation_ids: list[str] = []
+        for citation in citations:
+            memory_id = str(citation.get("memory_id") or "").strip()
+            if memory_id and memory_id not in key_memory_ids:
+                key_memory_ids.append(memory_id)
+            for source_memory_id in citation.get("source_memory_ids") or []:
+                normalized_memory_id = str(source_memory_id or "").strip()
+                if normalized_memory_id and normalized_memory_id not in key_memory_ids:
+                    key_memory_ids.append(normalized_memory_id)
+            observation_id = str(citation.get("observation_id") or "").strip()
+            if observation_id and observation_id not in supporting_observation_ids:
+                supporting_observation_ids.append(observation_id)
+        used_edge_types = dedupe_preserve_order(
+            str(edge.get("edge_type") or "").strip()
+            for edge in used_edges
+            if str(edge.get("edge_type") or "").strip()
+        )
+        return {
+            "audit_schema_version": 1,
+            "query_preview": query_text[:512],
+            "query_length": len(query_text),
+            "result_count": len(result_items),
+            "ok_result_count": statuses.count("ok"),
+            "partial_result_count": statuses.count("partial"),
+            "rejected_result_count": statuses.count("rejected"),
+            "not_ready_result_count": statuses.count("not_ready"),
+            "status": str(result.get("status") or "unknown"),
+            "error_code": result.get("error_code"),
+            "latency_ms": latency_ms,
+            "answer_preview": answer.replace("\n", " ").strip()[:512],
+            "answer_length": len(answer),
+            "citation_count": len(citations),
+            "uncertainty_count": len(uncertainties),
+            "used_edge_count": len(used_edges),
+            "used_edge_types": used_edge_types,
+            "key_memory_ids": key_memory_ids,
+            "supporting_observation_ids": supporting_observation_ids,
         }
 
     async def _expand_graph(

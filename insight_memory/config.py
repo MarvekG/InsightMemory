@@ -45,6 +45,7 @@ class Settings(BaseSettings):
     MEMORY_EMBEDDING_PREWARM_MAX_ATTEMPTS: int = Field(default=5, ge=1)
     MEMORY_EMBEDDING_PREWARM_RETRY_SECONDS: float = Field(default=5.0, ge=0.0)
     MEMORY_EMBEDDING_MAX_CONCURRENCY: int = Field(default=8, ge=1)
+    MEMORY_LOCAL_EMBEDDING_MAX_CONCURRENCY: int = Field(default=2, ge=1)
     MEMORY_EMBEDDING_BATCH_SIZE: int = Field(default=32, ge=1)
     MEMORY_HF_ENDPOINT: str = "https://hf-mirror.com"
     MEMORY_LLM_PROVIDER: str = "deepseek"

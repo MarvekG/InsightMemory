@@ -20,8 +20,8 @@ def test_run_startup_schedules_embedding_prewarm(monkeypatch) -> None:
     def fake_start_prewarm_background() -> None:
         calls.append("schedule_prewarm")
 
-    async def fake_recover_pending_tasks() -> None:
-        calls.append("recover_pending_tasks")
+    def fake_schedule_pending_task_recovery() -> None:
+        calls.append("schedule_recover_pending_tasks")
 
     async def fake_ensure_rebuild_task_if_needed() -> None:
         calls.append("ensure_rebuild_task_if_needed")
@@ -31,7 +31,7 @@ def test_run_startup_schedules_embedding_prewarm(monkeypatch) -> None:
 
     monkeypatch.setattr(main_module, "init_database", fake_init_database)
     monkeypatch.setattr(main_module.embedding_service, "start_prewarm_background", fake_start_prewarm_background)
-    monkeypatch.setattr(main_module.background_worker, "recover_pending_tasks", fake_recover_pending_tasks)
+    monkeypatch.setattr(main_module, "schedule_pending_task_recovery", fake_schedule_pending_task_recovery)
     monkeypatch.setattr(main_module, "ensure_rebuild_task_if_needed", fake_ensure_rebuild_task_if_needed)
     monkeypatch.setattr(main_module.background_worker, "start", fake_start)
 
@@ -40,7 +40,7 @@ def test_run_startup_schedules_embedding_prewarm(monkeypatch) -> None:
     assert calls == [
         "init_database",
         "schedule_prewarm",
-        "recover_pending_tasks",
+        "schedule_recover_pending_tasks",
         "ensure_rebuild_task_if_needed",
         "start",
     ]

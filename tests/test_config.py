@@ -19,6 +19,7 @@ def test_local_embedding_runtime_defaults() -> None:
     settings = Settings(MEMORY_EMBEDDING_PROVIDER="local")
 
     assert settings.MEMORY_EMBEDDING_MAX_CONCURRENCY == 8
+    assert settings.MEMORY_LOCAL_EMBEDDING_MAX_CONCURRENCY == 2
     assert settings.MEMORY_EMBEDDING_BATCH_SIZE == 32
     assert settings.MEMORY_EMBEDDING_PREWARM_MAX_ATTEMPTS == 5
 
@@ -27,6 +28,7 @@ def test_openai_compatible_embedding_uses_static_runtime_defaults() -> None:
     settings = Settings(MEMORY_EMBEDDING_PROVIDER="openai_compatible")
 
     assert settings.MEMORY_EMBEDDING_MAX_CONCURRENCY == 8
+    assert settings.MEMORY_LOCAL_EMBEDDING_MAX_CONCURRENCY == 2
     assert settings.MEMORY_EMBEDDING_BATCH_SIZE == 32
 
 
@@ -34,10 +36,12 @@ def test_embedding_runtime_overrides_are_preserved() -> None:
     settings = Settings(
         MEMORY_EMBEDDING_PROVIDER="openai_compatible",
         MEMORY_EMBEDDING_MAX_CONCURRENCY=48,
+        MEMORY_LOCAL_EMBEDDING_MAX_CONCURRENCY=3,
         MEMORY_EMBEDDING_BATCH_SIZE=256,
     )
 
     assert settings.MEMORY_EMBEDDING_MAX_CONCURRENCY == 48
+    assert settings.MEMORY_LOCAL_EMBEDDING_MAX_CONCURRENCY == 3
     assert settings.MEMORY_EMBEDDING_BATCH_SIZE == 256
 
 

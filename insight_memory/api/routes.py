@@ -8,6 +8,7 @@ from insight_memory.api.schemas import (
     IngestRequest,
     IngestResponse,
     MemoryPreviewResponse,
+    RecallAuditPreviewResponse,
     RecallRequest,
     RecallResponse,
     UsageStatsResponse,
@@ -15,6 +16,7 @@ from insight_memory.api.schemas import (
 from insight_memory.services.health_service import health_service
 from insight_memory.services.ingest_service import ingest_service
 from insight_memory.services.preview_service import preview_service
+from insight_memory.services.recall_audit_preview_service import recall_audit_preview_service
 from insight_memory.services.recall_service import recall_service
 from insight_memory.utils.logger import get_logger
 
@@ -76,6 +78,28 @@ async def _memory_preview_impl(
         offset=offset,
     )
     return MemoryPreviewResponse(**result)
+
+
+async def _recall_audit_preview_impl(
+    *,
+    memory_scope: str | None,
+    memory_scope_prefix: str | None,
+    memory_scope_contains: str | None,
+    status: str | None,
+    error_code: str | None,
+    limit: int,
+    offset: int,
+) -> RecallAuditPreviewResponse:
+    result = await recall_audit_preview_service.preview(
+        memory_scope=memory_scope,
+        memory_scope_prefix=memory_scope_prefix,
+        memory_scope_contains=memory_scope_contains,
+        status=status,
+        error_code=error_code,
+        limit=limit,
+        offset=offset,
+    )
+    return RecallAuditPreviewResponse(**result)
 
 
 @router.post("/ingest", response_model=IngestResponse)
@@ -147,6 +171,27 @@ async def preview_memories_memory(
         memory_scope_prefix=memory_scope_prefix,
         memory_scope_contains=memory_scope_contains,
         status=status,
+        limit=limit,
+        offset=offset,
+    )
+
+
+@router.get("/memory/admin/recall-audits/preview", response_model=RecallAuditPreviewResponse)
+async def preview_recall_audits_memory(
+    memory_scope: str | None = Query(default=None, max_length=255),
+    memory_scope_prefix: str | None = Query(default=None, max_length=255),
+    memory_scope_contains: str | None = Query(default=None, max_length=255),
+    status: str | None = Query(default=None, max_length=128),
+    error_code: str | None = Query(default=None, max_length=128),
+    limit: int = Query(default=20, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+) -> RecallAuditPreviewResponse:
+    return await _recall_audit_preview_impl(
+        memory_scope=memory_scope,
+        memory_scope_prefix=memory_scope_prefix,
+        memory_scope_contains=memory_scope_contains,
+        status=status,
+        error_code=error_code,
         limit=limit,
         offset=offset,
     )
