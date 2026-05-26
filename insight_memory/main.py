@@ -53,8 +53,8 @@ async def run_startup() -> None:
             "service_name": settings.MEMORY_SERVICE_NAME,
             "port": settings.MEMORY_SERVICE_PORT,
             "database_schema": settings.MEMORY_DATABASE_SCHEMA,
-            "llm_provider": settings.MEMORY_LLM_PROVIDER,
-            "llm_model": settings.MEMORY_LLM_MODEL,
+            "llm_provider": "litellm",
+            "llm_model": settings.LITELLM_MEMORY_MODEL,
         },
     )
     step_start = perf_counter()

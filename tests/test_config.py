@@ -46,7 +46,13 @@ def test_embedding_runtime_overrides_are_preserved() -> None:
 
 
 def test_settings_can_load_runtime_env_file(tmp_path, monkeypatch) -> None:
-    for env_name in ("MEMORY_SERVICE_PORT", "MEMORY_DATABASE_URL", "MEMORY_LLM_PROVIDER", "MEMORY_LLM_MODEL"):
+    for env_name in (
+        "MEMORY_SERVICE_PORT",
+        "MEMORY_DATABASE_URL",
+        "LITELLM_BASE_URL",
+        "LITELLM_API_KEY",
+        "LITELLM_MEMORY_MODEL",
+    ):
         monkeypatch.delenv(env_name, raising=False)
     env_file = tmp_path / ".env"
     env_file.write_text(
@@ -54,8 +60,9 @@ def test_settings_can_load_runtime_env_file(tmp_path, monkeypatch) -> None:
             [
                 "MEMORY_SERVICE_PORT=9123",
                 "MEMORY_DATABASE_URL=postgresql+asyncpg://postgres:password@127.0.0.1:5433/memory",
-                "MEMORY_LLM_PROVIDER=deepseek",
-                "MEMORY_LLM_MODEL=deepseek-chat",
+                "LITELLM_BASE_URL=http://litellm:4000/v1",
+                "LITELLM_API_KEY=sk-litellm",
+                "LITELLM_MEMORY_MODEL=memory",
             ]
         ),
         encoding="utf-8",
@@ -65,7 +72,9 @@ def test_settings_can_load_runtime_env_file(tmp_path, monkeypatch) -> None:
 
     assert settings.MEMORY_SERVICE_PORT == 9123
     assert settings.MEMORY_DATABASE_URL == "postgresql+asyncpg://postgres:password@127.0.0.1:5433/memory"
-    assert settings.MEMORY_LLM_MODEL == "deepseek-chat"
+    assert settings.LITELLM_BASE_URL == "http://litellm:4000/v1"
+    assert settings.LITELLM_API_KEY == "sk-litellm"
+    assert settings.LITELLM_MEMORY_MODEL == "memory"
 
 
 def test_default_env_files_do_not_scan_source_tree(monkeypatch) -> None:

@@ -48,10 +48,9 @@ class Settings(BaseSettings):
     MEMORY_LOCAL_EMBEDDING_MAX_CONCURRENCY: int = Field(default=2, ge=1)
     MEMORY_EMBEDDING_BATCH_SIZE: int = Field(default=32, ge=1)
     MEMORY_HF_ENDPOINT: str = "https://hf-mirror.com"
-    MEMORY_LLM_PROVIDER: str = "deepseek"
-    MEMORY_LLM_MODEL: str = "deep_seek"
-    MEMORY_LLM_API_KEY: str = ""
-    MEMORY_LLM_BASE_URL: str = ""
+    LITELLM_BASE_URL: str = "http://litellm:4000/v1"
+    LITELLM_API_KEY: str = "sk-litellm-gateway-key"
+    LITELLM_MEMORY_MODEL: str = "memory"
     MEMORY_LLM_TIMEOUT_SECONDS: float = 60.0
     MEMORY_LLM_PROMPT_VERSION: str = "v1"
     MEMORY_MAX_CONTENT_LENGTH: int = 20000

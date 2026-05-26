@@ -14,7 +14,6 @@ for path in (ROOT, WORKSPACE_ROOT):
 
 os.environ["MEMORY_DATABASE_URL"] = "postgresql+asyncpg://postgres:password@db.invalid:5432/memory_test"
 os.environ["MEMORY_DATABASE_SCHEMA"] = "memory"
-os.environ["MEMORY_LLM_PROVIDER"] = "test"
-os.environ["MEMORY_LLM_MODEL"] = "test-model"
-os.environ["MEMORY_LLM_API_KEY"] = "test-key"
-os.environ["MEMORY_LLM_BASE_URL"] = "https://llm.test/v1"
+os.environ["LITELLM_BASE_URL"] = "https://llm.test/v1"
+os.environ["LITELLM_API_KEY"] = "test-key"
+os.environ["LITELLM_MEMORY_MODEL"] = "memory"

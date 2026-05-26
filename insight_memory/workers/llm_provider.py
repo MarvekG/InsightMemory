@@ -90,22 +90,22 @@ def _first_usage_value(value: Any, keys: tuple[str, ...]) -> int | None:
 
 class StructuredLLMProvider:
     def __init__(self) -> None:
-        self.provider = settings.MEMORY_LLM_PROVIDER
-        self.model_name = settings.MEMORY_LLM_MODEL
+        self.provider = "litellm"
+        self.model_name = settings.LITELLM_MEMORY_MODEL
         self.prompt_version = settings.MEMORY_LLM_PROMPT_VERSION
-        self._api_key = settings.MEMORY_LLM_API_KEY
-        self._base_url = settings.MEMORY_LLM_BASE_URL
+        self._api_key = settings.LITELLM_API_KEY
+        self._base_url = settings.LITELLM_BASE_URL
         self._client: AsyncOpenAI | None = None
         if self.enabled:
             self._client = AsyncOpenAI(
                 api_key=self._api_key,
-                base_url=self._base_url or None,
+                base_url=self._base_url,
                 http_client=httpx.AsyncClient(timeout=settings.MEMORY_LLM_TIMEOUT_SECONDS),
             )
 
     @property
     def enabled(self) -> bool:
-        return bool(self.provider and self.model_name and self._api_key)
+        return bool(self.model_name and self._api_key and self._base_url)
 
     async def generate(
         self,
