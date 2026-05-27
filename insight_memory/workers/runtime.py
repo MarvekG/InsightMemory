@@ -23,6 +23,7 @@ from insight_memory.workers.schemas import (
     QueryPlannerOutput,
     ResolverBatchOutput,
     ResolverOutput,
+    WriteGateOutput,
 )
 
 
@@ -121,6 +122,66 @@ def _map_short_ref_to_long_id(ref: str | None, short_to_long: dict[str, str]) ->
 class MemoryWorkers:
     def __init__(self) -> None:
         pass
+
+    async def run_write_gate(
+        self,
+        *,
+        memory_space: str,
+        context: str,
+        request_id: str,
+    ) -> WriteGateOutput:
+        """同步判断写入内容是否具备可归属的稳定主体。
+
+        Args:
+            memory_space: 当前记忆空间。
+            context: 原始写入内容。
+            request_id: 当前请求 id。
+
+        Returns:
+            仅包含主体门禁结果和主体草稿的结构化输出。
+        """
+
+        payload = {
+            "memory_space": memory_space,
+            "context": context,
+        }
+        call = await self._run(
+            provider_worker_type="write_gate",
+            memory_space=memory_space,
+            request_id=request_id,
+            payload=payload,
+            schema_type=WriteGateOutput,
+        )
+        result = call.parsed
+        normalized_drafts = []
+        for draft in result.identity_profile_drafts:
+            normalized = _normalized_profile_draft(draft)
+            if not normalized["who"] or not normalized["surface_forms"]:
+                continue
+            normalized_drafts.append(
+                IdentityProfileDraft(
+                    draft_id=draft.draft_id,
+                    who=normalized["who"],
+                    surface_forms=normalized["surface_forms"],
+                    distinguishing_context=normalized["distinguishing_context"],
+                )
+            )
+        gate_status = "passed" if normalized_drafts else "rejected_no_identity_profile"
+        logger.info(
+            "worker write gate normalized",
+            extra={
+                "memory_space": memory_space,
+                "request_id": request_id,
+                "draft_count": len(normalized_drafts),
+                "gate_status": gate_status,
+                "drafts": [draft.model_dump() for draft in normalized_drafts],
+            },
+        )
+        return WriteGateOutput(
+            identity_gate_status=gate_status,
+            identity_profile_drafts=normalized_drafts,
+            write_rejection_reason=None if normalized_drafts else "cannot_extract_identity_profile",
+        )
 
     @staticmethod
     async def _record_llm_run_best_effort(

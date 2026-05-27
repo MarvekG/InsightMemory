@@ -33,7 +33,8 @@ class _FakeStatsSession:
             return _FakeExecuteResult((2, 150, 30, 180, 75, 75, 8))
         return _FakeExecuteResult(
             all_result=[
-                ("extractor", 1, 100, 20, 120, 60, 40, 5),
+                ("write_gate", 1, 30, 4, 34, 18, 12, 0),
+                ("extractor", 1, 70, 16, 86, 42, 28, 5),
                 ("answer_composer", 1, 50, 10, 60, 15, 35, 3),
             ]
         )
@@ -64,8 +65,11 @@ def test_memory_llm_usage_stats_include_cached_reasoning_and_hit_rate() -> None:
     assert stats["cache_miss_tokens"] == 75
     assert stats["reasoning_tokens"] == 8
     assert stats["cache_hit_rate"] == 0.5
-    assert stats["by_operation"]["extractor"]["cached_tokens"] == 60
-    assert stats["by_operation"]["extractor"]["cache_miss_tokens"] == 40
+    assert stats["by_operation"]["write_gate"]["cached_tokens"] == 18
+    assert stats["by_operation"]["write_gate"]["cache_miss_tokens"] == 12
+    assert stats["by_operation"]["write_gate"]["cache_hit_rate"] == 0.6
+    assert stats["by_operation"]["extractor"]["cached_tokens"] == 42
+    assert stats["by_operation"]["extractor"]["cache_miss_tokens"] == 28
     assert stats["by_operation"]["extractor"]["reasoning_tokens"] == 5
     assert stats["by_operation"]["extractor"]["cache_hit_rate"] == 0.6
     assert stats["by_operation"]["answer_composer"]["cache_miss_tokens"] == 35

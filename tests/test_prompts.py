@@ -4,11 +4,20 @@ from insight_memory.workers.prompts import IDENTITY_PROFILE_RULES, get_worker_in
 
 
 def test_identity_profile_rules_are_shared_across_identity_workers() -> None:
-    worker_types = ("extractor", "query_planner", "linker", "profile_writer")
+    worker_types = ("write_gate", "extractor", "query_planner", "linker", "profile_writer")
 
     for worker_type in worker_types:
         instructions = get_worker_instructions(worker_type)
         assert IDENTITY_PROFILE_RULES in instructions
+
+
+def test_write_gate_uses_original_identity_examples_without_candidate_extraction() -> None:
+    instructions = get_worker_instructions("write_gate")
+
+    assert "`Gateway 是项目，当前主阻塞是数据库迁移失败。`" in instructions
+    assert "`Product Division 同时运营两条产品线" in instructions
+    assert "Return identity_profile drafts only; do not create candidate memories." in instructions
+    assert "candidate memories must describe" not in instructions
 
 
 def test_query_planner_instructions_require_per_draft_query_text() -> None:

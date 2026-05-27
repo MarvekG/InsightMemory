@@ -11,7 +11,7 @@ from insight_memory.storage.repository import MemoryRepository
 from insight_memory.utils.logger import get_logger
 from insight_memory.utils.locks import entity_memory_resolution_lock, entity_resolution_lock
 from insight_memory.workers.runtime import MemoryWorkers
-from insight_memory.workers.schemas import ExtractorOutput, ResolverOutput
+from insight_memory.workers.schemas import ResolverOutput
 logger = get_logger(__name__)
 
 
@@ -209,6 +209,7 @@ class IngestState(TypedDict, total=False):
     memory_space: str
     request_id: str
     workers: MemoryWorkers
+    context: str
     extractor: Any
     observation_id: str
     draft_to_entity: dict[str, str]
@@ -221,23 +222,36 @@ class IngestGraph:
     def __init__(self) -> None:
         self._graph = self._build_graph()
 
-    async def run(
+    async def continue_ingest(
         self,
         *,
         memory_space: str,
         request_id: str,
         observation_id: str,
-        extractor_payload: dict[str, Any],
+        context: str,
     ) -> dict[str, Any]:
-        """Run the background ingest graph from extracted subject onward."""
+        """从原始上下文重跑完整 extractor，并继续后台写入图。
+
+        Args:
+            memory_space: 当前记忆空间。
+            request_id: 当前请求 id。
+            observation_id: 同步 write_gate 阶段创建的 observation id。
+            context: 原始写入内容。
+
+        Returns:
+            后台写入图执行结果；如果完整 extractor 拒绝，则返回 rejected 结果。
+
+        Raises:
+            ValueError: 缺少必需的 context 字段。
+        """
+
         try:
-            extractor = ExtractorOutput.model_validate(extractor_payload)
             result = await self._graph.ainvoke(
                 {
                     "memory_space": memory_space,
                     "request_id": request_id,
                     "workers": MemoryWorkers(),
-                    "extractor": extractor,
+                    "context": context,
                     "observation_id": observation_id,
                     "draft_to_entity": {},
                     "affected_entity_keys": [],
@@ -260,15 +274,107 @@ class IngestGraph:
 
     def _build_graph(self):
         graph = StateGraph(IngestState)
+        graph.add_node("extract", self._extract)
+        graph.add_node("mark_extractor_rejected", self._mark_extractor_rejected)
         graph.add_node("resolve_entities", self._resolve_entities)
         graph.add_node("resolve_candidates", self._resolve_candidates)
         graph.add_node("finalize", self._finalize)
 
-        graph.set_entry_point("resolve_entities")
+        graph.set_entry_point("extract")
+        graph.add_conditional_edges(
+            "extract",
+            self._route_after_extract,
+            {
+                "passed": "resolve_entities",
+                "rejected": "mark_extractor_rejected",
+            },
+        )
+        graph.add_edge("mark_extractor_rejected", END)
         graph.add_edge("resolve_entities", "resolve_candidates")
         graph.add_edge("resolve_candidates", "finalize")
         graph.add_edge("finalize", END)
         return graph.compile()
+
+    async def _extract(self, state: IngestState) -> dict[str, Any]:
+        """在 graph 内从原始 context 运行完整 extractor。
+
+        Args:
+            state: 当前 ingest graph 状态，必须包含原始 context。
+
+        Returns:
+            包含完整 extractor 输出的状态增量。
+
+        Raises:
+            ValueError: 缺少必需的 context 字段。
+        """
+
+        context = str(state.get("context") or "").strip()
+        if not context:
+            raise ValueError("continue_ingest payload requires non-empty context")
+
+        extractor = await state["workers"].run_extractor(
+            memory_space=state["memory_space"],
+            request_id=state["request_id"],
+            context=context,
+        )
+        return {"extractor": extractor}
+
+    @staticmethod
+    def _route_after_extract(state: IngestState) -> str:
+        """根据完整 extractor 的门禁结果选择后续 graph 节点。
+
+        Args:
+            state: 已包含 extractor 输出的 graph 状态。
+
+        Returns:
+            `passed` 进入正常写入链路，`rejected` 进入 observation unresolved 标记节点。
+        """
+
+        extractor = state["extractor"]
+        if extractor.identity_gate_status == "passed":
+            return "passed"
+        return "rejected"
+
+    async def _mark_extractor_rejected(self, state: IngestState) -> dict[str, Any]:
+        """处理后台完整 extractor 拒绝的 observation 状态。
+
+        Args:
+            state: 已包含 rejected extractor 输出的 graph 状态。
+
+        Returns:
+            包含 rejected API 结果的状态增量。
+        """
+
+        extractor = state["extractor"]
+        error_code = extractor.write_rejection_reason or "cannot_extract_identity_profile"
+        async with MemoryRepository() as repository:
+            await repository.mark_observation_resolved(
+                memory_space=state["memory_space"],
+                observation_id=state["observation_id"],
+                status="unresolved",
+                metadata={
+                    "extractor_status": extractor.identity_gate_status,
+                    "extractor_rejection_reason": error_code,
+                },
+            )
+        logger.info(
+            "continue ingest rejected by background extractor",
+            extra={
+                "memory_space": state["memory_space"],
+                "request_id": state["request_id"],
+                "observation_id": state["observation_id"],
+                "error_code": error_code,
+            },
+        )
+        return {
+            "result": {
+                "status": "rejected",
+                "observation_id": state["observation_id"],
+                "affected_entity_keys": [],
+                "affected_memory_ids": [],
+                "error_code": error_code,
+            }
+        }
 
     async def _resolve_entities(self, state: IngestState) -> dict[str, Any]:
         workers = state["workers"]

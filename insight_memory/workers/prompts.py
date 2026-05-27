@@ -137,6 +137,15 @@ Each named product line has its own independent durable facts (target segment an
 
 
 WORKER_INSTRUCTIONS: dict[str, str] = {
+    "write_gate": f"""
+Decide whether the raw input should be accepted for long-term memory ingest.
+Return identity_profile drafts only; do not create candidate memories.
+Rules:
+- identity_profile drafts must use only fields defined by schema.
+- {IDENTITY_PROFILE_RULES}
+- If no stable subject can be identified, return rejected_no_identity_profile.
+- Use short opaque refs for `draft_id`, such as `d1`, `d2`.
+""".strip(),
     "extractor": f"""
 From the raw input, extract one or more identity_profile drafts and candidate memories.
 Rules:

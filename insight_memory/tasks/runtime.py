@@ -407,11 +407,21 @@ class TaskRuntime:
         return {"task_type": task_type, "status": "ignored"}
 
     async def _continue_ingest(self, *, payload: dict[str, Any]) -> dict[str, Any]:
-        return await ingest_graph.run(
+        """把 continue_ingest 任务交给后台写入图处理。
+
+        Args:
+            payload: `continue_ingest` 任务载荷，包含 memory_space、request_id、
+                observation_id 和 context。
+
+        Returns:
+            后台写入图的执行结果。
+        """
+
+        return await ingest_graph.continue_ingest(
             memory_space=str(payload["memory_space"]),
             request_id=str(payload["request_id"]),
             observation_id=str(payload["observation_id"]),
-            extractor_payload=dict(payload.get("extractor") or {}),
+            context=str(payload.get("context") or ""),
         )
 
     async def _refresh_entity_profile(self, *, payload: dict[str, Any]) -> dict[str, Any]:
