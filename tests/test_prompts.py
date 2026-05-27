@@ -27,6 +27,16 @@ def test_query_planner_instructions_require_per_draft_query_text() -> None:
     assert "Do not reuse the full multi-subject query as `query_text` for every draft." in instructions
 
 
+def test_query_planner_instructions_require_graph_expansion_intent() -> None:
+    instructions = get_worker_instructions("query_planner")
+
+    assert "`graph_expansion_intent`" in instructions
+    assert "`entity_local`" in instructions
+    assert "`cross_entity`" in instructions
+    assert "`uncertain`" in instructions
+    assert "Do not decide graph expansion with keyword matching" in instructions
+
+
 def test_identity_profile_rules_prioritize_subject_assignment() -> None:
     assert "First decide which named stable subject owns the input or query." in IDENTITY_PROFILE_RULES
     assert "Do not run a second value/type gate over the statement content." in IDENTITY_PROFILE_RULES

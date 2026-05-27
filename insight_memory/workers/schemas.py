@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class IdentityProfileDraft(BaseModel):
@@ -94,9 +94,28 @@ class QueryFocus(BaseModel):
 
     topic: str = ""
     time_intent: Literal["current", "latest", "history", "unspecified"] = "unspecified"
+    graph_expansion_intent: Literal["entity_local", "cross_entity", "uncertain"] = "uncertain"
+    graph_expansion_reason: str = ""
     prefer_status: list[str] = Field(default_factory=list)
     include_history: bool = False
     require_citations: bool = True
+
+    @field_validator("graph_expansion_intent", mode="before")
+    @classmethod
+    def normalize_graph_expansion_intent(cls, value: object) -> str:
+        """
+        将非法图扩展意图降级为保守的 `uncertain`。
+
+        Args:
+            value: LLM 输出的原始图扩展意图。
+
+        Returns:
+            合法的图扩展意图枚举值。
+        """
+        text = str(value or "").strip().lower()
+        if text in {"entity_local", "cross_entity", "uncertain"}:
+            return text
+        return "uncertain"
 
 
 class QueryPlannerOutput(BaseModel):

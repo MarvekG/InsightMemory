@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from insight_memory.workers.schemas import ExtractorOutput
+from insight_memory.workers.schemas import ExtractorOutput, QueryFocus
 
 
 def test_extractor_allows_long_temporary_refs() -> None:
@@ -33,3 +33,17 @@ def test_extractor_allows_long_temporary_refs() -> None:
     assert output.identity_profile_drafts[0].draft_id == long_draft_id
     assert output.candidates[0].candidate_id == long_candidate_id
     assert output.candidates[0].owner_draft_id == long_draft_id
+
+
+def test_query_focus_normalizes_invalid_graph_expansion_intent_to_uncertain() -> None:
+    output = QueryFocus.model_validate(
+        {
+            "topic": "Orion service owner",
+            "time_intent": "current",
+            "graph_expansion_intent": "not_a_valid_intent",
+            "graph_expansion_reason": "The model emitted an unknown value.",
+        }
+    )
+
+    assert output.graph_expansion_intent == "uncertain"
+    assert output.graph_expansion_reason == "The model emitted an unknown value."

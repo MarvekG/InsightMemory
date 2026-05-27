@@ -113,6 +113,37 @@ def _effective_time_intent(planner: Any) -> str:
     return "unspecified"
 
 
+def _graph_expansion_intent(planner: Any) -> str:
+    """
+    从 planner 输出中归一化动态图扩展意图。
+
+    Args:
+        planner: query planner 的结构化输出。
+
+    Returns:
+        `entity_local`、`cross_entity` 或 `uncertain`。
+    """
+    query_focus = getattr(planner, "query_focus", None)
+    intent = str(getattr(query_focus, "graph_expansion_intent", "") or "").strip().lower()
+    if intent in {"entity_local", "cross_entity", "uncertain"}:
+        return intent
+    return "uncertain"
+
+
+def _graph_expansion_reason(planner: Any) -> str:
+    """
+    从 planner 输出中读取动态图扩展决策原因。
+
+    Args:
+        planner: query planner 的结构化输出。
+
+    Returns:
+        去除首尾空白后的决策原因。
+    """
+    query_focus = getattr(planner, "query_focus", None)
+    return str(getattr(query_focus, "graph_expansion_reason", "") or "").strip()
+
+
 def _memory_evidence_role(*, memory_id: str, seed_ids: set[str], relation_types: list[str]) -> str:
     """
     根据种子命中和边类型给 memory evidence 标注角色。
@@ -241,6 +272,7 @@ class RecallGraph:
                 "draft_count": len(planner.query_identity_profile_drafts),
                 "query_rewrite_count": len(planner.query_rewrites),
                 "time_intent": getattr(planner.query_focus, "time_intent", None),
+                "graph_expansion_intent": getattr(planner.query_focus, "graph_expansion_intent", None),
             },
         )
         return {
@@ -507,6 +539,8 @@ class RecallGraph:
         if entity is None:
             raise RuntimeError(f"Resolved entity disappeared before recall: {entity_key}")
         time_intent = _effective_time_intent(planner)
+        graph_intent = _graph_expansion_intent(planner)
+        graph_reason = _graph_expansion_reason(planner)
         query_texts = [query]
         if len(planner.query_identity_profile_drafts) <= 1:
             query_texts.extend(planner.query_rewrites)
@@ -532,32 +566,38 @@ class RecallGraph:
         )
         stage_timings["local_graph_expansion"] = _elapsed_ms(graph_started_at)
         if expanded_memories:
-            cross_started_at = perf_counter()
-            (
-                expanded_memories,
-                evidence_observation_ids,
-                graph_uncertainties,
-                used_edges,
-            ) = await self._supplement_cross_entity_graph(
-                memory_space=state["memory_space"],
-                anchor_entity_key=entity_key,
-                original_query=str(state.get("original_query") or state.get("query") or ""),
-                query_identity_profile={
-                    "who": str(state["draft_payload"].get("who") or "").strip(),
-                    "surface_forms": [str(item) for item in state["draft_payload"].get("surface_forms") or []],
-                    "distinguishing_context": [
-                        str(item) for item in state["draft_payload"].get("distinguishing_context") or []
-                    ],
-                },
-                expanded_memories=expanded_memories,
-                evidence_observation_ids=evidence_observation_ids,
-                graph_uncertainties=graph_uncertainties,
-                used_edges=used_edges,
-                workers=workers,
-            )
-            stage_timings["dynamic_cross_entity_graph"] = _elapsed_ms(cross_started_at)
+            if graph_intent == "entity_local":
+                stage_timings["dynamic_cross_entity_graph"] = 0
+                dynamic_cross_entity_skipped = True
+            else:
+                cross_started_at = perf_counter()
+                (
+                    expanded_memories,
+                    evidence_observation_ids,
+                    graph_uncertainties,
+                    used_edges,
+                ) = await self._supplement_cross_entity_graph(
+                    memory_space=state["memory_space"],
+                    anchor_entity_key=entity_key,
+                    original_query=str(state.get("original_query") or state.get("query") or ""),
+                    query_identity_profile={
+                        "who": str(state["draft_payload"].get("who") or "").strip(),
+                        "surface_forms": [str(item) for item in state["draft_payload"].get("surface_forms") or []],
+                        "distinguishing_context": [
+                            str(item) for item in state["draft_payload"].get("distinguishing_context") or []
+                        ],
+                    },
+                    expanded_memories=expanded_memories,
+                    evidence_observation_ids=evidence_observation_ids,
+                    graph_uncertainties=graph_uncertainties,
+                    used_edges=used_edges,
+                    workers=workers,
+                )
+                stage_timings["dynamic_cross_entity_graph"] = _elapsed_ms(cross_started_at)
+                dynamic_cross_entity_skipped = False
         else:
             stage_timings["dynamic_cross_entity_graph"] = 0
+            dynamic_cross_entity_skipped = False
         logger.info(
             "recall graph expanded",
             extra={
@@ -570,6 +610,8 @@ class RecallGraph:
                 "evidence_observation_ids": evidence_observation_ids,
                 "graph_uncertainty_count": len(graph_uncertainties),
                 "used_edge_types": [edge["edge_type"] for edge in used_edges],
+                "graph_expansion_intent": graph_intent,
+                "dynamic_cross_entity_skipped": dynamic_cross_entity_skipped,
             },
         )
         resolution_trace = dict(state.get("resolution_trace") or {})
@@ -579,6 +621,9 @@ class RecallGraph:
                 "seed_memory_ids": [item.memory_id for item in seed_memories],
                 "expanded_memory_ids": [item.memory_id for item in expanded_memories],
                 "graph_uncertainties": graph_uncertainties,
+                "graph_expansion_intent": graph_intent,
+                "graph_expansion_reason": graph_reason,
+                "dynamic_cross_entity_skipped": dynamic_cross_entity_skipped,
             }
         )
         if not expanded_memories:
@@ -870,6 +915,23 @@ class RecallGraph:
             "key_memory_ids": key_memory_ids,
             "supporting_observation_ids": supporting_observation_ids,
         }
+        graph_intents = dedupe_preserve_order(
+            str(item.get("resolution_trace", {}).get("graph_expansion_intent") or "").strip()
+            for item in draft_runs
+            if str(item.get("resolution_trace", {}).get("graph_expansion_intent") or "").strip()
+        )
+        dynamic_skip_values = [
+            bool(item.get("resolution_trace", {}).get("dynamic_cross_entity_skipped"))
+            for item in draft_runs
+            if "dynamic_cross_entity_skipped" in dict(item.get("resolution_trace") or {})
+        ]
+        if graph_intents:
+            metadata["graph_expansion_intents"] = graph_intents
+            if len(graph_intents) == 1:
+                metadata["graph_expansion_intent"] = graph_intents[0]
+        if dynamic_skip_values:
+            metadata["dynamic_cross_entity_skipped_count"] = sum(1 for item in dynamic_skip_values if item)
+            metadata["dynamic_cross_entity_run_count"] = sum(1 for item in dynamic_skip_values if not item)
         if stage_timings_ms is not None:
             metadata["stage_timings_ms"] = _merge_stage_timings(stage_timings_ms)
         if draft_timings_ms is not None:

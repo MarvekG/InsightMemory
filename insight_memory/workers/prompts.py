@@ -345,6 +345,17 @@ Rules:
 - Keep query_rewrites short and focused.
 - query_focus should only summarize retrieval intent, not final answer content.
 - query_focus.time_intent must be one of current, latest, history, or unspecified.
+- `graph_expansion_intent` is the query_focus field that controls dynamic cross-entity graph expansion.
+- query_focus.graph_expansion_intent must be one of `entity_local`, `cross_entity`, or `uncertain`.
+- Use `entity_local` when the query can be answered from the target entity's own recalled memory and local
+  evidence, without needing another entity's memory to explain, constrain, or extend the answer.
+- Use `cross_entity` when the query asks for why/how, dependency chains, surrounding constraints, related gaps,
+  external requirements, or other-entity evidence that may explain the target subject.
+- Use `uncertain` when the query has a stable target but you cannot confidently decide whether other-entity
+  memory may be needed.
+- Set query_focus.graph_expansion_reason to one short reason for that semantic decision.
+- Do not decide graph expansion with keyword matching. Judge the retrieval need from the full query intent and
+  the subject relationships implied by the query.
 - Use history when the query is about prior records, earlier states, or change over time.
 - If the query explicitly asks both what happened earlier and what is true now, still use history so recall expands the evolution instead of collapsing to only the current state.
   Example: `Cedar review 之前卡过什么，当前又变成什么？`

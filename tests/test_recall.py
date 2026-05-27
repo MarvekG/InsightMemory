@@ -5,9 +5,11 @@ from types import SimpleNamespace
 from fastapi.testclient import TestClient
 
 from insight_memory.api import routes as routes_module
+from insight_memory.graph import recall_graph as recall_graph_module
 from insight_memory.graph.recall_graph import RecallGraph
 from insight_memory.main import app
 from insight_memory.services.recall_service import recall_service
+from insight_memory.workers.schemas import QueryFocus
 from tests.utils import run_async
 
 
@@ -421,3 +423,143 @@ def test_run_draft_subgraphs_uses_per_draft_query_text() -> None:
         {"resolve_entity": 3, "answer_composer": 7, "total": 11},
         {"resolve_entity": 3, "answer_composer": 7, "total": 11},
     ]
+
+
+def test_recall_memories_skips_dynamic_cross_entity_for_entity_local_intent(monkeypatch) -> None:
+    result, supplement_calls = _run_recall_memories_with_graph_intent(monkeypatch, "entity_local")
+
+    assert supplement_calls == []
+    assert result["resolution_trace"]["graph_expansion_intent"] == "entity_local"
+    assert result["resolution_trace"]["dynamic_cross_entity_skipped"] is True
+    assert result["stage_timings_ms"]["dynamic_cross_entity_graph"] == 0
+
+
+def test_recall_memories_runs_dynamic_cross_entity_for_cross_entity_intent(monkeypatch) -> None:
+    result, supplement_calls = _run_recall_memories_with_graph_intent(monkeypatch, "cross_entity")
+
+    assert supplement_calls == ["cross_entity"]
+    assert result["resolution_trace"]["graph_expansion_intent"] == "cross_entity"
+    assert result["resolution_trace"]["dynamic_cross_entity_skipped"] is False
+
+
+def test_recall_memories_runs_dynamic_cross_entity_for_uncertain_intent(monkeypatch) -> None:
+    result, supplement_calls = _run_recall_memories_with_graph_intent(monkeypatch, "uncertain")
+
+    assert supplement_calls == ["uncertain"]
+    assert result["resolution_trace"]["graph_expansion_intent"] == "uncertain"
+    assert result["resolution_trace"]["dynamic_cross_entity_skipped"] is False
+
+
+def _run_recall_memories_with_graph_intent(monkeypatch, graph_expansion_intent: str) -> tuple[dict, list[str]]:
+    graph = RecallGraph()
+    memory = SimpleNamespace(
+        memory_id="mem_1",
+        entity_key="ent_1",
+        status="active",
+        title="Orion owner",
+        summary="Orion service 当前负责人是 Mina。",
+        content="Orion service 当前负责人是 Mina。",
+    )
+    entity = SimpleNamespace(
+        entity_key="ent_1",
+        identity_profile={
+            "who": "Orion service",
+            "surface_forms": ["Orion service"],
+            "distinguishing_context": ["service"],
+        },
+    )
+    observation = SimpleNamespace(
+        observation_id="obs_1",
+        summary="Orion service 当前负责人是 Mina。",
+        content="Orion service 当前负责人是 Mina。",
+        created_at=1.0,
+    )
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return [memory]
+
+        async def get_entity(self, **kwargs):
+            return entity
+
+        async def get_observations_by_ids(self, **kwargs):
+            return [observation]
+
+    class _FakeRetrievalIndex:
+        async def memory_candidates(self, **kwargs):
+            return [SimpleNamespace(memory=memory)]
+
+    class _FakeWorkers:
+        async def run_answer_composer(self, **kwargs):
+            return SimpleNamespace(
+                answer="Orion service 当前负责人是 Mina。",
+                citations=[],
+                uncertainties=[],
+            )
+
+    supplement_calls: list[str] = []
+
+    async def fake_expand_graph(**kwargs):
+        return (
+            [memory],
+            ["obs_1"],
+            [],
+            [
+                {
+                    "edge_type": "derived_from",
+                    "from_id": "mem_1",
+                    "to_id": "obs_1",
+                    "reason": "source",
+                    "weight": 1.0,
+                }
+            ],
+        )
+
+    async def fake_supplement_cross_entity_graph(**kwargs):
+        supplement_calls.append(graph_expansion_intent)
+        return (
+            kwargs["expanded_memories"],
+            kwargs["evidence_observation_ids"],
+            kwargs["graph_uncertainties"],
+            kwargs["used_edges"],
+        )
+
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+    monkeypatch.setattr(graph, "_expand_graph", fake_expand_graph)
+    monkeypatch.setattr(graph, "_supplement_cross_entity_graph", fake_supplement_cross_entity_graph)
+
+    state = {
+        "memory_space": "workspace:orion",
+        "query": "Orion service 当前负责人是谁？",
+        "original_query": "Orion service 当前负责人是谁？",
+        "request_id": "req_orion",
+        "workers": _FakeWorkers(),
+        "planner": SimpleNamespace(
+            query_identity_profile_drafts=[object()],
+            query_rewrites=[],
+            query_focus=QueryFocus(
+                topic="Orion service owner",
+                time_intent="current",
+                graph_expansion_intent=graph_expansion_intent,
+                graph_expansion_reason="Planner semantic decision.",
+            ),
+        ),
+        "entity_key": "ent_1",
+        "draft_payload": {
+            "who": "Orion service",
+            "surface_forms": ["Orion service"],
+            "distinguishing_context": ["service"],
+            "query_text": "Orion service 当前负责人是谁？",
+        },
+        "stage_timings_ms": {"resolve_entity": 1},
+        "resolution_trace": {},
+    }
+
+    return run_async(graph._recall_memories(state)), supplement_calls
