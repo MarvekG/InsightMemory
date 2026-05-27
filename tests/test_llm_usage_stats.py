@@ -225,6 +225,50 @@ def test_memory_llm_provider_extracts_mapping_usage_cache_read_tokens() -> None:
     assert result.reasoning_tokens == 6
 
 
+class _RecordingCompletions:
+    def __init__(self) -> None:
+        self.calls = []
+
+    async def create(self, **kwargs):
+        self.calls.append(kwargs)
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content='{"value":"ok"}'))],
+            usage=SimpleNamespace(prompt_tokens=10, completion_tokens=2),
+        )
+
+
+class _RecordingClient:
+    def __init__(self) -> None:
+        self.completions = _RecordingCompletions()
+        self.chat = SimpleNamespace(completions=self.completions)
+
+
+def test_memory_llm_provider_keeps_static_prompt_in_system_and_payload_in_user_message() -> None:
+    provider = StructuredLLMProvider()
+    client = _RecordingClient()
+    provider._client = client
+    provider._api_key = "test-key"
+
+    for value in ("first", "second"):
+        run_async(
+            provider.generate(
+                worker_type="extractor",
+                instructions="Return JSON.",
+                payload={"value": value},
+                schema_type=_SimpleSchema,
+            )
+        )
+
+    first_messages = client.completions.calls[0]["messages"]
+    second_messages = client.completions.calls[1]["messages"]
+    assert [message["role"] for message in first_messages] == ["system", "user"]
+    assert first_messages[0]["content"] == second_messages[0]["content"]
+    assert first_messages[1]["content"] == '{"value":"first"}'
+    assert second_messages[1]["content"] == '{"value":"second"}'
+    assert '"properties":{"value"' in first_messages[0]["content"]
+    assert '"properties": {"value"' not in first_messages[0]["content"]
+
+
 class _FakeDeleteSession:
     def __init__(self) -> None:
         self.executed = []
