@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 from insight_memory.api.schemas import IngestRequest
 from insight_memory.storage.repository import MemoryRepository
 from insight_memory.utils.logger import get_logger
@@ -17,21 +15,29 @@ class IngestService:
     """Handle the HTTP ingest hot path before background resolution continues."""
 
     async def ingest(self, request: IngestRequest) -> dict:
-        """Extract a subject, persist the observation, and enqueue background resolution."""
+        """同步执行主体门禁，通过后创建 observation 并排队后台完整抽取。
+
+        Args:
+            request: 写入请求，包含记忆空间和原始上下文。
+
+        Returns:
+            与 Memory ingest API 对齐的同步 accepted/rejected 结果。
+        """
+
         request_id = get_or_create_request_id()
         workers = MemoryWorkers()
-        extractor = await workers.run_extractor(
+        write_gate = await workers.run_write_gate(
             memory_space=request.memory_scope,
             context=request.context,
             request_id=request_id,
         )
-        if extractor.identity_gate_status != "passed":
+        if write_gate.identity_gate_status != "passed":
             return {
                 "status": "rejected",
                 "observation_id": None,
                 "affected_entity_keys": [],
                 "affected_memory_ids": [],
-                "error_code": extractor.write_rejection_reason or "cannot_extract_identity_profile",
+                "error_code": write_gate.write_rejection_reason or "cannot_extract_identity_profile",
             }
 
         observation_id = await self._create_observation(
@@ -43,7 +49,7 @@ class IngestService:
             memory_space=request.memory_scope,
             request_id=request_id,
             observation_id=observation_id,
-            extractor_payload=extractor.model_dump(),
+            context=request.context,
         )
         logger.info(
             "ingest accepted for background continuation",
@@ -62,6 +68,17 @@ class IngestService:
         }
 
     async def _create_observation(self, *, memory_space: str, context: str, request_id: str) -> str:
+        """创建待后台解析的原始 observation。
+
+        Args:
+            memory_space: 当前记忆空间。
+            context: 原始写入内容。
+            request_id: 当前请求 id。
+
+        Returns:
+            新建 observation 的 id。
+        """
+
         async with MemoryRepository() as repository:
             observation = await repository.create_observation(
                 memory_space=memory_space,
@@ -86,8 +103,17 @@ class IngestService:
         memory_space: str,
         request_id: str,
         observation_id: str,
-        extractor_payload: dict[str, Any],
+        context: str,
     ) -> None:
+        """创建只携带原始上下文的后台继续写入任务。
+
+        Args:
+            memory_space: 当前记忆空间。
+            request_id: 当前请求 id。
+            observation_id: 已创建的 observation id。
+            context: 原始写入内容，供后台完整 extractor 重新处理。
+        """
+
         async with MemoryRepository() as repository:
             await repository.create_task(
                 memory_space=memory_space,
@@ -98,7 +124,7 @@ class IngestService:
                     "memory_space": memory_space,
                     "request_id": request_id,
                     "observation_id": observation_id,
-                    "extractor": extractor_payload,
+                    "context": context,
                 },
             )
 

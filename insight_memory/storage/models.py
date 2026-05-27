@@ -13,6 +13,7 @@ ENTITY_RESOLUTION_STATUSES = ("pending", "resolved", "partially_resolved", "unre
 EDGE_TYPES = ("derived_from", "updates", "supports", "contradicts", "related_to")
 TASK_STATUSES = ("pending", "running", "succeeded", "failed", "dead_letter", "cancelled")
 TASK_TYPES = (
+    "continue_ingest",
     "extract_candidates",
     "resolve_identity_drafts",
     "resolve_candidates",
@@ -26,6 +27,7 @@ TASK_TYPES = (
     "purge_memory",
 )
 LLM_WORKER_TYPES = (
+    "write_gate",
     "extractor",
     "linker",
     "resolver",
@@ -220,7 +222,7 @@ class MemoryLLMRun(Base):
     __table_args__ = table_args(
         Index("ix_memory_llm_runs_space_worker_created_at", "memory_space", "worker_type", "created_at"),
         CheckConstraint(
-            "worker_type IN ('extractor', 'linker', 'resolver', 'query_planner', "
+            "worker_type IN ('write_gate', 'extractor', 'linker', 'resolver', 'query_planner', "
             "'answer_composer', 'answer_judge', 'profile_writer', 'merge_judge', 'edge_judge')",
             name="ck_memory_llm_runs_worker_type",
         ),

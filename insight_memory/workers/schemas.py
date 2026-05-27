@@ -51,6 +51,14 @@ class ExtractorOutput(BaseModel):
     write_rejection_reason: str | None = None
 
 
+class WriteGateOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    identity_gate_status: Literal["passed", "rejected_no_identity_profile"]
+    identity_profile_drafts: list[IdentityProfileDraft] = Field(default_factory=list)
+    write_rejection_reason: str | None = None
+
+
 class LinkerOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

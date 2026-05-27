@@ -33,7 +33,8 @@ class _FakeStatsSession:
             return _FakeExecuteResult((2, 150, 30, 180, 75, 75, 8))
         return _FakeExecuteResult(
             all_result=[
-                ("extractor", 1, 100, 20, 120, 60, 40, 5),
+                ("write_gate", 1, 30, 4, 34, 18, 12, 0),
+                ("extractor", 1, 70, 16, 86, 42, 28, 5),
                 ("answer_composer", 1, 50, 10, 60, 15, 35, 3),
             ]
         )
@@ -64,8 +65,11 @@ def test_memory_llm_usage_stats_include_cached_reasoning_and_hit_rate() -> None:
     assert stats["cache_miss_tokens"] == 75
     assert stats["reasoning_tokens"] == 8
     assert stats["cache_hit_rate"] == 0.5
-    assert stats["by_operation"]["extractor"]["cached_tokens"] == 60
-    assert stats["by_operation"]["extractor"]["cache_miss_tokens"] == 40
+    assert stats["by_operation"]["write_gate"]["cached_tokens"] == 18
+    assert stats["by_operation"]["write_gate"]["cache_miss_tokens"] == 12
+    assert stats["by_operation"]["write_gate"]["cache_hit_rate"] == 0.6
+    assert stats["by_operation"]["extractor"]["cached_tokens"] == 42
+    assert stats["by_operation"]["extractor"]["cache_miss_tokens"] == 28
     assert stats["by_operation"]["extractor"]["reasoning_tokens"] == 5
     assert stats["by_operation"]["extractor"]["cache_hit_rate"] == 0.6
     assert stats["by_operation"]["answer_composer"]["cache_miss_tokens"] == 35
@@ -219,6 +223,50 @@ def test_memory_llm_provider_extracts_mapping_usage_cache_read_tokens() -> None:
     assert result.output_tokens == 20
     assert result.cached_tokens == 35
     assert result.reasoning_tokens == 6
+
+
+class _RecordingCompletions:
+    def __init__(self) -> None:
+        self.calls = []
+
+    async def create(self, **kwargs):
+        self.calls.append(kwargs)
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content='{"value":"ok"}'))],
+            usage=SimpleNamespace(prompt_tokens=10, completion_tokens=2),
+        )
+
+
+class _RecordingClient:
+    def __init__(self) -> None:
+        self.completions = _RecordingCompletions()
+        self.chat = SimpleNamespace(completions=self.completions)
+
+
+def test_memory_llm_provider_keeps_static_prompt_in_system_and_payload_in_user_message() -> None:
+    provider = StructuredLLMProvider()
+    client = _RecordingClient()
+    provider._client = client
+    provider._api_key = "test-key"
+
+    for value in ("first", "second"):
+        run_async(
+            provider.generate(
+                worker_type="extractor",
+                instructions="Return JSON.",
+                payload={"value": value},
+                schema_type=_SimpleSchema,
+            )
+        )
+
+    first_messages = client.completions.calls[0]["messages"]
+    second_messages = client.completions.calls[1]["messages"]
+    assert [message["role"] for message in first_messages] == ["system", "user"]
+    assert first_messages[0]["content"] == second_messages[0]["content"]
+    assert first_messages[1]["content"] == '{"value":"first"}'
+    assert second_messages[1]["content"] == '{"value":"second"}'
+    assert '"properties":{"value"' in first_messages[0]["content"]
+    assert '"properties": {"value"' not in first_messages[0]["content"]
 
 
 class _FakeDeleteSession:

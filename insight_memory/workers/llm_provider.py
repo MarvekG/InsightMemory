@@ -18,6 +18,46 @@ SchemaT = TypeVar("SchemaT", bound=BaseModel)
 logger = get_logger(__name__)
 
 
+def _stable_json(value: Any) -> str:
+    """生成适合 prompt cache 的稳定紧凑 JSON 字符串。
+
+    Args:
+        value: 需要序列化到 LLM 消息中的 JSON 兼容对象。
+
+    Returns:
+        key 顺序稳定且不包含无意义空白的 JSON 字符串。
+    """
+
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def _build_system_message(
+    *,
+    worker_type: str,
+    instructions: str,
+    schema_type: type[BaseModel],
+) -> str:
+    """构造 worker 的固定 system prompt。
+
+    Args:
+        worker_type: Memory worker 类型。
+        instructions: 固定 worker 提示词。
+        schema_type: 结构化输出 schema 类型。
+
+    Returns:
+        只包含固定 worker/schema/instructions 的 system message。
+    """
+
+    schema = schema_type.model_json_schema()
+    return (
+        f"You are the {worker_type} worker for a memory system.\n"
+        "Return exactly one JSON object and nothing else.\n"
+        "Do not add markdown fences.\n"
+        f"Follow this output schema:\n{_stable_json(schema)}\n\n"
+        f"Worker instructions:\n{instructions}"
+    )
+
+
 @dataclass(slots=True)
 class LLMCallResult(Generic[SchemaT]):
     parsed: SchemaT
@@ -118,15 +158,12 @@ class StructuredLLMProvider:
         if not self.enabled or self._client is None:
             raise RuntimeError("memory llm provider is not configured")
 
-        schema = schema_type.model_json_schema()
-        system_message = (
-            f"You are the {worker_type} worker for a memory system.\n"
-            "Return exactly one JSON object and nothing else.\n"
-            "Do not add markdown fences.\n"
-            f"Follow this output schema:\n{json.dumps(schema, ensure_ascii=False)}\n\n"
-            f"Worker instructions:\n{instructions}"
+        system_message = _build_system_message(
+            worker_type=worker_type,
+            instructions=instructions,
+            schema_type=schema_type,
         )
-        user_message = json.dumps(payload, ensure_ascii=False)
+        user_message = _stable_json(payload)
 
         started_at = perf_counter()
         response = await self._client.chat.completions.create(
