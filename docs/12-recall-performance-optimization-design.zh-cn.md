@@ -339,11 +339,68 @@ MEMORY_DYNAMIC_CROSS_ENTITY_CANDIDATES=8
 - 跨实体 why/how eval 仍触发 dynamic cross-entity LLM 调用。
 - 不出现关键词、正则、case 名称或样本名词专用逻辑。
 
-### Phase 3：Payload 与预算优化
+### Phase 3a：Graph-first Entity-local Recall
+
+Phase 2 后，直接事实类查询已经不再运行动态跨实体图补全，但单主体仍需要：
+
+```text
+planner -> linker -> local graph -> answer_composer
+```
+
+其中 `linker` 是一次独立 LLM 调用。对 `entity_local` 且 graph/candidate 结构已经无歧义的查询，
+可以先让本地图结构做实体收敛，跳过 `linker`，保留 `answer_composer` 做有证据回答：
+
+```text
+planner -> graph-first resolver -> local graph -> answer_composer
+                         |
+                         +-- 不确定 -> linker -> local graph -> answer_composer
+```
+
+触发条件必须保守：
+
+- `query_focus.graph_expansion_intent == "entity_local"`。
+- `retrieval_index.entity_candidates(...)` 只返回一个候选实体。
+- 该候选实体仍按现有 Memory graph 读取 active / stale / superseded memories，再走 `_expand_graph()`。
+- 任何多候选、无候选、`cross_entity`、`uncertain`、schema 缺失或异常场景都回退原 `linker`。
+
+Graph-first resolver 不生成答案，也不做关键词规则。它只基于结构条件决定是否可以把 query draft
+绑定到唯一候选实体：
+
+- 候选实体来自现有语义索引，不靠手写字符串规则。
+- local graph expansion 仍负责收集 `derived_from`、`updates`、`supports`、`contradicts`、`related_to`
+  等结构证据。
+- composer 仍只基于 graph 给出的 memories / observations / edges 生成 answer 和 citations。
+
+需要新增 audit 字段：
+
+```json
+{
+  "graph_first_entity_resolution": {
+    "attempted": true,
+    "used": true,
+    "fallback_reason": "",
+    "candidate_count": 1
+  }
+}
+```
+
+多 draft 场景在聚合 metadata 中记录：
+
+- `graph_first_entity_resolution_attempted_count`
+- `graph_first_entity_resolution_used_count`
+- `graph_first_entity_resolution_fallback_reasons`
+
+预期收益：
+
+- 单主体直接事实少一次 `linker` LLM 调用，单实体 recall 预计从约 5.4s 降到 3.4s - 4.0s。
+- 多主体直接事实中，唯一候选 draft 也可减少 linker 调用数。
+- 同名主体、多候选和跨实体 why/how 查询保持原路径，质量风险受控。
+
+### Phase 3b：Payload 与预算优化
 
 改动：
 
-- 裁剪 linker candidate payload。
+- 裁剪 linker candidate payload；graph-first 未命中的场景仍会用到 linker。
 - 增加动态 cross-entity budget 配置。
 - 根据 stage timing 和 eval 失败分布决定默认值。
 
@@ -362,6 +419,9 @@ MEMORY_DYNAMIC_CROSS_ENTITY_CANDIDATES=8
 - `test_recall_runs_dynamic_cross_entity_when_planner_intent_cross_entity`
 - `test_recall_runs_dynamic_cross_entity_when_planner_intent_uncertain`
 - `test_query_planner_rejects_invalid_graph_expansion_intent_to_uncertain`
+- `test_resolve_entity_uses_graph_first_when_entity_local_has_unique_candidate`
+- `test_resolve_entity_falls_back_to_linker_when_graph_first_has_multiple_candidates`
+- `test_resolve_entity_falls_back_to_linker_when_planner_intent_is_cross_entity`
 
 近邻测试：
 

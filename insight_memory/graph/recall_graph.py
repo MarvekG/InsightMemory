@@ -20,6 +20,7 @@ from insight_memory.utils.logger import get_logger
 from insight_memory.utils.request_context import get_or_create_request_id
 from insight_memory.utils.text import dedupe_preserve_order
 from insight_memory.workers.runtime import MemoryWorkers
+from insight_memory.workers.schemas import LinkerOutput
 
 
 logger = get_logger(__name__)
@@ -168,6 +169,63 @@ def _memory_evidence_role(*, memory_id: str, seed_ids: set[str], relation_types:
     if "related_to" in relation_type_set:
         return "background_only"
     return "expanded"
+
+
+def _graph_first_entity_resolution_decision(
+    *,
+    planner: Any,
+    scored_candidates: list[Any],
+) -> tuple[LinkerOutput | None, dict[str, Any]]:
+    """
+    在低风险 entity-local 查询中用 graph 候选结构直接绑定唯一实体。
+
+    该函数只使用 planner 的语义图扩展意图和候选实体数量做结构性决策，不根据查询词或
+    记忆内容写关键词规则。只要不是明确的 `entity_local` 或候选不是唯一，就返回
+    `None`，调用方继续走原 linker 路径。
+
+    Args:
+        planner: query planner 的结构化输出。
+        scored_candidates: 语义索引返回的实体候选列表。
+
+    Returns:
+        二元组 `(linker_output, trace)`。`linker_output` 为 `None` 表示需要 fallback 到
+        原 linker；`trace` 用于写入 recall audit。
+    """
+    graph_intent = _graph_expansion_intent(planner)
+    candidate_count = len(scored_candidates)
+    trace: dict[str, Any] = {
+        "attempted": graph_intent == "entity_local",
+        "used": False,
+        "fallback_reason": "" if graph_intent == "entity_local" else f"graph_intent_{graph_intent}",
+        "candidate_count": candidate_count,
+        "selected_entity_key": None,
+    }
+    if graph_intent != "entity_local":
+        return None, trace
+    if candidate_count != 1:
+        trace["fallback_reason"] = "candidate_count_not_one"
+        return None, trace
+    selected_entity_key = str(getattr(scored_candidates[0].entity, "entity_key", "") or "").strip()
+    if not selected_entity_key:
+        trace["fallback_reason"] = "missing_entity_key"
+        return None, trace
+    trace.update(
+        {
+            "used": True,
+            "fallback_reason": "",
+            "selected_entity_key": selected_entity_key,
+        }
+    )
+    return (
+        LinkerOutput(
+            decision="link_existing",
+            selected_entity_key=selected_entity_key,
+            ambiguous_entity_keys=[],
+            confidence=1.0,
+            reason="graph_first_entity_local_unique_candidate",
+        ),
+        trace,
+    )
 
 
 class RecallGraph:
@@ -446,13 +504,29 @@ class RecallGraph:
                 }
                 for item in scored_candidates
             ]
-        linker = await workers.run_linker(
-            memory_space=state["memory_space"],
-            request_id=state["request_id"],
-            mode="query",
-            identity_profile_draft=draft_payload,
-            entity_candidates=entity_candidates,
+        graph_first_linker, graph_first_trace = _graph_first_entity_resolution_decision(
+            planner=state.get("planner"),
+            scored_candidates=scored_candidates,
         )
+        if graph_first_linker is not None:
+            linker = graph_first_linker
+            logger.info(
+                "recall graph-first entity resolver completed",
+                extra={
+                    "memory_space": state["memory_space"],
+                    "request_id": state["request_id"],
+                    "candidate_count": len(scored_candidates),
+                    "selected_entity_key": linker.selected_entity_key,
+                },
+            )
+        else:
+            linker = await workers.run_linker(
+                memory_space=state["memory_space"],
+                request_id=state["request_id"],
+                mode="query",
+                identity_profile_draft=draft_payload,
+                entity_candidates=entity_candidates,
+            )
         logger.info(
             "recall entity linker completed",
             extra={
@@ -468,6 +542,7 @@ class RecallGraph:
         resolution_trace.update(
             {
                 "entity_candidate_keys": [item.entity.entity_key for item in scored_candidates],
+                "graph_first_entity_resolution": graph_first_trace,
                 "linker_decision": linker.model_dump(),
             }
         )
@@ -932,6 +1007,25 @@ class RecallGraph:
         if dynamic_skip_values:
             metadata["dynamic_cross_entity_skipped_count"] = sum(1 for item in dynamic_skip_values if item)
             metadata["dynamic_cross_entity_run_count"] = sum(1 for item in dynamic_skip_values if not item)
+        graph_first_traces = [
+            dict(item.get("resolution_trace", {}).get("graph_first_entity_resolution") or {})
+            for item in draft_runs
+            if isinstance(item.get("resolution_trace", {}).get("graph_first_entity_resolution"), dict)
+        ]
+        if graph_first_traces:
+            metadata["graph_first_entity_resolution_attempted_count"] = sum(
+                1 for item in graph_first_traces if bool(item.get("attempted"))
+            )
+            metadata["graph_first_entity_resolution_used_count"] = sum(
+                1 for item in graph_first_traces if bool(item.get("used"))
+            )
+            fallback_reasons = dedupe_preserve_order(
+                str(item.get("fallback_reason") or "").strip()
+                for item in graph_first_traces
+                if str(item.get("fallback_reason") or "").strip()
+            )
+            if fallback_reasons:
+                metadata["graph_first_entity_resolution_fallback_reasons"] = fallback_reasons
         if stage_timings_ms is not None:
             metadata["stage_timings_ms"] = _merge_stage_timings(stage_timings_ms)
         if draft_timings_ms is not None:
