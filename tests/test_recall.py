@@ -246,6 +246,54 @@ def test_build_audit_metadata_summarizes_recall_for_system_improvement() -> None
     assert metadata["supporting_observation_ids"] == ["obs_1"]
 
 
+def test_build_audit_metadata_includes_stage_and_draft_timings() -> None:
+    metadata = RecallGraph._build_audit_metadata(
+        query="Orion service 当前负责人是谁？",
+        draft_runs=[
+            {
+                "result": {
+                    "status": "ok",
+                    "answer": "Orion service 当前负责人是 Mina。",
+                    "citations": [],
+                    "uncertainties": [],
+                    "error_code": None,
+                }
+            }
+        ],
+        result={
+            "status": "ok",
+            "answer": "Orion service 当前负责人是 Mina。",
+            "citations": [],
+            "uncertainties": [],
+            "error_code": None,
+        },
+        used_edges=[],
+        citations=[],
+        latency_ms=123,
+        stage_timings_ms={"plan_query": 10, "run_draft_subgraphs": 90},
+        draft_timings_ms=[
+            {
+                "draft_index": 0,
+                "resolve_entity": 20,
+                "memory_candidates": 5,
+                "answer_composer": 40,
+                "total": 70,
+            }
+        ],
+    )
+
+    assert metadata["stage_timings_ms"] == {"plan_query": 10, "run_draft_subgraphs": 90}
+    assert metadata["draft_timings_ms"] == [
+        {
+            "draft_index": 0,
+            "resolve_entity": 20,
+            "memory_candidates": 5,
+            "answer_composer": 40,
+            "total": 70,
+        }
+    ]
+
+
 def test_recall_audit_preview_route_exposes_improvement_metadata(monkeypatch) -> None:
     calls: list[dict] = []
 
@@ -319,6 +367,7 @@ def test_run_draft_subgraphs_uses_per_draft_query_text() -> None:
             calls.append(dict(state))
             return {
                 "entity_key": None,
+                "stage_timings_ms": {"resolve_entity": 3, "answer_composer": 7, "total": 11},
                 "used_edges": [],
                 "resolution_trace": {},
                 "result": {
@@ -367,4 +416,8 @@ def test_run_draft_subgraphs_uses_per_draft_query_text() -> None:
     assert [item["result"]["answer"] for item in result["draft_runs"]] == [
         "Atlas 发布项目 当前主阻塞是什么？",
         "Atlas 文档 当前缺什么？",
+    ]
+    assert [item["stage_timings_ms"] for item in result["draft_runs"]] == [
+        {"resolve_entity": 3, "answer_composer": 7, "total": 11},
+        {"resolve_entity": 3, "answer_composer": 7, "total": 11},
     ]
