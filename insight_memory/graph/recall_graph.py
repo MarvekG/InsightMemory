@@ -18,7 +18,7 @@ from insight_memory.index.retrieval_index import project_identity_profile, proje
 from insight_memory.storage.repository import MemoryRepository
 from insight_memory.utils.logger import get_logger
 from insight_memory.utils.request_context import get_or_create_request_id
-from insight_memory.utils.text import dedupe_preserve_order
+from insight_memory.utils.text import dedupe_preserve_order, normalize_text
 from insight_memory.workers.runtime import MemoryWorkers
 from insight_memory.workers.schemas import LinkerOutput
 
@@ -174,17 +174,19 @@ def _memory_evidence_role(*, memory_id: str, seed_ids: set[str], relation_types:
 def _graph_first_entity_resolution_decision(
     *,
     planner: Any,
+    draft_payload: dict[str, Any],
     scored_candidates: list[Any],
 ) -> tuple[LinkerOutput | None, dict[str, Any]]:
     """
     在低风险 entity-local 查询中用 graph 候选结构直接绑定唯一实体。
 
-    该函数只使用 planner 的语义图扩展意图和候选实体数量做结构性决策，不根据查询词或
-    记忆内容写关键词规则。只要不是明确的 `entity_local` 或候选不是唯一，就返回
-    `None`，调用方继续走原 linker 路径。
+    该函数只使用 planner 的语义图扩展意图、当前 query draft 和候选实体 identity profile
+    做结构性决策，不根据查询词或记忆内容写关键词规则。只要不是明确的 `entity_local`，
+    或无法收敛到唯一候选，就返回 `None`，调用方继续走原 linker 路径。
 
     Args:
         planner: query planner 的结构化输出。
+        draft_payload: 当前 recall draft 的 identity profile payload。
         scored_candidates: 语义索引返回的实体候选列表。
 
     Returns:
@@ -202,10 +204,16 @@ def _graph_first_entity_resolution_decision(
     }
     if graph_intent != "entity_local":
         return None, trace
-    if candidate_count != 1:
-        trace["fallback_reason"] = "candidate_count_not_one"
+    if candidate_count != 1 and not draft_payload:
+        trace["fallback_reason"] = "missing_identity_draft"
         return None, trace
-    selected_entity_key = str(getattr(scored_candidates[0].entity, "entity_key", "") or "").strip()
+    matched_candidates = _graph_first_identity_matches(draft_payload=draft_payload, scored_candidates=scored_candidates)
+    if candidate_count == 1 and not matched_candidates:
+        matched_candidates = scored_candidates
+    if len(matched_candidates) != 1:
+        trace["fallback_reason"] = "identity_match_not_unique" if matched_candidates else "identity_match_not_found"
+        return None, trace
+    selected_entity_key = str(getattr(matched_candidates[0].entity, "entity_key", "") or "").strip()
     if not selected_entity_key:
         trace["fallback_reason"] = "missing_entity_key"
         return None, trace
@@ -226,6 +234,95 @@ def _graph_first_entity_resolution_decision(
         ),
         trace,
     )
+
+
+def _graph_first_identity_matches(*, draft_payload: dict[str, Any], scored_candidates: list[Any]) -> list[Any]:
+    """
+    使用 query draft 与候选 identity profile 的结构匹配筛选候选实体。
+
+    Args:
+        draft_payload: 当前 recall draft 的 identity profile payload。
+        scored_candidates: 语义索引返回的实体候选列表。
+
+    Returns:
+        与 query draft identity 结构匹配的候选。
+    """
+    if not draft_payload:
+        return []
+    draft_profile = {
+        "who": draft_payload.get("who", ""),
+        "surface_forms": list(draft_payload.get("surface_forms", []) or []),
+        "distinguishing_context": list(draft_payload.get("distinguishing_context", []) or []),
+    }
+    return [
+        item
+        for item in scored_candidates
+        if _identity_profile_structurally_matches(
+            draft_profile=draft_profile,
+            candidate_profile=dict(getattr(item.entity, "identity_profile", {}) or {}),
+        )
+    ]
+
+
+def _identity_profile_structurally_matches(
+    *,
+    draft_profile: dict[str, Any],
+    candidate_profile: dict[str, Any],
+) -> bool:
+    """
+    判断 query draft 与候选 entity identity profile 是否结构性匹配。
+
+    Args:
+        draft_profile: query planner 输出的 identity profile draft。
+        candidate_profile: 候选 entity 的 identity profile。
+
+    Returns:
+        当 draft 的稳定主体或稳定限定符能唯一落在候选 profile 中时返回 `True`。
+    """
+    draft_who = normalize_text(draft_profile.get("who")).casefold()
+    draft_surfaces = {
+        normalize_text(item).casefold()
+        for item in draft_profile.get("surface_forms") or []
+        if normalize_text(item)
+    }
+    draft_context = [
+        normalize_text(item).casefold()
+        for item in draft_profile.get("distinguishing_context") or []
+        if normalize_text(item)
+    ]
+    candidate_who = normalize_text(candidate_profile.get("who")).casefold()
+    candidate_surfaces = {
+        normalize_text(item).casefold()
+        for item in candidate_profile.get("surface_forms") or []
+        if normalize_text(item)
+    }
+    candidate_context = [
+        normalize_text(item).casefold()
+        for item in candidate_profile.get("distinguishing_context") or []
+        if normalize_text(item)
+    ]
+    candidate_identity_text = " ".join(
+        item
+        for item in [
+            candidate_who,
+            *sorted(candidate_surfaces),
+            *candidate_context,
+        ]
+        if item
+    )
+    exact_subject_match = bool(
+        draft_who
+        and (
+            draft_who == candidate_who
+            or draft_who in candidate_surfaces
+            or draft_who == normalize_text(candidate_profile.get("display_name")).casefold()
+        )
+    )
+    surface_subject_match = bool(draft_surfaces.intersection({candidate_who, *candidate_surfaces}))
+    context_match = bool(draft_context) and all(item in candidate_identity_text for item in draft_context)
+    if exact_subject_match and (not draft_context or context_match):
+        return True
+    return surface_subject_match and context_match
 
 
 class RecallGraph:
@@ -506,6 +603,7 @@ class RecallGraph:
             ]
         graph_first_linker, graph_first_trace = _graph_first_entity_resolution_decision(
             planner=state.get("planner"),
+            draft_payload=draft_payload,
             scored_candidates=scored_candidates,
         )
         if graph_first_linker is not None:

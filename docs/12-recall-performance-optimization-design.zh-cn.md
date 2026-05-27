@@ -359,14 +359,19 @@ planner -> graph-first resolver -> local graph -> answer_composer
 触发条件必须保守：
 
 - `query_focus.graph_expansion_intent == "entity_local"`。
-- `retrieval_index.entity_candidates(...)` 只返回一个候选实体。
+- `retrieval_index.entity_candidates(...)` 只返回一个候选实体；或多候选中只有一个候选的
+  identity profile 与 query draft 结构性唯一匹配。
 - 该候选实体仍按现有 Memory graph 读取 active / stale / superseded memories，再走 `_expand_graph()`。
-- 任何多候选、无候选、`cross_entity`、`uncertain`、schema 缺失或异常场景都回退原 `linker`。
+- 无候选、多候选但无法唯一结构匹配、`cross_entity`、`uncertain`、schema 缺失或异常场景都回退原 `linker`。
 
 Graph-first resolver 不生成答案，也不做关键词规则。它只基于结构条件决定是否可以把 query draft
 绑定到唯一候选实体：
 
 - 候选实体来自现有语义索引，不靠手写字符串规则。
+- 多候选消歧以当前正在解析的 `draft_payload` 为准，而不是整次 planner 的 draft 列表；这样多主体查询中每个 draft 可以独立收敛。
+- 多候选消歧只比较 identity profile 结构：`who`、`surface_forms`、`distinguishing_context`
+  的规范化精确匹配或 draft 稳定限定符是否被候选 identity profile 明确包含。
+- 如果多个候选同时匹配、没有候选匹配、或 draft 缺少足够身份结构，则回退 `linker`。
 - local graph expansion 仍负责收集 `derived_from`、`updates`、`supports`、`contradicts`、`related_to`
   等结构证据。
 - composer 仍只基于 graph 给出的 memories / observations / edges 生成 answer 和 citations。
@@ -393,8 +398,15 @@ Graph-first resolver 不生成答案，也不做关键词规则。它只基于�
 预期收益：
 
 - 单主体直接事实少一次 `linker` LLM 调用，单实体 recall 预计从约 5.4s 降到 3.4s - 4.0s。
-- 多主体直接事实中，唯一候选 draft 也可减少 linker 调用数。
+- 多主体直接事实中，同前缀 artifact 只要 query draft 带有稳定限定符，也可减少 linker 调用数。
 - 同名主体、多候选和跨实体 why/how 查询保持原路径，质量风险受控。
+
+2026-05-27 实测结果：
+
+- `recall_phase3a_graph_multi2_20260527` smoke matrix：6/6 通过，grounded rate 100%。
+- 单主体：`graph_first_entity_resolution_used_count=1`，`memory_entity_linker` 调用数 0。
+- 多主体 2/3/4/5 draft：graph-first 命中数分别为 2/3/4/5，`memory_entity_linker` 调用数 0。
+- 相比同日修正前仍回退 linker 的 `recall_phase3a_graph_multi_20260527`，多主体 recall 延迟下降约 18.0% - 27.1%。
 
 ### Phase 3b：Payload 与预算优化
 
@@ -420,7 +432,9 @@ Graph-first resolver 不生成答案，也不做关键词规则。它只基于�
 - `test_recall_runs_dynamic_cross_entity_when_planner_intent_uncertain`
 - `test_query_planner_rejects_invalid_graph_expansion_intent_to_uncertain`
 - `test_resolve_entity_uses_graph_first_when_entity_local_has_unique_candidate`
-- `test_resolve_entity_falls_back_to_linker_when_graph_first_has_multiple_candidates`
+- `test_resolve_entity_falls_back_to_linker_when_graph_first_has_no_unique_identity_match`
+- `test_resolve_entity_uses_graph_first_when_multi_candidate_identity_match_is_unique`
+- `test_resolve_entity_falls_back_to_linker_when_multi_candidate_identity_match_is_ambiguous`
 - `test_resolve_entity_falls_back_to_linker_when_planner_intent_is_cross_entity`
 
 近邻测试：

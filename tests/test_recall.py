@@ -577,7 +577,7 @@ def test_resolve_entity_uses_graph_first_when_entity_local_has_unique_candidate(
     }
 
 
-def test_resolve_entity_falls_back_to_linker_when_graph_first_has_multiple_candidates(monkeypatch) -> None:
+def test_resolve_entity_falls_back_to_linker_when_graph_first_has_no_unique_identity_match(monkeypatch) -> None:
     graph = RecallGraph()
     entities = [
         SimpleNamespace(
@@ -632,10 +632,10 @@ def test_resolve_entity_falls_back_to_linker_when_graph_first_has_multiple_candi
                 "workers": workers,
                 "planner": SimpleNamespace(query_focus=QueryFocus(graph_expansion_intent="entity_local")),
                 "draft_payload": {
-                    "who": "Orion service",
-                    "surface_forms": ["Orion service"],
-                    "distinguishing_context": ["service"],
-                    "query_text": "Orion service 当前负责人是谁？",
+                    "who": "Orion owner",
+                    "surface_forms": ["Orion owner"],
+                    "distinguishing_context": ["owner"],
+                    "query_text": "Orion owner 当前负责人是谁？",
                 },
                 "stage_timings_ms": {},
                 "resolution_trace": {},
@@ -647,7 +647,185 @@ def test_resolve_entity_falls_back_to_linker_when_graph_first_has_multiple_candi
     assert result["entity_key"] == "ent_a"
     assert result["resolution_trace"]["graph_first_entity_resolution"]["attempted"] is True
     assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is False
-    assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "candidate_count_not_one"
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "identity_match_not_found"
+
+
+def test_resolve_entity_uses_graph_first_when_multi_candidate_identity_match_is_unique(monkeypatch) -> None:
+    graph = RecallGraph()
+    entities = [
+        SimpleNamespace(
+            entity_key="ent_checklist",
+            display_name="Elmfield checklist",
+            identity_profile={
+                "who": "Elmfield checklist",
+                "surface_forms": ["Elmfield checklist", "Elmfield"],
+                "distinguishing_context": ["checklist"],
+            },
+        ),
+        SimpleNamespace(
+            entity_key="ent_handbook",
+            display_name="Elmfield handbook",
+            identity_profile={
+                "who": "Elmfield handbook",
+                "surface_forms": ["Elmfield handbook", "Elmfield"],
+                "distinguishing_context": ["handbook"],
+            },
+        ),
+    ]
+    scored_candidates = [SimpleNamespace(entity=entity, score=0.9 - index * 0.1) for index, entity in enumerate(entities)]
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return []
+
+    class _FakeRetrievalIndex:
+        async def entity_candidates(self, **kwargs):
+            return scored_candidates
+
+    class _FakeWorkers:
+        def __init__(self) -> None:
+            self.link_calls: list[dict] = []
+
+        async def run_linker(self, **kwargs):
+            self.link_calls.append(dict(kwargs))
+            return LinkerOutput(decision="cannot_resolve", confidence=0.0)
+
+    workers = _FakeWorkers()
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+
+    result = run_async(
+        graph._resolve_entity(
+            {
+                "memory_space": "workspace:elmfield",
+                "request_id": "req_elmfield",
+                "workers": workers,
+                "planner": SimpleNamespace(
+                    query_focus=QueryFocus(graph_expansion_intent="entity_local"),
+                    query_identity_profile_drafts=[
+                        SimpleNamespace(
+                            who="Elmfield checklist",
+                            surface_forms=["Elmfield checklist", "Elmfield"],
+                            distinguishing_context=["checklist"],
+                        ),
+                        SimpleNamespace(
+                            who="Elmfield handbook",
+                            surface_forms=["Elmfield handbook", "Elmfield"],
+                            distinguishing_context=["handbook"],
+                        )
+                    ],
+                ),
+                "draft_payload": {
+                    "who": "Elmfield handbook",
+                    "surface_forms": ["Elmfield handbook", "Elmfield"],
+                    "distinguishing_context": ["handbook"],
+                    "query_text": "Elmfield handbook 当前要求什么？",
+                },
+                "stage_timings_ms": {},
+                "resolution_trace": {},
+            }
+        )
+    )
+
+    assert workers.link_calls == []
+    assert result["entity_key"] == "ent_handbook"
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is True
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["selected_entity_key"] == "ent_handbook"
+
+
+def test_resolve_entity_falls_back_to_linker_when_multi_candidate_identity_match_is_ambiguous(monkeypatch) -> None:
+    graph = RecallGraph()
+    entities = [
+        SimpleNamespace(
+            entity_key="ent_primary",
+            display_name="Elmfield handbook",
+            identity_profile={
+                "who": "Elmfield handbook",
+                "surface_forms": ["Elmfield handbook", "Elmfield"],
+                "distinguishing_context": ["handbook"],
+            },
+        ),
+        SimpleNamespace(
+            entity_key="ent_duplicate",
+            display_name="Elmfield handbook",
+            identity_profile={
+                "who": "Elmfield handbook",
+                "surface_forms": ["Elmfield handbook", "Elmfield"],
+                "distinguishing_context": ["handbook"],
+            },
+        ),
+    ]
+    scored_candidates = [SimpleNamespace(entity=entity, score=0.9 - index * 0.1) for index, entity in enumerate(entities)]
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return []
+
+    class _FakeRetrievalIndex:
+        async def entity_candidates(self, **kwargs):
+            return scored_candidates
+
+    class _FakeWorkers:
+        def __init__(self) -> None:
+            self.link_calls: list[dict] = []
+
+        async def run_linker(self, **kwargs):
+            self.link_calls.append(dict(kwargs))
+            return LinkerOutput(
+                decision="link_existing",
+                selected_entity_key="ent_primary",
+                confidence=0.72,
+                reason="Ambiguous graph-first candidates require linker.",
+            )
+
+    workers = _FakeWorkers()
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+
+    result = run_async(
+        graph._resolve_entity(
+            {
+                "memory_space": "workspace:elmfield",
+                "request_id": "req_elmfield",
+                "workers": workers,
+                "planner": SimpleNamespace(
+                    query_focus=QueryFocus(graph_expansion_intent="entity_local"),
+                    query_identity_profile_drafts=[
+                        SimpleNamespace(
+                            who="Elmfield handbook",
+                            surface_forms=["Elmfield handbook", "Elmfield"],
+                            distinguishing_context=["handbook"],
+                        )
+                    ],
+                ),
+                "draft_payload": {
+                    "who": "Elmfield handbook",
+                    "surface_forms": ["Elmfield handbook", "Elmfield"],
+                    "distinguishing_context": ["handbook"],
+                    "query_text": "Elmfield handbook 当前要求什么？",
+                },
+                "stage_timings_ms": {},
+                "resolution_trace": {},
+            }
+        )
+    )
+
+    assert len(workers.link_calls) == 1
+    assert result["entity_key"] == "ent_primary"
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is False
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "identity_match_not_unique"
 
 
 def test_resolve_entity_falls_back_to_linker_when_planner_intent_is_cross_entity(monkeypatch) -> None:
