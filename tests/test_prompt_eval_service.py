@@ -59,7 +59,7 @@ def test_prompt_eval_service_returns_llm_output_and_usage(monkeypatch) -> None:
 
     assert calls[0]["worker_type"] == "write_gate"
     assert calls[0]["schema_type"] is WriteGateOutput
-    assert "identity_profile 用于把输入或查询绑定到稳定主体" in calls[0]["instructions"]
+    assert "[identity_profile提取规则]" in calls[0]["instructions"]
     assert result["status"] == "ok"
     assert result["prompt_key"] == "write_gate"
     assert result["model"] == "test-model"

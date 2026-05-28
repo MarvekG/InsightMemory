@@ -29,7 +29,9 @@ ENTITY_TYPE_RULES = f"""
 
 
 IDENTITY_PROFILE_RULES = """
-identity_profile 用于把输入或查询绑定到稳定主体；它是只描述“主体是谁”的结构化身份档案。
+[identity_profile提取规则]
+identity_profile 的提取目标是判断“这条记忆属于谁”，即抽取承接这条记忆的命名主体名词。
+identity_profile 是只描述主体身份、不描述记忆事实的结构化身份档案。
 
 字段说明：
 1. `who`：同一主体的简短稳定标签，应保留能区分主体的角色词或对象词。
@@ -410,7 +412,9 @@ Allowed entity_type values:
 
 
 IDENTITY_PROFILE_RULES_EN = """
-identity_profile binds input or query to a stable subject; it is a structured identity record for "who".
+[identity_profile extraction rules]
+identity_profile answers "who does this memory belong to" by extracting the named subject noun.
+identity_profile is a structured identity record that describes only the subject identity, not memory facts.
 
 Field guide:
 1. `who`: a short stable label for the same subject, preserving role or object words when needed.
