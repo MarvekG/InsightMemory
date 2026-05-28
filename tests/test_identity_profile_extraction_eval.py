@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from memory.evals.scripts.eval_identity_profile_extraction import (
@@ -12,6 +13,9 @@ from memory.evals.scripts.eval_identity_profile_extraction import (
     write_report_files,
 )
 from insight_memory.workers.prompts import get_worker_instructions
+
+
+CJK_PATTERN = re.compile(r"[\u4e00-\u9fff]")
 
 
 def test_load_identity_extraction_suite_reads_cases(tmp_path: Path) -> None:
@@ -93,6 +97,7 @@ def test_identity_prompt_examples_do_not_copy_eval_subjects() -> None:
     suites = [
         ("zh", Path("memory/evals/prompt_cases/identity_profile_rules_zh_v1.json")),
         ("en", Path("memory/evals/prompt_cases/identity_profile_rules_v1.json")),
+        ("en", Path("memory/evals/prompt_cases/identity_profile_rules_mixed_v1.json")),
     ]
     copied_subjects = []
     for language, suite_path in suites:
@@ -109,6 +114,33 @@ def test_identity_prompt_examples_do_not_copy_eval_subjects() -> None:
         )
 
     assert copied_subjects == []
+
+
+def test_identity_profile_prompt_case_suites_are_split_by_language() -> None:
+    en_path = Path("memory/evals/prompt_cases/identity_profile_rules_v1.json")
+    mixed_path = Path("memory/evals/prompt_cases/identity_profile_rules_mixed_v1.json")
+    en_suite = load_identity_extraction_suite(en_path)
+    mixed_suite = load_identity_extraction_suite(mixed_path)
+    en_raw = json.loads(en_path.read_text(encoding="utf-8"))
+    mixed_raw = json.loads(mixed_path.read_text(encoding="utf-8"))
+
+    en_cases_with_cjk = [
+        str(case["case_id"])
+        for case in en_raw["cases"]
+        if CJK_PATTERN.search(json.dumps(case, ensure_ascii=False))
+    ]
+    mixed_cases_without_cjk = [
+        str(case["case_id"])
+        for case in mixed_raw["cases"]
+        if not CJK_PATTERN.search(json.dumps(case, ensure_ascii=False))
+    ]
+
+    assert en_suite["suite_id"] == "identity_profile_rules_v1"
+    assert mixed_suite["suite_id"] == "identity_profile_rules_mixed_v1"
+    assert len(en_suite["cases"]) == 19
+    assert len(mixed_suite["cases"]) == 181
+    assert en_cases_with_cjk == []
+    assert mixed_cases_without_cjk == []
 
 
 def test_score_identity_extraction_case_passes_write_gate_output() -> None:
