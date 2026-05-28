@@ -70,6 +70,45 @@ def test_identity_profile_rules_keep_named_artifact_identity() -> None:
     assert "`这条记录` only says which stored memory the query wants to inspect" in IDENTITY_PROFILE_RULES
 
 
+def test_identity_profile_rules_use_owner_subject_granularity() -> None:
+    assert "Decide identity granularity from the owner subject" in IDENTITY_PROFILE_RULES
+    assert "Do not split the owner subject into a lower-level subject plus a record descriptor" in IDENTITY_PROFILE_RULES
+    assert "classification must come from the ownership relation in the sentence" in IDENTITY_PROFILE_RULES
+
+
+def test_linker_write_mode_requires_same_identity_granularity() -> None:
+    instructions = get_worker_instructions("linker")
+
+    assert "same identity granularity" in instructions
+    assert "share a prefix, topic, or underlying domain entity" in instructions
+    assert "could both own the same durable memories without losing a subject boundary" in instructions
+
+
+def test_merge_judge_rejects_same_type_boundary_union_without_equivalence() -> None:
+    instructions = get_worker_instructions("merge_judge")
+
+    assert "same broad entity_type is only eligibility to compare, not evidence to merge" in instructions
+    assert "must not be a blind union" in instructions
+    assert "explicit identity-equivalence evidence" in instructions
+
+
+def test_query_planner_uses_required_evidence_scope_for_graph_intent() -> None:
+    instructions = get_worker_instructions("query_planner")
+
+    assert "Decide graph expansion by the evidence scope required to answer" in instructions
+    assert "not by matching query words" in instructions
+    assert "requires external constraints, dependencies, governing evidence, or other-entity state" in instructions
+
+
+def test_answer_composer_preserves_explanation_chain_and_longform_parallel_drivers() -> None:
+    instructions = get_worker_instructions("answer_composer")
+
+    assert "If the query requires an explanation chain" in instructions
+    assert "do not truncate after the seed memory" in instructions
+    assert "First decide whether long evidence has one central driver or several co-central drivers" in instructions
+    assert "Do not collapse co-central drivers into one generic umbrella" in instructions
+
+
 def test_identity_profile_rules_include_shared_examples() -> None:
     assert "Correct identity_profile:" in IDENTITY_PROFILE_RULES
     assert "Input:" in IDENTITY_PROFILE_RULES
