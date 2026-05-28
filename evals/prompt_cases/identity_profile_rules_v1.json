@@ -1,6 +1,6 @@
 {
   "suite_id": "identity_profile_rules_v1",
-  "description": "Prompt-level accuracy suite for identity_profile extraction rules. It calls /memory/prompt-evals/run and scores only the returned raw output.",
+  "description": "Accuracy suite for identity_profile extraction. It calls /memory/prompt-evals/run and scores only identity fields from the raw output.",
   "minimum_pass_rate": 1.0,
   "cases": [
     {
@@ -11,15 +11,15 @@
         "context": "Lanturn deployment cannot enter final validation because the escrow approval form is still missing."
       },
       "expected_gate_status": "passed",
-      "expected_profiles": [
+      "expected_identities": [
         {
           "who_any": ["Lanturn deployment"],
           "entity_type_any": ["workflow", "project", "work_item"],
           "surface_forms_all": ["Lanturn deployment"],
-          "evidence_contains_any": ["Lanturn deployment", "deployment status", "final validation"]
+          "evidence_contains_any": ["subject", "Lanturn deployment", "final validation"]
         }
       ],
-      "forbidden_who": ["escrow approval form"],
+      "forbidden_identity_who": ["escrow approval form"],
       "min_profile_count": 1,
       "max_profile_count": 1
     },
@@ -31,7 +31,7 @@
         "context": "Cedar QA policy requires every release ticket to attach a parity matrix before manager signoff."
       },
       "expected_gate_status": "passed",
-      "expected_profiles": [
+      "expected_identities": [
         {
           "who_any": ["Cedar QA policy"],
           "entity_type": "document",
@@ -39,7 +39,7 @@
           "evidence_contains_any": ["requires", "Cedar QA policy"]
         }
       ],
-      "forbidden_who": ["parity matrix", "release ticket"],
+      "forbidden_identity_who": ["parity matrix", "release ticket"],
       "min_profile_count": 1,
       "max_profile_count": 1
     },
@@ -51,7 +51,7 @@
         "context": "Ravel import service is owned by Priya. Ravel import checklist is maintained by Tomas and tracks customs packet readiness."
       },
       "expected_gate_status": "passed",
-      "expected_profiles": [
+      "expected_identities": [
         {
           "who_any": ["Ravel import service"],
           "entity_type": "system",
@@ -65,7 +65,7 @@
           "evidence_contains_any": ["maintained by Tomas", "customs packet readiness"]
         }
       ],
-      "forbidden_who": ["Ravel import"],
+      "forbidden_identity_who": ["Ravel import"],
       "min_profile_count": 2,
       "max_profile_count": 2
     },
@@ -77,7 +77,7 @@
         "query": "What does the latest analyst note say about STP.N?"
       },
       "expected_gate_status": "passed",
-      "expected_profiles": [
+      "expected_identities": [
         {
           "who_any": ["STP.N"],
           "entity_type": "market_object",
@@ -85,7 +85,7 @@
           "evidence_contains_all": ["STP.N"]
         }
       ],
-      "forbidden_who": ["latest analyst note", "STP.N latest analyst note"],
+      "forbidden_identity_who": ["latest analyst note", "STP.N latest analyst note"],
       "min_profile_count": 1,
       "max_profile_count": 1
     },
@@ -97,7 +97,7 @@
         "query": "For Meridian onboarding, what changed in the phase 3 review?"
       },
       "expected_gate_status": "passed",
-      "expected_profiles": [
+      "expected_identities": [
         {
           "who_any": ["Meridian onboarding"],
           "entity_type_any": ["workflow", "project", "work_item"],
@@ -105,7 +105,7 @@
           "evidence_contains_all": ["Meridian onboarding"]
         }
       ],
-      "forbidden_who": ["phase 3 review", "Meridian onboarding phase 3 review"],
+      "forbidden_identity_who": ["phase 3 review", "Meridian onboarding phase 3 review"],
       "min_profile_count": 1,
       "max_profile_count": 1
     },
@@ -117,15 +117,15 @@
         "context": "During the Nexus sync, Vireo billing migration moved to amber because invoice replay tests failed overnight."
       },
       "expected_gate_status": "passed",
-      "expected_profiles": [
+      "expected_identities": [
         {
           "who_any": ["Vireo billing migration"],
           "entity_type_any": ["workflow", "project", "work_item"],
           "surface_forms_all": ["Vireo billing migration"],
-          "evidence_contains_any": ["Vireo billing migration", "status update", "moved to amber"]
+          "evidence_contains_any": ["subject", "Vireo billing migration", "moved to amber"]
         }
       ],
-      "forbidden_who": ["Nexus sync", "invoice replay tests"],
+      "forbidden_identity_who": ["Nexus sync", "invoice replay tests"],
       "min_profile_count": 1,
       "max_profile_count": 1
     }
