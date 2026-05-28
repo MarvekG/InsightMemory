@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from insight_memory.workers.schemas import ExtractorOutput, IdentityProfileDraft, QueryFocus
+from insight_memory.workers.schemas import ExtractorOutput, IdentityProfileDraft, ProfileWriterOutput, QueryFocus
 
 
 def test_identity_profile_draft_uses_v2_fields_under_original_name() -> None:
@@ -37,6 +37,37 @@ def test_identity_profile_draft_rejects_legacy_distinguishing_context() -> None:
                 "distinguishing_context": ["handbook"],
             }
         )
+
+
+def test_identity_profile_draft_normalizes_unknown_entity_type() -> None:
+    draft = IdentityProfileDraft.model_validate(
+        {
+            "schema_version": 2,
+            "draft_id": "draft_access_policy",
+            "who": "Access recovery policy",
+            "entity_type": "policy",
+            "surface_forms": ["Access recovery policy"],
+            "stable_qualifiers": ["policy"],
+            "evidence": ["The source names Access recovery policy."],
+        }
+    )
+
+    assert draft.entity_type == "unknown"
+
+
+def test_profile_writer_output_normalizes_unknown_entity_type() -> None:
+    output = ProfileWriterOutput.model_validate(
+        {
+            "schema_version": 2,
+            "who": "Phoenix review",
+            "entity_type": "review",
+            "surface_forms": ["Phoenix review"],
+            "stable_qualifiers": ["review"],
+            "evidence": ["The source names Phoenix review."],
+        }
+    )
+
+    assert output.entity_type == "unknown"
 
 
 def test_extractor_allows_long_temporary_refs() -> None:

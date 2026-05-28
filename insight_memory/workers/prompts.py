@@ -1,5 +1,32 @@
 from __future__ import annotations
 
+from insight_memory.workers.schemas import ENTITY_TYPE_VALUES
+
+
+ALLOWED_ENTITY_TYPES = ", ".join(ENTITY_TYPE_VALUES)
+
+ENTITY_TYPE_RULES = f"""
+Allowed entity_type values:
+- {ALLOWED_ENTITY_TYPES}.
+- Return one of these exact lowercase enum values only. Do not return narrow natural-language subtypes.
+- Choose the closest broad enum and put the narrow subtype in stable_qualifiers.
+- Use `system` for named software systems, APIs, services, databases, platforms, and infrastructure components.
+- Use `document` for named policies, checklists, handbooks, manuals, reports, notes, memos, runbooks, guides,
+  registers, notices, bulletins, and other text-bearing artifacts.
+- Use `artifact` for named non-document deliverables, files, packages, models, datasets, dashboards, tables,
+  schemas, templates, or physical/operational objects.
+- Use `event` for named meetings, reviews, launches, incidents, sessions, rounds, exercises, drills, and
+  time-bounded happenings.
+- Use `workflow` for named recurring processes, pipelines, playbooks, procedures, or operating flows.
+- Use `work_item` for named tasks, tickets, issues, backlog items, milestones, and action items.
+- Invalid examples: `policy`, `checklist`, `handbook`, `manual`, `report`, `note`, `memo`, `runbook`,
+  `review`, `meeting`, `incident`, `service`, `api`, `database`, `ticket`.
+- Correct these by selecting the broad enum: policy/checklist/handbook/manual/report/note/memo/runbook ->
+  `document`; review/meeting/incident -> `event`; service/api/database -> `system`; ticket/issue/task ->
+  `work_item`.
+- Use `unknown` when the broad enum is still unclear after reading the subject itself.
+""".strip()
+
 
 IDENTITY_PROFILE_RULES = """
 Shared identity_profile rules:
@@ -17,9 +44,8 @@ Shared identity_profile rules:
 - identity_profile describes only who the subject is, not what happened to it.
 - `schema_version` must be exactly 2.
 - `who` must be a short stable label for the same subject.
-- `entity_type` must be one of: person, organization, market_object, system, document, artifact, project,
-  work_item, workflow, event, decision, strategy, concept, unknown.
-- Use `unknown` when the entity type is not clear. Do not invent a narrow type outside the enum.
+- `entity_type` must be one of: {ALLOWED_ENTITY_TYPES}.
+{ENTITY_TYPE_RULES}
 - `surface_forms` must come from the input or query text directly.
 - `stable_qualifiers` must contain only short stable qualifiers that distinguish same-name subjects. Do
   not write prose.
@@ -139,7 +165,7 @@ Expected drafts:
 ]`
 Explanation:
 Each named product line has its own independent durable facts (target segment and owner), so they must be extracted as separate subjects even though they are mentioned within Product Division's context.
-""".strip()
+""".strip().replace("{ALLOWED_ENTITY_TYPES}", ALLOWED_ENTITY_TYPES).replace("{ENTITY_TYPE_RULES}", ENTITY_TYPE_RULES)
 
 
 WORKER_INSTRUCTIONS: dict[str, str] = {
