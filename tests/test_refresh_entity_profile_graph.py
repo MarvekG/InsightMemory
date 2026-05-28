@@ -78,8 +78,8 @@ def _entity() -> SimpleNamespace:
             "schema_version": 2,
             "who": "Orion service",
             "entity_type": "system",
-            "surface_forms": ["Orion service"],
-            "stable_qualifiers": ["service"],
+            "surface_forms": ["Orion service", "legacy Orion"],
+            "stable_qualifiers": ["legacy service"],
             "evidence": ["Original evidence."],
         },
         metadata_json={"profile_state": {"profile_revision": 1}},
@@ -87,7 +87,7 @@ def _entity() -> SimpleNamespace:
 
 
 @pytest.mark.asyncio
-async def test_refresh_entity_profile_applies_safe_additive_profile_update(
+async def test_refresh_entity_profile_applies_llm_profile_without_code_append(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _FakeRepository.entity = _entity()
@@ -122,6 +122,9 @@ async def test_refresh_entity_profile_applies_safe_additive_profile_update(
     assert result["result"] == {"refreshed": True, "entity_key": "ent_1", "refresh_status": "applied"}
     assert _FakeRepository.entity.identity_profile["surface_forms"] == ["Orion service", "Orion API"]
     assert _FakeRepository.entity.identity_profile["stable_qualifiers"] == ["service", "api service"]
+    assert "legacy Orion" not in _FakeRepository.entity.identity_profile["surface_forms"]
+    assert "legacy service" not in _FakeRepository.entity.identity_profile["stable_qualifiers"]
+    assert _FakeRepository.entity.identity_profile["evidence"] == ["Recent memory identifies Orion API as an alias."]
     assert _FakeRepository.entity.metadata_json["profile_state"]["profile_revision"] == 2
     assert _FakeRepository.entity.metadata_json["profile_state"]["last_refresh_status"] == "applied"
     assert _FakeRepository.entity.metadata_json["profile_history"][-1]["risk"] == "safe"

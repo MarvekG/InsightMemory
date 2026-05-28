@@ -8,7 +8,6 @@ from insight_memory.index.retrieval_index import retrieval_index
 from insight_memory.storage.repository import MemoryRepository
 from insight_memory.utils.identity_profile import (
     identity_profile_refresh_risk,
-    merge_additive_identity_profile,
     next_profile_metadata,
 )
 from insight_memory.utils.request_context import get_or_create_request_id
@@ -98,11 +97,7 @@ class RefreshEntityProfileGraph:
             proposed_profile=proposed_profile,
         )
         applied = risk == "safe"
-        profile = (
-            merge_additive_identity_profile(current_profile=current_profile, proposed_profile=proposed_profile)
-            if applied
-            else current_profile
-        )
+        profile = proposed_profile if applied else current_profile
         display_name = str(profile.get("who") or entity.display_name)
         async with MemoryRepository() as repository:
             current_entity = await repository.get_entity(
