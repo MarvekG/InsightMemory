@@ -8,6 +8,8 @@ from insight_memory.api.schemas import (
     IngestRequest,
     IngestResponse,
     MemoryPreviewResponse,
+    PromptEvalRequest,
+    PromptEvalResponse,
     RecallAuditPreviewResponse,
     RecallRequest,
     RecallResponse,
@@ -16,6 +18,7 @@ from insight_memory.api.schemas import (
 from insight_memory.services.health_service import health_service
 from insight_memory.services.ingest_service import ingest_service
 from insight_memory.services.preview_service import preview_service
+from insight_memory.services.prompt_eval_service import prompt_eval_service
 from insight_memory.services.recall_audit_preview_service import recall_audit_preview_service
 from insight_memory.services.recall_service import recall_service
 from insight_memory.utils.logger import get_logger
@@ -58,6 +61,27 @@ async def _usage_stats_impl(*, hours: int | None = None) -> UsageStatsResponse:
 
 async def _clear_usage_stats_impl() -> ClearUsageStatsResponse:
     return ClearUsageStatsResponse(**(await health_service.clear_usage_stats()))
+
+
+async def _prompt_eval_impl(request: PromptEvalRequest) -> PromptEvalResponse:
+    """调用 Memory prompt eval service 并包装 HTTP 响应。
+
+    Args:
+        request: Prompt eval 请求，包含 prompt key 和 worker payload。
+
+    Returns:
+        Prompt eval 调用结果。
+    """
+
+    logger.info(
+        "http prompt eval received",
+        extra={
+            "prompt_key": request.prompt_key,
+            "payload_keys": sorted(request.payload.keys()),
+        },
+    )
+    result = await prompt_eval_service.run(prompt_key=request.prompt_key, payload=request.payload)
+    return PromptEvalResponse(**result)
 
 
 async def _memory_preview_impl(
@@ -120,6 +144,20 @@ async def recall(request: RecallRequest) -> RecallResponse:
 @router.post("/memory/recall", response_model=RecallResponse)
 async def recall_memory(request: RecallRequest) -> RecallResponse:
     return await _recall_impl(request)
+
+
+@router.post("/memory/prompt-evals/run", response_model=PromptEvalResponse)
+async def run_prompt_eval_memory(request: PromptEvalRequest) -> PromptEvalResponse:
+    """执行一次内部 Memory worker prompt 调用。
+
+    Args:
+        request: Prompt eval 请求，包含 prompt key 和 worker payload。
+
+    Returns:
+        LLM 调用输出和基础 usage 信息；不包含 case 比对结果。
+    """
+
+    return await _prompt_eval_impl(request)
 
 
 @router.get("/health", response_model=HealthResponse)

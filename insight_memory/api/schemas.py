@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from insight_memory.config import settings
@@ -25,6 +27,32 @@ class RecallRequest(BaseModel):
 
     memory_scope: str = Field(..., min_length=1, max_length=255)
     query: str = Field(..., min_length=1, max_length=settings.MEMORY_MAX_QUERY_LENGTH)
+
+
+class PromptEvalRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    prompt_key: str = Field(..., min_length=1, max_length=128)
+    payload: dict[str, Any] = Field(default_factory=dict)
+
+
+class PromptEvalUsage(BaseModel):
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    cached_tokens: int | None = None
+    cache_miss_tokens: int | None = None
+    reasoning_tokens: int | None = None
+
+
+class PromptEvalResponse(BaseModel):
+    status: str
+    prompt_key: str
+    model: str | None = None
+    latency_ms: int | None = None
+    output: dict[str, Any] = Field(default_factory=dict)
+    usage: PromptEvalUsage | None = None
+    error_code: str | None = None
+    error_message: str | None = None
 
 
 class RecallCitation(BaseModel):
