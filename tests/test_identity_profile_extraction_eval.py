@@ -38,7 +38,7 @@ def test_load_identity_extraction_suite_reads_cases(tmp_path: Path) -> None:
                             }
                         ],
                         "forbidden_identity_who": ["y"],
-                        "min_profile_count": 1,
+                        "profile_count": 1,
                     }
                 ],
             }
@@ -56,6 +56,34 @@ def test_load_identity_extraction_suite_reads_cases(tmp_path: Path) -> None:
     assert suite["cases"][0].expected_identities[0].surface_forms_all == ["x"]
     assert suite["cases"][0].expected_identities[0].stable_qualifiers_any == ["project"]
     assert suite["cases"][0].expected_identities[0].evidence_contains_all == ["x"]
+    assert suite["cases"][0].profile_count == 1
+
+
+def test_zh_identity_profile_suite_uses_identity_evidence() -> None:
+    suite = load_identity_extraction_suite(
+        Path("memory/evals/prompt_cases/identity_profile_rules_zh_v1.json")
+    )
+
+    memory_fact_fragments = [
+        "当前不能",
+        "当前无法",
+        "当前负责人",
+        "要求所有",
+        "要求入职",
+        "主风险",
+        "阈值",
+        "暂缓发布",
+        "偏好每周",
+    ]
+    invalid_evidence = []
+    for case in suite["cases"]:
+        for expected in case.expected_identities:
+            evidence_fragments = expected.evidence_contains_any + expected.evidence_contains_all
+            for fragment in evidence_fragments:
+                if any(memory_fact in fragment for memory_fact in memory_fact_fragments):
+                    invalid_evidence.append((case.case_id, fragment))
+
+    assert invalid_evidence == []
 
 
 def test_score_identity_extraction_case_passes_write_gate_output() -> None:
@@ -74,8 +102,7 @@ def test_score_identity_extraction_case_passes_write_gate_output() -> None:
             )
         ],
         forbidden_identity_who=["escrow approval form"],
-        min_profile_count=1,
-        max_profile_count=1,
+        profile_count=1,
     )
 
     result = score_identity_extraction_case(
@@ -273,6 +300,77 @@ def test_score_identity_extraction_case_fails_missing_profile_fields() -> None:
     assert any("surface_forms missing" in failure for failure in result["failures"])
     assert any("stable_qualifiers missing" in failure for failure in result["failures"])
     assert any("evidence missing" in failure for failure in result["failures"])
+
+
+def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:
+    case = IdentityExtractionCase(
+        case_id="extra_surface_forms",
+        category="boundary",
+        prompt_key="write_gate",
+        payload={"context": "x"},
+        expected_gate_status="passed",
+        expected_identities=[
+            ExpectedIdentityProfile(
+                who_any=["Cedar QA policy"],
+                entity_type="document",
+                surface_forms_all=["Cedar QA policy"],
+            )
+        ],
+    )
+
+    result = score_identity_extraction_case(
+        case,
+        {
+            "status": "ok",
+            "output": {
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
+                    {
+                        "who": "Cedar QA policy",
+                        "entity_type": "document",
+                        "surface_forms": ["Cedar QA policy", "Cedar policy"],
+                    },
+                ],
+            },
+        },
+    )
+
+    assert result["passed"] is False
+    assert any("surface_forms has unexpected values" in failure for failure in result["failures"])
+
+
+def test_score_identity_extraction_case_fails_non_exact_profile_count() -> None:
+    case = IdentityExtractionCase(
+        case_id="extra_profile",
+        category="boundary",
+        prompt_key="write_gate",
+        payload={"context": "x"},
+        expected_gate_status="passed",
+        expected_identities=[
+            ExpectedIdentityProfile(
+                who_any=["Cedar QA policy"],
+                entity_type="document",
+            )
+        ],
+        profile_count=1,
+    )
+
+    result = score_identity_extraction_case(
+        case,
+        {
+            "status": "ok",
+            "output": {
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
+                    {"who": "Cedar QA policy", "entity_type": "document"},
+                    {"who": "release ticket", "entity_type": "work_item"},
+                ],
+            },
+        },
+    )
+
+    assert result["passed"] is False
+    assert any("profile count is 2, expected exactly 1" in failure for failure in result["failures"])
 
 
 def test_summarize_results_counts_failures() -> None:

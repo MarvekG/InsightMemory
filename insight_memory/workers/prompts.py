@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+# 提示词维护规则：
+# 禁止为了让评测 case 通过而使用关键词匹配、类似正则的表达或针对 case 的捷径。
+# 所有提示词都必须优先保证泛化性能。可以用示例说明规则，但示例中的名称、
+# 领域、场景和表达方式必须与评测 case 不同。
+
 from textwrap import wrap
 
 from insight_memory.workers.schemas import ENTITY_TYPE_VALUES
@@ -15,11 +20,14 @@ ENTITY_TYPE_RULES = f"""
 - 只能返回这些精确的小写枚举值，不要返回更窄的自然语言子类型。
 - 选择最接近的宽泛枚举，把更窄的子类型放入 stable_qualifiers。
 - 对命名的软件系统、API、服务、数据库、平台、基础设施组件使用 `system`。
+- 对命名团队、部门、小组、运营组、运维组、评审组等组织单元使用 `organization`。
 - 对命名的政策、清单、手册、报告、笔记、备忘录、运行手册、指南、登记册、公告、简报等承载文本的工件使用 `document`。
 - 对命名的非文档交付物、文件、包、模型、数据集、看板、表格、schema、模板、物理或运营对象使用 `artifact`。
 - 对命名的会议、评审、发布、事故、会话、轮次、演习、训练等有时间边界的事件使用 `event`。
 - 对命名的周期性流程、流水线、playbook、操作过程或工作流使用 `workflow`。
+- 对命名的项目计划、上线计划、迁移计划、发布计划、实施计划等使用 `project`，不要用 `document`。
 - 对命名的任务、工单、问题、待办、里程碑和行动项使用 `work_item`。
+- 命名组织单元即使承担流程、运营或交付职责，也不要因此改成 `workflow`。
 - 非法示例：`policy`、`checklist`、`handbook`、`manual`、`report`、`note`、`memo`、`runbook`、
   `review`、`meeting`、`incident`、`service`、`api`、`database`、`ticket`。
 - 应改成宽泛枚举：policy/checklist/handbook/manual/report/note/memo/runbook -> `document`；
@@ -51,17 +59,31 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
 - 不要把完整短语拆成裸名称加记录描述词。
 - 不要把同前缀但角色不同的名词合并成同一个裸名称。
 - 项目、计划、手册、清单、服务、评审等角色词，能区分主体时必须保留。
-- 角色词可放在 `who`、`surface_forms` 或 `stable_qualifiers` 中。
+- 角色词必须保留在 `who` 和 `surface_forms` 中；也必须作为简短词放入 `stable_qualifiers`。
+- 例如“青竹迁移清单”的 `stable_qualifiers` 应包含“清单”；“青岚结算服务”应包含“服务”。
+- 例如“星河门户”的 `stable_qualifiers` 应包含“门户”；“星河门户消息中心”应包含“消息中心”。
+- 中文角色词也必须放入 `stable_qualifiers`，例如计划、制度、服务、流程、策略、纪要、手册、工单、公告、门户。
+- 即使角色词已经出现在 `who` 里，也要在 `stable_qualifiers` 里重复保留。
+- 中文主体里的复合角色短语应优先保留完整短语，例如“上线计划”优先于“计划”，“运维组”优先于“组”。
+- 人名、股票代码或没有角色词的唯一名称可以让 `stable_qualifiers` 为空。
+- “某人偏好/习惯/要求/不希望...”是人物主体的持久偏好，应抽取该人。
 - 一个输入里有多个命名名词时，只抽取真正各自被陈述或被查询的名词。
 - 只出现在父级背景、会议背景、旁注或地点里的名称，不单独建 identity_profile。
 - 子项目、子系统、子组件、产品线、子工件或流程节点可以单独建主体。
 - 只有文本直接描述子主体的负责人、状态、目标、要求或时间线时，才单独建主体。
+- 如果文本分别陈述“X”和“X 的子组件 Y”的状态，应同时抽取 X 与 X Y。
+- 例如“星河门户可登录。星河门户消息中心延迟十分钟。”应抽取“星河门户”和“星河门户消息中心”。
 - 缺失项、附件、证据、前置条件、原因、指标、字段值或执行细节，不单独建主体。
 - 这些名词应留在所属主体的记忆内容或查询文本里。
+- 负责人姓名、审批人姓名、复核人姓名只是 owner value，不单独建主体。
+- “X 当前负责人是 Y”时主体是 X，不要为 Y 建 identity_profile。
 - 如果句子说“X 不能推进，因为 Y 缺失”，主体是 X。
 - Y 只是解释 X 的原因，不因为是文档或工件就变成主体。
 - 不要因为 Y 不能建主体，就拒绝抽取 X。
 - 只有文本直接说明 Y 的负责人、状态、规则、决定或查询问题时，才为 Y 建主体。
+- “直到 Y 补齐签字/审批/附件”里的 Y 仍是 X 的完成条件，不是独立主体。
+- “直到 Y 补齐责任人签字/审批人签字/复核人签字”里的 Y 不建主体。
+- 例如“槐庭评审会决定暂缓发布，直到安全检查单补齐责任人签字”，只抽取“槐庭评审会”，不要抽取“安全检查单”。
 - 如果句子说“某手册/清单/政策要求 X 补 Y”，主体是这个手册/清单/政策。
 - 被要求补的 Y 是要求内容，除非文本还直接描述 Y 自己。
 - 只在会议里被提到、顺带出现或作为背景的名称，不单独建主体。
@@ -83,11 +105,19 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
 - 允许值：
   {ALLOWED_ENTITY_TYPES_PROMPT}。
 {ENTITY_TYPE_RULES}
+- 中文“看板”通常是命名展示工件，使用 `artifact`，不要因为它属于技术系统就改成 `system`。
 - `surface_forms` 必须直接来自输入或查询文本，不要发明别名。
 - `surface_forms` 应包含能证明同一主体的原始称呼。
 - `stable_qualifiers` 只能包含用于区分同名或同前缀主体的简短稳定限定词。
+- `stable_qualifiers` 应优先放主体短语里的角色词、对象词或稳定类别词。
+- 如果主体短语里有稳定角色词，必须复制该词到 `stable_qualifiers`，不要因为 `who` 已包含该词就省略。
+- 中文复合角色短语优先保留最长稳定短语，例如“上线计划”“运维组”“消息中心”。
+- `stable_qualifiers` 不要放 round、stage、第二轮、第三阶段、当前、最新、历史等记录标记。
 - `stable_qualifiers` 不要写成句子、当前状态或事实摘要。
 - `evidence` 只能包含简短身份抽取证据用于审计。
+- `evidence` 必须直接复制输入或查询中的身份片段，例如主体原文称呼或角色词。
+- `evidence` 不要写“句子主语”“文本直接描述”“查询直接询问”等解释性审计句。
+- `evidence` 可以与 `surface_forms` 重叠；它的作用是证明 identity_profile，不是证明 memory fact。
 - `evidence` 不得包含当前状态、结果、阻塞、负责人值、要求内容或其他记忆事实。
 """.strip().replace("{ALLOWED_ENTITY_TYPES_PROMPT}", ALLOWED_ENTITY_TYPES_PROMPT).replace(
     "{ENTITY_TYPE_RULES}", ENTITY_TYPE_RULES
@@ -387,6 +417,8 @@ Allowed entity_type values:
 - Return one of these exact lowercase enum values only. Do not return narrow natural-language subtypes.
 - Choose the closest broad enum and put the narrow subtype in stable_qualifiers.
 - Use `system` for named software systems, APIs, services, databases, platforms, and infrastructure components.
+- Use `organization` for named teams, departments, groups, operations groups, review groups, and other
+  organizational units.
 - Use `document` for named policies, checklists, handbooks, manuals, reports, notes, memos, runbooks, guides,
   registers, notices, bulletins, and other text-bearing artifacts.
 - Use `artifact` for named non-document deliverables, files, packages, models, datasets, dashboards, tables,
@@ -394,7 +426,9 @@ Allowed entity_type values:
 - Use `event` for named meetings, reviews, launches, incidents, sessions, rounds, exercises, drills, and
   time-bounded happenings.
 - Use `workflow` for named recurring processes, pipelines, playbooks, procedures, or operating flows.
+- Use `project` for named project plans, launch plans, migration plans, release plans, and implementation plans.
 - Use `work_item` for named tasks, tickets, issues, backlog items, milestones, and action items.
+- Do not classify a named organizational unit as `workflow` merely because it owns operations or delivery work.
 - Invalid examples: `policy`, `checklist`, `handbook`, `manual`, `report`, `note`, `memo`, `runbook`,
   `review`, `meeting`, `incident`, `service`, `api`, `database`, `ticket`.
 - Correct these by selecting the broad enum: policy/checklist/handbook/manual/report/note/memo/runbook ->
@@ -427,17 +461,34 @@ Rules:
 - Do not split a complete phrase into a bare name plus a record descriptor.
 - Do not merge same-prefix nouns with different roles into one bare name.
 - Keep role words such as project, plan, handbook, checklist, service, or review when they separate subjects.
-- Role words may appear in `who`, `surface_forms`, or `stable_qualifiers`.
+- Keep role words in `who` and `surface_forms`; also put them as short terms in `stable_qualifiers`.
+- For example, `Qingzhu migration checklist` should include `checklist` in `stable_qualifiers`;
+  `Qinglan settlement service` should include `service`.
+- For Chinese names, `星河门户` should include `门户`; `星河门户消息中心` should include `消息中心`.
+- Chinese role words must also be copied into `stable_qualifiers`, such as 计划, 制度, 服务, 流程,
+  策略, 纪要, 手册, 工单, 公告, 门户.
+- Repeat the role word in `stable_qualifiers` even when it is already present in `who`.
+- Prefer the longest stable Chinese role phrase, for example 上线计划 over 计划, and 运维组 over 组.
+- Person names, stock codes, or unique names with no role word may have empty `stable_qualifiers`.
+- A sentence saying a person prefers, habitually wants, requires, or does not want something is a durable
+  preference about that person; extract the person.
 - If one input has several named nouns, extract only nouns that are directly stated or queried.
 - Do not create identity_profile for names that appear only in parent context, meeting context, asides, or places.
 - Subprojects, subsystems, subcomponents, product lines, sub-artifacts, or workflow nodes may be subjects.
 - Create a sub-subject only when the text directly states its owner, state, target, requirement, or timeline.
+- If the text states facts about both `X` and a subcomponent `X Y`, extract both subjects.
+- For example, if `星河门户` is normal and `星河门户消息中心` is delayed, extract both names.
 - Missing items, attachments, evidence, prerequisites, reasons, metrics, field values, and details are not subjects.
 - Keep those nouns inside the memory content or query text of the subject they belong to.
+- Owner names, approver names, and reviewer names are owner values, not separate subjects.
+- If the text says `X currently owner is Y`, extract X only; do not create identity_profile for Y.
 - If a sentence says "X cannot proceed because Y is missing", the subject is X.
 - Y only explains X and does not become the subject just because it is a document or artifact.
 - Do not reject X because Y should not become a subject.
 - Create a subject for Y only when the text directly states Y's owner, state, rule, decision, or question.
+- In phrases like "until Y has the required signature/approval/attachment", Y is still a completion condition
+  for X, not an independent subject.
+- In phrases like "until Y has owner/approver/reviewer signature", Y is not a separate subject.
 - If a handbook, checklist, or policy requires X to provide Y, the subject is that artifact.
 - Required item Y is requirement content unless the text also directly describes Y itself.
 - A name merely mentioned in a meeting, aside, or background is not a separate subject.
@@ -458,11 +509,23 @@ Rules:
 - Allowed values:
   {ALLOWED_ENTITY_TYPES_PROMPT}.
 {ENTITY_TYPE_RULES_EN}
+- A Chinese 看板 is usually a named display artifact; use `artifact`, not `system`, unless the text clearly
+  names it as a software service or platform.
 - `surface_forms` must come directly from the input or query text and must not invent aliases.
 - `surface_forms` should include source mentions that prove the same subject.
 - `stable_qualifiers` must contain only short stable qualifiers for same-name or same-prefix subjects.
+- Prefer role words, object words, or stable category words from the subject phrase in `stable_qualifiers`.
+- If the subject phrase contains a stable role word, copy that word into `stable_qualifiers`; do not omit it
+  just because it already appears in `who`.
+- Prefer the longest stable Chinese role phrase, such as 上线计划, 运维组, or 消息中心.
+- Do not put record markers such as round, stage, second round, phase 3, current, latest, or history in `stable_qualifiers`.
 - `stable_qualifiers` must not be sentences, current states, or fact summaries.
 - `evidence` may contain only short identity extraction evidence for audit.
+- `evidence` must directly copy identity snippets from the input or query, such as the source subject mention
+  or role word.
+- Do not write explanatory audit sentences like "the sentence subject", "the text directly describes",
+  or "the query directly asks".
+- `evidence` may overlap with `surface_forms`; it proves the identity_profile, not the memory fact.
 - `evidence` must not include current state, result, blocker, owner value, requirement content, or memory facts.
 """.strip().replace("{ALLOWED_ENTITY_TYPES_PROMPT}", ALLOWED_ENTITY_TYPES_PROMPT).replace(
     "{ENTITY_TYPE_RULES_EN}", ENTITY_TYPE_RULES_EN

@@ -45,8 +45,7 @@ class IdentityExtractionCase:
     expected_gate_status: str
     expected_identities: list[ExpectedIdentityProfile] = field(default_factory=list)
     forbidden_identity_who: list[str] = field(default_factory=list)
-    min_profile_count: int | None = None
-    max_profile_count: int | None = None
+    profile_count: int | None = None
 
 
 def load_identity_extraction_suite(path: Path) -> dict[str, Any]:
@@ -92,8 +91,7 @@ def load_identity_extraction_suite(path: Path) -> dict[str, Any]:
                     for profile in item.get("expected_identities") or []
                 ],
                 forbidden_identity_who=[str(value) for value in item.get("forbidden_identity_who") or []],
-                min_profile_count=item.get("min_profile_count"),
-                max_profile_count=item.get("max_profile_count"),
+                profile_count=item.get("profile_count"),
             )
         )
     return {
@@ -126,10 +124,8 @@ def score_identity_extraction_case(case: IdentityExtractionCase, response: dict[
         failures.append(f"gate status is {gate_status!r}, expected {case.expected_gate_status!r}")
 
     profiles = _extract_profiles(output)
-    if case.min_profile_count is not None and len(profiles) < case.min_profile_count:
-        failures.append(f"profile count is {len(profiles)}, expected at least {case.min_profile_count}")
-    if case.max_profile_count is not None and len(profiles) > case.max_profile_count:
-        failures.append(f"profile count is {len(profiles)}, expected at most {case.max_profile_count}")
+    if case.profile_count is not None and len(profiles) != case.profile_count:
+        failures.append(f"profile count is {len(profiles)}, expected exactly {case.profile_count}")
 
     for expected in case.expected_identities:
         matched_profile = _find_matching_identity_profile(profiles, expected)
@@ -229,9 +225,8 @@ def _find_matching_identity_profile(
 def _score_profile_fields(profile: dict[str, Any], expected: ExpectedIdentityProfile) -> list[str]:
     failures: list[str] = []
     failures.extend(
-        _score_exact_list_field(
+        _score_surface_forms_field(
             profile=profile,
-            field_name="surface_forms",
             expected_any=expected.surface_forms_any,
             expected_all=expected.surface_forms_all,
         )
@@ -252,6 +247,39 @@ def _score_profile_fields(profile: dict[str, Any], expected: ExpectedIdentityPro
             expected_all=expected.evidence_contains_all,
         )
     )
+    return failures
+
+
+def _score_surface_forms_field(
+    *,
+    profile: dict[str, Any],
+    expected_any: list[str],
+    expected_all: list[str],
+) -> list[str]:
+    """检查 surface_forms 是否与期望原始称呼一致。
+
+    Args:
+        profile: LLM 返回的单个 identity_profile。
+        expected_any: 至少命中一个即可的兼容期望。
+        expected_all: 完整匹配的期望 surface form 列表。
+
+    Returns:
+        失败原因列表；没有失败时返回空列表。
+    """
+
+    field_name = "surface_forms"
+    values = {_normalize_text(value) for value in _list_field(profile, field_name)}
+    failures: list[str] = []
+    if expected_any and not values.intersection({_normalize_text(value) for value in expected_any}):
+        failures.append(f"{field_name} has no expected value from {expected_any!r}")
+    if expected_all:
+        expected_values = {_normalize_text(value) for value in expected_all}
+        missing = [value for value in expected_all if _normalize_text(value) not in values]
+        extra = sorted(value for value in values if value not in expected_values)
+        if missing:
+            failures.append(f"{field_name} missing expected values {missing!r}")
+        if extra:
+            failures.append(f"{field_name} has unexpected values {extra!r}")
     return failures
 
 
