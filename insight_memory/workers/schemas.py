@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import get_args
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 EntityType = Literal[
     "person",
@@ -249,6 +249,31 @@ class EdgeJudgeOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     relations: list[EdgeRelation] = Field(default_factory=list)
+
+    @model_validator(mode="before")
+    @classmethod
+    def drop_none_relations(cls, value: object) -> object:
+        """丢弃 LLM 用 `none` 表示的无关系记录。
+
+        Args:
+            value: LLM 输出的原始结构化结果。
+
+        Returns:
+            删除 `edge_type=none` 后的结构化结果；其他非法 edge_type 继续交给
+            Pydantic 严格校验。
+        """
+
+        if not isinstance(value, dict):
+            return value
+        relations = value.get("relations")
+        if not isinstance(relations, list):
+            return value
+        sanitized = []
+        for relation in relations:
+            if isinstance(relation, dict) and str(relation.get("edge_type") or "").strip().lower() == "none":
+                continue
+            sanitized.append(relation)
+        return {**value, "relations": sanitized}
 
 
 class MergeJudgeOutput(BaseModel):

@@ -96,8 +96,10 @@ def test_edge_judge_instructions_use_original_query_for_narrow_cross_entity_call
     assert "If `original_query` and `query_identity_profile` are present" in instructions
     assert "judge supports against the current query target" in instructions
     assert "For narrow target-property questions" in instructions
+    assert 'Do not output `edge_type="none"`' in instructions
+    assert "omit that pair from `relations`" in instructions
     assert "`Lattice checklist 当前要求补齐什么？`" in instructions
-    assert "Preferred edge: `related_to` or `none`" in instructions
+    assert "Preferred edge: `related_to` or omit the relation" in instructions
 
 
 def test_answer_composer_instructions_keep_narrow_queries_scoped() -> None:

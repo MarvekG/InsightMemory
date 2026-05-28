@@ -3,7 +3,13 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from insight_memory.workers.schemas import ExtractorOutput, IdentityProfileDraft, ProfileWriterOutput, QueryFocus
+from insight_memory.workers.schemas import (
+    EdgeJudgeOutput,
+    ExtractorOutput,
+    IdentityProfileDraft,
+    ProfileWriterOutput,
+    QueryFocus,
+)
 
 
 def test_identity_profile_draft_uses_v2_fields_under_original_name() -> None:
@@ -117,3 +123,46 @@ def test_query_focus_normalizes_invalid_graph_expansion_intent_to_uncertain() ->
 
     assert output.graph_expansion_intent == "uncertain"
     assert output.graph_expansion_reason == "The model emitted an unknown value."
+
+
+def test_edge_judge_output_drops_none_relations() -> None:
+    output = EdgeJudgeOutput.model_validate(
+        {
+            "relations": [
+                {
+                    "from_memory_id": "mem_a",
+                    "to_memory_id": "mem_b",
+                    "edge_type": "supports",
+                    "reason": "A directly explains B.",
+                    "weight": 0.9,
+                },
+                {
+                    "from_memory_id": "mem_a",
+                    "to_memory_id": "mem_c",
+                    "edge_type": "none",
+                    "reason": "No direct relation.",
+                    "weight": 0.1,
+                },
+            ]
+        }
+    )
+
+    assert len(output.relations) == 1
+    assert output.relations[0].edge_type == "supports"
+
+
+def test_edge_judge_output_still_rejects_unknown_edge_type() -> None:
+    with pytest.raises(ValidationError):
+        EdgeJudgeOutput.model_validate(
+            {
+                "relations": [
+                    {
+                        "from_memory_id": "mem_a",
+                        "to_memory_id": "mem_b",
+                        "edge_type": "causes",
+                        "reason": "Unsupported edge type.",
+                        "weight": 0.5,
+                    }
+                ]
+            }
+        )

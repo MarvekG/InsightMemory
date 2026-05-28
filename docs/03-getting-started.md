@@ -105,7 +105,7 @@ python -m pip install -r requirements.txt
 python run.py
 ```
 
-For source-tree development with auto-reload, set `MEMORY_APP_RELOAD=true` in `.env`.
+Source-tree development enables auto-reload by default with `MEMORY_APP_RELOAD=true`.
 
 ### Verify Health
 

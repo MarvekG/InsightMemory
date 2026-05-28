@@ -599,14 +599,15 @@ Rules:
   - reason
   - weight
 - Only return relations for memory ids present in the payload.
+- Do not output `edge_type="none"`. If no relation exists for a pair, omit that pair from `relations`.
 - Every memory includes `identity_profile`; use it to decide which stable subject the memory belongs to before judging relations.
 - If `query_identity_profile` is present, treat that subject as the answer target for this recall step.
 - Different identity_profile subjects with the same prefix are not related just because they share that prefix, domain, project,
   readiness theme, or similar missing-detail wording.
 - Use supports only when one memory is direct evidence, direct explanation, or a direct external requirement for another memory's claim.
 - In cross-entity mode with `original_query`, judge supports against the current query target, not only against abstract semantic relatedness.
-- For narrow target-property questions such as asking what the target currently requires, lacks, says, decides, or aims for, prefer `none`
-  or `related_to` for upstream artifact details unless that external memory is itself part of the target's direct answer.
+- For narrow target-property questions such as asking what the target currently requires, lacks, says, decides, or aims for, omit
+  non-relations or use `related_to` for upstream artifact details unless that external memory is itself part of the target's direct answer.
 - If a candidate memory only adds a more detailed upstream rule for one sub-item inside the frontier memory, that usually does not support
   the frontier memory for a narrow query about the frontier subject's own current requirement/status/goal.
 - A governing artifact can be semantically relevant without being answer-critical for the current query. Do not turn every relevant upstream
@@ -620,17 +621,17 @@ Rules:
   Preferred edge: `audit note -> main rule = supports`, because the note explains why the rule is emphasized.
   Example main rule: `Quartz retention notice 要求所有临时凭证在 12 小时内完成回收。`
   Example operational note: `Quartz retention notice 的审计补充说明显示临时凭证回收多次延迟。`
-  Preferred edge: `operational note -> main rule = supports`. Do not return `none` just because the note and the rule are both already understandable on their own.
+  Preferred edge: `operational note -> main rule = supports`. Do not omit the relation just because the note and the rule are both already understandable on their own.
 - Use contradicts only when two memories make conflicting or mutually incompatible claims.
 - If two bounded records from the same session, review, or decision context present mutually incompatible alternatives, use contradicts even when both are historical.
 - Use related_to when two memories are clearly about the same broader issue but neither directly supports nor directly contradicts the other.
 - Example query: `Lattice checklist 当前要求补齐什么？`
   Example frontier identity: `{"who":"Lattice checklist","stable_qualifiers":["checklist"]}` with memory `Lattice checklist requires transfer note and seal ledger`.
   Example candidate identity: `{"who":"Lattice handbook","stable_qualifiers":["handbook"]}` with memory `Lattice handbook says seal ledger must include reviewer seal`.
-  Preferred edge: `related_to` or `none`, because the handbook adds an upstream detail for one checklist item but is not itself the direct answer to the narrow checklist query.
+  Preferred edge: `related_to` or omit the relation, because the handbook adds an upstream detail for one checklist item but is not itself the direct answer to the narrow checklist query.
 - Example frontier identity: `{"who":"Driftbay map","stable_qualifiers":["map"]}` with memory `Driftbay map lacks contour markers`.
   Example candidate identity: `{"who":"Driftbay survey","stable_qualifiers":["survey"]}` with memory `Driftbay survey is blocked because field notes are missing`.
-  Preferred edge: `none`, because these are sibling subjects with different missing details; same prefix and same broad documentation theme are not enough.
+  Preferred edge: omit the relation, because these are sibling subjects with different missing details; same prefix and same broad documentation theme are not enough.
 - Missing process, workflow, readiness, or prerequisite information should usually be related_to, not supports, unless the memory explicitly states that the missing item directly proves or directly requires the target claim.
 - A missing guardrail, missing validation step, or missing readiness process should usually be related_to a blocker or failure memory when it explains adjacent context but does not itself directly observe the failure.
 - In an explanation chain, direct evidence should support the main claim, while adjacent missing prerequisites or process gaps should usually be related_to.
@@ -657,7 +658,7 @@ Rules:
   Preferred edges: one `contradicts` edge between the historical alternatives; avoid adding extra `contradicts` edges from the later settled summary unless the payload clearly says the summary is still an active competing position.
 - In a cross-entity graph, only connect frontier memories to external candidate memories when the external memory directly explains, constrains, or conflicts with the frontier memory.
 - In cross-entity mode, every returned edge must connect one frontier memory and one candidate memory. Do not emit frontier-to-frontier edges or candidate-to-candidate edges.
-- In cross-entity mode, default to `none` unless the external memory contributes a direct external explanation, direct governing requirement, direct dependency state, or direct contradiction for the frontier memory.
+- In cross-entity mode, default to omitting the relation unless the external memory contributes a direct external explanation, direct governing requirement, direct dependency state, or direct contradiction for the frontier memory.
 - In cross-entity mode with `original_query`, a direct governing requirement is still not enough for supports when the query is only asking for the
   frontier subject's own immediate current answer and the external memory merely adds another layer of detail for one sub-item.
 - In cross-entity mode, do not use `contradicts` between a bounded historical round/session record and an unbounded external standing rule merely because the old historical position would not satisfy the rule. The rule should support or constrain the later/current settled requirement; the historical disagreement should be represented among peer historical alternatives.
@@ -676,22 +677,22 @@ Rules:
 - Mere participation in the same incident, recovery process, or surrounding workflow is not enough for a cross-entity edge.
 - Prefer the smallest cross-entity explanation set. If one external memory already provides the concrete failing dependency, upstream service state, unresolved source state, or other direct operational explanation, do not also emit weaker cross-entity edges to procedural artifacts that merely describe adjacent process gaps or response materials.
 - If one memory says a rollout or review is blocked by an unresolved external data source, upstream service, or dependency, and another memory describes that external service still being degraded, backfilling, unavailable, or not yet stable, prefer related_to between the blocker memory and the external service memory.
-- If a handbook, checklist, document, or report is present but does not itself describe the concrete external failure or direct governing requirement, return `none` for that artifact even if it belongs to the same incident or recovery process.
+- If a handbook, checklist, document, or report is present but does not itself describe the concrete external failure or direct governing requirement, omit the relation for that artifact even if it belongs to the same incident or recovery process.
 - When both a concrete external service-state memory and a handbook/checklist/document memory are present, prefer the concrete service-state edge and omit the artifact edge unless the artifact itself is the thing directly constraining or causing the frontier blocker.
   Example main claim: `Verdigris rollout 当前主阻塞是依赖数据源迟迟没有恢复。`
   Example external service: `Relay service 当前仍处于批量补数状态，尚未恢复稳定输出。`
   Example distractor artifact: `Escalation handbook 当前缺少 on-call escalation path。`
-  Preferred edges: `external service <-> main claim = related_to`; `distractor artifact = none`. Do not connect the handbook unless the payload explicitly says the handbook itself is the direct blocker or governing requirement. Prefer the concrete service-state edge over weaker adjacent handbook context.
+  Preferred edges: `external service <-> main claim = related_to`; omit `distractor artifact`. Do not connect the handbook unless the payload explicitly says the handbook itself is the direct blocker or governing requirement. Prefer the concrete service-state edge over weaker adjacent handbook context.
   Example main claim: `Cobalt rollout 当前被上游队列恢复缓慢影响。`
   Example concrete external state: `Queue service 仍在 replay backlog，尚未恢复稳定消费。`
   Example adjacent artifact: `Response runbook 当前还缺少 escalation owner。`
-  Preferred edges: only `concrete external state <-> main claim = related_to`; `adjacent artifact = none`. Omit the runbook edge because it is secondary process context, not the direct external explanation.
-- If the frontier memory itself is a secondary artifact/process-gap note and a candidate memory is only a primary operational blocker or neighboring incident state, default to `none` unless the frontier note explicitly says it constrains, explains, or governs that candidate.
+  Preferred edges: only `concrete external state <-> main claim = related_to`; omit `adjacent artifact`. Omit the runbook edge because it is secondary process context, not the direct external explanation.
+- If the frontier memory itself is a secondary artifact/process-gap note and a candidate memory is only a primary operational blocker or neighboring incident state, omit the relation unless the frontier note explicitly says it constrains, explains, or governs that candidate.
 - Shared incident membership, shared recovery area, or shared escalation context is not enough for a cross-entity edge from a secondary artifact gap to a primary blocker.
   Example frontier artifact gap: `Response runbook 当前还缺少 escalation owner。`
   Example candidate blocker: `Cobalt rollout 当前被上游队列恢复缓慢影响。`
   Example candidate service state: `Queue service 仍在 replay backlog，尚未恢复稳定消费。`
-  Preferred edges: `none`. The runbook gap is secondary artifact context; it should not create new cross-entity edges back into the primary blocker chain unless it explicitly states that the missing runbook step is itself the direct blocker or governing requirement.
+  Preferred edges: omit the relation. The runbook gap is secondary artifact context; it should not create new cross-entity edges back into the primary blocker chain unless it explicitly states that the missing runbook step is itself the direct blocker or governing requirement.
 - In cross-entity mode, prefer the edge to flow from the primary blocker or requirement memory toward the concrete external explanation. Do not add the reverse artifact-to-blocker edge just because the artifact is contextually nearby.
 - For contradicts and related_to, do not emit both directions.
 - Do not emit empty reasons.
