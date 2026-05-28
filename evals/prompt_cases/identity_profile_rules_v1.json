@@ -14,7 +14,9 @@
       "expected_profiles": [
         {
           "who_any": ["Lanturn deployment"],
-          "entity_type": "workflow"
+          "entity_type_any": ["workflow", "project", "work_item"],
+          "surface_forms_all": ["Lanturn deployment"],
+          "evidence_contains_any": ["Lanturn deployment", "deployment status", "final validation"]
         }
       ],
       "forbidden_who": ["escrow approval form"],
@@ -32,7 +34,9 @@
       "expected_profiles": [
         {
           "who_any": ["Cedar QA policy"],
-          "entity_type": "document"
+          "entity_type": "document",
+          "surface_forms_all": ["Cedar QA policy"],
+          "evidence_contains_any": ["requires", "Cedar QA policy"]
         }
       ],
       "forbidden_who": ["parity matrix", "release ticket"],
@@ -50,11 +54,15 @@
       "expected_profiles": [
         {
           "who_any": ["Ravel import service"],
-          "entity_type": "system"
+          "entity_type": "system",
+          "surface_forms_all": ["Ravel import service"],
+          "evidence_contains_any": ["owned by Priya", "Ravel import service"]
         },
         {
           "who_any": ["Ravel import checklist"],
-          "entity_type": "document"
+          "entity_type": "document",
+          "surface_forms_all": ["Ravel import checklist"],
+          "evidence_contains_any": ["maintained by Tomas", "customs packet readiness"]
         }
       ],
       "forbidden_who": ["Ravel import"],
@@ -72,7 +80,9 @@
       "expected_profiles": [
         {
           "who_any": ["STP.N"],
-          "entity_type": "market_object"
+          "entity_type": "market_object",
+          "surface_forms_all": ["STP.N"],
+          "evidence_contains_all": ["STP.N"]
         }
       ],
       "forbidden_who": ["latest analyst note", "STP.N latest analyst note"],
@@ -90,7 +100,9 @@
       "expected_profiles": [
         {
           "who_any": ["Meridian onboarding"],
-          "entity_type_any": ["workflow", "project", "work_item"]
+          "entity_type_any": ["workflow", "project", "work_item"],
+          "surface_forms_all": ["Meridian onboarding"],
+          "evidence_contains_all": ["Meridian onboarding"]
         }
       ],
       "forbidden_who": ["phase 3 review", "Meridian onboarding phase 3 review"],
@@ -108,7 +120,9 @@
       "expected_profiles": [
         {
           "who_any": ["Vireo billing migration"],
-          "entity_type_any": ["workflow", "project", "work_item"]
+          "entity_type_any": ["workflow", "project", "work_item"],
+          "surface_forms_all": ["Vireo billing migration"],
+          "evidence_contains_any": ["Vireo billing migration", "status update", "moved to amber"]
         }
       ],
       "forbidden_who": ["Nexus sync", "invoice replay tests"],

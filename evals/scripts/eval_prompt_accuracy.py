@@ -27,6 +27,12 @@ class ExpectedProfile:
     who_any: list[str]
     entity_type: str | None = None
     entity_type_any: list[str] = field(default_factory=list)
+    surface_forms_any: list[str] = field(default_factory=list)
+    surface_forms_all: list[str] = field(default_factory=list)
+    stable_qualifiers_any: list[str] = field(default_factory=list)
+    stable_qualifiers_all: list[str] = field(default_factory=list)
+    evidence_contains_any: list[str] = field(default_factory=list)
+    evidence_contains_all: list[str] = field(default_factory=list)
 
 
 @dataclass(slots=True)
@@ -69,6 +75,20 @@ def load_prompt_eval_suite(path: Path) -> dict[str, Any]:
                         who_any=[str(value) for value in profile.get("who_any") or []],
                         entity_type=profile.get("entity_type"),
                         entity_type_any=[str(value) for value in profile.get("entity_type_any") or []],
+                        surface_forms_any=[str(value) for value in profile.get("surface_forms_any") or []],
+                        surface_forms_all=[str(value) for value in profile.get("surface_forms_all") or []],
+                        stable_qualifiers_any=[
+                            str(value) for value in profile.get("stable_qualifiers_any") or []
+                        ],
+                        stable_qualifiers_all=[
+                            str(value) for value in profile.get("stable_qualifiers_all") or []
+                        ],
+                        evidence_contains_any=[
+                            str(value) for value in profile.get("evidence_contains_any") or []
+                        ],
+                        evidence_contains_all=[
+                            str(value) for value in profile.get("evidence_contains_all") or []
+                        ],
                     )
                     for profile in item.get("expected_profiles") or []
                 ],
@@ -113,11 +133,14 @@ def score_prompt_case(case: PromptEvalCase, response: dict[str, Any]) -> dict[st
         failures.append(f"profile count is {len(profiles)}, expected at most {case.max_profile_count}")
 
     for expected in case.expected_profiles:
-        if not _profile_matches_expected(profiles, expected):
+        matched_profile = _find_matching_identity_profile(profiles, expected)
+        if matched_profile is None:
             failures.append(
                 "missing expected profile "
                 f"who_any={expected.who_any!r} entity_type={_expected_entity_type_text(expected)!r}"
             )
+            continue
+        failures.extend(_score_profile_fields(matched_profile, expected))
 
     profile_names = {_normalize_text(profile.get("who")) for profile in profiles}
     for forbidden in case.forbidden_who:
@@ -190,7 +213,9 @@ def _normalize_text(value: object) -> str:
     return " ".join(str(value or "").strip().lower().split())
 
 
-def _profile_matches_expected(profiles: list[dict[str, Any]], expected: ExpectedProfile) -> bool:
+def _find_matching_identity_profile(
+    profiles: list[dict[str, Any]], expected: ExpectedProfile
+) -> dict[str, Any] | None:
     expected_names = {_normalize_text(value) for value in expected.who_any}
     expected_types = _expected_entity_types(expected)
     for profile in profiles:
@@ -198,8 +223,86 @@ def _profile_matches_expected(profiles: list[dict[str, Any]], expected: Expected
             continue
         if expected_types and profile.get("entity_type") not in expected_types:
             continue
-        return True
-    return False
+        return profile
+    return None
+
+
+def _score_profile_fields(profile: dict[str, Any], expected: ExpectedProfile) -> list[str]:
+    failures: list[str] = []
+    failures.extend(
+        _score_exact_list_field(
+            profile=profile,
+            field_name="surface_forms",
+            expected_any=expected.surface_forms_any,
+            expected_all=expected.surface_forms_all,
+        )
+    )
+    failures.extend(
+        _score_exact_list_field(
+            profile=profile,
+            field_name="stable_qualifiers",
+            expected_any=expected.stable_qualifiers_any,
+            expected_all=expected.stable_qualifiers_all,
+        )
+    )
+    failures.extend(
+        _score_contains_list_field(
+            profile=profile,
+            field_name="evidence",
+            expected_any=expected.evidence_contains_any,
+            expected_all=expected.evidence_contains_all,
+        )
+    )
+    return failures
+
+
+def _score_exact_list_field(
+    *,
+    profile: dict[str, Any],
+    field_name: str,
+    expected_any: list[str],
+    expected_all: list[str],
+) -> list[str]:
+    values = {_normalize_text(value) for value in _list_field(profile, field_name)}
+    failures: list[str] = []
+    if expected_any and not values.intersection({_normalize_text(value) for value in expected_any}):
+        failures.append(f"{field_name} has no expected value from {expected_any!r}")
+    missing = [
+        value
+        for value in expected_all
+        if _normalize_text(value) not in values
+    ]
+    if missing:
+        failures.append(f"{field_name} missing expected values {missing!r}")
+    return failures
+
+
+def _score_contains_list_field(
+    *,
+    profile: dict[str, Any],
+    field_name: str,
+    expected_any: list[str],
+    expected_all: list[str],
+) -> list[str]:
+    text = _normalize_text(" ".join(_list_field(profile, field_name)))
+    failures: list[str] = []
+    if expected_any and not any(_normalize_text(value) in text for value in expected_any):
+        failures.append(f"{field_name} contains none of {expected_any!r}")
+    missing = [
+        value
+        for value in expected_all
+        if _normalize_text(value) not in text
+    ]
+    if missing:
+        failures.append(f"{field_name} missing expected fragments {missing!r}")
+    return failures
+
+
+def _list_field(profile: dict[str, Any], field_name: str) -> list[str]:
+    value = profile.get(field_name)
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value]
 
 
 def _expected_entity_types(expected: ExpectedProfile) -> set[str]:
@@ -235,6 +338,7 @@ def _case_result(*, case: PromptEvalCase, response: dict[str, Any], failures: li
                 "entity_type": profile.get("entity_type"),
                 "surface_forms": profile.get("surface_forms") or [],
                 "stable_qualifiers": profile.get("stable_qualifiers") or [],
+                "evidence": profile.get("evidence") or [],
             }
             for profile in profiles
         ],
