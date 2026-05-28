@@ -128,6 +128,273 @@
       "forbidden_identity_who": ["Nexus sync", "invoice replay tests"],
       "min_profile_count": 1,
       "max_profile_count": 1
+    },
+    {
+      "case_id": "history_multi_subject_document_noise",
+      "category": "history_multi_subject_noise",
+      "prompt_key": "extractor",
+      "source_case": "generic_multi_subject_document_targeted_v1:multi_subject_briefing_background_noise",
+      "payload": {
+        "context": "Quarterly transfer briefing: Briarwatch rollout 当前仍不能进入 turnover，因为 berth packet 还没有补齐。周会里顺手提到 Mossledger service 近期也在调整批处理窗口，但没有给出它的独立结论。另有一条明确更新：Drumlin review 当前负责人是 Mila Song。其余段落只是在背景中提到 Harborlane checklist、Harborlane bulletin 和旧的 shift note，没有给出这些对象新的独立 durable fact。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": ["Briarwatch rollout"],
+          "entity_type_any": ["workflow", "project", "work_item"],
+          "surface_forms_all": ["Briarwatch rollout"],
+          "evidence_contains_any": ["Briarwatch rollout", "turnover", "berth packet"]
+        },
+        {
+          "who_any": ["Drumlin review"],
+          "entity_type_any": ["work_item", "event", "artifact"],
+          "surface_forms_all": ["Drumlin review"],
+          "evidence_contains_any": ["Drumlin review", "Mila Song"]
+        }
+      ],
+      "forbidden_identity_who": ["Mossledger service", "Harborlane checklist", "Harborlane bulletin", "shift note"],
+      "min_profile_count": 2,
+      "max_profile_count": 2
+    },
+    {
+      "case_id": "history_same_prefix_five_artifacts",
+      "category": "history_same_prefix_artifacts",
+      "prompt_key": "extractor",
+      "source_case": "generic_multi_subject_document_targeted_v1:multi_subject_same_prefix_artifacts_split",
+      "payload": {
+        "context": "Field operations digest: Latchmere plan 当前目标是周五前补齐 berth packet；Latchmere review 当前负责人是 Noor Patel；Latchmere bulletin 当前要求 every berth packet include quay tag；Latchmere register 之前允许 quay tag 在 departure 后 8 hours 内补录；Latchmere checklist 当前要求 quay tag 和 seal memo 一起提交。以上五个对象名称相近，但分别是 plan、review、bulletin、register、checklist。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": ["Latchmere plan"],
+          "entity_type_any": ["document", "project", "work_item", "strategy"],
+          "surface_forms_all": ["Latchmere plan"],
+          "evidence_contains_any": ["Latchmere plan", "berth packet"]
+        },
+        {
+          "who_any": ["Latchmere review"],
+          "entity_type_any": ["work_item", "event", "artifact"],
+          "surface_forms_all": ["Latchmere review"],
+          "evidence_contains_any": ["Latchmere review", "Noor Patel"]
+        },
+        {
+          "who_any": ["Latchmere bulletin"],
+          "entity_type_any": ["document", "artifact"],
+          "surface_forms_all": ["Latchmere bulletin"],
+          "evidence_contains_any": ["Latchmere bulletin", "quay tag"]
+        },
+        {
+          "who_any": ["Latchmere register"],
+          "entity_type_any": ["document", "artifact"],
+          "surface_forms_all": ["Latchmere register"],
+          "evidence_contains_any": ["Latchmere register", "8 hours"]
+        },
+        {
+          "who_any": ["Latchmere checklist"],
+          "entity_type_any": ["document", "artifact"],
+          "surface_forms_all": ["Latchmere checklist"],
+          "evidence_contains_any": ["Latchmere checklist", "seal memo"]
+        }
+      ],
+      "forbidden_identity_who": ["Latchmere"],
+      "min_profile_count": 5,
+      "max_profile_count": 5
+    },
+    {
+      "case_id": "history_ultralong_multientity_noise",
+      "category": "history_ultralong_multientity",
+      "prompt_key": "extractor",
+      "source_case": "generic_ultralong_multientity_v1:ultralong_five_durable_facts",
+      "payload": {
+        "context": "超长周报记录：前半段反复提到旧白板、访客登记、照明巡检、会议室门卡、走廊摄像头、临时工位、午餐统计和几位旁听者姓名。中段真正形成的持久结论有五条：Oakspan rollout 当前主阻塞是 rollback annex missing；Ridgepath checklist 当前要求所有 cutover 先补 rollback annex 和 approver signature；Talon review 当前负责人是 Mira Chen；Quarry dashboard 当前数据延迟 18 分钟；Westbay handbook 当前要求 incident timeline 记录附在 handoff packet 中。后半段仍然是闲聊、排班、访客 badge 和仓库灯光测试，这些都不应成为单独记忆。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": ["Oakspan rollout"],
+          "entity_type_any": ["workflow", "project", "work_item"],
+          "surface_forms_all": ["Oakspan rollout"],
+          "evidence_contains_any": ["Oakspan rollout", "rollback annex"]
+        },
+        {
+          "who_any": ["Ridgepath checklist"],
+          "entity_type_any": ["document", "artifact"],
+          "surface_forms_all": ["Ridgepath checklist"],
+          "evidence_contains_any": ["Ridgepath checklist", "approver signature"]
+        },
+        {
+          "who_any": ["Talon review"],
+          "entity_type_any": ["work_item", "event", "artifact"],
+          "surface_forms_all": ["Talon review"],
+          "evidence_contains_any": ["Talon review", "Mira Chen"]
+        },
+        {
+          "who_any": ["Quarry dashboard"],
+          "entity_type_any": ["system", "artifact"],
+          "surface_forms_all": ["Quarry dashboard"],
+          "evidence_contains_any": ["Quarry dashboard", "18 分钟"]
+        },
+        {
+          "who_any": ["Westbay handbook"],
+          "entity_type_any": ["document", "artifact"],
+          "surface_forms_all": ["Westbay handbook"],
+          "evidence_contains_any": ["Westbay handbook", "handoff packet"]
+        }
+      ],
+      "forbidden_identity_who": ["旧白板", "访客登记", "午餐统计", "访客 badge"],
+      "min_profile_count": 5,
+      "max_profile_count": 5
+    },
+    {
+      "case_id": "history_format_table_register_checklist",
+      "category": "history_format_shift_table",
+      "prompt_key": "extractor",
+      "source_case": "generic_format_shift_v1:format_table_record",
+      "payload": {
+        "context": "artifact | state | note\nTideline register | blocked | cannot close because crate note is missing\n\nartifact | rule | note\nTideline checklist | requirement | every register must include crate note before closure\n"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": ["Tideline register"],
+          "entity_type_any": ["document", "artifact", "work_item"],
+          "surface_forms_all": ["Tideline register"],
+          "evidence_contains_any": ["Tideline register", "artifact | state | note", "crate note"]
+        },
+        {
+          "who_any": ["Tideline checklist"],
+          "entity_type_any": ["document", "artifact"],
+          "surface_forms_all": ["Tideline checklist"],
+          "evidence_contains_any": ["Tideline checklist", "artifact | rule | note", "requirement"]
+        }
+      ],
+      "forbidden_identity_who": ["crate note"],
+      "min_profile_count": 2,
+      "max_profile_count": 2
+    },
+    {
+      "case_id": "history_query_same_surface_handbook",
+      "category": "history_query_artifact_boundary",
+      "prompt_key": "query_planner",
+      "source_case": "generic_rule_evolution_matrix_v1:rule_evolution_same_surface_manual_vs_checklist",
+      "payload": {
+        "query": "Elmfield handbook 当前要求什么？"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": ["Elmfield handbook"],
+          "entity_type": "document",
+          "surface_forms_all": ["Elmfield handbook"],
+          "evidence_contains_any": ["Elmfield handbook", "handbook"]
+        }
+      ],
+      "forbidden_identity_who": ["Elmfield checklist", "rollback note", "incident owner"],
+      "min_profile_count": 1,
+      "max_profile_count": 1
+    },
+    {
+      "case_id": "history_query_manual_temporal_record",
+      "category": "history_query_record_marker",
+      "prompt_key": "query_planner",
+      "source_case": "generic_farfield_openworld_v1:farfield_chart_manual_rule_evolution",
+      "payload": {
+        "query": "North Quill chart manual 之前允许什么？"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": ["North Quill chart manual"],
+          "entity_type": "document",
+          "surface_forms_all": ["North Quill chart manual"],
+          "evidence_contains_any": ["North Quill chart manual", "manual"]
+        }
+      ],
+      "forbidden_identity_who": ["tidal variance note", "departure"],
+      "min_profile_count": 1,
+      "max_profile_count": 1
+    },
+    {
+      "case_id": "history_realworld_ticket_row",
+      "category": "history_realworld_ticket",
+      "prompt_key": "write_gate",
+      "source_case": "generic_realworld_adversarial_v1:ticket_rows_owner_boundary",
+      "payload": {
+        "context": "Ops table row: ticket=MX-17A; asset=freezer bay; blocker=missing gasket photo; owner=Rui."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": ["MX-17A"],
+          "entity_type_any": ["work_item", "artifact"],
+          "surface_forms_all": ["MX-17A"],
+          "evidence_contains_any": ["MX-17A", "ticket"]
+        }
+      ],
+      "forbidden_identity_who": ["freezer bay", "missing gasket photo", "Rui"],
+      "min_profile_count": 1,
+      "max_profile_count": 1
+    },
+    {
+      "case_id": "history_policy_requirement",
+      "category": "history_policy_requirement",
+      "prompt_key": "write_gate",
+      "source_case": "generic_accuracy_v1:single_fact_policy",
+      "payload": {
+        "context": "Access policy 要求所有临时权限在24小时内回收。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": ["Access policy"],
+          "entity_type": "document",
+          "surface_forms_all": ["Access policy"],
+          "evidence_contains_any": ["Access policy", "要求"]
+        }
+      ],
+      "forbidden_identity_who": ["临时权限"],
+      "min_profile_count": 1,
+      "max_profile_count": 1
+    },
+    {
+      "case_id": "history_field_record_many_named_objects",
+      "category": "history_format_field_record",
+      "prompt_key": "extractor",
+      "source_case": "generic_format_shift_v1:format_field_record_many_named_objects",
+      "payload": {
+        "context": "name: Aster observatory docket\nowner: Ilya North\n\nname: Aster observatory ledger\nowner: Mara Pike\n\nname: Aster observatory queue\nowner: Soren Vale\n\nname: Aster observatory bulletin\nowner: Nira Holt\n"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": ["Aster observatory docket"],
+          "entity_type_any": ["document", "artifact"],
+          "surface_forms_all": ["Aster observatory docket"],
+          "evidence_contains_any": ["Aster observatory docket", "Ilya North"]
+        },
+        {
+          "who_any": ["Aster observatory ledger"],
+          "entity_type_any": ["document", "artifact"],
+          "surface_forms_all": ["Aster observatory ledger"],
+          "evidence_contains_any": ["Aster observatory ledger", "Mara Pike"]
+        },
+        {
+          "who_any": ["Aster observatory queue"],
+          "entity_type_any": ["workflow", "work_item", "artifact"],
+          "surface_forms_all": ["Aster observatory queue"],
+          "evidence_contains_any": ["Aster observatory queue", "Soren Vale"]
+        },
+        {
+          "who_any": ["Aster observatory bulletin"],
+          "entity_type_any": ["document", "artifact"],
+          "surface_forms_all": ["Aster observatory bulletin"],
+          "evidence_contains_any": ["Aster observatory bulletin", "Nira Holt"]
+        }
+      ],
+      "forbidden_identity_who": ["Aster observatory", "Ilya North", "Mara Pike", "Soren Vale", "Nira Holt"],
+      "min_profile_count": 4,
+      "max_profile_count": 4
     }
   ]
 }
