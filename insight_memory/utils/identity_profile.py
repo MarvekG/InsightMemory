@@ -2,76 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from insight_memory.utils.text import dedupe_preserve_order, normalize_text
-
-
-def profile_values(profile: dict[str, Any], field: str, *, limit: int = 8) -> list[str]:
-    """读取并规范化 identity profile 中的列表字段。
-
-    Args:
-        profile: identity profile payload。
-        field: 需要读取的字段名。
-        limit: 返回字段值的最大数量。
-
-    Returns:
-        去重后的非空字符串列表。
-    """
-
-    return dedupe_preserve_order([str(item) for item in profile.get(field) or []], limit=limit)
-
-
-def merge_additive_identity_profile(
-    *,
-    current_profile: dict[str, Any],
-    proposed_profile: dict[str, Any],
-) -> dict[str, Any]:
-    """合并同一主体下低风险的 identity profile 追加更新。
-
-    Args:
-        current_profile: 当前实体 profile。
-        proposed_profile: 新 profile 或被合并实体的 profile。
-
-    Returns:
-        只保留同一主体下低风险新增字段后的 profile。
-    """
-
-    current_who = normalize_text(current_profile.get("who"))
-    proposed_who = normalize_text(proposed_profile.get("who"))
-    who = current_who or proposed_who
-    surface_forms = dedupe_preserve_order(
-        [
-            *profile_values(current_profile, "surface_forms"),
-            proposed_who,
-            *profile_values(proposed_profile, "surface_forms"),
-        ],
-        limit=8,
-    )
-    stable_qualifiers = dedupe_preserve_order(
-        [
-            *profile_values(current_profile, "stable_qualifiers"),
-            *profile_values(proposed_profile, "stable_qualifiers"),
-        ],
-        limit=8,
-    )
-    evidence = dedupe_preserve_order(
-        [
-            *profile_values(current_profile, "evidence", limit=4),
-            *profile_values(proposed_profile, "evidence", limit=4),
-        ],
-        limit=4,
-    )
-    return {
-        "schema_version": 2,
-        "who": who,
-        "entity_type": (
-            proposed_profile.get("entity_type")
-            if current_profile.get("entity_type") == "unknown"
-            else current_profile.get("entity_type", proposed_profile.get("entity_type", "unknown"))
-        ),
-        "surface_forms": surface_forms,
-        "stable_qualifiers": stable_qualifiers,
-        "evidence": evidence,
-    }
+from insight_memory.utils.text import normalize_text
 
 
 def identity_profile_refresh_risk(

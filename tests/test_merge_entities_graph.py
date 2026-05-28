@@ -7,6 +7,7 @@ import pytest
 
 import insight_memory.graph.merge_entities_graph as merge_graph_module
 from insight_memory.graph.merge_entities_graph import MergeEntitiesGraph
+from insight_memory.workers.schemas import ProfileWriterOutput
 
 
 class _FakeRepository:
@@ -118,11 +119,11 @@ def _install_fakes(monkeypatch: pytest.MonkeyPatch) -> _FakeRetrievalIndex:
 
 
 @pytest.mark.asyncio
-async def test_apply_merge_adds_source_profile_aliases_to_survivor(
+async def test_apply_merge_uses_llm_merged_profile_without_code_append(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     source = _entity("ent_source", entity_type="system", surface_forms=["Orion API"])
-    target = _entity("ent_target", entity_type="system", surface_forms=["Orion service"])
+    target = _entity("ent_target", entity_type="system", surface_forms=["Orion service", "legacy Orion"])
     _FakeRepository.entities = {source.entity_key: source, target.entity_key: target}
     _FakeRepository.memories = {
         source.entity_key: [_memory("mem_source", source.entity_key)],
@@ -140,6 +141,14 @@ async def test_apply_merge_adds_source_profile_aliases_to_survivor(
             "reason": "test",
             "judgment": SimpleNamespace(
                 survivor_entity_key=target.entity_key,
+                merged_identity_profile=ProfileWriterOutput(
+                    schema_version=2,
+                    who="Orion service",
+                    entity_type="system",
+                    surface_forms=["Orion service", "Orion API"],
+                    stable_qualifiers=["api service"],
+                    evidence=["Merge judge identified Orion API as the same service."],
+                ),
                 reason="same subject",
             ),
         }
@@ -147,6 +156,9 @@ async def test_apply_merge_adds_source_profile_aliases_to_survivor(
 
     assert result == {"result": {"merged": True}}
     assert target.identity_profile["surface_forms"] == ["Orion service", "Orion API"]
+    assert "legacy Orion" not in target.identity_profile["surface_forms"]
+    assert target.identity_profile["stable_qualifiers"] == ["api service"]
+    assert target.identity_profile["evidence"] == ["Merge judge identified Orion API as the same service."]
     assert target.metadata_json["profile_state"]["profile_revision"] == 2
     assert target.metadata_json["profile_history"][-1]["reason"] == "entity_merged:safe_additive_update"
     assert retrieval_index.deleted_entities[-1]["entity_keys"] == [source.entity_key]
@@ -177,6 +189,14 @@ async def test_apply_merge_keeps_survivor_profile_when_entity_type_conflicts(
             "reason": "test",
             "judgment": SimpleNamespace(
                 survivor_entity_key=target.entity_key,
+                merged_identity_profile=ProfileWriterOutput(
+                    schema_version=2,
+                    who="Orion runbook",
+                    entity_type="document",
+                    surface_forms=["Orion runbook"],
+                    stable_qualifiers=["runbook"],
+                    evidence=["Merge judge proposed a document identity."],
+                ),
                 reason="same subject",
             ),
         }
@@ -187,3 +207,38 @@ async def test_apply_merge_keeps_survivor_profile_when_entity_type_conflicts(
     assert target.metadata_json["profile_state"]["profile_revision"] == 1
     assert target.metadata_json["profile_state"]["last_refresh_status"] == "needs_identity_review"
     assert target.metadata_json["profile_history"][-1]["reason"] == "entity_merged:entity_type_conflict"
+
+
+@pytest.mark.asyncio
+async def test_apply_merge_keeps_survivor_profile_when_merged_profile_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = _entity("ent_source", entity_type="system", surface_forms=["Orion API"])
+    target = _entity("ent_target", entity_type="system", surface_forms=["Orion service"])
+    _FakeRepository.entities = {source.entity_key: source, target.entity_key: target}
+    _FakeRepository.memories = {
+        source.entity_key: [_memory("mem_source", source.entity_key)],
+        target.entity_key: [_memory("mem_target", target.entity_key)],
+    }
+    _install_fakes(monkeypatch)
+
+    await MergeEntitiesGraph()._apply_merge(
+        {
+            "memory_space": "workspace:orion",
+            "source_entity_key": source.entity_key,
+            "target_entity_key": target.entity_key,
+            "source": source,
+            "target": target,
+            "reason": "test",
+            "judgment": SimpleNamespace(
+                survivor_entity_key=target.entity_key,
+                merged_identity_profile=None,
+                reason="same subject",
+            ),
+        }
+    )
+
+    assert target.identity_profile["surface_forms"] == ["Orion service"]
+    assert target.metadata_json["profile_state"]["profile_revision"] == 1
+    assert target.metadata_json["profile_state"]["last_refresh_status"] == "needs_identity_review"
+    assert target.metadata_json["profile_history"][-1]["reason"] == "entity_merged:missing_merged_identity_profile"

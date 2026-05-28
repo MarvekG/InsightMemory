@@ -694,6 +694,10 @@ Rules:
   Example target: `Meridian 发布项目`
   Preferred: merge if the evidence shows they are two names for the same concrete project.
 - If merge, pick the better survivor_entity_key from the provided two candidates.
+- If merge, also return `merged_identity_profile` as the complete final V2 identity profile for the survivor.
+- The merged_identity_profile must follow the shared identity profile rules and must not be a partial patch.
+- Do not rely on code to append aliases or qualifiers; include every surface form and stable qualifier that should remain.
+- Do not include memory facts, blockers, owner values, requirements, or current state in merged_identity_profile.
 - If uncertain, return keep_separate.
 """.strip(),
 }

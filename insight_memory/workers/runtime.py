@@ -774,16 +774,35 @@ class MemoryWorkers:
             payload=payload,
             schema_type=MergeJudgeOutput,
         )
+        parsed = call.parsed
+        if parsed.merged_identity_profile is not None:
+            normalized = _normalized_profile_draft(
+                IdentityProfileDraft(
+                    schema_version=2,
+                    draft_id="merge_judge",
+                    who=parsed.merged_identity_profile.who,
+                    entity_type=parsed.merged_identity_profile.entity_type,
+                    surface_forms=parsed.merged_identity_profile.surface_forms,
+                    stable_qualifiers=parsed.merged_identity_profile.stable_qualifiers,
+                    evidence=parsed.merged_identity_profile.evidence,
+                )
+            )
+            parsed = MergeJudgeOutput(
+                decision=parsed.decision,
+                survivor_entity_key=parsed.survivor_entity_key,
+                merged_identity_profile=ProfileWriterOutput(**normalized),
+                reason=parsed.reason,
+            )
         logger.info(
             "worker merge judge completed",
             extra={
                 "memory_space": memory_space,
                 "request_id": request_id,
-                "decision": call.parsed.decision,
-                "survivor_entity_key": call.parsed.survivor_entity_key,
+                "decision": parsed.decision,
+                "survivor_entity_key": parsed.survivor_entity_key,
             },
         )
-        return call.parsed
+        return parsed
 
     async def _run(
         self,

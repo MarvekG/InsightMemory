@@ -211,4 +211,5 @@ class MergeJudgeOutput(BaseModel):
 
     decision: Literal["merge", "keep_separate"]
     survivor_entity_key: str | None = None
+    merged_identity_profile: ProfileWriterOutput | None = None
     reason: str = ""

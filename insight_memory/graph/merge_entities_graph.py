@@ -8,7 +8,6 @@ from insight_memory.index.retrieval_index import retrieval_index
 from insight_memory.storage.repository import MemoryRepository
 from insight_memory.utils.identity_profile import (
     identity_profile_refresh_risk,
-    merge_additive_identity_profile,
     next_profile_metadata,
 )
 from insight_memory.utils.request_context import get_or_create_request_id
@@ -171,23 +170,23 @@ class MergeEntitiesGraph:
             )
             if survivor is not None:
                 survivor_profile = dict(survivor.identity_profile or {})
-                merged_profile = dict(merged_entity.identity_profile or {})
-                risk, risk_reason = identity_profile_refresh_risk(
-                    current_profile=survivor_profile,
-                    proposed_profile=merged_profile,
+                proposed_profile = (
+                    judgment.merged_identity_profile.model_dump()
+                    if judgment.merged_identity_profile is not None
+                    else {}
                 )
-                applied_profile = (
-                    merge_additive_identity_profile(
+                if proposed_profile:
+                    risk, risk_reason = identity_profile_refresh_risk(
                         current_profile=survivor_profile,
-                        proposed_profile=merged_profile,
+                        proposed_profile=proposed_profile,
                     )
-                    if risk == "safe"
-                    else survivor_profile
-                )
+                else:
+                    risk, risk_reason = "needs_identity_review", "missing_merged_identity_profile"
+                applied_profile = proposed_profile if risk == "safe" else survivor_profile
                 metadata = next_profile_metadata(
                     current_metadata=dict(survivor.metadata_json or {}),
                     previous_profile=survivor_profile,
-                    proposed_profile=merged_profile,
+                    proposed_profile=proposed_profile,
                     applied_profile=applied_profile,
                     risk=risk,
                     reason=f"entity_merged:{risk_reason}",
