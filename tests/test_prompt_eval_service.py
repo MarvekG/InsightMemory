@@ -24,10 +24,9 @@ def test_prompt_eval_service_returns_llm_output_and_usage(monkeypatch) -> None:
                 "schema_version": 2,
                 "draft_id": "d1",
                 "who": "Harborlane rollout",
-                "entity_type": "workflow",
                 "surface_forms": ["Harborlane rollout"],
                 "stable_qualifiers": ["rollout"],
-                "evidence": ["Harborlane rollout 不能进入 cutover"],
+                "definition": "Named rollout.",
             }
         ],
         "write_rejection_reason": None,

@@ -5,37 +5,6 @@ from __future__ import annotations
 # 所有提示词都必须优先保证泛化性能。可以用示例说明规则，但示例中的名称、
 # 领域、场景和表达方式必须与评测 case 不同。
 
-from textwrap import wrap
-
-from insight_memory.workers.schemas import ENTITY_TYPE_VALUES
-
-
-ALLOWED_ENTITY_TYPES = ", ".join(ENTITY_TYPE_VALUES)
-ALLOWED_ENTITY_TYPES_PROMPT = "\n  ".join(wrap(ALLOWED_ENTITY_TYPES, width=96, break_long_words=False))
-
-ENTITY_TYPE_RULES = f"""
-允许的 entity_type 取值：
-- 允许值：
-  {ALLOWED_ENTITY_TYPES_PROMPT}。
-- 只能返回这些精确的小写枚举值，不要返回更窄的自然语言子类型。
-- 选择最接近的宽泛枚举，把更窄的子类型放入 stable_qualifiers。
-- 对命名的软件系统、API、服务、数据库、平台、基础设施组件使用 `system`。
-- 对命名团队、部门、小组、运营组、运维组、评审组等组织单元使用 `organization`。
-- 对命名的政策、清单、手册、报告、笔记、备忘录、运行手册、指南、登记册、公告、简报等承载文本的工件使用 `document`。
-- 对命名的非文档交付物、文件、包、模型、数据集、看板、表格、schema、模板、物理或运营对象使用 `artifact`。
-- 对命名的会议、评审、发布、事故、会话、轮次、演习、训练等有时间边界的事件使用 `event`。
-- 对命名的周期性流程、流水线、playbook、操作过程或工作流使用 `workflow`。
-- 对命名的项目计划、上线计划、迁移计划、发布计划、实施计划等使用 `project`，不要用 `document`。
-- 对命名的任务、工单、问题、待办、里程碑和行动项使用 `work_item`。
-- 命名组织单元即使承担流程、运营或交付职责，也不要因此改成 `workflow`。
-- 非法示例：`policy`、`checklist`、`handbook`、`manual`、`report`、`note`、`memo`、`runbook`、
-  `review`、`meeting`、`incident`、`service`、`api`、`database`、`ticket`。
-- 应改成宽泛枚举：policy/checklist/handbook/manual/report/note/memo/runbook -> `document`；
-  review/meeting/incident -> `event`；service/api/database -> `system`；ticket/issue/task -> `work_item`。
-- 阅读主体本身后仍无法确定宽泛枚举时使用 `unknown`。
-""".strip()
-
-
 IDENTITY_PROFILE_RULES = """
 [identity_profile提取规则]
 提取目标：判断“这条记忆属于谁”，从文本里找出承接这条记忆的命名名词。
@@ -43,9 +12,9 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
 
 字段说明：
 1. `who`：同一主体的简短稳定标签，应保留能区分主体的角色词或对象词。
-2. `entity_type`：主体的宽泛类型，只能使用允许枚举值。
-3. `surface_forms`：直接来自输入或查询文本的原始称呼，不要发明别名。
-4. `stable_qualifiers` 和 `evidence`：前者是稳定限定词；后者只放身份抽取依据。
+2. `surface_forms`：直接来自输入或查询文本的原始称呼，不要发明别名。
+3. `stable_qualifiers`：稳定限定词，用于区分同名或同前缀主体。
+4. `definition`：解释 `who` 指代的主体名词是什么，不写记忆事实。
 
 具体规则：
 - 先读完整输入或查询，问：这条记忆主要在说哪个命名名词？
@@ -101,10 +70,6 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
 - 时间变化、状态变化和结论变化应写入记忆内容，不要写成新主体。
 - identity_profile 只写“是谁”，不要写“发生了什么”。
 - 不要把当前状态、阻塞、负责人值、要求内容、结论、指标或时间变化放入 identity_profile。
-- `entity_type` 必须使用允许枚举值。
-- 允许值：
-  {ALLOWED_ENTITY_TYPES_PROMPT}。
-{ENTITY_TYPE_RULES}
 - 中文“看板”通常是命名展示工件，使用 `artifact`，不要因为它属于技术系统就改成 `system`。
 - `surface_forms` 必须直接来自输入或查询文本，不要发明别名。
 - `surface_forms` 应包含能证明同一主体的原始称呼。
@@ -114,14 +79,9 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
 - 中文复合角色短语优先保留最长稳定短语，例如“上线计划”“运维组”“消息中心”。
 - `stable_qualifiers` 不要放 round、stage、第二轮、第三阶段、当前、最新、历史等记录标记。
 - `stable_qualifiers` 不要写成句子、当前状态或事实摘要。
-- `evidence` 只能包含简短身份抽取证据用于审计。
-- `evidence` 必须直接复制输入或查询中的身份片段，例如主体原文称呼或角色词。
-- `evidence` 不要写“句子主语”“文本直接描述”“查询直接询问”等解释性审计句。
-- `evidence` 可以与 `surface_forms` 重叠；它的作用是证明 identity_profile，不是证明 memory fact。
-- `evidence` 不得包含当前状态、结果、阻塞、负责人值、要求内容或其他记忆事实。
-""".strip().replace("{ALLOWED_ENTITY_TYPES_PROMPT}", ALLOWED_ENTITY_TYPES_PROMPT).replace(
-    "{ENTITY_TYPE_RULES}", ENTITY_TYPE_RULES
-)
+- `definition` 应定义 `who`，例如“命名项目计划”“命名服务”“命名团队”，不要照抄事实句。
+- `definition` 不得包含当前状态、结果、阻塞、负责人值、要求内容或其他记忆事实。
+""".strip()
 
 
 
@@ -383,7 +343,6 @@ WORKER_INSTRUCTIONS: dict[str, str] = {
 规则：
 - 只有当二者明确指向同一主体时才返回 merge。
 - 共享主题、要求、阻塞、工作流或周边上下文不足以合并。
-- 相同 broad entity_type 只是可比较资格，不是合并证据。
 - stable_qualifiers 是身份边界证据；不同稳定身份边界应保持分离，除非 payload 给出明确 identity-equivalence evidence。
 - 不要因为 document/policy/checklist/report/handbook artifact 约束、解释或提到 actor/system/project/person，就把二者合并。
 - plan 与 project，或 plan 与 checklist/document/policy artifact，不应仅因短名相同或同属审批流程就合并。
@@ -410,34 +369,6 @@ WORKER_INSTRUCTIONS["same_batch_resolver"] = SAME_BATCH_RESOLVER_INSTRUCTIONS
 
 
 
-ENTITY_TYPE_RULES_EN = f"""
-Allowed entity_type values:
-- Allowed values:
-  {ALLOWED_ENTITY_TYPES_PROMPT}.
-- Return one of these exact lowercase enum values only. Do not return narrow natural-language subtypes.
-- Choose the closest broad enum and put the narrow subtype in stable_qualifiers.
-- Use `system` for named software systems, APIs, services, databases, platforms, and infrastructure components.
-- Use `organization` for named teams, departments, groups, operations groups, review groups, and other
-  organizational units.
-- Use `document` for named policies, checklists, handbooks, manuals, reports, notes, memos, runbooks, guides,
-  registers, notices, bulletins, and other text-bearing artifacts.
-- Use `artifact` for named non-document deliverables, files, packages, models, datasets, dashboards, tables,
-  schemas, templates, or physical/operational objects.
-- Use `event` for named meetings, reviews, launches, incidents, sessions, rounds, exercises, drills, and
-  time-bounded happenings.
-- Use `workflow` for named recurring processes, pipelines, playbooks, procedures, or operating flows.
-- Use `project` for named project plans, launch plans, migration plans, release plans, and implementation plans.
-- Use `work_item` for named tasks, tickets, issues, backlog items, milestones, and action items.
-- Do not classify a named organizational unit as `workflow` merely because it owns operations or delivery work.
-- Invalid examples: `policy`, `checklist`, `handbook`, `manual`, `report`, `note`, `memo`, `runbook`,
-  `review`, `meeting`, `incident`, `service`, `api`, `database`, `ticket`.
-- Correct these by selecting the broad enum: policy/checklist/handbook/manual/report/note/memo/runbook ->
-  `document`; review/meeting/incident -> `event`; service/api/database -> `system`; ticket/issue/task ->
-  `work_item`.
-- Use `unknown` when the broad enum is still unclear after reading the subject itself.
-""".strip()
-
-
 IDENTITY_PROFILE_RULES_EN = """
 [identity_profile extraction rules]
 Goal: decide "who does this memory belong to" by finding the named noun that owns this memory.
@@ -445,9 +376,9 @@ identity_profile records only who that noun is, not what happened to it.
 
 Field guide:
 1. `who`: a short stable label for the same subject, preserving role or object words when needed.
-2. `entity_type`: the broad subject type, using only allowed enum values.
-3. `surface_forms`: source mentions taken directly from the input or query; do not invent aliases.
-4. `stable_qualifiers` and `evidence`: stable qualifiers, plus audit-only identity evidence.
+2. `surface_forms`: source mentions taken directly from the input or query; do not invent aliases.
+3. `stable_qualifiers`: stable qualifiers that separate same-name or same-prefix subjects.
+4. `definition`: define what the `who` subject noun refers to; do not write memory facts.
 
 Rules:
 - Read the full input or query, then ask: which named noun is this memory mainly about?
@@ -505,10 +436,6 @@ Rules:
 - Time changes, state changes, and conclusion changes belong in memory content, not in a new subject.
 - identity_profile only says "who"; it does not say "what happened".
 - Do not put current state, blocker, owner value, requirement content, conclusion, metric, or time change in it.
-- `entity_type` must use an allowed enum value.
-- Allowed values:
-  {ALLOWED_ENTITY_TYPES_PROMPT}.
-{ENTITY_TYPE_RULES_EN}
 - A Chinese 看板 is usually a named display artifact; use `artifact`, not `system`, unless the text clearly
   names it as a software service or platform.
 - `surface_forms` must come directly from the input or query text and must not invent aliases.
@@ -520,16 +447,9 @@ Rules:
 - Prefer the longest stable Chinese role phrase, such as 上线计划, 运维组, or 消息中心.
 - Do not put record markers such as round, stage, second round, phase 3, current, latest, or history in `stable_qualifiers`.
 - `stable_qualifiers` must not be sentences, current states, or fact summaries.
-- `evidence` may contain only short identity extraction evidence for audit.
-- `evidence` must directly copy identity snippets from the input or query, such as the source subject mention
-  or role word.
-- Do not write explanatory audit sentences like "the sentence subject", "the text directly describes",
-  or "the query directly asks".
-- `evidence` may overlap with `surface_forms`; it proves the identity_profile, not the memory fact.
-- `evidence` must not include current state, result, blocker, owner value, requirement content, or memory facts.
-""".strip().replace("{ALLOWED_ENTITY_TYPES_PROMPT}", ALLOWED_ENTITY_TYPES_PROMPT).replace(
-    "{ENTITY_TYPE_RULES_EN}", ENTITY_TYPE_RULES_EN
-)
+- `definition` should define `who`, such as "named project plan", "named service", or "named team".
+- `definition` must not include current state, result, blocker, owner value, requirement content, or memory facts.
+""".strip()
 
 
 
@@ -1075,7 +995,6 @@ Decide whether two entities should merge.
 Rules:
 - Return merge only when they clearly refer to the same subject.
 - Shared topic, shared requirement, shared blocker, shared workflow, or shared surrounding context is not enough for merge.
-- The same broad entity_type is only eligibility to compare, not evidence to merge.
 - stable_qualifiers are identity-boundary evidence. Different stable identity boundaries should remain separate
   unless the payload gives explicit identity-equivalence evidence.
 - Do not merge an actor/system/project/person with a document/policy/checklist/report/handbook artifact just because the artifact constrains, explains, or is mentioned by the actor.

@@ -31,10 +31,9 @@ def test_load_identity_extraction_suite_reads_cases(tmp_path: Path) -> None:
                         "expected_identities": [
                             {
                                 "who_any": ["x"],
-                                "entity_type_any": ["workflow", "project"],
                                 "surface_forms_all": ["x"],
                                 "stable_qualifiers_any": ["project"],
-                                "evidence_contains_all": ["x"],
+                                "definition_required": True,
                             }
                         ],
                         "forbidden_identity_who": ["y"],
@@ -52,14 +51,13 @@ def test_load_identity_extraction_suite_reads_cases(tmp_path: Path) -> None:
     assert suite["minimum_pass_rate"] == 0.9
     assert len(suite["cases"]) == 1
     assert suite["cases"][0].expected_identities[0].who_any == ["x"]
-    assert suite["cases"][0].expected_identities[0].entity_type_any == ["workflow", "project"]
     assert suite["cases"][0].expected_identities[0].surface_forms_all == ["x"]
     assert suite["cases"][0].expected_identities[0].stable_qualifiers_any == ["project"]
-    assert suite["cases"][0].expected_identities[0].evidence_contains_all == ["x"]
+    assert suite["cases"][0].expected_identities[0].definition_required is True
     assert suite["cases"][0].profile_count == 1
 
 
-def test_zh_identity_profile_suite_uses_identity_evidence() -> None:
+def test_zh_identity_profile_suite_uses_identity_definition() -> None:
     suite = load_identity_extraction_suite(
         Path("memory/evals/prompt_cases/identity_profile_rules_zh_v1.json")
     )
@@ -75,15 +73,19 @@ def test_zh_identity_profile_suite_uses_identity_evidence() -> None:
         "暂缓发布",
         "偏好每周",
     ]
-    invalid_evidence = []
+    invalid_definitions = []
+    missing_definition_checks = []
     for case in suite["cases"]:
         for expected in case.expected_identities:
-            evidence_fragments = expected.evidence_contains_any + expected.evidence_contains_all
-            for fragment in evidence_fragments:
+            if not expected.definition_required:
+                missing_definition_checks.append(case.case_id)
+            definition_fragments = expected.definition_contains_any + expected.definition_contains_all
+            for fragment in definition_fragments:
                 if any(memory_fact in fragment for memory_fact in memory_fact_fragments):
-                    invalid_evidence.append((case.case_id, fragment))
+                    invalid_definitions.append((case.case_id, fragment))
 
-    assert invalid_evidence == []
+    assert invalid_definitions == []
+    assert missing_definition_checks == []
 
 
 def test_score_identity_extraction_case_passes_write_gate_output() -> None:
@@ -96,9 +98,8 @@ def test_score_identity_extraction_case_passes_write_gate_output() -> None:
         expected_identities=[
             ExpectedIdentityProfile(
                 who_any=["Lanturn deployment"],
-                entity_type="workflow",
                 surface_forms_all=["Lanturn deployment"],
-                evidence_contains_all=["cannot enter final validation"],
+                definition_required=True,
             )
         ],
         forbidden_identity_who=["escrow approval form"],
@@ -114,11 +115,8 @@ def test_score_identity_extraction_case_passes_write_gate_output() -> None:
                 "identity_profile_drafts": [
                     {
                         "who": "Lanturn deployment",
-                        "entity_type": "workflow",
                         "surface_forms": ["Lanturn deployment"],
-                        "evidence": [
-                            "Lanturn deployment cannot enter final validation."
-                        ],
+                        "definition": "Named deployment.",
                     }
                 ],
             },
@@ -127,9 +125,7 @@ def test_score_identity_extraction_case_passes_write_gate_output() -> None:
 
     assert result["passed"] is True
     assert result["actual_gate_status"] == "passed"
-    assert result["actual_identities"][0]["evidence"] == [
-        "Lanturn deployment cannot enter final validation."
-    ]
+    assert result["actual_identities"][0]["definition"] == "Named deployment."
 
 
 def test_score_identity_extraction_case_fails_for_forbidden_identity() -> None:
@@ -139,7 +135,7 @@ def test_score_identity_extraction_case_fails_for_forbidden_identity() -> None:
         prompt_key="write_gate",
         payload={"context": "x"},
         expected_gate_status="passed",
-        expected_identities=[ExpectedIdentityProfile(who_any=["Lanturn deployment"], entity_type="workflow")],
+        expected_identities=[ExpectedIdentityProfile(who_any=["Lanturn deployment"])],
         forbidden_identity_who=["escrow approval form"],
     )
 
@@ -150,7 +146,7 @@ def test_score_identity_extraction_case_fails_for_forbidden_identity() -> None:
             "output": {
                 "identity_gate_status": "passed",
                 "identity_profile_drafts": [
-                    {"who": "escrow approval form", "entity_type": "document"},
+                    {"who": "escrow approval form"},
                 ],
             },
         },
@@ -168,7 +164,7 @@ def test_score_identity_extraction_case_reads_query_planner_profiles() -> None:
         prompt_key="query_planner",
         payload={"query": "x"},
         expected_gate_status="passed",
-        expected_identities=[ExpectedIdentityProfile(who_any=["STP.N"], entity_type="market_object")],
+        expected_identities=[ExpectedIdentityProfile(who_any=["STP.N"])],
     )
 
     result = score_identity_extraction_case(
@@ -178,7 +174,7 @@ def test_score_identity_extraction_case_reads_query_planner_profiles() -> None:
             "output": {
                 "query_gate_status": "passed",
                 "query_identity_profile_drafts": [
-                    {"who": "STP.N", "entity_type": "market_object"},
+                    {"who": "STP.N"},
                 ],
             },
         },
@@ -188,7 +184,7 @@ def test_score_identity_extraction_case_reads_query_planner_profiles() -> None:
     assert result["actual_identities"][0]["who"] == "STP.N"
 
 
-def test_score_identity_extraction_case_accepts_entity_type_any() -> None:
+def test_score_identity_extraction_case_does_not_require_entity_type() -> None:
     case = IdentityExtractionCase(
         case_id="record_marker",
         category="boundary",
@@ -198,7 +194,6 @@ def test_score_identity_extraction_case_accepts_entity_type_any() -> None:
         expected_identities=[
             ExpectedIdentityProfile(
                 who_any=["Meridian onboarding"],
-                entity_type_any=["workflow", "project", "work_item"],
             )
         ],
     )
@@ -210,7 +205,7 @@ def test_score_identity_extraction_case_accepts_entity_type_any() -> None:
             "output": {
                 "query_gate_status": "passed",
                 "query_identity_profile_drafts": [
-                    {"who": "Meridian onboarding", "entity_type": "project"},
+                    {"who": "Meridian onboarding"},
                 ],
             },
         },
@@ -219,7 +214,7 @@ def test_score_identity_extraction_case_accepts_entity_type_any() -> None:
     assert result["passed"] is True
 
 
-def test_score_identity_extraction_case_checks_surface_qualifiers_and_evidence() -> None:
+def test_score_identity_extraction_case_checks_surface_qualifiers_and_definition() -> None:
     case = IdentityExtractionCase(
         case_id="full_profile_fields",
         category="boundary",
@@ -229,10 +224,9 @@ def test_score_identity_extraction_case_checks_surface_qualifiers_and_evidence()
         expected_identities=[
             ExpectedIdentityProfile(
                 who_any=["Cedar QA policy"],
-                entity_type="document",
                 surface_forms_all=["Cedar QA policy"],
                 stable_qualifiers_any=["QA policy", "policy"],
-                evidence_contains_all=["release ticket"],
+                definition_contains_all=["policy"],
             )
         ],
     )
@@ -246,10 +240,9 @@ def test_score_identity_extraction_case_checks_surface_qualifiers_and_evidence()
                 "identity_profile_drafts": [
                     {
                         "who": "Cedar QA policy",
-                        "entity_type": "document",
                         "surface_forms": ["Cedar QA policy"],
                         "stable_qualifiers": ["policy"],
-                        "evidence": ["requires every release ticket to attach a parity matrix"],
+                        "definition": "Named QA policy.",
                     },
                 ],
             },
@@ -269,10 +262,9 @@ def test_score_identity_extraction_case_fails_missing_profile_fields() -> None:
         expected_identities=[
             ExpectedIdentityProfile(
                 who_any=["Cedar QA policy"],
-                entity_type="document",
                 surface_forms_all=["Cedar QA policy"],
                 stable_qualifiers_all=["policy"],
-                evidence_contains_all=["release ticket"],
+                definition_required=True,
             )
         ],
     )
@@ -286,10 +278,9 @@ def test_score_identity_extraction_case_fails_missing_profile_fields() -> None:
                 "identity_profile_drafts": [
                     {
                         "who": "Cedar QA policy",
-                        "entity_type": "document",
                         "surface_forms": ["Cedar policy"],
                         "stable_qualifiers": [],
-                        "evidence": ["requires parity matrix"],
+                        "definition": "",
                     },
                 ],
             },
@@ -299,7 +290,7 @@ def test_score_identity_extraction_case_fails_missing_profile_fields() -> None:
     assert result["passed"] is False
     assert any("surface_forms missing" in failure for failure in result["failures"])
     assert any("stable_qualifiers missing" in failure for failure in result["failures"])
-    assert any("evidence missing" in failure for failure in result["failures"])
+    assert any("definition is required" in failure for failure in result["failures"])
 
 
 def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:
@@ -312,7 +303,6 @@ def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:
         expected_identities=[
             ExpectedIdentityProfile(
                 who_any=["Cedar QA policy"],
-                entity_type="document",
                 surface_forms_all=["Cedar QA policy"],
             )
         ],
@@ -327,7 +317,6 @@ def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:
                 "identity_profile_drafts": [
                     {
                         "who": "Cedar QA policy",
-                        "entity_type": "document",
                         "surface_forms": ["Cedar QA policy", "Cedar policy"],
                     },
                 ],
@@ -349,7 +338,6 @@ def test_score_identity_extraction_case_fails_non_exact_profile_count() -> None:
         expected_identities=[
             ExpectedIdentityProfile(
                 who_any=["Cedar QA policy"],
-                entity_type="document",
             )
         ],
         profile_count=1,
@@ -362,8 +350,8 @@ def test_score_identity_extraction_case_fails_non_exact_profile_count() -> None:
             "output": {
                 "identity_gate_status": "passed",
                 "identity_profile_drafts": [
-                    {"who": "Cedar QA policy", "entity_type": "document"},
-                    {"who": "release ticket", "entity_type": "work_item"},
+                    {"who": "Cedar QA policy"},
+                    {"who": "release ticket"},
                 ],
             },
         },
@@ -401,7 +389,7 @@ def test_write_report_files_outputs_json_and_markdown(tmp_path: Path) -> None:
                     "prompt_key": "write_gate",
                     "passed": True,
                     "failures": [],
-                    "actual_identities": [{"who": "x", "entity_type": "workflow"}],
+                    "actual_identities": [{"who": "x", "definition": "Named subject."}],
                 }
             ],
         },

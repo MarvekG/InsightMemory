@@ -1,42 +1,8 @@
 from __future__ import annotations
 
-from typing import get_args
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
-
-EntityType = Literal[
-    "person",
-    "organization",
-    "market_object",
-    "system",
-    "document",
-    "artifact",
-    "project",
-    "work_item",
-    "workflow",
-    "event",
-    "decision",
-    "strategy",
-    "concept",
-    "unknown",
-]
-ENTITY_TYPE_VALUES = tuple(get_args(EntityType))
-ENTITY_TYPES = set(ENTITY_TYPE_VALUES)
-
-
-def normalize_entity_type(value: object) -> str:
-    """将 LLM 输出的实体类型规范化为受支持枚举。
-
-    Args:
-        value: LLM 输出的原始实体类型。
-
-    Returns:
-        合法的实体类型；未知或非法时返回 `unknown`，避免 schema 错误变成 HTTP 500。
-    """
-
-    text = str(value or "").strip().lower()
-    return text if text in ENTITY_TYPES else "unknown"
 
 
 class IdentityProfileDraft(BaseModel):
@@ -45,10 +11,9 @@ class IdentityProfileDraft(BaseModel):
     schema_version: Literal[2] = 2
     draft_id: str = Field(..., min_length=1)
     who: str = Field(..., min_length=1, max_length=255)
-    entity_type: EntityType
     surface_forms: list[str] = Field(default_factory=list)
     stable_qualifiers: list[str] = Field(default_factory=list)
-    evidence: list[str] = Field(default_factory=list)
+    definition: str = Field(default="", max_length=512)
 
     @model_validator(mode="before")
     @classmethod
@@ -65,20 +30,6 @@ class IdentityProfileDraft(BaseModel):
         if not isinstance(value, dict):
             return value
         return {**value, "schema_version": 2}
-
-    @field_validator("entity_type", mode="before")
-    @classmethod
-    def normalize_entity_type_field(cls, value: object) -> str:
-        """将 profile draft 的非法实体类型降级为 `unknown`。
-
-        Args:
-            value: LLM 输出的原始实体类型。
-
-        Returns:
-            合法的实体类型枚举值。
-        """
-
-        return normalize_entity_type(value)
 
 
 class QueryIdentityProfileDraft(IdentityProfileDraft):
@@ -231,10 +182,9 @@ class ProfileWriterOutput(BaseModel):
 
     schema_version: Literal[2] = 2
     who: str = Field(..., min_length=1, max_length=255)
-    entity_type: EntityType
     surface_forms: list[str] = Field(default_factory=list)
     stable_qualifiers: list[str] = Field(default_factory=list)
-    evidence: list[str] = Field(default_factory=list)
+    definition: str = Field(default="", max_length=512)
 
     @model_validator(mode="before")
     @classmethod
@@ -251,20 +201,6 @@ class ProfileWriterOutput(BaseModel):
         if not isinstance(value, dict):
             return value
         return {**value, "schema_version": 2}
-
-    @field_validator("entity_type", mode="before")
-    @classmethod
-    def normalize_entity_type_field(cls, value: object) -> str:
-        """将 profile writer 的非法实体类型降级为 `unknown`。
-
-        Args:
-            value: LLM 输出的原始实体类型。
-
-        Returns:
-            合法的实体类型枚举值。
-        """
-
-        return normalize_entity_type(value)
 
 
 class EdgeRelation(BaseModel):

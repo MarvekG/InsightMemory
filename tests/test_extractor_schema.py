@@ -17,17 +17,15 @@ def test_identity_profile_draft_uses_v2_fields_under_original_name() -> None:
         {
             "draft_id": "draft_commodity_risk_handbook",
             "who": "Commodity risk handbook",
-            "entity_type": "document",
             "surface_forms": ["Commodity risk handbook"],
             "stable_qualifiers": ["risk handbook"],
-            "evidence": ["The source calls it a handbook."],
+            "definition": "Named risk handbook.",
         }
     )
 
     assert draft.schema_version == 2
-    assert draft.entity_type == "document"
     assert draft.stable_qualifiers == ["risk handbook"]
-    assert draft.evidence == ["The source calls it a handbook."]
+    assert draft.definition == "Named risk handbook."
 
 
 def test_identity_profile_schema_version_is_fixed_in_code() -> None:
@@ -36,7 +34,6 @@ def test_identity_profile_schema_version_is_fixed_in_code() -> None:
             "schema_version": 1,
             "draft_id": "draft_access_policy",
             "who": "Access recovery policy",
-            "entity_type": "document",
             "surface_forms": ["Access recovery policy"],
         }
     )
@@ -45,7 +42,6 @@ def test_identity_profile_schema_version_is_fixed_in_code() -> None:
         {
             "schema_version": 1,
             "who": "Phoenix review",
-            "entity_type": "event",
             "surface_forms": ["Phoenix review"],
         }
     )
@@ -54,49 +50,46 @@ def test_identity_profile_schema_version_is_fixed_in_code() -> None:
     assert output.schema_version == 2
 
 
-def test_identity_profile_draft_rejects_legacy_distinguishing_context() -> None:
+def test_identity_profile_draft_rejects_removed_distinguishing_context() -> None:
     with pytest.raises(ValidationError):
         IdentityProfileDraft.model_validate(
             {
                 "schema_version": 2,
                 "draft_id": "draft_commodity_risk_handbook",
                 "who": "Commodity risk handbook",
-                "entity_type": "document",
                 "surface_forms": ["Commodity risk handbook"],
                 "distinguishing_context": ["handbook"],
             }
         )
 
 
-def test_identity_profile_draft_normalizes_unknown_entity_type() -> None:
-    draft = IdentityProfileDraft.model_validate(
-        {
-            "schema_version": 2,
-            "draft_id": "draft_access_policy",
-            "who": "Access recovery policy",
-            "entity_type": "policy",
-            "surface_forms": ["Access recovery policy"],
-            "stable_qualifiers": ["policy"],
-            "evidence": ["The source names Access recovery policy."],
-        }
-    )
+def test_identity_profile_draft_rejects_removed_fields() -> None:
+    with pytest.raises(ValidationError):
+        IdentityProfileDraft.model_validate(
+            {
+                "schema_version": 2,
+                "draft_id": "draft_access_policy",
+                "who": "Access recovery policy",
+                "entity_type": "policy",
+                "surface_forms": ["Access recovery policy"],
+                "stable_qualifiers": ["policy"],
+                "evidence": ["The source names Access recovery policy."],
+            }
+        )
 
-    assert draft.entity_type == "unknown"
 
-
-def test_profile_writer_output_normalizes_unknown_entity_type() -> None:
-    output = ProfileWriterOutput.model_validate(
-        {
-            "schema_version": 2,
-            "who": "Phoenix review",
-            "entity_type": "review",
-            "surface_forms": ["Phoenix review"],
-            "stable_qualifiers": ["review"],
-            "evidence": ["The source names Phoenix review."],
-        }
-    )
-
-    assert output.entity_type == "unknown"
+def test_profile_writer_output_rejects_removed_fields() -> None:
+    with pytest.raises(ValidationError):
+        ProfileWriterOutput.model_validate(
+            {
+                "schema_version": 2,
+                "who": "Phoenix review",
+                "entity_type": "review",
+                "surface_forms": ["Phoenix review"],
+                "stable_qualifiers": ["review"],
+                "evidence": ["The source names Phoenix review."],
+            }
+        )
 
 
 def test_extractor_allows_long_temporary_refs() -> None:
@@ -111,10 +104,9 @@ def test_extractor_allows_long_temporary_refs() -> None:
                     "schema_version": 2,
                     "draft_id": long_draft_id,
                     "who": "Commodity risk handbook",
-                    "entity_type": "document",
                     "surface_forms": ["Commodity risk handbook"],
                     "stable_qualifiers": ["handbook"],
-                    "evidence": ["The source names Commodity risk handbook."],
+                    "definition": "Named commodity risk handbook.",
                 }
             ],
             "candidates": [

@@ -16,7 +16,6 @@
           "who_any": [
             "松岭上线计划"
           ],
-          "entity_type": "project",
           "surface_forms_all": [
             "松岭上线计划"
           ],
@@ -24,10 +23,7 @@
             "上线计划",
             "计划"
           ],
-          "evidence_contains_any": [
-            "松岭上线计划",
-            "上线计划"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -48,17 +44,13 @@
           "who_any": [
             "临时权限回收制度"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "临时权限回收制度"
           ],
           "stable_qualifiers_any": [
             "制度"
           ],
-          "evidence_contains_any": [
-            "临时权限回收制度",
-            "制度"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -79,13 +71,10 @@
           "who_any": [
             "周明"
           ],
-          "entity_type": "person",
           "surface_forms_all": [
             "周明"
           ],
-          "evidence_contains_any": [
-            "周明"
-          ]
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -103,17 +92,13 @@
           "who_any": [
             "北桥运维组"
           ],
-          "entity_type": "organization",
           "surface_forms_all": [
             "北桥运维组"
           ],
           "stable_qualifiers_any": [
             "运维组"
           ],
-          "evidence_contains_any": [
-            "北桥运维组",
-            "运维组"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -134,17 +119,13 @@
           "who_any": [
             "青岚结算服务"
           ],
-          "entity_type": "system",
           "surface_forms_all": [
             "青岚结算服务"
           ],
           "stable_qualifiers_any": [
             "服务"
           ],
-          "evidence_contains_any": [
-            "青岚结算服务",
-            "服务"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -165,17 +146,13 @@
           "who_any": [
             "槐庭评审会"
           ],
-          "entity_type": "event",
           "surface_forms_all": [
             "槐庭评审会"
           ],
           "stable_qualifiers_any": [
             "评审会"
           ],
-          "evidence_contains_any": [
-            "槐庭评审会",
-            "评审会"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -196,17 +173,13 @@
           "who_any": [
             "流量告警看板"
           ],
-          "entity_type": "artifact",
           "surface_forms_all": [
             "流量告警看板"
           ],
           "stable_qualifiers_any": [
             "看板"
           ],
-          "evidence_contains_any": [
-            "流量告警看板",
-            "看板"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -228,13 +201,10 @@
           "who_any": [
             "海岳电池"
           ],
-          "entity_type": "market_object",
           "surface_forms_all": [
             "海岳电池"
           ],
-          "evidence_contains_any": [
-            "海岳电池"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -256,17 +226,13 @@
           "who_any": [
             "南仓工单甲十七"
           ],
-          "entity_type": "work_item",
           "surface_forms_all": [
             "南仓工单甲十七"
           ],
           "stable_qualifiers_any": [
             "工单"
           ],
-          "evidence_contains_any": [
-            "南仓工单甲十七",
-            "工单"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -288,7 +254,6 @@
           "who_any": [
             "白塔换班流程"
           ],
-          "entity_type": "workflow",
           "surface_forms_all": [
             "白塔换班流程"
           ],
@@ -296,10 +261,7 @@
             "流程",
             "换班流程"
           ],
-          "evidence_contains_any": [
-            "白塔换班流程",
-            "流程"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -321,17 +283,13 @@
           "who_any": [
             "霞港交接手册"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "霞港交接手册"
           ],
           "stable_qualifiers_any": [
             "手册"
           ],
-          "evidence_contains_any": [
-            "霞港交接手册",
-            "手册"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -353,7 +311,6 @@
           "who_any": [
             "春谷防守策略"
           ],
-          "entity_type": "strategy",
           "surface_forms_all": [
             "春谷防守策略"
           ],
@@ -361,10 +318,7 @@
             "策略",
             "防守策略"
           ],
-          "evidence_contains_any": [
-            "春谷防守策略",
-            "策略"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -386,7 +340,6 @@
           "who_any": [
             "松岭上线计划"
           ],
-          "entity_type": "project",
           "surface_forms_all": [
             "松岭上线计划"
           ],
@@ -394,10 +347,7 @@
             "上线计划",
             "计划"
           ],
-          "evidence_contains_any": [
-            "松岭上线计划",
-            "上线计划"
-          ]
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -415,17 +365,13 @@
           "who_any": [
             "临时权限回收制度"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "临时权限回收制度"
           ],
           "stable_qualifiers_any": [
             "制度"
           ],
-          "evidence_contains_any": [
-            "临时权限回收制度",
-            "制度"
-          ]
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -443,13 +389,10 @@
           "who_any": [
             "周明"
           ],
-          "entity_type": "person",
           "surface_forms_all": [
             "周明"
           ],
-          "evidence_contains_any": [
-            "周明"
-          ]
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -467,17 +410,13 @@
           "who_any": [
             "青岚结算服务"
           ],
-          "entity_type": "system",
           "surface_forms_all": [
             "青岚结算服务"
           ],
           "stable_qualifiers_any": [
             "服务"
           ],
-          "evidence_contains_any": [
-            "青岚结算服务",
-            "服务"
-          ]
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -495,17 +434,13 @@
           "who_any": [
             "流量告警看板"
           ],
-          "entity_type": "artifact",
           "surface_forms_all": [
             "流量告警看板"
           ],
           "stable_qualifiers_any": [
             "看板"
           ],
-          "evidence_contains_any": [
-            "流量告警看板",
-            "看板"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -526,13 +461,10 @@
           "who_any": [
             "海岳电池"
           ],
-          "entity_type": "market_object",
           "surface_forms_all": [
             "海岳电池"
           ],
-          "evidence_contains_any": [
-            "海岳电池"
-          ]
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -550,17 +482,13 @@
           "who_any": [
             "槐庭评审会"
           ],
-          "entity_type": "event",
           "surface_forms_all": [
             "槐庭评审会"
           ],
           "stable_qualifiers_any": [
             "评审会"
           ],
-          "evidence_contains_any": [
-            "槐庭评审会",
-            "评审会"
-          ]
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -578,7 +506,6 @@
           "who_any": [
             "白塔换班流程"
           ],
-          "entity_type": "workflow",
           "surface_forms_all": [
             "白塔换班流程"
           ],
@@ -586,10 +513,7 @@
             "流程",
             "换班流程"
           ],
-          "evidence_contains_any": [
-            "白塔换班流程",
-            "流程"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -610,13 +534,10 @@
           "who_any": [
             "海岳电池"
           ],
-          "entity_type": "market_object",
           "surface_forms_all": [
             "海岳电池"
           ],
-          "evidence_contains_any": [
-            "海岳电池"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -638,17 +559,13 @@
           "who_any": [
             "青竹迁移清单"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "青竹迁移清单"
           ],
           "stable_qualifiers_any": [
             "清单"
           ],
-          "evidence_contains_any": [
-            "青竹迁移清单",
-            "清单"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -669,17 +586,13 @@
           "who_any": [
             "南仓工单甲十七"
           ],
-          "entity_type": "work_item",
           "surface_forms_all": [
             "南仓工单甲十七"
           ],
           "stable_qualifiers_any": [
             "工单"
           ],
-          "evidence_contains_any": [
-            "南仓工单甲十七",
-            "工单"
-          ]
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -697,7 +610,6 @@
           "who_any": [
             "春谷防守策略"
           ],
-          "entity_type": "strategy",
           "surface_forms_all": [
             "春谷防守策略"
           ],
@@ -705,10 +617,7 @@
             "策略",
             "防守策略"
           ],
-          "evidence_contains_any": [
-            "春谷防守策略",
-            "策略"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -729,7 +638,6 @@
           "who_any": [
             "青竹迁移计划"
           ],
-          "entity_type": "project",
           "surface_forms_all": [
             "青竹迁移计划"
           ],
@@ -737,42 +645,31 @@
             "计划",
             "迁移计划"
           ],
-          "evidence_contains_any": [
-            "青竹迁移计划",
-            "计划"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "青竹迁移清单"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "青竹迁移清单"
           ],
           "stable_qualifiers_any": [
             "清单"
           ],
-          "evidence_contains_any": [
-            "青竹迁移清单",
-            "清单"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "青竹迁移手册"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "青竹迁移手册"
           ],
           "stable_qualifiers_any": [
             "手册"
           ],
-          "evidence_contains_any": [
-            "青竹迁移手册",
-            "手册"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -795,7 +692,6 @@
           "who_any": [
             "霜河发布流程"
           ],
-          "entity_type": "workflow",
           "surface_forms_all": [
             "霜河发布流程"
           ],
@@ -803,16 +699,12 @@
             "流程",
             "发布流程"
           ],
-          "evidence_contains_any": [
-            "霜河发布流程",
-            "流程"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "霜河发布公告"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "霜河发布公告"
           ],
@@ -820,10 +712,7 @@
             "公告",
             "发布公告"
           ],
-          "evidence_contains_any": [
-            "霜河发布公告",
-            "公告"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -846,33 +735,25 @@
           "who_any": [
             "南港登记册"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "南港登记册"
           ],
           "stable_qualifiers_any": [
             "登记册"
           ],
-          "evidence_contains_any": [
-            "南港登记册",
-            "登记册"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "南港核对表"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "南港核对表"
           ],
           "stable_qualifiers_any": [
             "核对表"
           ],
-          "evidence_contains_any": [
-            "南港核对表",
-            "核对表"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -895,29 +776,22 @@
           "who_any": [
             "陈岚"
           ],
-          "entity_type": "person",
           "surface_forms_all": [
             "陈岚"
           ],
-          "evidence_contains_any": [
-            "陈岚"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "东桥数据组"
           ],
-          "entity_type": "organization",
           "surface_forms_all": [
             "东桥数据组"
           ],
           "stable_qualifiers_any": [
             "数据组"
           ],
-          "evidence_contains_any": [
-            "东桥数据组",
-            "数据组"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -939,19 +813,15 @@
           "who_any": [
             "海岳电池"
           ],
-          "entity_type": "market_object",
           "surface_forms_all": [
             "海岳电池"
           ],
-          "evidence_contains_any": [
-            "海岳电池"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "海岳调研纪要"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "海岳调研纪要"
           ],
@@ -959,10 +829,7 @@
             "纪要",
             "调研纪要"
           ],
-          "evidence_contains_any": [
-            "海岳调研纪要",
-            "纪要"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -985,33 +852,25 @@
           "who_any": [
             "星河门户"
           ],
-          "entity_type": "system",
           "surface_forms_all": [
             "星河门户"
           ],
           "stable_qualifiers_any": [
             "门户"
           ],
-          "evidence_contains_any": [
-            "星河门户",
-            "门户"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "星河门户消息中心"
           ],
-          "entity_type": "system",
           "surface_forms_all": [
             "星河门户消息中心"
           ],
           "stable_qualifiers_any": [
             "消息中心"
           ],
-          "evidence_contains_any": [
-            "星河门户消息中心",
-            "消息中心"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1032,7 +891,6 @@
           "who_any": [
             "春谷防守策略"
           ],
-          "entity_type": "strategy",
           "surface_forms_all": [
             "春谷防守策略"
           ],
@@ -1040,16 +898,12 @@
             "策略",
             "防守策略"
           ],
-          "evidence_contains_any": [
-            "春谷防守策略",
-            "策略"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "春谷风控手册"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "春谷风控手册"
           ],
@@ -1057,10 +911,7 @@
             "手册",
             "风控手册"
           ],
-          "evidence_contains_any": [
-            "春谷风控手册",
-            "手册"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1083,23 +934,18 @@
           "who_any": [
             "槐庭评审会"
           ],
-          "entity_type": "event",
           "surface_forms_all": [
             "槐庭评审会"
           ],
           "stable_qualifiers_any": [
             "评审会"
           ],
-          "evidence_contains_any": [
-            "槐庭评审会",
-            "评审会"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "槐庭整改工单"
           ],
-          "entity_type": "work_item",
           "surface_forms_all": [
             "槐庭整改工单"
           ],
@@ -1107,10 +953,7 @@
             "工单",
             "整改工单"
           ],
-          "evidence_contains_any": [
-            "槐庭整改工单",
-            "工单"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [

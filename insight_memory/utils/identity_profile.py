@@ -22,24 +22,14 @@ def identity_profile_refresh_risk(
 
     current_who = normalize_text(current_profile.get("who")).casefold()
     proposed_who = normalize_text(proposed_profile.get("who")).casefold()
-    current_type = normalize_text(current_profile.get("entity_type")).casefold()
-    proposed_type = normalize_text(proposed_profile.get("entity_type")).casefold()
     if proposed_profile.get("schema_version") != 2:
         return "reject", "schema_version_must_be_2"
-    if (
-        current_type
-        and proposed_type
-        and current_type != "unknown"
-        and proposed_type != "unknown"
-        and current_type != proposed_type
-    ):
-        return "needs_identity_review", "entity_type_conflict"
     proposed_surfaces = {
         normalize_text(item).casefold()
         for item in proposed_profile.get("surface_forms") or []
         if normalize_text(item)
     }
-    if current_who and proposed_who and proposed_who != current_who and proposed_who not in proposed_surfaces:
+    if current_who and proposed_who and proposed_who != current_who and current_who not in proposed_surfaces:
         return "needs_identity_review", "who_changed_without_alias"
     return "safe", "safe_additive_update"
 

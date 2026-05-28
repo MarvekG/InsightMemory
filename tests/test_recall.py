@@ -512,10 +512,9 @@ def test_resolve_entity_uses_graph_first_when_entity_local_has_unique_candidate(
         identity_profile={
             "schema_version": 2,
             "who": "Orion service",
-            "entity_type": "system",
             "surface_forms": ["Orion service"],
             "stable_qualifiers": ["service"],
-            "evidence": ["The profile names Orion service."],
+            "definition": "Named service.",
         },
     )
     memory = SimpleNamespace(summary="Orion service 当前负责人是 Mina。")
@@ -561,10 +560,9 @@ def test_resolve_entity_uses_graph_first_when_entity_local_has_unique_candidate(
                 "draft_payload": {
                     "schema_version": 2,
                     "who": "Orion service",
-                    "entity_type": "system",
                     "surface_forms": ["Orion service"],
                     "stable_qualifiers": ["service"],
-                    "evidence": ["The query names Orion service."],
+                    "definition": "Named service.",
                     "query_text": "Orion service 当前负责人是谁？",
                 },
                 "stage_timings_ms": {},
@@ -900,7 +898,7 @@ def test_resolve_entity_falls_back_to_linker_when_planner_intent_is_cross_entity
     assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "graph_intent_cross_entity"
 
 
-def test_resolve_entity_falls_back_to_linker_when_entity_type_conflicts(monkeypatch) -> None:
+def test_resolve_entity_uses_graph_first_without_entity_type(monkeypatch) -> None:
     graph = RecallGraph()
     entity = SimpleNamespace(
         entity_key="ent_project",
@@ -908,10 +906,9 @@ def test_resolve_entity_falls_back_to_linker_when_entity_type_conflicts(monkeypa
         identity_profile={
             "schema_version": 2,
             "who": "Orion runbook",
-            "entity_type": "project",
             "surface_forms": ["Orion runbook"],
-            "stable_qualifiers": ["project"],
-            "evidence": ["The profile says this is a project."],
+            "stable_qualifiers": ["runbook"],
+            "definition": "Named runbook.",
         },
     )
 
@@ -956,10 +953,9 @@ def test_resolve_entity_falls_back_to_linker_when_entity_type_conflicts(monkeypa
                 "draft_payload": {
                     "schema_version": 2,
                     "who": "Orion runbook",
-                    "entity_type": "document",
                     "surface_forms": ["Orion runbook"],
                     "stable_qualifiers": ["runbook"],
-                    "evidence": ["The query names a runbook."],
+                    "definition": "Named runbook.",
                     "query_text": "Orion runbook 当前要求是什么？",
                 },
                 "stage_timings_ms": {},
@@ -968,10 +964,9 @@ def test_resolve_entity_falls_back_to_linker_when_entity_type_conflicts(monkeypa
         )
     )
 
-    assert len(workers.link_calls) == 1
-    assert result.get("entity_key") is None
-    assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is False
-    assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "identity_match_not_found"
+    assert workers.link_calls == []
+    assert result["entity_key"] == "ent_project"
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is True
 
 
 def _run_recall_memories_with_graph_intent(monkeypatch, graph_expansion_intent: str) -> tuple[dict, list[str]]:

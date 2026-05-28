@@ -24,14 +24,13 @@ class ExpectedIdentityProfile:
     """单个期望 identity_profile 的判分条件。"""
 
     who_any: list[str]
-    entity_type: str | None = None
-    entity_type_any: list[str] = field(default_factory=list)
     surface_forms_any: list[str] = field(default_factory=list)
     surface_forms_all: list[str] = field(default_factory=list)
     stable_qualifiers_any: list[str] = field(default_factory=list)
     stable_qualifiers_all: list[str] = field(default_factory=list)
-    evidence_contains_any: list[str] = field(default_factory=list)
-    evidence_contains_all: list[str] = field(default_factory=list)
+    definition_required: bool = False
+    definition_contains_any: list[str] = field(default_factory=list)
+    definition_contains_all: list[str] = field(default_factory=list)
 
 
 @dataclass(slots=True)
@@ -71,8 +70,6 @@ def load_identity_extraction_suite(path: Path) -> dict[str, Any]:
                 expected_identities=[
                     ExpectedIdentityProfile(
                         who_any=[str(value) for value in profile.get("who_any") or []],
-                        entity_type=profile.get("entity_type"),
-                        entity_type_any=[str(value) for value in profile.get("entity_type_any") or []],
                         surface_forms_any=[str(value) for value in profile.get("surface_forms_any") or []],
                         surface_forms_all=[str(value) for value in profile.get("surface_forms_all") or []],
                         stable_qualifiers_any=[
@@ -81,11 +78,12 @@ def load_identity_extraction_suite(path: Path) -> dict[str, Any]:
                         stable_qualifiers_all=[
                             str(value) for value in profile.get("stable_qualifiers_all") or []
                         ],
-                        evidence_contains_any=[
-                            str(value) for value in profile.get("evidence_contains_any") or []
+                        definition_required=bool(profile.get("definition_required", False)),
+                        definition_contains_any=[
+                            str(value) for value in profile.get("definition_contains_any") or []
                         ],
-                        evidence_contains_all=[
-                            str(value) for value in profile.get("evidence_contains_all") or []
+                        definition_contains_all=[
+                            str(value) for value in profile.get("definition_contains_all") or []
                         ],
                     )
                     for profile in item.get("expected_identities") or []
@@ -130,10 +128,7 @@ def score_identity_extraction_case(case: IdentityExtractionCase, response: dict[
     for expected in case.expected_identities:
         matched_profile = _find_matching_identity_profile(profiles, expected)
         if matched_profile is None:
-            failures.append(
-                "missing expected identity "
-                f"who_any={expected.who_any!r} entity_type={_expected_entity_type_text(expected)!r}"
-            )
+            failures.append(f"missing expected identity who_any={expected.who_any!r}")
             continue
         failures.extend(_score_profile_fields(matched_profile, expected))
 
@@ -212,11 +207,8 @@ def _find_matching_identity_profile(
     identities: list[dict[str, Any]], expected: ExpectedIdentityProfile
 ) -> dict[str, Any] | None:
     expected_names = {_normalize_text(value) for value in expected.who_any}
-    expected_types = _expected_entity_types(expected)
     for profile in identities:
         if _normalize_text(profile.get("who")) not in expected_names:
-            continue
-        if expected_types and profile.get("entity_type") not in expected_types:
             continue
         return profile
     return None
@@ -240,11 +232,34 @@ def _score_profile_fields(profile: dict[str, Any], expected: ExpectedIdentityPro
         )
     )
     failures.extend(
+        _score_definition_field(
+            profile=profile,
+            definition_required=expected.definition_required,
+            expected_any=expected.definition_contains_any,
+            expected_all=expected.definition_contains_all,
+        )
+    )
+    return failures
+
+
+def _score_definition_field(
+    *,
+    profile: dict[str, Any],
+    definition_required: bool,
+    expected_any: list[str],
+    expected_all: list[str],
+) -> list[str]:
+    failures: list[str] = []
+    definition = _normalize_text(profile.get("definition"))
+    if definition_required and not definition:
+        failures.append("definition is required")
+        return failures
+    failures.extend(
         _score_contains_list_field(
             profile=profile,
-            field_name="evidence",
-            expected_any=expected.evidence_contains_any,
-            expected_all=expected.evidence_contains_all,
+            field_name="definition",
+            expected_any=expected_any,
+            expected_all=expected_all,
         )
     )
     return failures
@@ -311,7 +326,11 @@ def _score_contains_list_field(
     expected_any: list[str],
     expected_all: list[str],
 ) -> list[str]:
-    text = _normalize_text(" ".join(_list_field(profile, field_name)))
+    raw_value = profile.get(field_name)
+    if isinstance(raw_value, list):
+        text = _normalize_text(" ".join(str(item) for item in raw_value))
+    else:
+        text = _normalize_text(raw_value)
     failures: list[str] = []
     if expected_any and not any(_normalize_text(value) in text for value in expected_any):
         failures.append(f"{field_name} contains none of {expected_any!r}")
@@ -332,22 +351,6 @@ def _list_field(profile: dict[str, Any], field_name: str) -> list[str]:
     return [str(item) for item in value]
 
 
-def _expected_entity_types(expected: ExpectedIdentityProfile) -> set[str]:
-    values = set(expected.entity_type_any)
-    if expected.entity_type:
-        values.add(expected.entity_type)
-    return values
-
-
-def _expected_entity_type_text(expected: ExpectedIdentityProfile) -> str | list[str] | None:
-    values = sorted(_expected_entity_types(expected))
-    if not values:
-        return None
-    if len(values) == 1:
-        return values[0]
-    return values
-
-
 def _case_result(*, case: IdentityExtractionCase, response: dict[str, Any], failures: list[str]) -> dict[str, Any]:
     output = dict(response.get("output") or {})
     profiles = _extract_profiles(output)
@@ -362,10 +365,9 @@ def _case_result(*, case: IdentityExtractionCase, response: dict[str, Any], fail
         "actual_identities": [
             {
                 "who": profile.get("who"),
-                "entity_type": profile.get("entity_type"),
                 "surface_forms": profile.get("surface_forms") or [],
                 "stable_qualifiers": profile.get("stable_qualifiers") or [],
-                "evidence": profile.get("evidence") or [],
+                "definition": profile.get("definition") or "",
             }
             for profile in profiles
         ],

@@ -124,17 +124,15 @@ def _profile(
     *,
     draft_id: str,
     who: str,
-    entity_type: str,
     stable_qualifiers: list[str],
 ) -> IdentityProfileDraft:
     return IdentityProfileDraft(
         schema_version=2,
         draft_id=draft_id,
         who=who,
-        entity_type=entity_type,
         surface_forms=[who],
         stable_qualifiers=stable_qualifiers,
-        evidence=[f"The input names {who}."],
+        definition=f"Named subject {who}.",
     )
 
 
@@ -177,9 +175,9 @@ async def test_resolve_entities_delays_new_entity_indexing(monkeypatch: pytest.M
         retrieval_index=retrieval_index,
         workers=workers,
         extractor=_extractor(
-            _profile(draft_id="d1", who="Alpha service", entity_type="system", stable_qualifiers=["service"]),
-            _profile(draft_id="d2", who="Beta checklist", entity_type="document", stable_qualifiers=["checklist"]),
-            _profile(draft_id="d3", who="Gamma review", entity_type="event", stable_qualifiers=["review"]),
+            _profile(draft_id="d1", who="Alpha service", stable_qualifiers=["service"]),
+            _profile(draft_id="d2", who="Beta checklist", stable_qualifiers=["checklist"]),
+            _profile(draft_id="d3", who="Gamma review", stable_qualifiers=["review"]),
         ),
     )
 
@@ -201,8 +199,8 @@ async def test_resolve_entities_reuses_exact_local_identity(monkeypatch: pytest.
         retrieval_index=retrieval_index,
         workers=workers,
         extractor=_extractor(
-            _profile(draft_id="d1", who="Alpha service", entity_type="system", stable_qualifiers=["service"]),
-            _profile(draft_id="d2", who="Alpha service", entity_type="system", stable_qualifiers=["service"]),
+            _profile(draft_id="d1", who="Alpha service", stable_qualifiers=["service"]),
+            _profile(draft_id="d2", who="Alpha service", stable_qualifiers=["service"]),
         ),
     )
 
@@ -225,10 +223,9 @@ async def test_resolve_entities_still_links_against_historical_candidates(
         identity_profile={
             "schema_version": 2,
             "who": "Alpha service",
-            "entity_type": "system",
             "surface_forms": ["Alpha service"],
             "stable_qualifiers": ["service"],
-            "evidence": ["The input names Alpha service."],
+            "definition": "Named subject Alpha service.",
         },
     )
     retrieval_index = _FakeRetrievalIndex(indexed_entities=[historical])
@@ -246,7 +243,7 @@ async def test_resolve_entities_still_links_against_historical_candidates(
         retrieval_index=retrieval_index,
         workers=workers,
         extractor=_extractor(
-            _profile(draft_id="d1", who="Alpha service", entity_type="system", stable_qualifiers=["service"]),
+            _profile(draft_id="d1", who="Alpha service", stable_qualifiers=["service"]),
         ),
     )
 

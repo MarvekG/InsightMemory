@@ -67,10 +67,9 @@ class _FakeGateWorkers:
                     schema_version=2,
                     draft_id="d1",
                     who="Atlas review",
-                    entity_type="event",
                     surface_forms=["Atlas review"],
                     stable_qualifiers=["review"],
-                    evidence=["The input names Atlas review."],
+                    definition="Named review.",
                 )
             ]
             if self.gate_status == "passed"
@@ -158,19 +157,17 @@ def test_run_write_gate_normalizes_drafts_and_rejects_empty_surface_forms(
                         schema_version=2,
                         draft_id="d1",
                         who="  Atlas review  ",
-                        entity_type="event",
                         surface_forms=["Atlas review", "Atlas review"],
                         stable_qualifiers=[" review ", "review"],
-                        evidence=[" Atlas review is named. ", "Atlas review is named."],
+                        definition=" Named review. ",
                     ),
                     IdentityProfileDraft(
                         schema_version=2,
                         draft_id="d2",
                         who="No surface",
-                        entity_type="unknown",
                         surface_forms=[],
                         stable_qualifiers=[],
-                        evidence=[],
+                        definition="",
                     ),
                 ],
             )
@@ -197,10 +194,9 @@ def test_run_write_gate_normalizes_drafts_and_rejects_empty_surface_forms(
             "schema_version": 2,
             "draft_id": "d1",
             "who": "Atlas review",
-            "entity_type": "event",
             "surface_forms": ["Atlas review"],
             "stable_qualifiers": ["review"],
-            "evidence": ["Atlas review is named."],
+            "definition": "Named review.",
         }
     ]
 
@@ -277,10 +273,9 @@ def test_ingest_graph_continue_ingest_runs_full_extractor_from_context(monkeypat
                 schema_version=2,
                 draft_id="d1",
                 who="Atlas review",
-                entity_type="event",
                 surface_forms=["Atlas review"],
                 stable_qualifiers=["review"],
-                evidence=["The input names Atlas review."],
+                definition="Named review.",
             )
         ],
         candidates=[],

@@ -19,12 +19,7 @@
           "surface_forms_all": [
             "Lanturn deployment"
           ],
-          "evidence_contains_any": [
-            "subject",
-            "Lanturn deployment",
-            "final validation"
-          ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -45,14 +40,10 @@
           "who_any": [
             "Cedar QA policy"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "Cedar QA policy"
           ],
-          "evidence_contains_any": [
-            "requires",
-            "Cedar QA policy"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -74,27 +65,19 @@
           "who_any": [
             "Ravel import service"
           ],
-          "entity_type": "system",
           "surface_forms_all": [
             "Ravel import service"
           ],
-          "evidence_contains_any": [
-            "owned by Priya",
-            "Ravel import service"
-          ]
+          "definition_required": true
         },
         {
           "who_any": [
             "Ravel import checklist"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "Ravel import checklist"
           ],
-          "evidence_contains_any": [
-            "maintained by Tomas",
-            "customs packet readiness"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -115,13 +98,10 @@
           "who_any": [
             "STP.N"
           ],
-          "entity_type": "market_object",
           "surface_forms_all": [
             "STP.N"
           ],
-          "evidence_contains_all": [
-            "STP.N"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -146,10 +126,7 @@
           "surface_forms_all": [
             "Meridian onboarding"
           ],
-          "evidence_contains_all": [
-            "Meridian onboarding"
-          ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -174,12 +151,7 @@
           "surface_forms_all": [
             "Vireo billing migration"
           ],
-          "evidence_contains_any": [
-            "subject",
-            "Vireo billing migration",
-            "moved to amber"
-          ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -205,12 +177,7 @@
           "surface_forms_all": [
             "Briarwatch rollout"
           ],
-          "evidence_contains_any": [
-            "Briarwatch rollout",
-            "turnover",
-            "berth packet"
-          ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -219,11 +186,7 @@
           "surface_forms_all": [
             "Drumlin review"
           ],
-          "evidence_contains_any": [
-            "Drumlin review",
-            "Mila Song"
-          ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -251,11 +214,7 @@
           "surface_forms_all": [
             "Latchmere plan"
           ],
-          "evidence_contains_any": [
-            "Latchmere plan",
-            "berth packet"
-          ],
-          "entity_type": "project"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -264,11 +223,7 @@
           "surface_forms_all": [
             "Latchmere review"
           ],
-          "evidence_contains_any": [
-            "Latchmere review",
-            "Noor Patel"
-          ],
-          "entity_type": "event"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -277,11 +232,7 @@
           "surface_forms_all": [
             "Latchmere bulletin"
           ],
-          "evidence_contains_any": [
-            "Latchmere bulletin",
-            "quay tag"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -290,11 +241,7 @@
           "surface_forms_all": [
             "Latchmere register"
           ],
-          "evidence_contains_any": [
-            "Latchmere register",
-            "8 hours"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -303,11 +250,7 @@
           "surface_forms_all": [
             "Latchmere checklist"
           ],
-          "evidence_contains_any": [
-            "Latchmere checklist",
-            "seal memo"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -332,11 +275,7 @@
           "surface_forms_all": [
             "Oakspan rollout"
           ],
-          "evidence_contains_any": [
-            "Oakspan rollout",
-            "rollback annex"
-          ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -345,11 +284,7 @@
           "surface_forms_all": [
             "Ridgepath checklist"
           ],
-          "evidence_contains_any": [
-            "Ridgepath checklist",
-            "approver signature"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -358,11 +293,7 @@
           "surface_forms_all": [
             "Talon review"
           ],
-          "evidence_contains_any": [
-            "Talon review",
-            "Mira Chen"
-          ],
-          "entity_type": "event"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -371,11 +302,7 @@
           "surface_forms_all": [
             "Quarry dashboard"
           ],
-          "evidence_contains_any": [
-            "Quarry dashboard",
-            "18 分钟"
-          ],
-          "entity_type": "artifact"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -384,11 +311,7 @@
           "surface_forms_all": [
             "Westbay handbook"
           ],
-          "evidence_contains_any": [
-            "Westbay handbook",
-            "handoff packet"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -416,12 +339,7 @@
           "surface_forms_all": [
             "Tideline register"
           ],
-          "evidence_contains_any": [
-            "Tideline register",
-            "artifact | state | note",
-            "crate note"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -430,12 +348,7 @@
           "surface_forms_all": [
             "Tideline checklist"
           ],
-          "evidence_contains_any": [
-            "Tideline checklist",
-            "artifact | rule | note",
-            "requirement"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -457,14 +370,10 @@
           "who_any": [
             "Elmfield handbook"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "Elmfield handbook"
           ],
-          "evidence_contains_any": [
-            "Elmfield handbook",
-            "handbook"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -488,14 +397,10 @@
           "who_any": [
             "North Quill chart manual"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "North Quill chart manual"
           ],
-          "evidence_contains_any": [
-            "North Quill chart manual",
-            "manual"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -521,11 +426,7 @@
           "surface_forms_all": [
             "MX-17A"
           ],
-          "evidence_contains_any": [
-            "MX-17A",
-            "ticket"
-          ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -549,14 +450,10 @@
           "who_any": [
             "Access policy"
           ],
-          "entity_type": "document",
           "surface_forms_all": [
             "Access policy"
           ],
-          "evidence_contains_any": [
-            "Access policy",
-            "要求"
-          ]
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -581,11 +478,7 @@
           "surface_forms_all": [
             "Aster observatory docket"
           ],
-          "evidence_contains_any": [
-            "Aster observatory docket",
-            "Ilya North"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -594,11 +487,7 @@
           "surface_forms_all": [
             "Aster observatory ledger"
           ],
-          "evidence_contains_any": [
-            "Aster observatory ledger",
-            "Mara Pike"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -607,11 +496,7 @@
           "surface_forms_all": [
             "Aster observatory queue"
           ],
-          "evidence_contains_any": [
-            "Aster observatory queue",
-            "Soren Vale"
-          ],
-          "entity_type": "artifact"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -620,11 +505,7 @@
           "surface_forms_all": [
             "Aster observatory bulletin"
           ],
-          "evidence_contains_any": [
-            "Aster observatory bulletin",
-            "Nira Holt"
-          ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -653,13 +534,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -681,13 +559,10 @@
           "surface_forms_all": [
             "Briar release card"
           ],
-          "evidence_contains_any": [
-            "Briar release card"
-          ],
           "stable_qualifiers_any": [
             "card"
           ],
-          "entity_type": "artifact"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -709,13 +584,10 @@
           "surface_forms_all": [
             "Driftwood rollout"
           ],
-          "evidence_contains_any": [
-            "Driftwood rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -740,13 +612,10 @@
           "surface_forms_all": [
             "Aurora service"
           ],
-          "evidence_contains_any": [
-            "Aurora service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -768,13 +637,10 @@
           "surface_forms_all": [
             "Deltaframe service"
           ],
-          "evidence_contains_any": [
-            "Deltaframe service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -796,13 +662,10 @@
           "surface_forms_all": [
             "Code review pipeline"
           ],
-          "evidence_contains_any": [
-            "Code review pipeline"
-          ],
           "stable_qualifiers_any": [
             "pipeline"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -824,13 +687,10 @@
           "surface_forms_all": [
             "Morrowfield register"
           ],
-          "evidence_contains_any": [
-            "Morrowfield register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -852,13 +712,10 @@
           "surface_forms_all": [
             "Siltmere bulletin"
           ],
-          "evidence_contains_any": [
-            "Siltmere bulletin"
-          ],
-          "entity_type": "document",
           "stable_qualifiers_any": [
             "bulletin"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -880,13 +737,10 @@
           "surface_forms_all": [
             "Sundial rollout"
           ],
-          "evidence_contains_any": [
-            "Sundial rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -911,13 +765,10 @@
           "surface_forms_all": [
             "Aetherpoint rollout"
           ],
-          "evidence_contains_any": [
-            "Aetherpoint rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -942,13 +793,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -973,13 +821,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1004,13 +849,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1032,13 +874,10 @@
           "surface_forms_all": [
             "Marlowe herbarium accession request"
           ],
-          "evidence_contains_any": [
-            "Marlowe herbarium accession request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1063,13 +902,10 @@
           "surface_forms_all": [
             "Marlowe herbarium accession request"
           ],
-          "evidence_contains_any": [
-            "Marlowe herbarium accession request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1094,13 +930,10 @@
           "surface_forms_all": [
             "Stonebridge ETF rebalance memo"
           ],
-          "evidence_contains_any": [
-            "Stonebridge ETF rebalance memo"
-          ],
           "stable_qualifiers_any": [
             "memo"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1122,13 +955,10 @@
           "surface_forms_all": [
             "Kestrel transit review"
           ],
-          "evidence_contains_any": [
-            "Kestrel transit review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1150,13 +980,10 @@
           "surface_forms_all": [
             "Willow handover notice"
           ],
-          "evidence_contains_any": [
-            "Willow handover notice"
-          ],
           "stable_qualifiers_any": [
             "notice"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1178,13 +1005,10 @@
           "surface_forms_all": [
             "Seaborne service"
           ],
-          "evidence_contains_any": [
-            "Seaborne service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1206,13 +1030,10 @@
           "surface_forms_all": [
             "Access recovery policy"
           ],
-          "evidence_contains_any": [
-            "Access recovery policy"
-          ],
           "stable_qualifiers_any": [
             "policy"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1234,13 +1055,10 @@
           "surface_forms_all": [
             "Database failover runbook"
           ],
-          "evidence_contains_any": [
-            "Database failover runbook"
-          ],
           "stable_qualifiers_any": [
             "runbook"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1262,13 +1080,10 @@
           "surface_forms_all": [
             "Rill custody docket"
           ],
-          "evidence_contains_any": [
-            "Rill custody docket"
-          ],
           "stable_qualifiers_any": [
             "doc"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1290,13 +1105,10 @@
           "surface_forms_all": [
             "Mica transit review"
           ],
-          "evidence_contains_any": [
-            "Mica transit review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1318,13 +1130,10 @@
           "surface_forms_all": [
             "Orchid transfer project"
           ],
-          "evidence_contains_any": [
-            "Orchid transfer project"
-          ],
           "stable_qualifiers_any": [
             "transfer"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1346,13 +1155,10 @@
           "surface_forms_all": [
             "Database migration"
           ],
-          "evidence_contains_any": [
-            "Database migration"
-          ],
           "stable_qualifiers_any": [
             "database"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1374,13 +1180,10 @@
           "surface_forms_all": [
             "Verdant project"
           ],
-          "evidence_contains_any": [
-            "Verdant project"
-          ],
           "stable_qualifiers_any": [
             "project"
           ],
-          "entity_type": "project"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1402,13 +1205,10 @@
           "surface_forms_all": [
             "Rook rollout"
           ],
-          "evidence_contains_any": [
-            "Rook rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1430,13 +1230,10 @@
           "surface_forms_all": [
             "Bluepeak Holdings"
           ],
-          "evidence_contains_any": [
-            "Bluepeak Holdings"
-          ],
           "stable_qualifiers_any": [
             "holdings"
           ],
-          "entity_type": "market_object"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1458,13 +1255,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1486,13 +1280,10 @@
           "surface_forms_all": [
             "Quarterly transfer briefing"
           ],
-          "evidence_contains_any": [
-            "Quarterly transfer briefing"
-          ],
           "stable_qualifiers_any": [
             "briefing"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1518,13 +1309,10 @@
           "surface_forms_all": [
             "Quarterly transfer briefing"
           ],
-          "evidence_contains_any": [
-            "Quarterly transfer briefing"
-          ],
           "stable_qualifiers_any": [
             "briefing"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1550,13 +1338,10 @@
           "surface_forms_all": [
             "Project Titan"
           ],
-          "evidence_contains_any": [
-            "Project Titan"
-          ],
           "stable_qualifiers_any": [
             "project"
           ],
-          "entity_type": "project"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1578,13 +1363,10 @@
           "surface_forms_all": [
             "Northstar rollout"
           ],
-          "evidence_contains_any": [
-            "Northstar rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1609,13 +1391,10 @@
           "surface_forms_all": [
             "API Endpoint"
           ],
-          "evidence_contains_any": [
-            "API Endpoint"
-          ],
           "stable_qualifiers_any": [
             "api"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1637,13 +1416,10 @@
           "surface_forms_all": [
             "Kite archive digitization request"
           ],
-          "evidence_contains_any": [
-            "Kite archive digitization request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1668,13 +1444,10 @@
           "surface_forms_all": [
             "Kite archive digitization request"
           ],
-          "evidence_contains_any": [
-            "Kite archive digitization request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1699,13 +1472,10 @@
           "surface_forms_all": [
             "Coral exhibit manual"
           ],
-          "evidence_contains_any": [
-            "Coral exhibit manual"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1727,13 +1497,10 @@
           "surface_forms_all": [
             "Kite archive digitization request"
           ],
-          "evidence_contains_any": [
-            "Kite archive digitization request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1758,13 +1525,10 @@
           "surface_forms_all": [
             "Seaford vessel"
           ],
-          "evidence_contains_any": [
-            "Seaford vessel"
-          ],
-          "entity_type": "artifact",
           "stable_qualifiers_any": [
             "vessel"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -1789,13 +1553,10 @@
           "surface_forms_all": [
             "NPI binder"
           ],
-          "evidence_contains_any": [
-            "NPI binder"
-          ],
           "stable_qualifiers_any": [
             "binder"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1817,13 +1578,10 @@
           "surface_forms_all": [
             "Willow kitchen renovation"
           ],
-          "evidence_contains_any": [
-            "Willow kitchen renovation"
-          ],
-          "entity_type": "project",
           "stable_qualifiers_any": [
             "renovation"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1845,10 +1603,7 @@
           "surface_forms_all": [
             "Milo"
           ],
-          "evidence_contains_any": [
-            "Milo"
-          ],
-          "entity_type": "person"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1870,10 +1625,7 @@
           "surface_forms_all": [
             "Nova"
           ],
-          "evidence_contains_any": [
-            "Nova"
-          ],
-          "entity_type": "person"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1895,13 +1647,10 @@
           "surface_forms_all": [
             "Atlas checkout API v2"
           ],
-          "evidence_contains_any": [
-            "Atlas checkout API v2"
-          ],
           "stable_qualifiers_any": [
             "api"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1923,13 +1672,10 @@
           "surface_forms_all": [
             "Harbor printer procurement"
           ],
-          "evidence_contains_any": [
-            "Harbor printer procurement"
-          ],
-          "entity_type": "project",
           "stable_qualifiers_any": [
             "procurement"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1951,13 +1697,10 @@
           "surface_forms_all": [
             "Operations team"
           ],
-          "evidence_contains_any": [
-            "Operations team"
-          ],
           "stable_qualifiers_any": [
             "team"
           ],
-          "entity_type": "organization"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -1979,13 +1722,10 @@
           "surface_forms_all": [
             "Ashgrove handbook"
           ],
-          "evidence_contains_any": [
-            "Ashgrove handbook"
-          ],
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2007,13 +1747,10 @@
           "surface_forms_all": [
             "Ashgrove handbook"
           ],
-          "evidence_contains_any": [
-            "Ashgrove handbook"
-          ],
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2035,13 +1772,10 @@
           "surface_forms_all": [
             "Lumen ferry dossier"
           ],
-          "evidence_contains_any": [
-            "Lumen ferry dossier"
-          ],
           "stable_qualifiers_any": [
             "dossier"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -2066,13 +1800,10 @@
           "surface_forms_all": [
             "Sundial rollout"
           ],
-          "evidence_contains_any": [
-            "Sundial rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -2097,13 +1828,10 @@
           "surface_forms_all": [
             "Sable clinic review"
           ],
-          "evidence_contains_any": [
-            "Sable clinic review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2125,13 +1853,10 @@
           "surface_forms_all": [
             "Orbit rollout"
           ],
-          "evidence_contains_any": [
-            "Orbit rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2153,13 +1878,10 @@
           "surface_forms_all": [
             "Prism plan"
           ],
-          "evidence_contains_any": [
-            "Prism plan"
-          ],
           "stable_qualifiers_any": [
             "plan"
           ],
-          "entity_type": "project"
+          "definition_required": true
         }
       ],
       "forbidden_identity_who": [
@@ -2184,13 +1906,10 @@
           "surface_forms_all": [
             "Nova review"
           ],
-          "evidence_contains_any": [
-            "Nova review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2212,13 +1931,10 @@
           "surface_forms_all": [
             "Project Aurora"
           ],
-          "evidence_contains_any": [
-            "Project Aurora"
-          ],
           "stable_qualifiers_any": [
             "project"
           ],
-          "entity_type": "project"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2240,10 +1956,7 @@
           "surface_forms_all": [
             "Jordan Lee"
           ],
-          "evidence_contains_any": [
-            "Jordan Lee"
-          ],
-          "entity_type": "person"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2265,13 +1978,10 @@
           "surface_forms_all": [
             "Briar compliance guide"
           ],
-          "evidence_contains_any": [
-            "Briar compliance guide"
-          ],
           "stable_qualifiers_any": [
             "guide"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2293,13 +2003,10 @@
           "surface_forms_all": [
             "Readiness checklist"
           ],
-          "evidence_contains_any": [
-            "Readiness checklist"
-          ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2321,13 +2028,10 @@
           "surface_forms_all": [
             "Aurora manual"
           ],
-          "evidence_contains_any": [
-            "Aurora manual"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2349,13 +2053,10 @@
           "surface_forms_all": [
             "Deltaframe service"
           ],
-          "evidence_contains_any": [
-            "Deltaframe service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2377,13 +2078,10 @@
           "surface_forms_all": [
             "System rollback procedure"
           ],
-          "evidence_contains_any": [
-            "System rollback procedure"
-          ],
           "stable_qualifiers_any": [
             "procedure"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2405,13 +2103,10 @@
           "surface_forms_all": [
             "Correction note for Morrowfield register"
           ],
-          "evidence_contains_any": [
-            "Correction note for Morrowfield register"
-          ],
           "stable_qualifiers_any": [
             "note"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2433,13 +2128,10 @@
           "surface_forms_all": [
             "Siltmere bulletin"
           ],
-          "evidence_contains_any": [
-            "Siltmere bulletin"
-          ],
-          "entity_type": "document",
           "stable_qualifiers_any": [
             "bulletin"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2461,13 +2153,10 @@
           "surface_forms_all": [
             "Release checklist"
           ],
-          "evidence_contains_any": [
-            "Release checklist"
-          ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2489,13 +2178,10 @@
           "surface_forms_all": [
             "Aetherpoint checklist"
           ],
-          "evidence_contains_any": [
-            "Aetherpoint checklist"
-          ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2517,13 +2203,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2545,13 +2228,10 @@
           "surface_forms_all": [
             "Billing service"
           ],
-          "evidence_contains_any": [
-            "Billing service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2573,13 +2253,10 @@
           "surface_forms_all": [
             "Data sync service"
           ],
-          "evidence_contains_any": [
-            "Data sync service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2601,13 +2278,10 @@
           "surface_forms_all": [
             "Custody register"
           ],
-          "evidence_contains_any": [
-            "Custody register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2629,13 +2303,10 @@
           "surface_forms_all": [
             "Custody register"
           ],
-          "evidence_contains_any": [
-            "Custody register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2657,13 +2328,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2685,13 +2353,10 @@
           "surface_forms_all": [
             "Briar release card"
           ],
-          "evidence_contains_any": [
-            "Briar release card"
-          ],
           "stable_qualifiers_any": [
             "card"
           ],
-          "entity_type": "artifact"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2713,13 +2378,10 @@
           "surface_forms_all": [
             "Quartz relay service"
           ],
-          "evidence_contains_any": [
-            "Quartz relay service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2741,13 +2403,10 @@
           "surface_forms_all": [
             "Aurora manual"
           ],
-          "evidence_contains_any": [
-            "Aurora manual"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2769,13 +2428,10 @@
           "surface_forms_all": [
             "Deltaframe service"
           ],
-          "evidence_contains_any": [
-            "Deltaframe service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2797,13 +2453,10 @@
           "surface_forms_all": [
             "Code review pipeline"
           ],
-          "evidence_contains_any": [
-            "Code review pipeline"
-          ],
           "stable_qualifiers_any": [
             "pipeline"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2825,13 +2478,10 @@
           "surface_forms_all": [
             "Pinewick manual"
           ],
-          "evidence_contains_any": [
-            "Pinewick manual"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2853,13 +2503,10 @@
           "surface_forms_all": [
             "Pinewick manual"
           ],
-          "evidence_contains_any": [
-            "Pinewick manual"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2881,13 +2528,10 @@
           "surface_forms_all": [
             "Sundial rollout"
           ],
-          "evidence_contains_any": [
-            "Sundial rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2909,13 +2553,10 @@
           "surface_forms_all": [
             "Why can’t Blackthorn packet release"
           ],
-          "evidence_contains_any": [
-            "Why can’t Blackthorn packet release"
-          ],
           "stable_qualifiers_any": [
             "packet"
           ],
-          "entity_type": "artifact"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2937,13 +2578,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2965,13 +2603,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -2993,13 +2628,10 @@
           "surface_forms_all": [
             "Marlowe herbarium accession request"
           ],
-          "evidence_contains_any": [
-            "Marlowe herbarium accession request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3021,13 +2653,10 @@
           "surface_forms_all": [
             "Marlowe herbarium accession request"
           ],
-          "evidence_contains_any": [
-            "Marlowe herbarium accession request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3049,13 +2678,10 @@
           "surface_forms_all": [
             "Everpoint sector note"
           ],
-          "evidence_contains_any": [
-            "Everpoint sector note"
-          ],
           "stable_qualifiers_any": [
             "note"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3077,13 +2703,10 @@
           "surface_forms_all": [
             "Juniper quay docket"
           ],
-          "evidence_contains_any": [
-            "Juniper quay docket"
-          ],
           "stable_qualifiers_any": [
             "doc"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3105,13 +2728,10 @@
           "surface_forms_all": [
             "Juniper quay docket"
           ],
-          "evidence_contains_any": [
-            "Juniper quay docket"
-          ],
           "stable_qualifiers_any": [
             "doc"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3133,13 +2753,10 @@
           "surface_forms_all": [
             "Seaborne checklist"
           ],
-          "evidence_contains_any": [
-            "Seaborne checklist"
-          ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3161,13 +2778,10 @@
           "surface_forms_all": [
             "Access recovery policy"
           ],
-          "evidence_contains_any": [
-            "Access recovery policy"
-          ],
           "stable_qualifiers_any": [
             "policy"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3189,13 +2803,10 @@
           "surface_forms_all": [
             "Access recovery policy"
           ],
-          "evidence_contains_any": [
-            "Access recovery policy"
-          ],
           "stable_qualifiers_any": [
             "policy"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3217,13 +2828,10 @@
           "surface_forms_all": [
             "Nacre berth queue"
           ],
-          "evidence_contains_any": [
-            "Nacre berth queue"
-          ],
-          "entity_type": "work_item",
           "stable_qualifiers_any": [
             "queue"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3245,13 +2853,10 @@
           "surface_forms_all": [
             "Nacre berth queue"
           ],
-          "evidence_contains_any": [
-            "Nacre berth queue"
-          ],
-          "entity_type": "work_item",
           "stable_qualifiers_any": [
             "queue"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3273,13 +2878,10 @@
           "surface_forms_all": [
             "Orchid transfer checklist"
           ],
-          "evidence_contains_any": [
-            "Orchid transfer checklist"
-          ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3301,13 +2903,10 @@
           "surface_forms_all": [
             "Payment Service"
           ],
-          "evidence_contains_any": [
-            "Payment Service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3329,13 +2928,10 @@
           "surface_forms_all": [
             "Verdant project"
           ],
-          "evidence_contains_any": [
-            "Verdant project"
-          ],
           "stable_qualifiers_any": [
             "project"
           ],
-          "entity_type": "project"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3357,13 +2953,10 @@
           "surface_forms_all": [
             "Rook rollout"
           ],
-          "evidence_contains_any": [
-            "Rook rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3385,13 +2978,10 @@
           "surface_forms_all": [
             "Bluepeak Holdings"
           ],
-          "evidence_contains_any": [
-            "Bluepeak Holdings"
-          ],
           "stable_qualifiers_any": [
             "holdings"
           ],
-          "entity_type": "market_object"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3413,13 +3003,10 @@
           "surface_forms_all": [
             "Billing service"
           ],
-          "evidence_contains_any": [
-            "Billing service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3441,13 +3028,10 @@
           "surface_forms_all": [
             "Briarwatch rollout"
           ],
-          "evidence_contains_any": [
-            "Briarwatch rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3469,13 +3053,10 @@
           "surface_forms_all": [
             "Briarwatch rollout"
           ],
-          "evidence_contains_any": [
-            "Briarwatch rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3497,13 +3078,10 @@
           "surface_forms_all": [
             "Guest account"
           ],
-          "evidence_contains_any": [
-            "Guest account"
-          ],
-          "entity_type": "artifact",
           "stable_qualifiers_any": [
             "account"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3525,13 +3103,10 @@
           "surface_forms_all": [
             "Access retention policy"
           ],
-          "evidence_contains_any": [
-            "Access retention policy"
-          ],
           "stable_qualifiers_any": [
             "policy"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3553,13 +3128,10 @@
           "surface_forms_all": [
             "API Endpoint"
           ],
-          "evidence_contains_any": [
-            "API Endpoint"
-          ],
           "stable_qualifiers_any": [
             "api"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3581,13 +3153,10 @@
           "surface_forms_all": [
             "Kite archive digitization request"
           ],
-          "evidence_contains_any": [
-            "Kite archive digitization request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3609,13 +3178,10 @@
           "surface_forms_all": [
             "Kite archive digitization request"
           ],
-          "evidence_contains_any": [
-            "Kite archive digitization request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3637,13 +3203,10 @@
           "surface_forms_all": [
             "Coral exhibit manual"
           ],
-          "evidence_contains_any": [
-            "Coral exhibit manual"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3665,13 +3228,10 @@
           "surface_forms_all": [
             "Kite archive digitization request"
           ],
-          "evidence_contains_any": [
-            "Kite archive digitization request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3693,13 +3253,10 @@
           "surface_forms_all": [
             "Archive Hall catalog"
           ],
-          "evidence_contains_any": [
-            "Archive Hall catalog"
-          ],
-          "entity_type": "document",
           "stable_qualifiers_any": [
             "catalog"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3721,13 +3278,10 @@
           "surface_forms_all": [
             "NPI binder"
           ],
-          "evidence_contains_any": [
-            "NPI binder"
-          ],
           "stable_qualifiers_any": [
             "binder"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3749,13 +3303,10 @@
           "surface_forms_all": [
             "Willow kitchen renovation"
           ],
-          "evidence_contains_any": [
-            "Willow kitchen renovation"
-          ],
-          "entity_type": "project",
           "stable_qualifiers_any": [
             "renovation"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3777,10 +3328,7 @@
           "surface_forms_all": [
             "Milo"
           ],
-          "evidence_contains_any": [
-            "Milo"
-          ],
-          "entity_type": "person"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3802,13 +3350,10 @@
           "surface_forms_all": [
             "Nova router"
           ],
-          "evidence_contains_any": [
-            "Nova router"
-          ],
-          "entity_type": "system",
           "stable_qualifiers_any": [
             "router"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3830,13 +3375,10 @@
           "surface_forms_all": [
             "Beacon repo"
           ],
-          "evidence_contains_any": [
-            "Beacon repo"
-          ],
-          "entity_type": "artifact",
           "stable_qualifiers_any": [
             "repo"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3858,13 +3400,10 @@
           "surface_forms_all": [
             "KiteWorks onboarding"
           ],
-          "evidence_contains_any": [
-            "KiteWorks onboarding"
-          ],
           "stable_qualifiers_any": [
             "board"
           ],
-          "entity_type": "organization"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3886,13 +3425,10 @@
           "surface_forms_all": [
             "Ashgrove handbook"
           ],
-          "evidence_contains_any": [
-            "Ashgrove handbook"
-          ],
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3914,13 +3450,10 @@
           "surface_forms_all": [
             "Ashgrove handbook"
           ],
-          "evidence_contains_any": [
-            "Ashgrove handbook"
-          ],
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3942,13 +3475,10 @@
           "surface_forms_all": [
             "Lumen ferry dossier"
           ],
-          "evidence_contains_any": [
-            "Lumen ferry dossier"
-          ],
           "stable_qualifiers_any": [
             "dossier"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3970,13 +3500,10 @@
           "surface_forms_all": [
             "Sundial rollout"
           ],
-          "evidence_contains_any": [
-            "Sundial rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -3998,13 +3525,10 @@
           "surface_forms_all": [
             "Sable clinic review"
           ],
-          "evidence_contains_any": [
-            "Sable clinic review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4026,13 +3550,10 @@
           "surface_forms_all": [
             "Aster rollout"
           ],
-          "evidence_contains_any": [
-            "Aster rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4054,13 +3575,10 @@
           "surface_forms_all": [
             "Nova review"
           ],
-          "evidence_contains_any": [
-            "Nova review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4082,13 +3600,10 @@
           "surface_forms_all": [
             "Project Aurora"
           ],
-          "evidence_contains_any": [
-            "Project Aurora"
-          ],
           "stable_qualifiers_any": [
             "project"
           ],
-          "entity_type": "project"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4110,13 +3625,10 @@
           "surface_forms_all": [
             "Oakspan rollout"
           ],
-          "evidence_contains_any": [
-            "Oakspan rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4138,10 +3650,7 @@
           "surface_forms_all": [
             "002142.SZ"
           ],
-          "evidence_contains_any": [
-            "002142.SZ"
-          ],
-          "entity_type": "market_object"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4163,10 +3672,7 @@
           "surface_forms_all": [
             "Jordan Lee"
           ],
-          "evidence_contains_any": [
-            "Jordan Lee"
-          ],
-          "entity_type": "person"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4188,13 +3694,10 @@
           "surface_forms_all": [
             "Briar release card"
           ],
-          "evidence_contains_any": [
-            "Briar release card"
-          ],
           "stable_qualifiers_any": [
             "card"
           ],
-          "entity_type": "artifact"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4216,13 +3719,10 @@
           "surface_forms_all": [
             "Driftwood rollout"
           ],
-          "evidence_contains_any": [
-            "Driftwood rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4244,13 +3744,10 @@
           "surface_forms_all": [
             "Driftwood rollout"
           ],
-          "evidence_contains_any": [
-            "Driftwood rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4272,13 +3769,10 @@
           "surface_forms_all": [
             "Deltaframe service"
           ],
-          "evidence_contains_any": [
-            "Deltaframe service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4300,13 +3794,10 @@
           "surface_forms_all": [
             "Quality gate process"
           ],
-          "evidence_contains_any": [
-            "Quality gate process"
-          ],
           "stable_qualifiers_any": [
             "process"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4328,13 +3819,10 @@
           "surface_forms_all": [
             "Pinewick manual"
           ],
-          "evidence_contains_any": [
-            "Pinewick manual"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4356,13 +3844,10 @@
           "surface_forms_all": [
             "Pinewick manual"
           ],
-          "evidence_contains_any": [
-            "Pinewick manual"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4384,13 +3869,10 @@
           "surface_forms_all": [
             "Torchline review"
           ],
-          "evidence_contains_any": [
-            "Torchline review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4412,13 +3894,10 @@
           "surface_forms_all": [
             "Atlas checklist"
           ],
-          "evidence_contains_any": [
-            "Atlas checklist"
-          ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4440,13 +3919,10 @@
           "surface_forms_all": [
             "Sundial rollout"
           ],
-          "evidence_contains_any": [
-            "Sundial rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4468,13 +3944,10 @@
           "surface_forms_all": [
             "Perigee survey docket"
           ],
-          "evidence_contains_any": [
-            "Perigee survey docket"
-          ],
           "stable_qualifiers_any": [
             "doc"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4496,13 +3969,10 @@
           "surface_forms_all": [
             "Pinecrest portfolio review"
           ],
-          "evidence_contains_any": [
-            "Pinecrest portfolio review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4524,13 +3994,10 @@
           "surface_forms_all": [
             "Willow handover notice"
           ],
-          "evidence_contains_any": [
-            "Willow handover notice"
-          ],
           "stable_qualifiers_any": [
             "notice"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4552,13 +4019,10 @@
           "surface_forms_all": [
             "Oakspan rollout"
           ],
-          "evidence_contains_any": [
-            "Oakspan rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4580,10 +4044,7 @@
           "surface_forms_all": [
             "Mina Chen"
           ],
-          "evidence_contains_any": [
-            "Mina Chen"
-          ],
-          "entity_type": "person"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -4605,28 +4066,22 @@
           "surface_forms_all": [
             "Briar release card"
           ],
-          "evidence_contains_any": [
-            "Briar release card"
-          ],
           "stable_qualifiers_any": [
             "card"
           ],
-          "entity_type": "artifact"
+          "definition_required": true
         },
         {
           "who_any": [
             "Briar compliance guide"
           ],
           "surface_forms_all": [
-            "Briar compliance guide"
-          ],
-          "evidence_contains_any": [
             "Briar compliance guide"
           ],
           "stable_qualifiers_any": [
             "guide"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -4635,13 +4090,10 @@
           "surface_forms_all": [
             "Briar training roster"
           ],
-          "evidence_contains_any": [
-            "Briar training roster"
-          ],
           "stable_qualifiers_any": [
             "roster"
           ],
-          "entity_type": "artifact"
+          "definition_required": true
         }
       ],
       "profile_count": 3
@@ -4663,13 +4115,10 @@
           "surface_forms_all": [
             "Driftwood rollout"
           ],
-          "evidence_contains_any": [
-            "Driftwood rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -4678,13 +4127,10 @@
           "surface_forms_all": [
             "Readiness checklist"
           ],
-          "evidence_contains_any": [
-            "Readiness checklist"
-          ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -4706,43 +4152,34 @@
           "surface_forms_all": [
             "Aurora service"
           ],
-          "evidence_contains_any": [
-            "Aurora service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         },
         {
           "who_any": [
             "Aurora manual"
           ],
           "surface_forms_all": [
-            "Aurora manual"
-          ],
-          "evidence_contains_any": [
             "Aurora manual"
           ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
             "Aurora plan"
           ],
           "surface_forms_all": [
-            "Aurora plan"
-          ],
-          "evidence_contains_any": [
             "Aurora plan"
           ],
           "stable_qualifiers_any": [
             "plan"
           ],
-          "entity_type": "project"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -4751,13 +4188,10 @@
           "surface_forms_all": [
             "Aurora review"
           ],
-          "evidence_contains_any": [
-            "Aurora review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 4
@@ -4779,28 +4213,22 @@
           "surface_forms_all": [
             "Seaborne service"
           ],
-          "evidence_contains_any": [
-            "Seaborne service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         },
         {
           "who_any": [
             "Seaborne checklist"
           ],
           "surface_forms_all": [
-            "Seaborne checklist"
-          ],
-          "evidence_contains_any": [
             "Seaborne checklist"
           ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -4809,13 +4237,10 @@
           "surface_forms_all": [
             "Seaborne review"
           ],
-          "evidence_contains_any": [
-            "Seaborne review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 3
@@ -4837,13 +4262,10 @@
           "surface_forms_all": [
             "System rollback procedure"
           ],
-          "evidence_contains_any": [
-            "System rollback procedure"
-          ],
           "stable_qualifiers_any": [
             "procedure"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -4852,13 +4274,10 @@
           "surface_forms_all": [
             "Surgical rollback procedure"
           ],
-          "evidence_contains_any": [
-            "Surgical rollback procedure"
-          ],
           "stable_qualifiers_any": [
             "procedure"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -4880,28 +4299,22 @@
           "surface_forms_all": [
             "Morrowfield register"
           ],
-          "evidence_contains_any": [
-            "Morrowfield register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
             "Correction note for Morrowfield register"
           ],
           "surface_forms_all": [
-            "Correction note for Morrowfield register"
-          ],
-          "evidence_contains_any": [
             "Correction note for Morrowfield register"
           ],
           "stable_qualifiers_any": [
             "note"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -4910,13 +4323,10 @@
           "surface_forms_all": [
             "Appendix to Morrowfield register"
           ],
-          "evidence_contains_any": [
-            "Appendix to Morrowfield register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 3
@@ -4938,13 +4348,10 @@
           "surface_forms_all": [
             "Junebay bulletin"
           ],
-          "evidence_contains_any": [
-            "Junebay bulletin"
-          ],
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -4953,13 +4360,10 @@
           "surface_forms_all": [
             "Junebay bulletin 最新补充"
           ],
-          "evidence_contains_any": [
-            "Junebay bulletin 最新补充"
-          ],
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -4981,28 +4385,22 @@
           "surface_forms_all": [
             "Sundial rollout"
           ],
-          "evidence_contains_any": [
-            "Sundial rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
             "Release checklist"
           ],
           "surface_forms_all": [
-            "Release checklist"
-          ],
-          "evidence_contains_any": [
             "Release checklist"
           ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5011,13 +4409,10 @@
           "surface_forms_all": [
             "Uplink register"
           ],
-          "evidence_contains_any": [
-            "Uplink register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 3
@@ -5039,43 +4434,34 @@
           "surface_forms_all": [
             "Aetherpoint rollout"
           ],
-          "evidence_contains_any": [
-            "Aetherpoint rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
             "Aetherpoint checklist"
           ],
           "surface_forms_all": [
-            "Aetherpoint checklist"
-          ],
-          "evidence_contains_any": [
             "Aetherpoint checklist"
           ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
             "Crestline bulletin"
           ],
           "surface_forms_all": [
-            "Crestline bulletin"
-          ],
-          "evidence_contains_any": [
             "Crestline bulletin"
           ],
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5084,13 +4470,10 @@
           "surface_forms_all": [
             "Dawnfield register"
           ],
-          "evidence_contains_any": [
-            "Dawnfield register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 4
@@ -5112,13 +4495,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5127,13 +4507,10 @@
           "surface_forms_all": [
             "Atlas checklist"
           ],
-          "evidence_contains_any": [
-            "Atlas checklist"
-          ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5155,13 +4532,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5170,13 +4544,10 @@
           "surface_forms_all": [
             "Billing service"
           ],
-          "evidence_contains_any": [
-            "Billing service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5198,28 +4569,22 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
             "Data sync service"
           ],
           "surface_forms_all": [
-            "Data sync service"
-          ],
-          "evidence_contains_any": [
             "Data sync service"
           ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5228,13 +4593,10 @@
           "surface_forms_all": [
             "Recovery handbook"
           ],
-          "evidence_contains_any": [
-            "Recovery handbook"
-          ],
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 3
@@ -5256,13 +4618,10 @@
           "surface_forms_all": [
             "Marlowe herbarium accession request"
           ],
-          "evidence_contains_any": [
-            "Marlowe herbarium accession request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5271,13 +4630,10 @@
           "surface_forms_all": [
             "Custody register"
           ],
-          "evidence_contains_any": [
-            "Custody register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5299,13 +4655,10 @@
           "surface_forms_all": [
             "Marlowe herbarium accession request"
           ],
-          "evidence_contains_any": [
-            "Marlowe herbarium accession request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5314,13 +4667,10 @@
           "surface_forms_all": [
             "Custody register"
           ],
-          "evidence_contains_any": [
-            "Custody register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5342,13 +4692,10 @@
           "surface_forms_all": [
             "Everpoint stock"
           ],
-          "evidence_contains_any": [
-            "Everpoint stock"
-          ],
           "stable_qualifiers_any": [
             "stock"
           ],
-          "entity_type": "market_object"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5357,13 +4704,10 @@
           "surface_forms_all": [
             "Everpoint sector note"
           ],
-          "evidence_contains_any": [
-            "Everpoint sector note"
-          ],
           "stable_qualifiers_any": [
             "note"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5385,13 +4729,10 @@
           "surface_forms_all": [
             "Kestrel transit review"
           ],
-          "evidence_contains_any": [
-            "Kestrel transit review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -5413,13 +4754,10 @@
           "surface_forms_all": [
             "Kestrel transit review"
           ],
-          "evidence_contains_any": [
-            "Kestrel transit review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -5441,28 +4779,22 @@
           "surface_forms_all": [
             "Seaborne service"
           ],
-          "evidence_contains_any": [
-            "Seaborne service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         },
         {
           "who_any": [
             "Seaborne checklist"
           ],
           "surface_forms_all": [
-            "Seaborne checklist"
-          ],
-          "evidence_contains_any": [
             "Seaborne checklist"
           ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5471,13 +4803,10 @@
           "surface_forms_all": [
             "Seaborne review"
           ],
-          "evidence_contains_any": [
-            "Seaborne review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         }
       ],
       "profile_count": 3
@@ -5499,13 +4828,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5514,13 +4840,10 @@
           "surface_forms_all": [
             "Billing service"
           ],
-          "evidence_contains_any": [
-            "Billing service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5542,28 +4865,22 @@
           "surface_forms_all": [
             "Rill custody docket"
           ],
-          "evidence_contains_any": [
-            "Rill custody docket"
-          ],
           "stable_qualifiers_any": [
             "doc"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
             "Rill custody guide"
           ],
           "surface_forms_all": [
-            "Rill custody guide"
-          ],
-          "evidence_contains_any": [
             "Rill custody guide"
           ],
           "stable_qualifiers_any": [
             "guide"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5572,13 +4889,10 @@
           "surface_forms_all": [
             "Rill custody register"
           ],
-          "evidence_contains_any": [
-            "Rill custody register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 3
@@ -5600,13 +4914,10 @@
           "surface_forms_all": [
             "Mica transit review"
           ],
-          "evidence_contains_any": [
-            "Mica transit review"
-          ],
           "stable_qualifiers_any": [
             "review"
           ],
-          "entity_type": "event"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5615,13 +4926,10 @@
           "surface_forms_all": [
             "Departure ordinance"
           ],
-          "evidence_contains_any": [
-            "Departure ordinance"
-          ],
-          "entity_type": "document",
           "stable_qualifiers_any": [
             "ordinance"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5643,28 +4951,22 @@
           "surface_forms_all": [
             "Orchid transfer project"
           ],
-          "evidence_contains_any": [
-            "Orchid transfer project"
-          ],
           "stable_qualifiers_any": [
             "transfer"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
             "Orchid transfer checklist"
           ],
           "surface_forms_all": [
-            "Orchid transfer checklist"
-          ],
-          "evidence_contains_any": [
             "Orchid transfer checklist"
           ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5673,13 +4975,10 @@
           "surface_forms_all": [
             "Orchid transfer handbook"
           ],
-          "evidence_contains_any": [
-            "Orchid transfer handbook"
-          ],
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 3
@@ -5701,58 +5000,46 @@
           "surface_forms_all": [
             "Verdant project"
           ],
-          "evidence_contains_any": [
-            "Verdant project"
-          ],
           "stable_qualifiers_any": [
             "project"
           ],
-          "entity_type": "project"
+          "definition_required": true
         },
         {
           "who_any": [
             "Verdant checklist"
           ],
           "surface_forms_all": [
-            "Verdant checklist"
-          ],
-          "evidence_contains_any": [
             "Verdant checklist"
           ],
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
             "Verdant handbook 规定所有 rollback note 必须附 incident"
           ],
           "surface_forms_all": [
-            "Verdant handbook 规定所有 rollback note 必须附 incident"
-          ],
-          "evidence_contains_any": [
             "Verdant handbook 规定所有 rollback note 必须附 incident"
           ],
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
             "Verdant plan"
           ],
           "surface_forms_all": [
-            "Verdant plan"
-          ],
-          "evidence_contains_any": [
             "Verdant plan"
           ],
           "stable_qualifiers_any": [
             "plan"
           ],
-          "entity_type": "project"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5761,13 +5048,10 @@
           "surface_forms_all": [
             "Verdant register"
           ],
-          "evidence_contains_any": [
-            "Verdant register"
-          ],
           "stable_qualifiers_any": [
             "register"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 5
@@ -5789,13 +5073,10 @@
           "surface_forms_all": [
             "Rook rollout"
           ],
-          "evidence_contains_any": [
-            "Rook rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5804,13 +5085,10 @@
           "surface_forms_all": [
             "Rook rollout 最新更新"
           ],
-          "evidence_contains_any": [
-            "Rook rollout 最新更新"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5832,13 +5110,10 @@
           "surface_forms_all": [
             "Northfield stock"
           ],
-          "evidence_contains_any": [
-            "Northfield stock"
-          ],
           "stable_qualifiers_any": [
             "stock"
           ],
-          "entity_type": "market_object"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5847,13 +5122,10 @@
           "surface_forms_all": [
             "Northfield earnings note"
           ],
-          "evidence_contains_any": [
-            "Northfield earnings note"
-          ],
           "stable_qualifiers_any": [
             "note"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5875,13 +5147,10 @@
           "surface_forms_all": [
             "Northstar rollout"
           ],
-          "evidence_contains_any": [
-            "Northstar rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5890,13 +5159,10 @@
           "surface_forms_all": [
             "Deployment approval policy"
           ],
-          "evidence_contains_any": [
-            "Deployment approval policy"
-          ],
           "stable_qualifiers_any": [
             "policy"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5918,13 +5184,10 @@
           "surface_forms_all": [
             "Kite archive digitization request"
           ],
-          "evidence_contains_any": [
-            "Kite archive digitization request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5933,13 +5196,10 @@
           "surface_forms_all": [
             "Reference finding aid"
           ],
-          "evidence_contains_any": [
-            "Reference finding aid"
-          ],
-          "entity_type": "document",
           "stable_qualifiers_any": [
             "finding aid"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -5961,13 +5221,10 @@
           "surface_forms_all": [
             "Kite archive digitization request"
           ],
-          "evidence_contains_any": [
-            "Kite archive digitization request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -5976,13 +5233,10 @@
           "surface_forms_all": [
             "Reference finding aid"
           ],
-          "evidence_contains_any": [
-            "Reference finding aid"
-          ],
-          "entity_type": "document",
           "stable_qualifiers_any": [
             "finding aid"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -6004,13 +5258,10 @@
           "surface_forms_all": [
             "Coral exhibit manual"
           ],
-          "evidence_contains_any": [
-            "Coral exhibit manual"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -6019,13 +5270,10 @@
           "surface_forms_all": [
             "Coral exhibit manual 最新补充"
           ],
-          "evidence_contains_any": [
-            "Coral exhibit manual 最新补充"
-          ],
           "stable_qualifiers_any": [
             "manual"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -6047,13 +5295,10 @@
           "surface_forms_all": [
             "Kite archive digitization request"
           ],
-          "evidence_contains_any": [
-            "Kite archive digitization request"
-          ],
           "stable_qualifiers_any": [
             "request"
           ],
-          "entity_type": "work_item"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -6062,13 +5307,10 @@
           "surface_forms_all": [
             "Reference finding aid"
           ],
-          "evidence_contains_any": [
-            "Reference finding aid"
-          ],
-          "entity_type": "document",
           "stable_qualifiers_any": [
             "finding aid"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -6090,13 +5332,10 @@
           "surface_forms_all": [
             "Seaford vessel"
           ],
-          "evidence_contains_any": [
-            "Seaford vessel"
-          ],
-          "entity_type": "artifact",
           "stable_qualifiers_any": [
             "vessel"
-          ]
+          ],
+          "definition_required": true
         },
         {
           "who_any": [
@@ -6105,13 +5344,10 @@
           "surface_forms_all": [
             "Seaford manifest"
           ],
-          "evidence_contains_any": [
-            "Seaford manifest"
-          ],
-          "entity_type": "document",
           "stable_qualifiers_any": [
             "manifest"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -6133,13 +5369,10 @@
           "surface_forms_all": [
             "NPI binder"
           ],
-          "evidence_contains_any": [
-            "NPI binder"
-          ],
           "stable_qualifiers_any": [
             "binder"
           ],
-          "entity_type": "document"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -6148,13 +5381,10 @@
           "surface_forms_all": [
             "North Pier incident bulletin"
           ],
-          "evidence_contains_any": [
-            "North Pier incident bulletin"
-          ],
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -6176,13 +5406,10 @@
           "surface_forms_all": [
             "Willow kitchen renovation"
           ],
-          "evidence_contains_any": [
-            "Willow kitchen renovation"
-          ],
-          "entity_type": "project",
           "stable_qualifiers_any": [
             "renovation"
-          ]
+          ],
+          "definition_required": true
         },
         {
           "who_any": [
@@ -6191,13 +5418,10 @@
           "surface_forms_all": [
             "Willow contractor packet"
           ],
-          "evidence_contains_any": [
-            "Willow contractor packet"
-          ],
           "stable_qualifiers_any": [
             "packet"
           ],
-          "entity_type": "artifact"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -6219,13 +5443,10 @@
           "surface_forms_all": [
             "Archive Box K-17"
           ],
-          "evidence_contains_any": [
-            "Archive Box K-17"
-          ],
-          "entity_type": "artifact",
           "stable_qualifiers_any": [
             "box"
-          ]
+          ],
+          "definition_required": true
         },
         {
           "who_any": [
@@ -6234,13 +5455,10 @@
           "surface_forms_all": [
             "K-17 gallery tour"
           ],
-          "evidence_contains_any": [
-            "K-17 gallery tour"
-          ],
-          "entity_type": "event",
           "stable_qualifiers_any": [
             "tour"
-          ]
+          ],
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -6262,13 +5480,10 @@
           "surface_forms_all": [
             "Atlas checkout API v2"
           ],
-          "evidence_contains_any": [
-            "Atlas checkout API v2"
-          ],
           "stable_qualifiers_any": [
             "api"
           ],
-          "entity_type": "system"
+          "definition_required": true
         },
         {
           "who_any": [
@@ -6277,13 +5492,10 @@
           "surface_forms_all": [
             "Atlas API review note"
           ],
-          "evidence_contains_any": [
-            "Atlas API review note"
-          ],
           "stable_qualifiers_any": [
             "note"
           ],
-          "entity_type": "document"
+          "definition_required": true
         }
       ],
       "profile_count": 2
@@ -6353,13 +5565,10 @@
           "surface_forms_all": [
             "Atlas rollout"
           ],
-          "evidence_contains_any": [
-            "Atlas rollout"
-          ],
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -6381,13 +5590,10 @@
           "surface_forms_all": [
             "Briar training roster"
           ],
-          "evidence_contains_any": [
-            "Briar training roster"
-          ],
           "stable_qualifiers_any": [
             "roster"
           ],
-          "entity_type": "artifact"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -6409,13 +5615,10 @@
           "surface_forms_all": [
             "Aurora service"
           ],
-          "evidence_contains_any": [
-            "Aurora service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -6437,13 +5640,10 @@
           "surface_forms_all": [
             "Aurora plan"
           ],
-          "evidence_contains_any": [
-            "Aurora plan"
-          ],
           "stable_qualifiers_any": [
             "plan"
           ],
-          "entity_type": "project"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -6465,13 +5665,10 @@
           "surface_forms_all": [
             "Seaborne service"
           ],
-          "evidence_contains_any": [
-            "Seaborne service"
-          ],
           "stable_qualifiers_any": [
             "service"
           ],
-          "entity_type": "system"
+          "definition_required": true
         }
       ],
       "profile_count": 1
@@ -6493,13 +5690,10 @@
           "surface_forms_all": [
             "Surgical rollback procedure"
           ],
-          "evidence_contains_any": [
-            "Surgical rollback procedure"
-          ],
           "stable_qualifiers_any": [
             "procedure"
           ],
-          "entity_type": "workflow"
+          "definition_required": true
         }
       ],
       "profile_count": 1
