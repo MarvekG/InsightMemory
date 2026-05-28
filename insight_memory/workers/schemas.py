@@ -42,13 +42,29 @@ def normalize_entity_type(value: object) -> str:
 class IdentityProfileDraft(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[2]
+    schema_version: Literal[2] = 2
     draft_id: str = Field(..., min_length=1)
     who: str = Field(..., min_length=1, max_length=255)
     entity_type: EntityType
     surface_forms: list[str] = Field(default_factory=list)
     stable_qualifiers: list[str] = Field(default_factory=list)
     evidence: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="before")
+    @classmethod
+    def fix_schema_version(cls, value: object) -> object:
+        """在服务端固定 identity profile 结构版本。
+
+        Args:
+            value: LLM 输出的原始 identity profile draft。
+
+        Returns:
+            补齐并固定 `schema_version=2` 的原始结构。
+        """
+
+        if not isinstance(value, dict):
+            return value
+        return {**value, "schema_version": 2}
 
     @field_validator("entity_type", mode="before")
     @classmethod
@@ -213,12 +229,28 @@ class AnswerJudgeOutput(BaseModel):
 class ProfileWriterOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[2]
+    schema_version: Literal[2] = 2
     who: str = Field(..., min_length=1, max_length=255)
     entity_type: EntityType
     surface_forms: list[str] = Field(default_factory=list)
     stable_qualifiers: list[str] = Field(default_factory=list)
     evidence: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="before")
+    @classmethod
+    def fix_schema_version(cls, value: object) -> object:
+        """在服务端固定完整 identity profile 结构版本。
+
+        Args:
+            value: LLM 输出的原始 profile writer 结果。
+
+        Returns:
+            补齐并固定 `schema_version=2` 的原始结构。
+        """
+
+        if not isinstance(value, dict):
+            return value
+        return {**value, "schema_version": 2}
 
     @field_validator("entity_type", mode="before")
     @classmethod

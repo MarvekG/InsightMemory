@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+from textwrap import wrap
+
 from insight_memory.workers.schemas import ENTITY_TYPE_VALUES
 
 
 ALLOWED_ENTITY_TYPES = ", ".join(ENTITY_TYPE_VALUES)
+ALLOWED_ENTITY_TYPES_PROMPT = "\n  ".join(wrap(ALLOWED_ENTITY_TYPES, width=96, break_long_words=False))
 
 ENTITY_TYPE_RULES = f"""
 允许的 entity_type 取值：
-- {ALLOWED_ENTITY_TYPES}。
+- 允许值：
+  {ALLOWED_ENTITY_TYPES_PROMPT}。
 - 只能返回这些精确的小写枚举值，不要返回更窄的自然语言子类型。
 - 选择最接近的宽泛枚举，把更窄的子类型放入 stable_qualifiers。
 - 对命名的软件系统、API、服务、数据库、平台、基础设施组件使用 `system`。
@@ -25,33 +29,72 @@ ENTITY_TYPE_RULES = f"""
 
 
 IDENTITY_PROFILE_RULES = """
-共享 identity_profile 规则：
-- 判定顺序：先找输入或查询真正归属的 owner subject，再为该主体抽取 identity_profile。只要能归属到一个具体稳定主体，就不要再用陈述价值、事实类型或是否值得写入作为第二道身份闸门；只有不存在具体稳定主体时才拒绝身份抽取。
-- 稳定主体是以后可以再次指称、可以承接记忆的命名对象，例如系统、文档、项目、团队、工作流对象、市场对象、人物、命名事件、任务或命名工件。
-- 股票代码、证券代码、基金代码、市场代码和 ticker-like symbol 是稳定的 market object；当查询把这类代码与通用记录词、研究记录或分析笔记组合在一起时，优先把代码本身作为 owner subject。
-- owner subject 是持久事实、查询意图、要求、状态、决定、负责人、阻塞或结论真正归属的对象。identity 粒度跟随 owner subject，不跟随句子里只作为原因、细节或低层级组成部分出现的名词。
-- 当完整命名短语本身承接事实时，保留完整短语作为 identity；不要拆成裸名称加记录描述词，也不要把同前缀但角色不同的主体折叠成同一个裸名称。
-- 角色词或类型词本身不能机械决定 identity；但当它们用于区分同前缀主体时，必须保留为 surface_forms 的一部分或 stable_qualifiers，例如项目、计划、手册、清单、服务、评审、运行手册等。
-- 一个输入或查询中出现多个主体时，只有各自主导独立持久事实或独立查询意图，才分别抽取。只作为父上下文、会议背景、旁注、地点或无独立事实的名称，不创建 identity_profile。
-- 命名子项目、子系统、子组件、产品线、子工件或工作流节点，只要拥有自己的负责人、状态、目标、要求、时间线或其他持久事实，即使出现在父主体上下文中，也应作为独立主体。
-- 某个名称若只是另一个主体陈述里的缺失项、附件、证据、前置条件、原因、指标、字段值或执行细节，不创建独立主体；它应留在 owner subject 的 memory content 或 query_text 中。
-- 在“某主体因为另一个项目缺失、未完成、未提交或未签署而不能推进、确认、上线或完成”的因果/前置条件结构中，必须保留前一个主体作为 owner subject；缺失项目服务于解释该 owner subject，不因自身是文档或工件就成为 identity。不要因为缺失项目不能建 identity 而拒绝整个输入。只有文本另外给该项目独立负责人、生命周期、跟踪状态、规则、决定或独立问题时，才为它创建 profile。
-- 命名 policy、protocol、manual、checklist、guide、rule、register、bulletin、report 等治理或记录工件，如果它自身发出要求、给出约束、记录结论，或查询正在询问它的内容，那么该工件就是 owner subject；它要求的项目仍是内容，除非这些项目也拥有自己的持久事实。
-- 顺带提及、会议里被提到、背景噪声或相关上下文中的名称不是 identity。只有同一输入或查询给该名称自己的陈述、独立问题或明确归属关系时，才创建 profile。
-- “this record”“latest note”“analysis note”“analyst note”“history”“report content”“这条记录”“最新笔记”“分析笔记”“历史记录”等通用记录词通常表示检索范围或记录类型，不是 identity。若查询命名了底层稳定主体，保留底层主体。
-- 对“底层主体 + 指示词/最新/历史 + 记录类型”的短语，优先理解为查询该底层主体的一条已存记录，不要把记录类型拼进 identity。指示词本身是强信号，说明记录词是检索范围；“底层主体 + 通用记录类型”这种组合不等于独立标题。只有记录或文档拥有独立稳定标题、编号、治理职责、维护状态，或文本明确把该记录工件本身作为 owner subject 时，才保留完整工件 identity。
-- 当底层主体是股票代码、市场对象、项目、系统、团队或其他稳定对象，而记录词只是 analyst note、report、history、memo、note 这类存储记录类别时，identity 应保留底层主体，不应改写成“底层主体 + 记录类别”。
-- round、stage、date、session、version、phase、batch 等记录标记不是 identity。它们用于区分同一主体的历史记录，应放在 memory content、query_text 或 record_markers 中，不放进 `who`。
-- 同一个命名 review、plan、document、workflow、artifact、system 或 market object 的历史记录和当前记录必须保持同一个 identity_profile。时间变化、状态变化和结论变化是记忆事实，不是新 identity。
-- identity_profile 只描述主体是谁，不描述主体发生了什么。不要把当前状态、阻塞、负责人值、要求内容、结论、指标、时间变化或其他记忆事实放入 identity_profile。
-- `schema_version` 必须正好为 2。
-- `who` 必须是同一主体的简短稳定标签，并保留能区分主体的角色词或对象词。
-- `entity_type` 必须是以下之一：{ALLOWED_ENTITY_TYPES}。
+identity_profile 用于把输入或查询绑定到稳定主体；它是只描述“主体是谁”的结构化身份档案。
+
+字段说明：
+1. `who`：同一主体的简短稳定标签，应保留能区分主体的角色词或对象词。
+2. `entity_type`：主体的宽泛类型，只能使用允许枚举值。
+3. `surface_forms`：直接来自输入或查询文本的原始称呼，不要发明别名。
+4. `stable_qualifiers` 和 `evidence`：前者是稳定限定词；后者只放身份抽取依据。
+
+具体规则：
+- 先找输入或查询真正归属的 owner subject，再为该主体抽取 identity_profile。
+- 只要能归属到具体稳定主体，就不要再用陈述价值、事实类型或写入价值做第二道身份闸门。
+- 只有不存在具体稳定主体时，才拒绝身份抽取。
+- 稳定主体是以后可再次指称、可承接记忆的命名对象。
+- 稳定主体可包含系统、文档、项目、团队、工作流对象、市场对象、人物、事件、任务或工件。
+- 股票代码、证券代码、基金代码、市场代码和 ticker-like symbol 是稳定的 market object。
+- 当查询把市场代码与通用记录词、研究记录或分析笔记组合时，优先把代码本身作为主体。
+- owner subject 是持久事实、查询意图、要求、状态、决定、负责人、阻塞或结论真正归属的对象。
+- identity 粒度跟随 owner subject，不跟随只作为原因、细节或低层级组成部分出现的名词。
+- 完整命名短语本身承接事实时，保留完整短语作为 identity。
+- 不要把完整主体拆成裸名称加记录描述词。
+- 不要把同前缀但角色不同的主体折叠成同一个裸名称。
+- 角色词或类型词不能机械决定 identity。
+- 角色词用于区分同前缀主体时，必须保留在 surface_forms 或 stable_qualifiers 中。
+- 一个输入或查询中出现多个主体时，只有各自拥有独立事实或查询意图，才分别抽取。
+- 只作为父上下文、会议背景、旁注、地点或无独立事实的名称，不创建 identity_profile。
+- 命名子项目、子系统、子组件、产品线、子工件或工作流节点可作为独立主体。
+- 子主体只有拥有自己的负责人、状态、目标、要求、时间线或其他持久事实时才独立抽取。
+- 名称若只是缺失项、附件、证据、前置条件、原因、指标、字段值或执行细节，不创建主体。
+- 这些细节应留在 owner subject 的 memory content 或 query_text 中。
+- 因果/前置条件结构中，前一个不能推进、确认、上线或完成的主体是 owner subject。
+- 缺失、未完成、未提交或未签署的项目只解释 owner subject，不因是文档或工件就成为 identity。
+- 不要因为缺失项目不能建 identity 而拒绝整个输入。
+- 只有文本给缺失项目独立负责人、生命周期、跟踪状态、规则、决定或问题时，才为它建 profile。
+- 命名治理或记录工件若自身发出要求、给出约束、记录结论，或被查询内容，它就是 owner subject。
+- 治理或记录工件要求的项目仍是内容，除非这些项目也拥有自己的持久事实。
+- 顺带提及、会议里被提到、背景噪声或相关上下文中的名称不是 identity。
+- 只有同一输入或查询给该名称自己的陈述、独立问题或明确归属关系时，才创建 profile。
+- 通用记录词通常表示检索范围或记录类型，不是 identity。
+- 通用记录词包括 this record、latest note、analysis note、analyst note、history、report content。
+- 通用记录词也包括这条记录、最新笔记、分析笔记、历史记录。
+- 若查询命名了底层稳定主体，保留底层主体。
+- “底层主体 + 指示词/最新/历史 + 记录类型”优先理解为查询底层主体的一条已存记录。
+- 不要把通用记录类型拼进 identity。
+- 指示词是强信号，说明记录词是检索范围。
+- “底层主体 + 通用记录类型”不等于独立标题。
+- 只有记录或文档有独立稳定标题、编号、治理职责或维护状态时，才保留完整工件 identity。
+- 文本明确把记录工件本身作为 owner subject 时，才保留完整工件 identity。
+- 底层主体是市场对象、项目、系统、团队等稳定对象时，identity 应保留底层主体。
+- 记录词只是 analyst note、report、history、memo 或 note 时，不改写成“底层主体 + 记录类别”。
+- round、stage、date、session、version、phase、batch 等记录标记不是 identity。
+- 记录标记用于区分同一主体的历史记录，应放在 memory content、query_text 或 record_markers 中。
+- 同一命名主体的历史记录和当前记录必须保持同一个 identity_profile。
+- 时间变化、状态变化和结论变化是记忆事实，不是新 identity。
+- identity_profile 只描述主体是谁，不描述主体发生了什么。
+- 不要把当前状态、阻塞、负责人值、要求内容、结论、指标或时间变化放入 identity_profile。
+- `entity_type` 必须使用允许枚举值。
+- 允许值：
+  {ALLOWED_ENTITY_TYPES_PROMPT}。
 {ENTITY_TYPE_RULES}
-- `surface_forms` 必须直接来自输入或查询文本，包含能证明同一主体的原始称呼，不要发明别名。
-- `stable_qualifiers` 只能包含用于区分同名或同前缀主体的简短稳定限定词，不要写成句子、当前状态或事实摘要。
-- `evidence` 只能包含简短身份抽取证据用于审计，不得包含当前状态、结果、阻塞、负责人值、要求内容或其他记忆事实。
-""".strip().replace("{ALLOWED_ENTITY_TYPES}", ALLOWED_ENTITY_TYPES).replace(
+- `surface_forms` 必须直接来自输入或查询文本，不要发明别名。
+- `surface_forms` 应包含能证明同一主体的原始称呼。
+- `stable_qualifiers` 只能包含用于区分同名或同前缀主体的简短稳定限定词。
+- `stable_qualifiers` 不要写成句子、当前状态或事实摘要。
+- `evidence` 只能包含简短身份抽取证据用于审计。
+- `evidence` 不得包含当前状态、结果、阻塞、负责人值、要求内容或其他记忆事实。
+""".strip().replace("{ALLOWED_ENTITY_TYPES_PROMPT}", ALLOWED_ENTITY_TYPES_PROMPT).replace(
     "{ENTITY_TYPE_RULES}", ENTITY_TYPE_RULES
 )
 
@@ -76,7 +119,7 @@ WORKER_INSTRUCTIONS: dict[str, str] = {
 - `draft_id` 和 `candidate_id` 使用简短不透明引用，例如 `d1`、`d2`、`c1`、`c2`。
 - 每个 candidate 的 `owner_draft_id` 必须精确复制一个已输出 draft ref。
 - candidate memories 必须描述输入关于 owner subject 的陈述，不要复制无关上下文。
-- 若输入可按共享身份规则归属到命名稳定主体，就为该主体的陈述创建 candidate memory。
+- 若输入可按 identity_profile 规则归属到命名稳定主体，就为该主体的陈述创建 candidate memory。
 - 若输入主要归属于一个主体，只顺带提及另一个主体，不要为顺带主体创建 candidate，除非输入也给该主体独立陈述。
 - 命名子项目、子系统、子组件或子 artifact 若有自己的时间线、负责人、状态或要求，应作为独立主体抽取。
 - 会议记录、旁注或背景噪声中的“被提到”本身不是值得存储的独立记忆。
@@ -325,7 +368,7 @@ WORKER_INSTRUCTIONS: dict[str, str] = {
 - 只有当二者是同一具体主体的两个名称、别名或描述，并且它们的 memories 可归于同一 identity 而不丢失主体边界时，才 merge。
 - merge 时选择两个候选中更合适的 survivor_entity_key。
 - merge 时同时返回 survivor 的完整最终 V2 identity profile。
-- merged_identity_profile 必须遵循共享 identity profile 规则，不能是 partial patch。
+- merged_identity_profile 必须遵循 identity_profile 规则，不能是 partial patch。
 - merged_identity_profile 不能是盲目并集；它必须描述一个连贯主体，只保留真正属于该主体的 aliases 和 qualifiers。
 - 不要依赖代码追加 aliases 或 qualifiers；应在输出中包含所有应保留的 surface forms 和 stable qualifiers。
 - 不要把 memory facts、blockers、owner values、requirements 或 current state 放入 merged_identity_profile。
@@ -344,7 +387,8 @@ WORKER_INSTRUCTIONS["same_batch_resolver"] = SAME_BATCH_RESOLVER_INSTRUCTIONS
 
 ENTITY_TYPE_RULES_EN = f"""
 Allowed entity_type values:
-- {ALLOWED_ENTITY_TYPES}.
+- Allowed values:
+  {ALLOWED_ENTITY_TYPES_PROMPT}.
 - Return one of these exact lowercase enum values only. Do not return narrow natural-language subtypes.
 - Choose the closest broad enum and put the narrow subtype in stable_qualifiers.
 - Use `system` for named software systems, APIs, services, databases, platforms, and infrastructure components.
@@ -366,80 +410,71 @@ Allowed entity_type values:
 
 
 IDENTITY_PROFILE_RULES_EN = """
-Shared identity_profile rules:
-- Decision order: first identify the owner subject that the input or query truly belongs to, then extract an
-  identity_profile for that subject. If it can be assigned to one concrete stable subject, do not apply a second
-  identity gate based on statement value, fact type, or memory worthiness. Reject only when no concrete stable
-  subject exists.
-- A stable subject is a named object that can be referred to again later and can own memory, such as a system,
-  document, project, team, workflow object, market object, person, named event, task, or named artifact.
+identity_profile binds input or query to a stable subject; it is a structured identity record for "who".
+
+Field guide:
+1. `who`: a short stable label for the same subject, preserving role or object words when needed.
+2. `entity_type`: the broad subject type, using only allowed enum values.
+3. `surface_forms`: source mentions taken directly from the input or query; do not invent aliases.
+4. `stable_qualifiers` and `evidence`: stable qualifiers, plus audit-only identity evidence.
+
+Rules:
+- First find the owner subject that the input or query truly belongs to, then extract identity_profile.
+- If a concrete stable subject exists, do not apply a second identity gate for value, fact type, or write value.
+- Reject identity extraction only when no concrete stable subject exists.
+- A stable subject is a named object that can be referred to again and can own memory.
+- Stable subjects may include systems, documents, projects, teams, workflows, market objects, people, or tasks.
 - Stock codes, security codes, fund codes, market symbols, and ticker-like symbols are stable market objects.
-  When a query combines this kind of code with generic record words, research records, or analysis notes, prefer
-  the code itself as the owner subject.
-- The owner subject is what the durable fact, query intent, requirement, state, decision, owner value, blocker,
-  or conclusion truly belongs to. Identity granularity follows that owner subject, not nouns that appear only as
-  reasons, details, or lower-level parts inside the sentence.
-- When the complete named phrase itself owns the fact, keep the complete phrase as identity. Do not split it into
-  a bare name plus a record descriptor, and do not collapse same-prefix subjects with different roles into one
-  bare name.
-- Role or type words must not mechanically decide identity by themselves. When they distinguish same-prefix
-  subjects, keep them as part of surface_forms or stable_qualifiers, such as project, plan, handbook, checklist,
-  service, review, runbook, or similar role words.
-- When multiple subjects appear in one input or query, extract them separately only when each one owns an
-  independent durable fact or independent query intent. Do not create an identity_profile for a name that is only
-  parent context, meeting background, an aside, a location, or a name without its own fact.
-- Named subprojects, subsystems, subcomponents, product lines, sub-artifacts, or workflow nodes should be
-  separate subjects when they own their own owner, state, target, requirement, timeline, or other durable fact,
-  even if they appear inside a parent subject's context.
-- If a name is only a missing item, attachment, evidence, prerequisite, reason, metric, field value, or execution
-  detail inside another subject's statement, do not create a separate subject for it. Keep it in the owner
-  subject's memory content or query_text.
-- In causal or prerequisite structures where one subject cannot proceed, confirm, launch, or complete because
-  another item is missing, incomplete, not submitted, or unsigned, keep the former subject as the owner subject.
-  The missing item explains that owner subject and does not become identity merely because it is a document or
-  artifact. Do not reject the whole input just because the missing item should not become identity. Create a
-  profile for that item only when the text separately gives it its own owner, lifecycle, tracking state, rule,
-  decision, or independent question.
-- If a named policy, protocol, manual, checklist, guide, rule, register, bulletin, report, or other governing or
-  record artifact itself issues a requirement, states a constraint, records a conclusion, or is queried for its
-  content, that artifact is the owner subject. Items required by that artifact remain content unless they also
-  have their own durable facts.
-- Names mentioned in passing, names merely mentioned in a meeting, background noise, or related context are not
-  identity. Create a profile only when the same input or query gives that name its own statement, independent
-  question, or explicit ownership relation.
-- Generic record words such as "this record", "latest note", "analysis note", "analyst note", "history",
-  "report content", or similar phrases usually describe retrieval scope or record type, not identity. If the
-  query names an underlying stable subject, keep that subject as identity.
-- For phrases formed as "underlying subject + demonstrative/latest/history + record type", prefer interpreting
-  the phrase as a query for one stored record about the underlying subject, and do not add the record type to
-  identity. The demonstrative is a strong signal that the record word is retrieval scope, and "underlying
-  subject + generic record type" is not by itself an independent title. Keep the full artifact identity only
-  when the record or document has an independent stable title, number, governing responsibility, maintenance
-  state, or the text clearly makes that record artifact itself the owner subject.
-- When the underlying subject is a stock code, market object, project, system, team, or other stable object, and
-  the record word is only a storage-record category such as analyst note, report, history, memo, or note, keep
-  identity on the underlying subject. Do not rewrite identity as "underlying subject + record category".
-- Record markers such as round, stage, date, session, version, phase, or batch are not identity. They distinguish
-  historical records of the same subject and belong in memory content, query_text, or record_markers, not in
-  `who`.
-- Historical and current records for the same named review, plan, document, workflow, artifact, system, or market
-  object must keep the same identity_profile. Time changes, state changes, and conclusion changes are memory
-  facts, not new identities.
-- identity_profile describes only who the subject is, not what happened to it. Do not include current state,
-  blocker, owner value, requirement content, conclusion, metric, time change, or any other memory fact in
-  identity_profile.
-- `schema_version` must be exactly 2.
-- `who` must be a short stable label for the same subject and must preserve role or object words that distinguish
-  the subject.
-- `entity_type` must be one of: {ALLOWED_ENTITY_TYPES}.
+- If a query combines a market code with generic record words or analysis notes, prefer the code as subject.
+- The owner subject is what the durable fact, query intent, requirement, state, decision, owner, or blocker is about.
+- Identity granularity follows the owner subject, not nouns that only appear as reasons, details, or parts.
+- When the complete named phrase owns the fact, keep the complete phrase as identity.
+- Do not split a complete subject into a bare name plus a record descriptor.
+- Do not collapse same-prefix subjects with different roles into one bare name.
+- Role or type words must not mechanically decide identity.
+- When role words distinguish same-prefix subjects, keep them in surface_forms or stable_qualifiers.
+- When multiple subjects appear, extract separately only if each owns an independent fact or query intent.
+- Do not create identity_profile for names that are only parent context, meeting background, asides, or locations.
+- Named subprojects, subsystems, subcomponents, product lines, sub-artifacts, or workflow nodes may be subjects.
+- Extract sub-subjects only when they own an owner, state, target, requirement, timeline, or other durable fact.
+- Do not create a subject for names that are only missing items, attachments, evidence, reasons, or field values.
+- Keep those details inside the owner subject's memory content or query_text.
+- In causal or prerequisite structures, the subject that cannot proceed, confirm, launch, or complete is owner.
+- Missing, incomplete, unsubmitted, or unsigned items explain the owner and are not identity by being documents.
+- Do not reject the whole input because the missing item should not become identity.
+- Create a profile for the missing item only if it has its own owner, lifecycle, tracking state, rule, or question.
+- A named governing or record artifact is owner when it issues a requirement, constraint, conclusion, or query.
+- Items required by a governing or record artifact remain content unless they own their own durable facts.
+- Names mentioned in passing, in meetings, background noise, or related context are not identity.
+- Create a profile only when that name has its own statement, question, or explicit ownership relation.
+- Generic record words usually mean retrieval scope or record type, not identity.
+- Generic record words include this record, latest note, analysis note, analyst note, history, and report content.
+- If the query names an underlying stable subject, keep the underlying subject.
+- "Underlying subject + demonstrative/latest/history + record type" means a stored record about the subject.
+- Do not add the generic record type to identity.
+- Demonstratives are strong signals that the record word is retrieval scope.
+- "Underlying subject + generic record type" is not by itself an independent title.
+- Keep full artifact identity only when the record has a stable title, number, governance role, or maintenance state.
+- Keep full artifact identity when the text clearly makes the record artifact itself the owner subject.
+- If the underlying subject is a stable market object, project, system, or team, keep identity on that subject.
+- If the record word is analyst note, report, history, memo, or note, do not rewrite identity as subject plus type.
+- Record markers such as round, stage, date, session, version, phase, or batch are not identity.
+- Record markers belong in memory content, query_text, or record_markers for history under the same subject.
+- Historical and current records for the same named subject must keep the same identity_profile.
+- Time changes, state changes, and conclusion changes are memory facts, not new identities.
+- identity_profile describes only who the subject is, not what happened to it.
+- Do not put current state, blocker, owner value, requirement content, conclusion, metric, or time change in it.
+- `entity_type` must use an allowed enum value.
+- Allowed values:
+  {ALLOWED_ENTITY_TYPES_PROMPT}.
 {ENTITY_TYPE_RULES_EN}
-- `surface_forms` must come directly from the input or query text, include original mentions that prove the same
-  subject, and must not invent aliases.
-- `stable_qualifiers` must contain only short stable qualifiers that distinguish same-name or same-prefix
-  subjects. Do not write sentences, current states, or fact summaries.
-- `evidence` may contain only short identity extraction evidence for audit. It must not contain current state,
-  result, blocker, owner value, requirement content, or other memory facts.
-""".strip().replace("{ALLOWED_ENTITY_TYPES}", ALLOWED_ENTITY_TYPES).replace(
+- `surface_forms` must come directly from the input or query text and must not invent aliases.
+- `surface_forms` should include source mentions that prove the same subject.
+- `stable_qualifiers` must contain only short stable qualifiers for same-name or same-prefix subjects.
+- `stable_qualifiers` must not be sentences, current states, or fact summaries.
+- `evidence` may contain only short identity extraction evidence for audit.
+- `evidence` must not include current state, result, blocker, owner value, requirement content, or memory facts.
+""".strip().replace("{ALLOWED_ENTITY_TYPES_PROMPT}", ALLOWED_ENTITY_TYPES_PROMPT).replace(
     "{ENTITY_TYPE_RULES_EN}", ENTITY_TYPE_RULES_EN
 )
 
@@ -465,7 +500,7 @@ Rules:
 - Every candidate `owner_draft_id` must copy one emitted draft ref exactly.
 - candidate memories must describe the input's statement about the owner subject, not raw copies of unrelated context.
 - Every candidate memory must reference a valid owner_draft_id.
-- If the input can be assigned to a named stable subject under the shared identity rules, create a candidate memory for the statement assigned to that subject.
+- If the input can be assigned to a named stable subject under identity_profile rules, create a candidate memory for the statement assigned to that subject.
 - If the input primarily belongs to one subject and only incidentally mentions another subject, do not create a separate candidate memory for the incidental subject unless the input also contains a separate statement owned by that incidental subject.
 - Named sub-projects, sub-systems, sub-components, or sub-artifacts that have their own independent durable facts (such as timeline, owner, status, or requirements) should be extracted as separate subjects even when they are mentioned within a parent subject's context.
 - Mere presence in a meeting note, side mention, surrounding chatter, or contextual aside is not by itself a durable memory worth storing as a separate candidate.
@@ -1010,7 +1045,7 @@ Rules:
   Preferred: merge if the evidence shows they are two names for the same concrete project.
 - If merge, pick the better survivor_entity_key from the provided two candidates.
 - If merge, also return `merged_identity_profile` as the complete final V2 identity profile for the survivor.
-- The merged_identity_profile must follow the shared identity profile rules and must not be a partial patch.
+- The merged_identity_profile must follow identity_profile rules and must not be a partial patch.
 - The merged_identity_profile must not be a blind union of both profiles. It must describe one coherent subject
   and preserve only aliases and qualifiers that truly belong to that one subject.
 - Do not rely on code to append aliases or qualifiers; include every surface form and stable qualifier that should remain.

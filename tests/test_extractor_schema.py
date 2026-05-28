@@ -15,7 +15,6 @@ from insight_memory.workers.schemas import (
 def test_identity_profile_draft_uses_v2_fields_under_original_name() -> None:
     draft = IdentityProfileDraft.model_validate(
         {
-            "schema_version": 2,
             "draft_id": "draft_commodity_risk_handbook",
             "who": "Commodity risk handbook",
             "entity_type": "document",
@@ -29,6 +28,30 @@ def test_identity_profile_draft_uses_v2_fields_under_original_name() -> None:
     assert draft.entity_type == "document"
     assert draft.stable_qualifiers == ["risk handbook"]
     assert draft.evidence == ["The source calls it a handbook."]
+
+
+def test_identity_profile_schema_version_is_fixed_in_code() -> None:
+    draft = IdentityProfileDraft.model_validate(
+        {
+            "schema_version": 1,
+            "draft_id": "draft_access_policy",
+            "who": "Access recovery policy",
+            "entity_type": "document",
+            "surface_forms": ["Access recovery policy"],
+        }
+    )
+
+    output = ProfileWriterOutput.model_validate(
+        {
+            "schema_version": 1,
+            "who": "Phoenix review",
+            "entity_type": "event",
+            "surface_forms": ["Phoenix review"],
+        }
+    )
+
+    assert draft.schema_version == 2
+    assert output.schema_version == 2
 
 
 def test_identity_profile_draft_rejects_legacy_distinguishing_context() -> None:
