@@ -308,7 +308,8 @@ def test_build_audit_metadata_summarizes_graph_first_entity_resolution() -> None
                         "fallback_reason": "",
                         "candidate_count": 1,
                         "selected_entity_key": "ent_1",
-                    }
+                    },
+                    "selected_entity_profile_revision": 3,
                 },
                 "result": {
                     "status": "ok",
@@ -346,6 +347,7 @@ def test_build_audit_metadata_summarizes_graph_first_entity_resolution() -> None
     assert metadata["graph_first_entity_resolution_attempted_count"] == 2
     assert metadata["graph_first_entity_resolution_used_count"] == 1
     assert metadata["graph_first_entity_resolution_fallback_reasons"] == ["candidate_count_not_one"]
+    assert metadata["selected_entity_profile_revisions"] == [3]
 
 
 def test_recall_audit_preview_route_exposes_improvement_metadata(monkeypatch) -> None:

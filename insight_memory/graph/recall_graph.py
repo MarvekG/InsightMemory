@@ -95,6 +95,24 @@ def _merge_stage_timings(*items: dict[str, int] | None) -> dict[str, int]:
     return merged
 
 
+def _entity_profile_revision(entity: Any) -> int | None:
+    """
+    从实体 metadata 中读取当前 identity profile revision。
+
+    Args:
+        entity: MemoryEntity 或测试中的等价对象。
+
+    Returns:
+        profile_revision 的整数值；缺失或非法时返回 None。
+    """
+    try:
+        state = dict((getattr(entity, "metadata_json", None) or {}).get("profile_state") or {})
+        revision = state.get("profile_revision")
+        return int(revision) if revision is not None else None
+    except (TypeError, ValueError):
+        return None
+
+
 def _effective_time_intent(planner: Any) -> str:
     """
     从 planner 输出中归一化 recall 时间意图。
@@ -657,6 +675,14 @@ class RecallGraph:
                 "linker_decision": linker.model_dump(),
             }
         )
+        if linker.decision == "link_existing" and linker.selected_entity_key:
+            selected_entity = next(
+                (item.entity for item in scored_candidates if item.entity.entity_key == linker.selected_entity_key),
+                None,
+            )
+            selected_revision = _entity_profile_revision(selected_entity) if selected_entity is not None else None
+            if selected_revision is not None:
+                resolution_trace["selected_entity_profile_revision"] = selected_revision
         payload: dict[str, Any] = {
             "scored_candidates": scored_candidates,
             "linker": linker,
@@ -1138,6 +1164,13 @@ class RecallGraph:
             )
             if fallback_reasons:
                 metadata["graph_first_entity_resolution_fallback_reasons"] = fallback_reasons
+        profile_revisions = [
+            int(item.get("resolution_trace", {}).get("selected_entity_profile_revision"))
+            for item in draft_runs
+            if item.get("resolution_trace", {}).get("selected_entity_profile_revision") is not None
+        ]
+        if profile_revisions:
+            metadata["selected_entity_profile_revisions"] = profile_revisions
         if stage_timings_ms is not None:
             metadata["stage_timings_ms"] = _merge_stage_timings(stage_timings_ms)
         if draft_timings_ms is not None:
