@@ -59,7 +59,7 @@ def test_prompt_eval_service_returns_llm_output_and_usage(monkeypatch) -> None:
 
     assert calls[0]["worker_type"] == "write_gate"
     assert calls[0]["schema_type"] is WriteGateOutput
-    assert "Shared identity_profile rules" in calls[0]["instructions"]
+    assert "共享 identity_profile 规则" in calls[0]["instructions"]
     assert result["status"] == "ok"
     assert result["prompt_key"] == "write_gate"
     assert result["model"] == "test-model"

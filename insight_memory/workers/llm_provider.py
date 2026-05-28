@@ -49,6 +49,14 @@ def _build_system_message(
     """
 
     schema = schema_type.model_json_schema()
+    if settings.MEMORY_SYSTEM_LANGUAGE == "zh":
+        return (
+            f"你是记忆系统的 {worker_type} worker。\n"
+            "只返回一个 JSON 对象，不要返回其他内容。\n"
+            "不要添加 markdown 代码块。\n"
+            f"严格遵循以下输出 schema：\n{_stable_json(schema)}\n\n"
+            f"Worker 指令：\n{instructions}"
+        )
     return (
         f"You are the {worker_type} worker for a memory system.\n"
         "Return exactly one JSON object and nothing else.\n"

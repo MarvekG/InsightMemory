@@ -1,18 +1,52 @@
 from __future__ import annotations
 
-from insight_memory.workers.prompts import IDENTITY_PROFILE_RULES, get_worker_instructions
+from insight_memory.workers.prompts import (
+    IDENTITY_PROFILE_RULES,
+    IDENTITY_PROFILE_RULES_ZH,
+    get_worker_instructions,
+)
+
+
+def _en(worker_type: str) -> str:
+    return get_worker_instructions(worker_type, system_language="en")
+
+
+def _zh(worker_type: str) -> str:
+    return get_worker_instructions(worker_type, system_language="zh")
 
 
 def test_identity_profile_rules_are_shared_across_identity_workers() -> None:
     worker_types = ("write_gate", "extractor", "query_planner", "linker", "profile_writer")
 
     for worker_type in worker_types:
-        instructions = get_worker_instructions(worker_type)
+        instructions = _en(worker_type)
         assert IDENTITY_PROFILE_RULES in instructions
 
 
-def test_write_gate_uses_original_identity_examples_without_candidate_extraction() -> None:
+def test_zh_identity_profile_rules_are_shared_across_identity_workers() -> None:
+    worker_types = ("write_gate", "extractor", "query_planner", "linker", "profile_writer")
+
+    for worker_type in worker_types:
+        instructions = _zh(worker_type)
+        assert IDENTITY_PROFILE_RULES_ZH in instructions
+
+
+def test_worker_instructions_default_to_system_language_zh() -> None:
     instructions = get_worker_instructions("write_gate")
+
+    assert "判断原始输入是否应被接受进入长期记忆写入" in instructions
+    assert "Decide whether the raw input should be accepted" not in instructions
+
+
+def test_worker_instructions_can_force_english() -> None:
+    instructions = _en("write_gate")
+
+    assert "Decide whether the raw input should be accepted for long-term memory ingest." in instructions
+    assert "判断原始输入是否应被接受进入长期记忆写入" not in instructions
+
+
+def test_write_gate_uses_original_identity_examples_without_candidate_extraction() -> None:
+    instructions = _en("write_gate")
 
     assert "`Gateway 是项目，当前主阻塞是数据库迁移失败。`" in instructions
     assert "`Product Division 同时运营两条产品线" in instructions
@@ -21,14 +55,14 @@ def test_write_gate_uses_original_identity_examples_without_candidate_extraction
 
 
 def test_query_planner_instructions_require_per_draft_query_text() -> None:
-    instructions = get_worker_instructions("query_planner")
+    instructions = _en("query_planner")
     assert "`query_text`" in instructions
     assert "shortest standalone sub-query" in instructions
     assert "Do not reuse the full multi-subject query as `query_text` for every draft." in instructions
 
 
 def test_query_planner_instructions_require_graph_expansion_intent() -> None:
-    instructions = get_worker_instructions("query_planner")
+    instructions = _en("query_planner")
 
     assert "`graph_expansion_intent`" in instructions
     assert "`entity_local`" in instructions
@@ -77,7 +111,7 @@ def test_identity_profile_rules_use_owner_subject_granularity() -> None:
 
 
 def test_linker_write_mode_requires_same_identity_granularity() -> None:
-    instructions = get_worker_instructions("linker")
+    instructions = _en("linker")
 
     assert "same identity granularity" in instructions
     assert "share a prefix, topic, or underlying domain entity" in instructions
@@ -85,7 +119,7 @@ def test_linker_write_mode_requires_same_identity_granularity() -> None:
 
 
 def test_merge_judge_rejects_same_type_boundary_union_without_equivalence() -> None:
-    instructions = get_worker_instructions("merge_judge")
+    instructions = _en("merge_judge")
 
     assert "same broad entity_type is only eligibility to compare, not evidence to merge" in instructions
     assert "must not be a blind union" in instructions
@@ -93,7 +127,7 @@ def test_merge_judge_rejects_same_type_boundary_union_without_equivalence() -> N
 
 
 def test_query_planner_uses_required_evidence_scope_for_graph_intent() -> None:
-    instructions = get_worker_instructions("query_planner")
+    instructions = _en("query_planner")
 
     assert "Decide graph expansion by the evidence scope required to answer" in instructions
     assert "not by matching query words" in instructions
@@ -101,7 +135,7 @@ def test_query_planner_uses_required_evidence_scope_for_graph_intent() -> None:
 
 
 def test_answer_composer_preserves_explanation_chain_and_longform_parallel_drivers() -> None:
-    instructions = get_worker_instructions("answer_composer")
+    instructions = _en("answer_composer")
 
     assert "If the query requires an explanation chain" in instructions
     assert "do not truncate after the seed memory" in instructions
@@ -130,7 +164,7 @@ def test_identity_profile_rules_include_shared_examples() -> None:
 
 
 def test_edge_judge_instructions_use_original_query_for_narrow_cross_entity_calls() -> None:
-    instructions = get_worker_instructions("edge_judge")
+    instructions = _en("edge_judge")
 
     assert "If `original_query` and `query_identity_profile` are present" in instructions
     assert "judge supports against the current query target" in instructions
@@ -142,7 +176,7 @@ def test_edge_judge_instructions_use_original_query_for_narrow_cross_entity_call
 
 
 def test_answer_composer_instructions_keep_narrow_queries_scoped() -> None:
-    instructions = get_worker_instructions("answer_composer")
+    instructions = _en("answer_composer")
 
     assert "First decide whether the query is asking for the target subject's own current answer" in instructions
     assert "that direct target-level answer" in instructions

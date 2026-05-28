@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from insight_memory.workers.prompts_zh import IDENTITY_PROFILE_RULES_ZH
+from insight_memory.workers.prompts_zh import WORKER_INSTRUCTIONS_ZH
 from insight_memory.workers.schemas import ENTITY_TYPE_VALUES
 
 
@@ -751,7 +753,45 @@ Rules:
 }
 
 
-def get_worker_instructions(worker_type: str) -> str:
+def _resolve_system_language(system_language: str | None) -> str:
+    """解析当前 worker prompt 使用的系统语言。
+
+    Args:
+        system_language: 显式传入的系统语言；为空时读取 Memory 配置。
+
+    Returns:
+        `en` 或 `zh`。
+
+    Raises:
+        ValueError: 语言值不是 `en` 或 `zh`。
+    """
+
+    if system_language is None:
+        from insight_memory.config import settings
+
+        system_language = settings.MEMORY_SYSTEM_LANGUAGE
+    if system_language not in {"en", "zh"}:
+        raise ValueError("system_language must be 'en' or 'zh'")
+    return system_language
+
+
+def get_worker_instructions(worker_type: str, *, system_language: str | None = None) -> str:
+    """按系统语言返回指定 worker 的提示词。
+
+    Args:
+        worker_type: Memory worker 类型。
+        system_language: 可选系统语言；为空时使用 `settings.MEMORY_SYSTEM_LANGUAGE`。
+
+    Returns:
+        对应语言的 worker prompt。
+    """
+
+    language = _resolve_system_language(system_language)
+    if language == "zh":
+        if worker_type == "same_batch_resolver":
+            return WORKER_INSTRUCTIONS_ZH["same_batch_resolver"] + "\n\n" + WORKER_INSTRUCTIONS_ZH["resolver"]
+        return WORKER_INSTRUCTIONS_ZH[worker_type]
+
     if worker_type == "same_batch_resolver":
         return """
 Resolve candidate memories against synthetic same-batch memories that represent earlier candidates from the same ingest batch.
