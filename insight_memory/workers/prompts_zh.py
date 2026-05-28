@@ -429,3 +429,9 @@ WORKER_INSTRUCTIONS_ZH: dict[str, str] = {
 - 不确定时返回 keep_separate。
 """.strip(),
 }
+
+SAME_BATCH_RESOLVER_INSTRUCTIONS_ZH = WORKER_INSTRUCTIONS_ZH["same_batch_resolver"] + "\n\n" + WORKER_INSTRUCTIONS_ZH[
+    "resolver"
+]
+
+WORKER_INSTRUCTIONS_ZH["same_batch_resolver"] = SAME_BATCH_RESOLVER_INSTRUCTIONS_ZH

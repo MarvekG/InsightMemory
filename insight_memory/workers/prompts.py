@@ -752,6 +752,19 @@ Rules:
 """.strip(),
 }
 
+SAME_BATCH_RESOLVER_INSTRUCTIONS = """
+Resolve candidate memories against synthetic same-batch memories that represent earlier candidates from the same ingest batch.
+Rules:
+- Existing memories in this worker may be synthetic placeholders that represent earlier candidates from the same batch.
+- Existing memories in this worker use short memory refs like `m1`; when you target an earlier same-batch placeholder, use that memory ref.
+- Use those synthetic placeholders to normalize one batch of earlier/current evolution into the final persisted shape before anything is written.
+- When a later candidate states the newer current rule, current blocker, or current standing state for the same artifact, it should usually target the earlier same-batch placeholder memory ref with action=replace instead of producing two peer active creates.
+- Never target your own candidate ref, and never invent a memory ref.
+- Prefer one superseded earlier memory plus one active current head when the batch expresses a clear earlier/current evolution for the same practical question.
+""".strip() + "\n\n" + WORKER_INSTRUCTIONS["resolver"]
+
+WORKER_INSTRUCTIONS["same_batch_resolver"] = SAME_BATCH_RESOLVER_INSTRUCTIONS
+
 
 def _resolve_system_language(system_language: str | None) -> str:
     """解析当前 worker prompt 使用的系统语言。
@@ -788,20 +801,6 @@ def get_worker_instructions(worker_type: str, *, system_language: str | None = N
 
     language = _resolve_system_language(system_language)
     if language == "zh":
-        if worker_type == "same_batch_resolver":
-            return WORKER_INSTRUCTIONS_ZH["same_batch_resolver"] + "\n\n" + WORKER_INSTRUCTIONS_ZH["resolver"]
         return WORKER_INSTRUCTIONS_ZH[worker_type]
 
-    if worker_type == "same_batch_resolver":
-        return """
-Resolve candidate memories against synthetic same-batch memories that represent earlier candidates from the same ingest batch.
-Rules:
-- Existing memories in this worker may be synthetic placeholders that represent earlier candidates from the same batch.
-- Existing memories in this worker use short memory refs like `m1`; when you target an earlier same-batch placeholder, use that memory ref.
-- Use those synthetic placeholders to normalize one batch of earlier/current evolution into the final persisted shape before anything is written.
-- When a later candidate states the newer current rule, current blocker, or current standing state for the same artifact, it should usually target the earlier same-batch placeholder memory ref with action=replace instead of producing two peer active creates.
-- Never target your own candidate ref, and never invent a memory ref.
-- Prefer one superseded earlier memory plus one active current head when the batch expresses a clear earlier/current evolution for the same practical question.
-
-""".strip() + "\n\n" + WORKER_INSTRUCTIONS["resolver"]
     return WORKER_INSTRUCTIONS[worker_type]
