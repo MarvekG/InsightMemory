@@ -11,6 +11,7 @@ from memory.evals.scripts.eval_identity_profile_extraction import (
     summarize_results,
     write_report_files,
 )
+from insight_memory.workers.prompts import get_worker_instructions
 
 
 def test_load_identity_extraction_suite_reads_cases(tmp_path: Path) -> None:
@@ -86,6 +87,28 @@ def test_zh_identity_profile_suite_uses_identity_definition() -> None:
 
     assert invalid_definitions == []
     assert missing_definition_checks == []
+
+
+def test_identity_prompt_examples_do_not_copy_eval_subjects() -> None:
+    suites = [
+        ("zh", Path("memory/evals/prompt_cases/identity_profile_rules_zh_v1.json")),
+        ("en", Path("memory/evals/prompt_cases/identity_profile_rules_v1.json")),
+    ]
+    copied_subjects = []
+    for language, suite_path in suites:
+        instructions = get_worker_instructions("write_gate", system_language=language)
+        suite = load_identity_extraction_suite(suite_path)
+        expected_subjects = {
+            subject
+            for case in suite["cases"]
+            for expected in case.expected_identities
+            for subject in expected.who_any
+        }
+        copied_subjects.extend(
+            f"{language}:{subject}" for subject in sorted(expected_subjects) if subject in instructions
+        )
+
+    assert copied_subjects == []
 
 
 def test_score_identity_extraction_case_passes_write_gate_output() -> None:

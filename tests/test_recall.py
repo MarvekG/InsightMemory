@@ -583,6 +583,26 @@ def test_resolve_entity_uses_graph_first_when_entity_local_has_unique_candidate(
     }
 
 
+def test_graph_first_identity_match_ignores_definition() -> None:
+    assert (
+        recall_graph_module._identity_profile_structurally_matches(
+            draft_profile={
+                "who": "Orion service",
+                "surface_forms": ["Orion service"],
+                "stable_qualifiers": ["service"],
+                "definition": "Named service.",
+            },
+            candidate_profile={
+                "who": "Boreal checklist",
+                "surface_forms": ["Boreal checklist"],
+                "stable_qualifiers": ["checklist"],
+                "definition": "Named service.",
+            },
+        )
+        is False
+    )
+
+
 def test_resolve_entity_falls_back_to_linker_when_graph_first_has_no_unique_identity_match(monkeypatch) -> None:
     graph = RecallGraph()
     entities = [

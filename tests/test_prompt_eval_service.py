@@ -3,6 +3,7 @@ from __future__ import annotations
 from insight_memory.evals.prompt_registry import get_prompt_eval_target
 from insight_memory.services import prompt_eval_service as service_module
 from insight_memory.workers.llm_provider import LLMCallResult
+from insight_memory.workers.prompts import get_worker_instructions
 from insight_memory.workers.schemas import WriteGateOutput
 from tests.utils import run_async
 
@@ -13,6 +14,26 @@ def test_prompt_registry_maps_write_gate_to_instructions_and_schema() -> None:
     assert target.prompt_key == "write_gate"
     assert target.instructions_key == "write_gate"
     assert target.schema_type is WriteGateOutput
+
+
+def test_identity_prompt_has_no_removed_type_classification_language() -> None:
+    zh_instructions = get_worker_instructions("write_gate", system_language="zh")
+    en_instructions = get_worker_instructions("write_gate", system_language="en")
+
+    assert "使用 `artifact`" not in zh_instructions
+    assert "改成 `system`" not in zh_instructions
+    assert "use `artifact`" not in en_instructions
+    assert "not `system`" not in en_instructions
+
+
+def test_identity_definition_prompt_defines_subject_not_category() -> None:
+    zh_instructions = get_worker_instructions("write_gate", system_language="zh")
+    en_instructions = get_worker_instructions("write_gate", system_language="en")
+
+    assert "主体类别" not in zh_instructions
+    assert "natural-language category" not in en_instructions
+    assert "对具体主体的定义，不是类别标签" in zh_instructions
+    assert "defines the concrete subject; it is not a category label" in en_instructions
 
 
 def test_prompt_eval_service_returns_llm_output_and_usage(monkeypatch) -> None:

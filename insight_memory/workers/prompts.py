@@ -10,77 +10,93 @@ IDENTITY_PROFILE_RULES = """
 提取目标：判断“这条记忆属于谁”，从文本里找出承接这条记忆的命名名词。
 identity_profile 只记录这个名词是谁，不记录它发生了什么。
 
-字段说明：
-1. `who`：同一主体的简短稳定标签，应保留能区分主体的角色词或对象词。
-2. `surface_forms`：直接来自输入或查询文本的原始称呼，不要发明别名。
-3. `stable_qualifiers`：稳定限定词，用于区分同名或同前缀主体。
-4. `definition`：解释 `who` 指代的主体名词是什么，不写记忆事实。
+整体判断：
+- 规则：先读完整输入或查询，找主要承接这条记忆的命名名词。
+  例：“洛川巡检手册要求夜班复核”，主体是“洛川巡检手册”。
+- 规则：不要先判断事实类型或写入价值；身份抽取只回答“属于谁”。
+  例：“南枝策略已废弃旧阈值”，仍先抽取“南枝策略”。
+- 规则：只有完全没有可复用命名名词时，才拒绝身份抽取。
+  例：“今晚感觉风险很高”没有命名主体，可拒绝。
+- 规则：可复用名词包括系统、文档、计划、团队、流程、代码、人物、事件、任务或工件。
+  例：“柳湾权限清单”“云脊结算服务”“孟澜”都可作为主体。
+- 规则：市场代码、证券代码、基金代码和 ticker-like symbol 可作为主体。
+  例：“771009.SZ 最新研究记录怎么看？”主体是“771009.SZ”。
 
-具体规则：
-- 先读完整输入或查询，问：这条记忆主要在说哪个命名名词？
-- 找到这个命名名词后，为它生成 identity_profile。
-- 不要先判断这句话有没有价值、属于什么事实类型，或者是否值得写入。
-- 只有文本里没有任何可复用的命名名词时，才拒绝身份抽取。
-- 可复用的命名名词包括系统、文档、项目、团队、流程、市场对象、人物、事件、任务或工件。
-- 股票代码、证券代码、基金代码、市场代码和 ticker-like symbol 可作为 market object。
-- 查询把市场代码和记录词、研究记录或分析笔记放在一起时，主体通常是代码本身。
-- 如果整条记忆在说一个完整命名短语，就保留完整短语。
-- 不要把完整短语拆成裸名称加记录描述词。
-- 不要把同前缀但角色不同的名词合并成同一个裸名称。
-- 项目、计划、手册、清单、服务、评审等角色词，能区分主体时必须保留。
-- 角色词必须保留在 `who` 和 `surface_forms` 中；也必须作为简短词放入 `stable_qualifiers`。
-- 例如“青竹迁移清单”的 `stable_qualifiers` 应包含“清单”；“青岚结算服务”应包含“服务”。
-- 例如“星河门户”的 `stable_qualifiers` 应包含“门户”；“星河门户消息中心”应包含“消息中心”。
-- 中文角色词也必须放入 `stable_qualifiers`，例如计划、制度、服务、流程、策略、纪要、手册、工单、公告、门户。
-- 即使角色词已经出现在 `who` 里，也要在 `stable_qualifiers` 里重复保留。
-- 中文主体里的复合角色短语应优先保留完整短语，例如“上线计划”优先于“计划”，“运维组”优先于“组”。
-- 人名、股票代码或没有角色词的唯一名称可以让 `stable_qualifiers` 为空。
-- “某人偏好/习惯/要求/不希望...”是人物主体的持久偏好，应抽取该人。
-- 一个输入里有多个命名名词时，只抽取真正各自被陈述或被查询的名词。
-- 只出现在父级背景、会议背景、旁注或地点里的名称，不单独建 identity_profile。
-- 子项目、子系统、子组件、产品线、子工件或流程节点可以单独建主体。
-- 只有文本直接描述子主体的负责人、状态、目标、要求或时间线时，才单独建主体。
-- 如果文本分别陈述“X”和“X 的子组件 Y”的状态，应同时抽取 X 与 X Y。
-- 例如“星河门户可登录。星河门户消息中心延迟十分钟。”应抽取“星河门户”和“星河门户消息中心”。
-- 缺失项、附件、证据、前置条件、原因、指标、字段值或执行细节，不单独建主体。
-- 这些名词应留在所属主体的记忆内容或查询文本里。
-- 负责人姓名、审批人姓名、复核人姓名只是 owner value，不单独建主体。
-- “X 当前负责人是 Y”时主体是 X，不要为 Y 建 identity_profile。
-- 如果句子说“X 不能推进，因为 Y 缺失”，主体是 X。
-- Y 只是解释 X 的原因，不因为是文档或工件就变成主体。
-- 不要因为 Y 不能建主体，就拒绝抽取 X。
-- 只有文本直接说明 Y 的负责人、状态、规则、决定或查询问题时，才为 Y 建主体。
-- “直到 Y 补齐签字/审批/附件”里的 Y 仍是 X 的完成条件，不是独立主体。
-- “直到 Y 补齐责任人签字/审批人签字/复核人签字”里的 Y 不建主体。
-- 例如“槐庭评审会决定暂缓发布，直到安全检查单补齐责任人签字”，只抽取“槐庭评审会”，不要抽取“安全检查单”。
-- 如果句子说“某手册/清单/政策要求 X 补 Y”，主体是这个手册/清单/政策。
-- 被要求补的 Y 是要求内容，除非文本还直接描述 Y 自己。
-- 只在会议里被提到、顺带出现或作为背景的名称，不单独建主体。
-- 只有文本对该名称给出自己的结论、问题、负责人、状态或要求时，才建主体。
-- 通用记录词通常表示要查哪类记录，不是主体名称。
-- 通用记录词包括 this record、latest note、analysis note、analyst note、history、report content。
-- 通用记录词也包括这条记录、最新笔记、分析笔记、历史记录。
-- 查询里已有股票代码、项目名、系统名或团队名时，保留这些名称作为主体。
-- “主体 + 这条/最新/历史 + 记录类型”表示查询该主体的一条记录。
-- 不要把 analyst note、report、history、memo 或 note 拼进主体名称。
-- 只有记录或文档有独立标题、编号、治理职责或维护状态时，才把记录本身作为主体。
-- round、stage、date、session、version、phase、batch 等是记录标记，不是主体名称。
-- 记录标记应放在记忆内容、查询文本或 record_markers 中。
-- 同一主体的历史记录和当前记录，应使用同一个 identity_profile。
-- 时间变化、状态变化和结论变化应写入记忆内容，不要写成新主体。
-- identity_profile 只写“是谁”，不要写“发生了什么”。
-- 不要把当前状态、阻塞、负责人值、要求内容、结论、指标或时间变化放入 identity_profile。
-- 中文“看板”通常是命名展示工件，使用 `artifact`，不要因为它属于技术系统就改成 `system`。
-- `surface_forms` 必须直接来自输入或查询文本，不要发明别名。
-- `surface_forms` 应包含能证明同一主体的原始称呼。
-- `stable_qualifiers` 只能包含用于区分同名或同前缀主体的简短稳定限定词。
-- `stable_qualifiers` 应优先放主体短语里的角色词、对象词或稳定类别词。
-- 如果主体短语里有稳定角色词，必须复制该词到 `stable_qualifiers`，不要因为 `who` 已包含该词就省略。
-- 中文复合角色短语优先保留最长稳定短语，例如“上线计划”“运维组”“消息中心”。
-- `stable_qualifiers` 不要放 round、stage、第二轮、第三阶段、当前、最新、历史等记录标记。
-- `stable_qualifiers` 不要写成句子、当前状态或事实摘要。
-- `definition` 应定义 `who`，例如“命名项目计划”“命名服务”“命名团队”，不要照抄事实句。
-- `definition` 不得包含当前状态、结果、阻塞、负责人值、要求内容或其他记忆事实。
+`who` 字段规则：
+- 规则：`who` 是同一主体的简短稳定标签，要写完整命名名词。
+  例：“枫桥上线计划当前卡在回归窗口”，`who` 写“枫桥上线计划”。
+- 规则：完整命名短语要完整保留，不要拆成裸名称或泛化描述。
+  例：“柳湾权限清单”不要拆成“柳湾”或“权限记录”。
+- 规则：同前缀但角色不同的名词不能合并成一个裸名称。
+  例：“云脊结算服务”和“云脊结算手册”是两个主体。
+- 规则：能区分主体的角色词必须保留在 `who` 中。
+  例：“鹭湾工单”的 `who` 写“鹭湾工单”，不要只写“鹭湾”。
+- 规则：人物偏好、习惯、要求或不希望做的事，属于这个人物。
+  例：“许诺偏好每周一看汇总”，主体是“许诺”。
+- 规则：`who` 只写主体名词，不写当前状态、阻塞、结论、指标或时间变化。
+  例：“云杉风控策略”可以；“云杉风控策略当前阈值上调”不可以。
+
+`surface_forms` 字段规则：
+- 规则：`surface_forms` 只能直接来自输入或查询原文，不要发明别名。
+  例：原文是“东篱访问清单”，不要写“东篱权限文档”。
+- 规则：`surface_forms` 要保留能证明同一主体的完整原始称呼。
+  例：原文只写“枫桥上线计划”，就保留“枫桥上线计划”。
+- 规则：不要把通用记录词拼进 `surface_forms`，除非记录本身有独立标题。
+  例：“771009.SZ 的最新分析笔记”保留“771009.SZ”，不是“最新分析笔记”。
+
+`stable_qualifiers` 字段规则：
+- 规则：`stable_qualifiers` 用来区分同名或同前缀主体，只写短稳定限定词。
+  例：“柳湾权限清单”可写“权限清单”和“清单”。
+- 规则：稳定限定词必须来自 `who` 或 `surface_forms`，不要从 `definition` 推断。
+  例：“碧湾发布公告”可放“公告”，不要因为定义写了文档就放“文档”。
+- 规则：能区分主体的角色词要放入 `stable_qualifiers`。
+  例：“鹭湾工单”的 `stable_qualifiers` 至少包含“工单”。
+- 规则：中文复合角色短语要同时保留最长稳定短语和末尾角色词。
+  例：“枫桥上线计划”放“上线计划”和“计划”；“洛川巡检手册”放“巡检手册”和“手册”。
+- 规则：人名、股票代码或无角色词的唯一名称，`stable_qualifiers` 可以为空。
+  例：“孟澜不希望周五排发布会”，主体是“孟澜”，限定词可为空。
+- 规则：`stable_qualifiers` 不要写记录标记、句子、当前状态或事实摘要。
+  例：不要把“当前暂停”“第二轮”放进 `stable_qualifiers`。
+- 规则：中文“看板”如果是主体名的一部分，要放入 `stable_qualifiers`。
+  例：“墨池运营看板”的 `stable_qualifiers` 应包含“看板”。
+
+`definition` 字段规则：
+- 规则：`definition` 只解释 `who` 是什么，不写记忆事实。
+  例：“碧湾发布公告指碧湾相关的发布公告”可以；“要求补齐审批链”不可以。
+- 规则：`definition` 不要包含当前状态、结果、阻塞、负责人值或要求内容。
+  例：“云脊结算服务指云脊相关的结算服务”可以；“负责人是赵奕”不可以。
+- 规则：`definition` 是对具体主体的定义，不是类别标签。
+  例：“枫桥上线计划指枫桥相关的上线计划”可以；只写“命名上线计划”不可以。
+- 规则：人物主体也要定义具体是谁，不要只写“人物”。
+  例：“孟澜指名为孟澜的人”可以；只写“人物”不可以。
+
+多主体和边界规则：
+- 规则：一条输入有多个名称时，只抽取被直接陈述或直接查询的名称。
+  例：“周会提到澜缓存服务，但柏港评审会决定延期”，只抽取“柏港评审会”。
+- 规则：子项目、子系统、子组件、产品线或流程节点被直接描述时，必须单独成主体。
+  例：“澜石门户正常，澜石门户消息台延迟”，两个名称都要抽取。
+- 规则：父主体和更长同前缀子主体各有事实时，不要把子主体折叠进父主体。
+  例：“岚河平台可登录；岚河平台审计台超时”，要抽取两个主体。
+- 规则：只出现在父级背景、会议背景、旁注或地点里的名称，不单独建主体。
+  例：“在沙河办公室讨论栖木发布”，主体不是“沙河办公室”。
+- 规则：缺失项、附件、证据、前置条件、原因、指标、字段值或执行细节，不单独建主体。
+  例：“南渡发布项目缺回滚说明”，主体是“南渡发布项目”，不是“回滚说明”。
+- 规则：负责人、审批人和复核人是属性值，不是要单独建的主体。
+  例：“鹭湾工单负责人是赵奕”，主体是“鹭湾工单”，不是“赵奕”。
+- 规则：如果 X 因 Y 缺失而不能推进，主体是 X；Y 是原因。
+  例：“岩庭上线因封板照片缺失暂停”，主体是“岩庭上线”。
+- 规则：只有文本直接说明 Y 自己的状态、规则、负责人、决定或查询时，才把 Y 建主体。
+  例：“封板照片由何组维护？”这时“封板照片”才可以成为查询主体。
+- 规则：命名手册、清单或政策要求 X 补 Y 时，主体是这个治理工件。
+  例：“栖梧准入手册要求项目补值班表”，主体是“栖梧准入手册”。
+- 规则：通用记录词表示要查哪类记录，不是主体名称。
+  例：“771009.SZ 的最新分析笔记”主体是“771009.SZ”，不是“分析笔记”。
+- 规则：只有记录或文档有独立标题、编号、治理职责或维护状态时，记录本身才是主体。
+  例：“沧澜交接记录由法务维护”，主体是“沧澜交接记录”。
+- 规则：round、stage、date、session、version、phase、batch 等是记录标记，不是主体。
+  例：“沧澜交接记录第二轮”仍归属“沧澜交接记录”。
+- 规则：同一主体的历史记录和当前记录，使用同一个 identity_profile。
+  例：“南枝策略之前宽松、当前收紧”，主体仍是“南枝策略”。
 """.strip()
 
 
@@ -374,81 +390,93 @@ IDENTITY_PROFILE_RULES_EN = """
 Goal: decide "who does this memory belong to" by finding the named noun that owns this memory.
 identity_profile records only who that noun is, not what happened to it.
 
-Field guide:
-1. `who`: a short stable label for the same subject, preserving role or object words when needed.
-2. `surface_forms`: source mentions taken directly from the input or query; do not invent aliases.
-3. `stable_qualifiers`: stable qualifiers that separate same-name or same-prefix subjects.
-4. `definition`: define what the `who` subject noun refers to; do not write memory facts.
+Overall judgment:
+- Rule: Read the full input or query, then find the named noun that mainly owns this memory.
+  Example: `Lorcan inspection handbook requires night-shift review` belongs to `Lorcan inspection handbook`.
+- Rule: Do not first judge fact type or write value; identity extraction only answers "who".
+  Example: `Southbranch policy retired the old threshold` still extracts `Southbranch policy` first.
+- Rule: Reject identity extraction only when there is no reusable named noun.
+  Example: `The risk feels high tonight` has no named subject and may be rejected.
+- Rule: Reusable nouns include systems, documents, plans, teams, workflows, codes, people, events, tasks, or artifacts.
+  Example: `Willowbank access checklist`, `Cloudridge settlement service`, and `Mira Lin` can be subjects.
+- Rule: Market codes, security codes, fund codes, and ticker-like symbols can be subjects.
+  Example: in `What does the latest note say about RQX.N?`, the subject is `RQX.N`.
 
-Rules:
-- Read the full input or query, then ask: which named noun is this memory mainly about?
-- After finding that named noun, create identity_profile for it.
-- Do not first judge whether the sentence is valuable, what fact type it is, or whether it should be written.
-- Reject identity extraction only when the text has no reusable named noun.
-- Reusable named nouns include systems, documents, projects, teams, workflows, market objects, people, and tasks.
-- Stock codes, security codes, fund codes, market symbols, and ticker-like symbols can be market objects.
-- If a query combines a market code with record words or analysis notes, the subject is usually the code itself.
-- If the whole memory is about a complete named phrase, keep the complete phrase.
-- Do not split a complete phrase into a bare name plus a record descriptor.
-- Do not merge same-prefix nouns with different roles into one bare name.
-- Keep role words such as project, plan, handbook, checklist, service, or review when they separate subjects.
-- Keep role words in `who` and `surface_forms`; also put them as short terms in `stable_qualifiers`.
-- For example, `Qingzhu migration checklist` should include `checklist` in `stable_qualifiers`;
-  `Qinglan settlement service` should include `service`.
-- For Chinese names, `星河门户` should include `门户`; `星河门户消息中心` should include `消息中心`.
-- Chinese role words must also be copied into `stable_qualifiers`, such as 计划, 制度, 服务, 流程,
-  策略, 纪要, 手册, 工单, 公告, 门户.
-- Repeat the role word in `stable_qualifiers` even when it is already present in `who`.
-- Prefer the longest stable Chinese role phrase, for example 上线计划 over 计划, and 运维组 over 组.
-- Person names, stock codes, or unique names with no role word may have empty `stable_qualifiers`.
-- A sentence saying a person prefers, habitually wants, requires, or does not want something is a durable
-  preference about that person; extract the person.
-- If one input has several named nouns, extract only nouns that are directly stated or queried.
-- Do not create identity_profile for names that appear only in parent context, meeting context, asides, or places.
-- Subprojects, subsystems, subcomponents, product lines, sub-artifacts, or workflow nodes may be subjects.
-- Create a sub-subject only when the text directly states its owner, state, target, requirement, or timeline.
-- If the text states facts about both `X` and a subcomponent `X Y`, extract both subjects.
-- For example, if `星河门户` is normal and `星河门户消息中心` is delayed, extract both names.
-- Missing items, attachments, evidence, prerequisites, reasons, metrics, field values, and details are not subjects.
-- Keep those nouns inside the memory content or query text of the subject they belong to.
-- Owner names, approver names, and reviewer names are owner values, not separate subjects.
-- If the text says `X currently owner is Y`, extract X only; do not create identity_profile for Y.
-- If a sentence says "X cannot proceed because Y is missing", the subject is X.
-- Y only explains X and does not become the subject just because it is a document or artifact.
-- Do not reject X because Y should not become a subject.
-- Create a subject for Y only when the text directly states Y's owner, state, rule, decision, or question.
-- In phrases like "until Y has the required signature/approval/attachment", Y is still a completion condition
-  for X, not an independent subject.
-- In phrases like "until Y has owner/approver/reviewer signature", Y is not a separate subject.
-- If a handbook, checklist, or policy requires X to provide Y, the subject is that artifact.
-- Required item Y is requirement content unless the text also directly describes Y itself.
-- A name merely mentioned in a meeting, aside, or background is not a separate subject.
-- Create a subject only when the text gives that name its own conclusion, question, owner, state, or requirement.
-- Generic record words usually say what type of record to retrieve, not the subject name.
-- Generic record words include this record, latest note, analysis note, analyst note, history, and report content.
-- If the query names a stock code, project, system, or team, keep that name as the subject.
-- "Subject + this/latest/history + record type" means a stored record about that subject.
-- Do not add analyst note, report, history, memo, or note to the subject name.
-- Make the record itself the subject only when it has its own title, number, governance role, or maintenance state.
-- Record markers such as round, stage, date, session, version, phase, or batch are not subject names.
-- Record markers belong in memory content, query text, or record_markers.
-- Historical and current records for the same subject should use the same identity_profile.
-- Time changes, state changes, and conclusion changes belong in memory content, not in a new subject.
-- identity_profile only says "who"; it does not say "what happened".
-- Do not put current state, blocker, owner value, requirement content, conclusion, metric, or time change in it.
-- A Chinese 看板 is usually a named display artifact; use `artifact`, not `system`, unless the text clearly
-  names it as a software service or platform.
-- `surface_forms` must come directly from the input or query text and must not invent aliases.
-- `surface_forms` should include source mentions that prove the same subject.
-- `stable_qualifiers` must contain only short stable qualifiers for same-name or same-prefix subjects.
-- Prefer role words, object words, or stable category words from the subject phrase in `stable_qualifiers`.
-- If the subject phrase contains a stable role word, copy that word into `stable_qualifiers`; do not omit it
-  just because it already appears in `who`.
-- Prefer the longest stable Chinese role phrase, such as 上线计划, 运维组, or 消息中心.
-- Do not put record markers such as round, stage, second round, phase 3, current, latest, or history in `stable_qualifiers`.
-- `stable_qualifiers` must not be sentences, current states, or fact summaries.
-- `definition` should define `who`, such as "named project plan", "named service", or "named team".
-- `definition` must not include current state, result, blocker, owner value, requirement content, or memory facts.
+`who` field rules:
+- Rule: `who` is the short stable label for the same subject; write the complete named noun.
+  Example: for `Maplebridge launch plan is waiting for regression window`, write `Maplebridge launch plan`.
+- Rule: Keep a complete named phrase complete; do not split it into a bare name or generic description.
+  Example: keep `Willowbank access checklist`, not `Willowbank` or `access record`.
+- Rule: Same-prefix nouns with different roles must not be merged into one bare name.
+  Example: `Cloudridge settlement service` and `Cloudridge settlement handbook` are different subjects.
+- Rule: Role words that separate subjects must stay in `who`.
+  Example: `Egret ticket` should use `Egret ticket`, not only `Egret`.
+- Rule: A person's preferences, habits, requirements, or dislikes belong to that person.
+  Example: `Nora Xu prefers Monday summaries` belongs to `Nora Xu`.
+- Rule: `who` names only the subject; do not include current state, blocker, conclusion, metric, or time change.
+  Example: `Fir risk policy` is valid; `Fir risk policy current threshold increased` is not a `who`.
+
+`surface_forms` field rules:
+- Rule: `surface_forms` must come directly from the input or query; do not invent aliases.
+  Example: if the text says `Eastgarden access list`, do not write `Eastgarden permission document`.
+- Rule: `surface_forms` should keep the complete source mention that proves the same subject.
+  Example: if the text only says `Maplebridge launch plan`, keep `Maplebridge launch plan`.
+- Rule: Do not add generic record words into `surface_forms` unless the record itself has an independent title.
+  Example: `latest analyst note for RQX.N` belongs to `RQX.N`, not `latest analyst note`.
+
+`stable_qualifiers` field rules:
+- Rule: `stable_qualifiers` separates same-name or same-prefix subjects; use short stable terms only.
+  Example: for `Willowbank access checklist`, use `access checklist` and `checklist`.
+- Rule: `stable_qualifiers` must come from `who` or `surface_forms`; do not infer them from `definition`.
+  Example: for `Jadebay release bulletin`, use `bulletin`; do not add `document` only from its definition.
+- Rule: Role words that separate subjects must be added to `stable_qualifiers`.
+  Example: `Egret ticket` should include `ticket` in `stable_qualifiers`.
+- Rule: For Chinese compound role phrases, include both the longest stable phrase and the final role word.
+  Example: for `枫桥上线计划`, include both `上线计划` and `计划`; for `洛川巡检手册`, include `手册`.
+- Rule: Person names, stock codes, or unique names with no role word may have empty `stable_qualifiers`.
+  Example: `Mira Lin does not want Friday releases` belongs to `Mira Lin`; qualifiers may be empty.
+- Rule: `stable_qualifiers` must not contain record markers, sentences, current states, or fact summaries.
+  Example: do not put `currently paused` or `round two` in `stable_qualifiers`.
+- Rule: If Chinese 看板 is part of the subject name, add it to `stable_qualifiers`.
+  Example: `墨池运营看板` should include `看板`.
+
+`definition` field rules:
+- Rule: `definition` defines what `who` is; it must not include memory facts.
+  Example: `Jadebay release bulletin refers to the release bulletin for Jadebay` is valid; `requires approval chain` is not.
+- Rule: `definition` must not include current state, result, blocker, owner value, or requirement content.
+  Example: `Cloudridge settlement service refers to the settlement service for Cloudridge` is valid; `owner is Jules Wei` is not.
+- Rule: `definition` defines the concrete subject; it is not a category label.
+  Example: `Maplebridge launch plan refers to the launch plan for Maplebridge` is valid; only `named launch plan` is not.
+- Rule: Person subjects must define the specific person, not only say `person`.
+  Example: `Mira Lin refers to the person named Mira Lin` is valid; only `person` is not.
+
+Multi-subject and boundary rules:
+- Rule: When one input has several names, extract only names that are directly stated or queried.
+  Example: if a meeting mentions `Slatecache service` but decides on `Alderport review`, extract `Alderport review`.
+- Rule: Subprojects, subsystems, subcomponents, product lines, or workflow nodes must be subjects when directly described.
+  Example: if `Stoneport portal` works but `Stoneport message panel` is delayed, extract both names.
+- Rule: When a parent subject and a longer same-prefix child subject each have facts, do not fold the child into parent.
+  Example: `Mistvale platform works; Mistvale platform audit panel times out` should extract both subjects.
+- Rule: Names appearing only in parent context, meeting context, asides, or locations are not separate subjects.
+  Example: in `discussed Grove launch in Riverroom`, `Riverroom` is not the subject.
+- Rule: Missing items, attachments, evidence, prerequisites, reasons, metrics, field values, and details are not subjects.
+  Example: `Southford rollout lacks rollback memo` belongs to `Southford rollout`, not `rollback memo`.
+- Rule: Owners, approvers, and reviewers are attribute values, not separate subjects.
+  Example: `Egret ticket owner is Jules Wei` belongs to `Egret ticket`, not `Jules Wei`.
+- Rule: If X cannot proceed because Y is missing, X is the subject and Y is the reason.
+  Example: `Ridgecourt launch paused because gate photo is missing` belongs to `Ridgecourt launch`.
+- Rule: Create a subject for Y only when the text directly describes Y's state, rule, owner, decision, or query.
+  Example: `Which team maintains gate photo?` can make `gate photo` the query subject.
+- Rule: If a named handbook, checklist, or policy requires X to provide Y, the governing artifact is the subject.
+  Example: `Grove entry handbook requires projects to add the duty roster` belongs to `Grove entry handbook`.
+- Rule: Generic record words describe what to retrieve; they are not the subject name.
+  Example: `latest analyst note for RQX.N` belongs to `RQX.N`, not `analyst note`.
+- Rule: A record or document is the subject only when it has its own title, number, governance role, or state.
+  Example: `Bluewater handover record is maintained by Legal` belongs to `Bluewater handover record`.
+- Rule: round, stage, date, session, version, phase, and batch are record markers, not subjects.
+  Example: `Bluewater handover record round two` still belongs to `Bluewater handover record`.
+- Rule: Historical and current records for the same subject use the same identity_profile.
+  Example: `Southbranch policy was loose before but is stricter now` still belongs to `Southbranch policy`.
 """.strip()
 
 
