@@ -408,6 +408,41 @@ Graph-first resolver 不生成答案，也不做关键词规则。它只基于�
 - 多主体 2/3/4/5 draft：graph-first 命中数分别为 2/3/4/5，`memory_entity_linker` 调用数 0。
 - 相比同日修正前仍回退 linker 的 `recall_phase3a_graph_multi_20260527`，多主体 recall 延迟下降约 18.0% - 27.1%。
 
+2026-05-27 全量最大并发压力评测：
+
+- 运行配置：`default_v1` 全量 matrix，39 个 suite / 273 个 case，`--max-concurrency 39`。
+- 报告路径：`/tmp/memory_eval_reports_phase3a_full_maxconc/matrix/latest.json` 和 `latest.md`。
+- Matrix full pass：22/273，full pass rate 8.06%；answer grounded rate 99.7%。
+- 加权维度通过率：
+  - `ingest_gate`: 96.7%
+  - `state`: 85.0%
+  - `query_gate`: 90.8%
+  - `recall_structured`: 88.3%
+  - `answer_judge`: 85.4%
+  - `background_tasks`: 10.6%
+- 失败主要来自压力下后台任务未在 settle 窗口内清空：`settle_timeout` 245 次，`not_ready` 58 次。
+- 评测结束时仍有后台积压：`pending merge_entities=180`、`running merge_entities=4`、`dead_letter repair_memory_edges=1`。
+- 本轮适合作为吞吐压力数据，不应直接作为 graph-first 准确率回归结论。
+
+Graph-first 在该压力评测中的观测：
+
+- recall audit 共 381 次。
+- `graph_first_entity_resolution_attempted_count` 合计 251。
+- `graph_first_entity_resolution_used_count` 合计 222，命中率约 88.4%。
+- fallback reason：`identity_match_not_found=26`、`identity_match_not_unique=1`、`graph_intent_cross_entity=99`。
+- LLM 调用数：`query_planner=462`、`answer_composer=341`、`linker=130`、`edge_judge=110`。
+- 全部 recall 平均 6552.7 ms，p50 5430 ms，p95 13971 ms。
+- `entity_local` recall 平均 5354.3 ms；`cross_entity` recall 平均 11965.9 ms。
+
+解释：
+
+- `max-concurrency=39` 会把 39 个 suite 同时启动，写入、continue ingest、reindex、profile refresh、edge repair、merge
+  都在同一段时间挤压后台 worker。
+- 大量 case 的业务回答本身 grounded，但因为 `background_tasks=false` 被 full pass 拉低；这说明当前瓶颈是后台任务吞吐和
+  settle budget，而不是 graph-first 多候选消歧的明显误选。
+- 后续判断准确率应补跑 `max-concurrency=4` 或 `8` 的全量 matrix；吞吐优化则应单独评估后台 worker 并发、任务优先级和
+  merge/reindex/repair 的队列预算。
+
 ### Phase 3b：Payload 与预算优化
 
 改动：
@@ -415,12 +450,14 @@ Graph-first resolver 不生成答案，也不做关键词规则。它只基于�
 - 裁剪 linker candidate payload；graph-first 未命中的场景仍会用到 linker。
 - 增加动态 cross-entity budget 配置。
 - 根据 stage timing 和 eval 失败分布决定默认值。
+- 单独处理后台任务吞吐：限制全量 eval 并发下的 merge/reindex/repair 堆积，或让 eval settle 只等待 recall 必需链路。
 
 验收：
 
 - 默认 eval matrix 不因裁剪导致 grounded answer rate 下降。
 - 多主体直接 recall p95 明显下降。
 - why/how、dependency chain、rule evolution 类 suite 保持通过。
+- `max-concurrency=4/8` 全量 matrix 中 `background_tasks` 维度不再成为主要失败来源。
 
 ## 测试计划
 
