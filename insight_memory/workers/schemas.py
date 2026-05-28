@@ -4,14 +4,34 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+EntityType = Literal[
+    "person",
+    "organization",
+    "market_object",
+    "system",
+    "document",
+    "artifact",
+    "project",
+    "work_item",
+    "workflow",
+    "event",
+    "decision",
+    "strategy",
+    "concept",
+    "unknown",
+]
+
 
 class IdentityProfileDraft(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    schema_version: Literal[2]
     draft_id: str = Field(..., min_length=1)
     who: str = Field(..., min_length=1, max_length=255)
+    entity_type: EntityType
     surface_forms: list[str] = Field(default_factory=list)
-    distinguishing_context: list[str] = Field(default_factory=list)
+    stable_qualifiers: list[str] = Field(default_factory=list)
+    evidence: list[str] = Field(default_factory=list)
 
 
 class QueryIdentityProfileDraft(IdentityProfileDraft):
@@ -162,9 +182,12 @@ class AnswerJudgeOutput(BaseModel):
 class ProfileWriterOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    schema_version: Literal[2]
     who: str = Field(..., min_length=1, max_length=255)
+    entity_type: EntityType
     surface_forms: list[str] = Field(default_factory=list)
-    distinguishing_context: list[str] = Field(default_factory=list)
+    stable_qualifiers: list[str] = Field(default_factory=list)
+    evidence: list[str] = Field(default_factory=list)
 
 
 class EdgeRelation(BaseModel):

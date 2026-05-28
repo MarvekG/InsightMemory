@@ -74,7 +74,9 @@ def test_identity_profile_rules_include_shared_examples() -> None:
     assert "Correct identity_profile:" in IDENTITY_PROFILE_RULES
     assert "Input:" in IDENTITY_PROFILE_RULES
     assert '当前主阻塞是数据库迁移失败' in IDENTITY_PROFILE_RULES
-    assert '"distinguishing_context":["项目"]' in IDENTITY_PROFILE_RULES
+    assert '"stable_qualifiers":["项目"]' in IDENTITY_PROFILE_RULES
+    assert "`schema_version` must be exactly 2." in IDENTITY_PROFILE_RULES
+    assert "`entity_type` must be one of:" in IDENTITY_PROFILE_RULES
     assert '`数据库迁移失败` is memory content' in IDENTITY_PROFILE_RULES
     assert '`Radian 运营组 计划本周完成切换；Radian 运行手册 还缺回滚章节。`' in IDENTITY_PROFILE_RULES
     assert "Expected drafts:" in IDENTITY_PROFILE_RULES

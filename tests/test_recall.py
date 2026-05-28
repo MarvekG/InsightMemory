@@ -445,13 +445,13 @@ def test_run_draft_subgraphs_uses_per_draft_query_text() -> None:
             {
                 "who": "Atlas 发布项目",
                 "surface_forms": ["Atlas 发布项目", "Atlas"],
-                "distinguishing_context": ["发布项目"],
+                "stable_qualifiers": ["发布项目"],
                 "query_text": "Atlas 发布项目 当前主阻塞是什么？",
             },
             {
                 "who": "Atlas 文档",
                 "surface_forms": ["Atlas 文档", "Atlas"],
-                "distinguishing_context": ["文档"],
+                "stable_qualifiers": ["文档"],
                 "query_text": "Atlas 文档 当前缺什么？",
             },
         ],
@@ -508,9 +508,12 @@ def test_resolve_entity_uses_graph_first_when_entity_local_has_unique_candidate(
         entity_key="ent_unique",
         display_name="Orion service",
         identity_profile={
+            "schema_version": 2,
             "who": "Orion service",
+            "entity_type": "system",
             "surface_forms": ["Orion service"],
-            "distinguishing_context": ["service"],
+            "stable_qualifiers": ["service"],
+            "evidence": ["The profile names Orion service."],
         },
     )
     memory = SimpleNamespace(summary="Orion service 当前负责人是 Mina。")
@@ -554,9 +557,12 @@ def test_resolve_entity_uses_graph_first_when_entity_local_has_unique_candidate(
                     )
                 ),
                 "draft_payload": {
+                    "schema_version": 2,
                     "who": "Orion service",
+                    "entity_type": "system",
                     "surface_forms": ["Orion service"],
-                    "distinguishing_context": ["service"],
+                    "stable_qualifiers": ["service"],
+                    "evidence": ["The query names Orion service."],
                     "query_text": "Orion service 当前负责人是谁？",
                 },
                 "stage_timings_ms": {},
@@ -634,7 +640,7 @@ def test_resolve_entity_falls_back_to_linker_when_graph_first_has_no_unique_iden
                 "draft_payload": {
                     "who": "Orion owner",
                     "surface_forms": ["Orion owner"],
-                    "distinguishing_context": ["owner"],
+                    "stable_qualifiers": ["owner"],
                     "query_text": "Orion owner 当前负责人是谁？",
                 },
                 "stage_timings_ms": {},
@@ -659,7 +665,7 @@ def test_resolve_entity_uses_graph_first_when_multi_candidate_identity_match_is_
             identity_profile={
                 "who": "Elmfield checklist",
                 "surface_forms": ["Elmfield checklist", "Elmfield"],
-                "distinguishing_context": ["checklist"],
+                "stable_qualifiers": ["checklist"],
             },
         ),
         SimpleNamespace(
@@ -668,7 +674,7 @@ def test_resolve_entity_uses_graph_first_when_multi_candidate_identity_match_is_
             identity_profile={
                 "who": "Elmfield handbook",
                 "surface_forms": ["Elmfield handbook", "Elmfield"],
-                "distinguishing_context": ["handbook"],
+                "stable_qualifiers": ["handbook"],
             },
         ),
     ]
@@ -712,19 +718,19 @@ def test_resolve_entity_uses_graph_first_when_multi_candidate_identity_match_is_
                         SimpleNamespace(
                             who="Elmfield checklist",
                             surface_forms=["Elmfield checklist", "Elmfield"],
-                            distinguishing_context=["checklist"],
+                            stable_qualifiers=["checklist"],
                         ),
                         SimpleNamespace(
                             who="Elmfield handbook",
                             surface_forms=["Elmfield handbook", "Elmfield"],
-                            distinguishing_context=["handbook"],
+                            stable_qualifiers=["handbook"],
                         )
                     ],
                 ),
                 "draft_payload": {
                     "who": "Elmfield handbook",
                     "surface_forms": ["Elmfield handbook", "Elmfield"],
-                    "distinguishing_context": ["handbook"],
+                    "stable_qualifiers": ["handbook"],
                     "query_text": "Elmfield handbook 当前要求什么？",
                 },
                 "stage_timings_ms": {},
@@ -748,7 +754,7 @@ def test_resolve_entity_falls_back_to_linker_when_multi_candidate_identity_match
             identity_profile={
                 "who": "Elmfield handbook",
                 "surface_forms": ["Elmfield handbook", "Elmfield"],
-                "distinguishing_context": ["handbook"],
+                "stable_qualifiers": ["handbook"],
             },
         ),
         SimpleNamespace(
@@ -757,7 +763,7 @@ def test_resolve_entity_falls_back_to_linker_when_multi_candidate_identity_match
             identity_profile={
                 "who": "Elmfield handbook",
                 "surface_forms": ["Elmfield handbook", "Elmfield"],
-                "distinguishing_context": ["handbook"],
+                "stable_qualifiers": ["handbook"],
             },
         ),
     ]
@@ -806,14 +812,14 @@ def test_resolve_entity_falls_back_to_linker_when_multi_candidate_identity_match
                         SimpleNamespace(
                             who="Elmfield handbook",
                             surface_forms=["Elmfield handbook", "Elmfield"],
-                            distinguishing_context=["handbook"],
+                            stable_qualifiers=["handbook"],
                         )
                     ],
                 ),
                 "draft_payload": {
                     "who": "Elmfield handbook",
                     "surface_forms": ["Elmfield handbook", "Elmfield"],
-                    "distinguishing_context": ["handbook"],
+                    "stable_qualifiers": ["handbook"],
                     "query_text": "Elmfield handbook 当前要求什么？",
                 },
                 "stage_timings_ms": {},
@@ -877,7 +883,7 @@ def test_resolve_entity_falls_back_to_linker_when_planner_intent_is_cross_entity
                 "draft_payload": {
                     "who": "Orion rollout",
                     "surface_forms": ["Orion rollout"],
-                    "distinguishing_context": ["rollout"],
+                    "stable_qualifiers": ["rollout"],
                     "query_text": "为什么 Orion rollout 还不能 cutover？",
                 },
                 "stage_timings_ms": {},
@@ -890,6 +896,80 @@ def test_resolve_entity_falls_back_to_linker_when_planner_intent_is_cross_entity
     assert result["entity_key"] == "ent_cross"
     assert result["resolution_trace"]["graph_first_entity_resolution"]["attempted"] is False
     assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "graph_intent_cross_entity"
+
+
+def test_resolve_entity_falls_back_to_linker_when_entity_type_conflicts(monkeypatch) -> None:
+    graph = RecallGraph()
+    entity = SimpleNamespace(
+        entity_key="ent_project",
+        display_name="Orion runbook",
+        identity_profile={
+            "schema_version": 2,
+            "who": "Orion runbook",
+            "entity_type": "project",
+            "surface_forms": ["Orion runbook"],
+            "stable_qualifiers": ["project"],
+            "evidence": ["The profile says this is a project."],
+        },
+    )
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return []
+
+    class _FakeRetrievalIndex:
+        async def entity_candidates(self, **kwargs):
+            return [SimpleNamespace(entity=entity, score=0.95)]
+
+    class _FakeWorkers:
+        def __init__(self) -> None:
+            self.link_calls: list[dict] = []
+
+        async def run_linker(self, **kwargs):
+            self.link_calls.append(dict(kwargs))
+            return LinkerOutput(
+                decision="cannot_resolve",
+                selected_entity_key=None,
+                confidence=0.0,
+                reason="Entity type conflict.",
+            )
+
+    workers = _FakeWorkers()
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+
+    result = run_async(
+        graph._resolve_entity(
+            {
+                "memory_space": "workspace:orion",
+                "request_id": "req_orion",
+                "workers": workers,
+                "planner": SimpleNamespace(query_focus=QueryFocus(graph_expansion_intent="entity_local")),
+                "draft_payload": {
+                    "schema_version": 2,
+                    "who": "Orion runbook",
+                    "entity_type": "document",
+                    "surface_forms": ["Orion runbook"],
+                    "stable_qualifiers": ["runbook"],
+                    "evidence": ["The query names a runbook."],
+                    "query_text": "Orion runbook 当前要求是什么？",
+                },
+                "stage_timings_ms": {},
+                "resolution_trace": {},
+            }
+        )
+    )
+
+    assert len(workers.link_calls) == 1
+    assert result.get("entity_key") is None
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is False
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "identity_match_not_found"
 
 
 def _run_recall_memories_with_graph_intent(monkeypatch, graph_expansion_intent: str) -> tuple[dict, list[str]]:
@@ -907,7 +987,7 @@ def _run_recall_memories_with_graph_intent(monkeypatch, graph_expansion_intent: 
         identity_profile={
             "who": "Orion service",
             "surface_forms": ["Orion service"],
-            "distinguishing_context": ["service"],
+            "stable_qualifiers": ["service"],
         },
     )
     observation = SimpleNamespace(
@@ -997,7 +1077,7 @@ def _run_recall_memories_with_graph_intent(monkeypatch, graph_expansion_intent: 
         "draft_payload": {
             "who": "Orion service",
             "surface_forms": ["Orion service"],
-            "distinguishing_context": ["service"],
+            "stable_qualifiers": ["service"],
             "query_text": "Orion service 当前负责人是谁？",
         },
         "stage_timings_ms": {"resolve_entity": 1},

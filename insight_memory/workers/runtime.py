@@ -32,9 +32,12 @@ logger = get_logger(__name__)
 
 def _normalized_profile_draft(draft: IdentityProfileDraft) -> dict[str, Any]:
     return {
+        "schema_version": 2,
         "who": normalize_text(draft.who),
+        "entity_type": draft.entity_type,
         "surface_forms": dedupe_preserve_order(draft.surface_forms, limit=3),
-        "distinguishing_context": dedupe_preserve_order(draft.distinguishing_context, limit=4),
+        "stable_qualifiers": dedupe_preserve_order(draft.stable_qualifiers, limit=4),
+        "evidence": dedupe_preserve_order(draft.evidence, limit=4),
     }
 
 
@@ -160,10 +163,13 @@ class MemoryWorkers:
                 continue
             normalized_drafts.append(
                 IdentityProfileDraft(
+                    schema_version=2,
                     draft_id=draft.draft_id,
                     who=normalized["who"],
+                    entity_type=normalized["entity_type"],
                     surface_forms=normalized["surface_forms"],
-                    distinguishing_context=normalized["distinguishing_context"],
+                    stable_qualifiers=normalized["stable_qualifiers"],
+                    evidence=normalized["evidence"],
                 )
             )
         gate_status = "passed" if normalized_drafts else "rejected_no_identity_profile"
@@ -257,10 +263,13 @@ class MemoryWorkers:
                 continue
             normalized_drafts.append(
                 IdentityProfileDraft(
+                    schema_version=2,
                     draft_id=draft.draft_id,
                     who=normalized["who"],
+                    entity_type=normalized["entity_type"],
                     surface_forms=normalized["surface_forms"],
-                    distinguishing_context=normalized["distinguishing_context"],
+                    stable_qualifiers=normalized["stable_qualifiers"],
+                    evidence=normalized["evidence"],
                 )
             )
         valid_draft_ids = {draft.draft_id for draft in normalized_drafts}
@@ -580,10 +589,13 @@ class MemoryWorkers:
                 continue
             normalized_drafts.append(
                 QueryIdentityProfileDraft(
+                    schema_version=2,
                     draft_id=draft.draft_id,
                     who=normalized["who"],
+                    entity_type=normalized["entity_type"],
                     surface_forms=normalized["surface_forms"],
-                    distinguishing_context=normalized["distinguishing_context"],
+                    stable_qualifiers=normalized["stable_qualifiers"],
+                    evidence=normalized["evidence"],
                     query_text=query_text,
                 )
             )
@@ -703,10 +715,13 @@ class MemoryWorkers:
         )
         normalized = _normalized_profile_draft(
             IdentityProfileDraft(
+                schema_version=2,
                 draft_id="profile_writer",
                 who=call.parsed.who,
+                entity_type=call.parsed.entity_type,
                 surface_forms=call.parsed.surface_forms,
-                distinguishing_context=call.parsed.distinguishing_context,
+                stable_qualifiers=call.parsed.stable_qualifiers,
+                evidence=call.parsed.evidence,
             )
         )
         logger.info(

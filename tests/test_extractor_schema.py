@@ -1,6 +1,42 @@
 from __future__ import annotations
 
-from insight_memory.workers.schemas import ExtractorOutput, QueryFocus
+import pytest
+from pydantic import ValidationError
+
+from insight_memory.workers.schemas import ExtractorOutput, IdentityProfileDraft, QueryFocus
+
+
+def test_identity_profile_draft_uses_v2_fields_under_original_name() -> None:
+    draft = IdentityProfileDraft.model_validate(
+        {
+            "schema_version": 2,
+            "draft_id": "draft_commodity_risk_handbook",
+            "who": "Commodity risk handbook",
+            "entity_type": "document",
+            "surface_forms": ["Commodity risk handbook"],
+            "stable_qualifiers": ["risk handbook"],
+            "evidence": ["The source calls it a handbook."],
+        }
+    )
+
+    assert draft.schema_version == 2
+    assert draft.entity_type == "document"
+    assert draft.stable_qualifiers == ["risk handbook"]
+    assert draft.evidence == ["The source calls it a handbook."]
+
+
+def test_identity_profile_draft_rejects_legacy_distinguishing_context() -> None:
+    with pytest.raises(ValidationError):
+        IdentityProfileDraft.model_validate(
+            {
+                "schema_version": 2,
+                "draft_id": "draft_commodity_risk_handbook",
+                "who": "Commodity risk handbook",
+                "entity_type": "document",
+                "surface_forms": ["Commodity risk handbook"],
+                "distinguishing_context": ["handbook"],
+            }
+        )
 
 
 def test_extractor_allows_long_temporary_refs() -> None:
@@ -12,10 +48,13 @@ def test_extractor_allows_long_temporary_refs() -> None:
             "identity_gate_status": "passed",
             "identity_profile_drafts": [
                 {
+                    "schema_version": 2,
                     "draft_id": long_draft_id,
                     "who": "Commodity risk handbook",
+                    "entity_type": "document",
                     "surface_forms": ["Commodity risk handbook"],
-                    "distinguishing_context": ["handbook"],
+                    "stable_qualifiers": ["handbook"],
+                    "evidence": ["The source names Commodity risk handbook."],
                 }
             ],
             "candidates": [

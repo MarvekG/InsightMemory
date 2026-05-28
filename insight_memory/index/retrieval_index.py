@@ -28,14 +28,16 @@ logger = get_logger(__name__)
 def project_identity_profile(profile: dict[str, Any] | None) -> str:
     payload = dict(profile or {})
     who = normalize_text(payload.get("who"))
+    entity_type = normalize_text(payload.get("entity_type"))
     surface_forms = [normalize_text(item) for item in payload.get("surface_forms") or []]
-    distinguishing_context = [normalize_text(item) for item in payload.get("distinguishing_context") or []]
+    stable_qualifiers = [normalize_text(item) for item in payload.get("stable_qualifiers") or []]
     parts = [
         f"who: {who}" if who else "",
+        f"entity_type: {entity_type}" if entity_type else "",
         f"surface_forms: {' | '.join(item for item in surface_forms if item)}" if surface_forms else "",
         (
-            f"distinguishing_context: {' | '.join(item for item in distinguishing_context if item)}"
-            if distinguishing_context
+            f"stable_qualifiers: {' | '.join(item for item in stable_qualifiers if item)}"
+            if stable_qualifiers
             else ""
         ),
     ]

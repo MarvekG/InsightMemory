@@ -160,7 +160,8 @@ unknown
 - 只能输出上表中的一个枚举值。
 - 不确定时输出 `unknown`，不要强行猜类型。
 - `unknown` 可以在 profile refresh 中进化为明确类型。
-- 明确类型之间不能由 profile writer 直接互改，必须走 merge/split 风险判断。
+- 明确类型之间不能由 profile writer 直接互改；proposal 必须拒绝自动应用，并进入
+  identity review。
 - 类型只表达主体“是什么”，不表达当前状态或用途。
 - 如果同一个名称同时像多个类型，优先选当前输入真正所属的主体，而不是被提到的依赖项。
 
@@ -265,7 +266,8 @@ background tasks
 - ingest 写入侧偏保守，避免永久误合并。
 - recall 读取侧可以有快路径，但必须严格、可审计、可回退。
 - profile refresh 只允许在同一 `entity_key` 下低风险进化。
-- merge/split 风险不能由 profile writer 自动吞掉。
+- 主体变更或疑似误合并风险不能由 profile writer 自动吞掉，必须拒绝自动应用并进入
+  identity review。
 
 ## Ingest Graph 设计
 
@@ -576,8 +578,8 @@ load_entity_context
 - `surface_forms` 默认只追加，不删除。
 - `stable_qualifiers` 默认只追加，不删除。
 - `evidence` 可以替换或截断，因为它不参与匹配。
-- 如果 proposal 暗示主体变了，拒绝应用，并排队 `detect_merge_candidates` 或人工/后续
-  split 诊断。
+- 如果 proposal 暗示主体变了，拒绝应用，并记录 `needs_identity_review`。当前设计不提供
+  自动 `split_entity_graph`，也不在 profile refresh 中修复历史误合并。
 
 应用成功后：
 
@@ -674,7 +676,8 @@ profile evolution 只解决身份描述越来越准确的问题：
 - 当前事实变化。
 - memory 内容更新。
 - 跨实体关系更新。
-- 实体 merge/split 的最终判断。
+- 实体 merge 的最终判断。
+- 历史误合并实体的自动拆分；当前没有 `split_entity_graph`。
 
 ### 字段刷新策略
 
@@ -682,7 +685,7 @@ profile evolution 只解决身份描述越来越准确的问题：
 | --- | --- | --- | --- |
 | `schema_version` | 固定为 `2` | 否 | 非 2 拒绝。 |
 | `who` | 默认保持；可改善展示名 | 不直接删除旧值 | 旧值进入 `surface_forms`，主体变化则拒绝。 |
-| `entity_type` | `unknown` 可变明确类型 | 否 | 明确类型冲突则拒绝，触发 merge/split 诊断。 |
+| `entity_type` | `unknown` 可变明确类型 | 否 | 明确类型冲突则拒绝，记录 `needs_identity_review`。 |
 | `surface_forms` | 追加去重 | 默认不删除 | 删除建议只进 audit，不自动应用。 |
 | `stable_qualifiers` | 追加去重 | 默认不删除 | 若像事实内容，拒绝或保留现状。 |
 | `evidence` | 替换、追加或截断 | 是 | 不参与匹配，低风险。 |
@@ -714,7 +717,7 @@ profile writer 输出必须结构化，至少包含：
 ```text
 safe
 needs_merge_review
-needs_split_review
+needs_identity_review
 reject
 ```
 
@@ -731,8 +734,8 @@ profile 自我进化不会影响准确率的前提是：变化必须被限制在
 - `surface_forms` 和 `stable_qualifiers` 以追加为主。
 - `entity_type` 只允许从 `unknown` 收敛。
 - `evidence` 不参与 retrieval projection 和 graph-first 匹配。
-- profile refresh 不自动 merge，不自动 split。
-- 任何主体变化迹象都进入 merge/split 诊断，而不是覆盖当前 profile。
+- profile refresh 不自动 merge，也不自动拆分历史误合并实体。
+- 任何主体变化迹象都进入 identity review，而不是覆盖当前 profile。
 - recall graph-first 只使用稳定字段，并且可回退 linker。
 
 这样 profile 可以变得更完整，但不会把一个实体“刷新成另一个实体”。

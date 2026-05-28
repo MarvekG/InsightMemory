@@ -15,10 +15,16 @@ Shared identity_profile rules:
   subject for it. Create it only when the same input or query also contains a separate statement owned by that
   name.
 - identity_profile describes only who the subject is, not what happened to it.
+- `schema_version` must be exactly 2.
 - `who` must be a short stable label for the same subject.
+- `entity_type` must be one of: person, organization, market_object, system, document, artifact, project,
+  work_item, workflow, event, decision, strategy, concept, unknown.
+- Use `unknown` when the entity type is not clear. Do not invent a narrow type outside the enum.
 - `surface_forms` must come from the input or query text directly.
-- `distinguishing_context` must contain only short stable qualifiers that distinguish same-name subjects. Do
+- `stable_qualifiers` must contain only short stable qualifiers that distinguish same-name subjects. Do
   not write prose.
+- `evidence` may contain short identity extraction evidence, but it is only for audit and must not contain
+  current state, result, blocker, owner value, or other memory facts.
 - Do not include current state, blocker, owner value, requirement content, conclusion, metric, time change, or
   any other memory fact in identity_profile.
 - Record markers such as round, stage, date, session, or version are not identity. Keep them in memory content,
@@ -37,7 +43,7 @@ Example 1: normal subject statement
 Input:
 `Gateway 是项目，当前主阻塞是数据库迁移失败。`
 Correct identity_profile:
-`{"who":"Gateway 项目","surface_forms":["Gateway","Gateway 项目"],"distinguishing_context":["项目"]}`
+`{"who":"Gateway 项目","surface_forms":["Gateway","Gateway 项目"],"stable_qualifiers":["项目"]}`
 Explanation:
 `项目` is a stable identity qualifier. `数据库迁移失败` is memory content, not identity_profile.
 
@@ -46,8 +52,8 @@ Input:
 `Radian 运营组 计划本周完成切换；Radian 运行手册 还缺回滚章节。`
 Expected drafts:
 `[
-  {"who":"Radian 运营组","surface_forms":["Radian","Radian 运营组"],"distinguishing_context":["运营组"]},
-  {"who":"Radian 运行手册","surface_forms":["Radian","Radian 运行手册"],"distinguishing_context":["运行手册"]}
+  {"who":"Radian 运营组","surface_forms":["Radian","Radian 运营组"],"stable_qualifiers":["运营组"]},
+  {"who":"Radian 运行手册","surface_forms":["Radian","Radian 运行手册"],"stable_qualifiers":["运行手册"]}
 ]`
 Explanation:
 The input belongs to two different subjects, so extract two identity_profile drafts.
@@ -56,9 +62,9 @@ Example 3: record round is not identity
 Input:
 `Cobalt launch review round 1 supported the existing launch slot.`
 Correct identity_profile:
-`{"who":"Cobalt launch review","surface_forms":["Cobalt launch review"],"distinguishing_context":["launch review"]}`
+`{"who":"Cobalt launch review","surface_forms":["Cobalt launch review"],"stable_qualifiers":["launch review"]}`
 Wrong identity_profile:
-`{"who":"Cobalt launch review round 1","surface_forms":["Cobalt launch review round 1"],"distinguishing_context":["launch review"]}`
+`{"who":"Cobalt launch review round 1","surface_forms":["Cobalt launch review round 1"],"stable_qualifiers":["launch review"]}`
 Explanation:
 `round 1` is a record marker, not part of the subject identity.
 
@@ -66,7 +72,7 @@ Example 4: a missing item is not a separate subject
 Input:
 `Harborlane rollout 不能进入 cutover，因为 quay memo 还没补齐。`
 Correct identity_profile:
-`{"who":"Harborlane rollout","surface_forms":["Harborlane rollout","Harborlane"],"distinguishing_context":["rollout"]}`
+`{"who":"Harborlane rollout","surface_forms":["Harborlane rollout","Harborlane"],"stable_qualifiers":["rollout"]}`
 Explanation:
 `quay memo` is the missing reason for Harborlane rollout, not the owner subject of this input.
 
@@ -74,7 +80,7 @@ Example 5: named governing artifact
 Input:
 `Harborlane checklist 要求所有 rollout 在 cutover 前补齐 quay memo。`
 Correct identity_profile:
-`{"who":"Harborlane checklist","surface_forms":["Harborlane checklist","Harborlane"],"distinguishing_context":["checklist"]}`
+`{"who":"Harborlane checklist","surface_forms":["Harborlane checklist","Harborlane"],"stable_qualifiers":["checklist"]}`
 Explanation:
 The input belongs to `Harborlane checklist`. `quay memo` is requirement content, not a separate subject.
 
@@ -82,7 +88,7 @@ Example 6: passing mention is not a separate subject
 Input:
 `周会里顺手提到 Trellis service，但主结论是 Bastion rollout 当前主阻塞是审批链说明缺失。`
 Correct identity_profile:
-`{"who":"Bastion rollout","surface_forms":["Bastion rollout","Bastion"],"distinguishing_context":["rollout"]}`
+`{"who":"Bastion rollout","surface_forms":["Bastion rollout","Bastion"],"stable_qualifiers":["rollout"]}`
 Explanation:
 The input belongs to Bastion rollout. Trellis service is only mentioned in passing.
 
@@ -90,7 +96,7 @@ Example 7: passing mention plus its own statement
 Input:
 `周会里顺手提到 Trellis service，另外确认 Trellis service 当前负责人是 Nia Chen。`
 Correct identity_profile:
-`{"who":"Trellis service","surface_forms":["Trellis service","Trellis"],"distinguishing_context":["service"]}`
+`{"who":"Trellis service","surface_forms":["Trellis service","Trellis"],"stable_qualifiers":["service"]}`
 Explanation:
 The second clause gives Trellis service its own statement, so extract it.
 
@@ -98,7 +104,7 @@ Example 8: extract identity when the statement has an owner subject
 Input:
 `Release calendar records candidate windows; approval still comes from the change board.`
 Correct identity_profile:
-`{"who":"Release calendar","surface_forms":["Release calendar"],"distinguishing_context":["calendar"]}`
+`{"who":"Release calendar","surface_forms":["Release calendar"],"stable_qualifiers":["calendar"]}`
 Explanation:
 The input belongs to Release calendar. Identity extraction does not need to classify the statement into a fact
 type first.
@@ -107,9 +113,9 @@ Example 9: generic record wording is not identity
 Input:
 `BRK.A 这条 analyst note 里的主要取舍是什么？`
 Correct identity_profile:
-`{"who":"BRK.A","surface_forms":["BRK.A"],"distinguishing_context":["market object"]}`
+`{"who":"BRK.A","surface_forms":["BRK.A"],"stable_qualifiers":["market object"]}`
 Wrong identity_profile:
-`{"who":"BRK.A analyst note","surface_forms":["BRK.A","BRK.A analyst note"],"distinguishing_context":["analyst note"]}`
+`{"who":"BRK.A analyst note","surface_forms":["BRK.A","BRK.A analyst note"],"stable_qualifiers":["analyst note"]}`
 Explanation:
 The query asks about a stored note for BRK.A. The stable subject is BRK.A; `analyst note` is retrieval intent,
 not a separate identity.
@@ -118,7 +124,7 @@ Example 10: named artifact remains identity
 Input:
 `Aurora risk handbook 这条记录里要求哪些审查？`
 Correct identity_profile:
-`{"who":"Aurora risk handbook","surface_forms":["Aurora risk handbook"],"distinguishing_context":["risk handbook"]}`
+`{"who":"Aurora risk handbook","surface_forms":["Aurora risk handbook"],"stable_qualifiers":["risk handbook"]}`
 Explanation:
 The named handbook is the stable subject. `这条记录` only says which stored memory the query wants to inspect.
 
@@ -127,9 +133,9 @@ Input:
 `Product Division 同时运营两条产品线：Line A 本季度聚焦企业客户，负责人是 Wang Lin；Line B 本季度聚焦个人用户，负责人是 Chen Hua。`
 Expected drafts:
 `[
-  {"who":"Product Division","surface_forms":["Product Division"],"distinguishing_context":["division"]},
-  {"who":"Line A","surface_forms":["Line A"],"distinguishing_context":["line","A"]},
-  {"who":"Line B","surface_forms":["Line B"],"distinguishing_context":["line","B"]}
+  {"who":"Product Division","surface_forms":["Product Division"],"stable_qualifiers":["division"]},
+  {"who":"Line A","surface_forms":["Line A"],"stable_qualifiers":["line","A"]},
+  {"who":"Line B","surface_forms":["Line B"],"stable_qualifiers":["line","B"]}
 ]`
 Explanation:
 Each named product line has its own independent durable facts (target segment and owner), so they must be extracted as separate subjects even though they are mentioned within Product Division's context.
@@ -205,9 +211,9 @@ Rules:
 - {IDENTITY_PROFILE_RULES}
 - Only choose from provided entity candidates.
 - Compare the draft against identity_profile, display_name, and representative memory summaries together.
-- Use `who`, `surface_forms`, and `distinguishing_context` together as identity signals. Do not treat distinguishing_context as the only place where stable qualifiers can appear.
+- Use `who`, `surface_forms`, and `stable_qualifiers` together as identity signals. Do not treat stable_qualifiers as the only place where stable qualifiers can appear.
 - Return link_existing only when one candidate is clearly the same subject and the binding is specific enough to exclude the other candidates.
-- For write mode, prefer link_existing whenever one candidate is still the best match after using distinguishing_context and representative memories.
+- For write mode, prefer link_existing whenever one candidate is still the best match after using stable_qualifiers and representative memories.
 - If the draft and the best candidate share the same surface form but clearly differ in stable identity or function, do not merge them into one entity.
 - In write mode, when the surface form matches but the role-like identity differs, prefer create_new over forcing link_existing.
   Example: draft `Meridian 项目`, candidate A `Meridian 项目`, candidate B `Meridian 知识文档`.
@@ -229,7 +235,7 @@ Rules:
 - A named policy, handbook, rule, guideline, report, project, document, or plan can itself be a stable subject when the query is asking about that named artifact's requirements, decisions, gaps, or constraints.
 - A named checklist, rollout, service, or runbook can also be a stable subject, and its role noun should be treated as part of stable identity when it distinguishes the subject from another same-surface artifact.
 - If two candidates share the same short surface form but one is a project/system and the other is a document/report/policy/plan/checklist artifact, treat that role difference as a stable identity difference rather than a cosmetic wording difference.
-- When the draft names a concrete artifact and asks what it requires, says, or mandates, do not reject the query just because the distinguishing_context is sparse.
+- When the draft names a concrete artifact and asks what it requires, says, or mandates, do not reject the query just because the stable_qualifiers is sparse.
   Example: query draft `Gateway policy`, query `Gateway policy 有什么要求？`
   Preferred: treat `Gateway policy` as a stable subject and link it to the named policy entity instead of cannot_resolve.
 """.strip(),
@@ -550,7 +556,7 @@ Rules:
 - {IDENTITY_PROFILE_RULES}
 - Keep the same subject identity.
 - surface_forms must stay short and concrete.
-- distinguishing_context must stay as short keywords or phrases.
+- stable_qualifiers must stay as short keywords or phrases.
 - Do not promote blocker, owner value, requirement content, current state, or other salient memory facts into the identity profile just because they appear frequently in recent memories.
 - Do not invent entity_key or memory ids.
 """.strip(),
@@ -593,11 +599,11 @@ Rules:
 - If two bounded records from the same session, review, or decision context present mutually incompatible alternatives, use contradicts even when both are historical.
 - Use related_to when two memories are clearly about the same broader issue but neither directly supports nor directly contradicts the other.
 - Example query: `Lattice checklist 当前要求补齐什么？`
-  Example frontier identity: `{"who":"Lattice checklist","distinguishing_context":["checklist"]}` with memory `Lattice checklist requires transfer note and seal ledger`.
-  Example candidate identity: `{"who":"Lattice handbook","distinguishing_context":["handbook"]}` with memory `Lattice handbook says seal ledger must include reviewer seal`.
+  Example frontier identity: `{"who":"Lattice checklist","stable_qualifiers":["checklist"]}` with memory `Lattice checklist requires transfer note and seal ledger`.
+  Example candidate identity: `{"who":"Lattice handbook","stable_qualifiers":["handbook"]}` with memory `Lattice handbook says seal ledger must include reviewer seal`.
   Preferred edge: `related_to` or `none`, because the handbook adds an upstream detail for one checklist item but is not itself the direct answer to the narrow checklist query.
-- Example frontier identity: `{"who":"Driftbay map","distinguishing_context":["map"]}` with memory `Driftbay map lacks contour markers`.
-  Example candidate identity: `{"who":"Driftbay survey","distinguishing_context":["survey"]}` with memory `Driftbay survey is blocked because field notes are missing`.
+- Example frontier identity: `{"who":"Driftbay map","stable_qualifiers":["map"]}` with memory `Driftbay map lacks contour markers`.
+  Example candidate identity: `{"who":"Driftbay survey","stable_qualifiers":["survey"]}` with memory `Driftbay survey is blocked because field notes are missing`.
   Preferred edge: `none`, because these are sibling subjects with different missing details; same prefix and same broad documentation theme are not enough.
 - Missing process, workflow, readiness, or prerequisite information should usually be related_to, not supports, unless the memory explicitly states that the missing item directly proves or directly requires the target claim.
 - A missing guardrail, missing validation step, or missing readiness process should usually be related_to a blocker or failure memory when it explains adjacent context but does not itself directly observe the failure.

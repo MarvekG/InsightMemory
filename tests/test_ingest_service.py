@@ -63,7 +63,15 @@ class _FakeGateWorkers:
         return SimpleNamespace(
             identity_gate_status=self.gate_status,
             identity_profile_drafts=[
-                IdentityProfileDraft(draft_id="d1", who="Atlas review", surface_forms=["Atlas review"])
+                IdentityProfileDraft(
+                    schema_version=2,
+                    draft_id="d1",
+                    who="Atlas review",
+                    entity_type="event",
+                    surface_forms=["Atlas review"],
+                    stable_qualifiers=["review"],
+                    evidence=["The input names Atlas review."],
+                )
             ]
             if self.gate_status == "passed"
             else [],
@@ -147,16 +155,22 @@ def test_run_write_gate_normalizes_drafts_and_rejects_empty_surface_forms(
                 identity_gate_status="passed",
                 identity_profile_drafts=[
                     IdentityProfileDraft(
+                        schema_version=2,
                         draft_id="d1",
                         who="  Atlas review  ",
+                        entity_type="event",
                         surface_forms=["Atlas review", "Atlas review"],
-                        distinguishing_context=[" review ", "review"],
+                        stable_qualifiers=[" review ", "review"],
+                        evidence=[" Atlas review is named. ", "Atlas review is named."],
                     ),
                     IdentityProfileDraft(
+                        schema_version=2,
                         draft_id="d2",
                         who="No surface",
+                        entity_type="unknown",
                         surface_forms=[],
-                        distinguishing_context=[],
+                        stable_qualifiers=[],
+                        evidence=[],
                     ),
                 ],
             )
@@ -180,10 +194,13 @@ def test_run_write_gate_normalizes_drafts_and_rejects_empty_surface_forms(
     assert result.identity_gate_status == "passed"
     assert [draft.model_dump() for draft in result.identity_profile_drafts] == [
         {
+            "schema_version": 2,
             "draft_id": "d1",
             "who": "Atlas review",
+            "entity_type": "event",
             "surface_forms": ["Atlas review"],
-            "distinguishing_context": ["review"],
+            "stable_qualifiers": ["review"],
+            "evidence": ["Atlas review is named."],
         }
     ]
 
@@ -256,7 +273,15 @@ def test_ingest_graph_continue_ingest_runs_full_extractor_from_context(monkeypat
     extractor = ExtractorOutput(
         identity_gate_status="passed",
         identity_profile_drafts=[
-            IdentityProfileDraft(draft_id="d1", who="Atlas review", surface_forms=["Atlas review"])
+            IdentityProfileDraft(
+                schema_version=2,
+                draft_id="d1",
+                who="Atlas review",
+                entity_type="event",
+                surface_forms=["Atlas review"],
+                stable_qualifiers=["review"],
+                evidence=["The input names Atlas review."],
+            )
         ],
         candidates=[],
     )
