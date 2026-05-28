@@ -1,0 +1,119 @@
+{
+  "suite_id": "identity_profile_rules_v1",
+  "description": "Prompt-level accuracy suite for identity_profile extraction rules. It calls /memory/prompt-evals/run and scores only the returned raw output.",
+  "minimum_pass_rate": 1.0,
+  "cases": [
+    {
+      "case_id": "write_gate_missing_item_owner",
+      "category": "causal_missing_item_boundary",
+      "prompt_key": "write_gate",
+      "payload": {
+        "context": "Lanturn deployment cannot enter final validation because the escrow approval form is still missing."
+      },
+      "expected_gate_status": "passed",
+      "expected_profiles": [
+        {
+          "who_any": ["Lanturn deployment"],
+          "entity_type": "workflow"
+        }
+      ],
+      "forbidden_who": ["escrow approval form"],
+      "min_profile_count": 1,
+      "max_profile_count": 1
+    },
+    {
+      "case_id": "write_gate_governing_policy_owner",
+      "category": "governing_artifact_owner",
+      "prompt_key": "write_gate",
+      "payload": {
+        "context": "Cedar QA policy requires every release ticket to attach a parity matrix before manager signoff."
+      },
+      "expected_gate_status": "passed",
+      "expected_profiles": [
+        {
+          "who_any": ["Cedar QA policy"],
+          "entity_type": "document"
+        }
+      ],
+      "forbidden_who": ["parity matrix", "release ticket"],
+      "min_profile_count": 1,
+      "max_profile_count": 1
+    },
+    {
+      "case_id": "extractor_same_prefix_roles",
+      "category": "same_prefix_role_boundary",
+      "prompt_key": "extractor",
+      "payload": {
+        "context": "Ravel import service is owned by Priya. Ravel import checklist is maintained by Tomas and tracks customs packet readiness."
+      },
+      "expected_gate_status": "passed",
+      "expected_profiles": [
+        {
+          "who_any": ["Ravel import service"],
+          "entity_type": "system"
+        },
+        {
+          "who_any": ["Ravel import checklist"],
+          "entity_type": "document"
+        }
+      ],
+      "forbidden_who": ["Ravel import"],
+      "min_profile_count": 2,
+      "max_profile_count": 2
+    },
+    {
+      "case_id": "query_planner_market_record_word",
+      "category": "market_record_scope",
+      "prompt_key": "query_planner",
+      "payload": {
+        "query": "What does the latest analyst note say about STP.N?"
+      },
+      "expected_gate_status": "passed",
+      "expected_profiles": [
+        {
+          "who_any": ["STP.N"],
+          "entity_type": "market_object"
+        }
+      ],
+      "forbidden_who": ["latest analyst note", "STP.N latest analyst note"],
+      "min_profile_count": 1,
+      "max_profile_count": 1
+    },
+    {
+      "case_id": "query_planner_record_marker_not_identity",
+      "category": "record_marker_boundary",
+      "prompt_key": "query_planner",
+      "payload": {
+        "query": "For Meridian onboarding, what changed in the phase 3 review?"
+      },
+      "expected_gate_status": "passed",
+      "expected_profiles": [
+        {
+          "who_any": ["Meridian onboarding"],
+          "entity_type_any": ["workflow", "project", "work_item"]
+        }
+      ],
+      "forbidden_who": ["phase 3 review", "Meridian onboarding phase 3 review"],
+      "min_profile_count": 1,
+      "max_profile_count": 1
+    },
+    {
+      "case_id": "write_gate_background_name_ignored",
+      "category": "background_name_boundary",
+      "prompt_key": "write_gate",
+      "payload": {
+        "context": "During the Nexus sync, Vireo billing migration moved to amber because invoice replay tests failed overnight."
+      },
+      "expected_gate_status": "passed",
+      "expected_profiles": [
+        {
+          "who_any": ["Vireo billing migration"],
+          "entity_type_any": ["workflow", "project", "work_item"]
+        }
+      ],
+      "forbidden_who": ["Nexus sync", "invoice replay tests"],
+      "min_profile_count": 1,
+      "max_profile_count": 1
+    }
+  ]
+}
