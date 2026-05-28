@@ -506,6 +506,188 @@ query_text
 
 Prompt 示例必须和 eval 样本不同，避免 case 定制。
 
+### 2026-05-28 实测问题与提示词优先修复方案
+
+本节记录 Identity Profile V2 合并后的新一轮真实评测问题。当前修复方向优先调整
+worker prompt，让 LLM 在既有 schema 和 graph 流程内给出更稳的语义判断；除非提示词无法
+约束，才考虑增加很小的通用守门代码。禁止写关键词、正则、case 名称或样本专用逻辑。
+
+#### 问题 1：写入侧把完整 owner subject 坍缩成底层主体
+
+失败样本：
+
+- run：`identity_profile_v2_accuracy_more2_20260528T060852Z_market`
+- case：`market_same_surface_stock_vs_note`
+- 结果：`entity_count expected 2, got 1`
+- 现象：`Northfield stock` 和 `Northfield earnings note` 被写到同一个 entity。
+
+日志证据：
+
+- 第一条写入 `Northfield stock 当前主风险是渠道库存压力。` 正确生成：
+  - `who=Northfield stock`
+  - `entity_type=market_object`
+  - `stable_qualifiers=["stock"]`
+- 第二条写入 `Northfield earnings note 当前结论是...` 被抽成：
+  - `who=Northfield`
+  - `entity_type=market_object`
+  - `stable_qualifiers=["market object"]`
+- linker 在 write mode 中把第二条绑定到 `Northfield stock`，理由是 `Northfield` 是同一市场主体。
+
+根因：
+
+- 当前 identity prompt 对“generic record wording is not identity”的规则偏强，适用于 query
+  中的“这条 analyst note”，但误伤了 ingest 中作为句子主语出现的具名 artifact。
+- 写入语境里，`X earnings note 当前结论...` 的 owner subject 是具名 note artifact，而不是
+  `X` 对应的股票。
+
+提示词修复方案：
+
+- 在 `write_gate` 和 `extractor` 中改为 owner-subject 语义判定：
+  - 先判断这条输入的可复用事实归属于哪个完整命名短语，而不是先把短语拆成底层实体和记录类型。
+  - 如果事实是对完整命名短语本身作出的结论、要求、状态或约束，identity 必须保留该完整短语。
+  - 如果短语中的底层名称只是修饰语，不能把 owner subject 降格为底层名称。
+  - 如果记录类表达只是“用户想检索哪条历史记录”的查询意图，而不是事实 owner，才允许把底层主体
+    作为 identity。
+  - `entity_type` 仍只选粗类型；更窄的身份限定由 LLM 根据主体边界写入 `stable_qualifiers`。
+- 在 `linker` 的 write mode prompt 中补充：
+  - 比较 draft 与候选是否处于同一身份粒度；不要因为共享前缀或共享主题就绑定。
+  - 如果把 draft 的事实挂到候选 entity 后，会导致两个可分别复指的主体共用一个长期身份，
+    应 `create_new` 或标记 ambiguous。
+  - 只有 evidence 支持两边记忆都能无损归属于同一主体时，才允许 `link_existing`。
+
+#### 问题 2：MergeGraph 把已经拆开的同名前缀 artifact 再次合并
+
+失败样本：
+
+- run：`edge_none_fix_20260528T054317Z_long_horizon`
+- case：`large_scope_document_project_checklist_with_noise`
+- 结果：`entity_count expected 4, got 3`
+- 现象：`Axiom document` 和 `Axiom checklist` 被 merge。
+
+日志证据：
+
+- write linker 对 `Axiom document`、`Axiom checklist`、`Axiom project` 都做了正确拆分。
+- merge_judge 后续输出：
+  - `decision=merge`
+  - `merged_identity_profile.who=Axiom document`
+  - `surface_forms=["Axiom checklist","Axiom document"]`
+  - `stable_qualifiers=["checklist","document"]`
+  - reason 认为 checklist 和 document 是同一 artifact 的 surface form。
+
+根因：
+
+- merge prompt 已经要求不同 stable function 保持分离，但 LLM 仍把两个同名前缀 document
+  role 当作同一 artifact 的别名。
+- profile refresh guard 只检查 `entity_type` 和 `who`/surface_forms，没有把
+  `stable_qualifiers` 的边界冲突作为强语义风险暴露给 LLM。
+
+提示词修复方案：
+
+- 在 `merge_judge` 中强化“同粗类型内的 role boundary”：
+  - 相同 `entity_type` 只是候选可比，不是 merge 证据。
+  - `stable_qualifiers` 表示主体边界；当双方 qualifier 描述的是不同稳定功能或身份粒度时，
+    默认 `keep_separate`。
+  - 只有 evidence 明确表明两边是同一具体主体的两个名称、改名或等价称呼时，才允许 merge。
+  - 如果 merge 后的 profile 只是把双方 `surface_forms` 和 `stable_qualifiers` 做并集，而没有
+    解释为什么这些限定属于同一主体，应判为 unsafe。
+- 在 `profile_writer` prompt 中补充：
+  - profile refresh 只能让当前主体的 identity 更清晰，不能把相关但独立的主体吸收到当前 profile。
+  - 如果 recent memories 暗示当前 entity 可能混入两个 owner subject，应保持原 profile，并在
+    reason 中标记需要后续身份审查，而不是自行扩张。
+
+#### 问题 3：解释型 recall 被 planner 判为 entity_local，导致跨实体证据链被截断
+
+失败样本：
+
+- run：`identity_profile_v2_accuracy_more_20260528T055421Z_heterogeneous`
+- case：`heterogeneous_same_surface_artifact_chain`
+- query：`为什么 Rill custody docket 还不能归档？`
+- 结果：answer grounded 但 answer_judge fail，答案只提到 `crate transfer slip`，漏
+  `Rill custody guide` 和 `Rill custody register/watch roster`。
+
+日志证据：
+
+- 数据库中已存在 3 个正确实体：
+  - `Rill custody docket`
+  - `Rill custody guide`
+  - `Rill custody register`
+- edges 已存在：
+  - docket blocker 与 guide requirement 有 `supports`
+  - register requirement 与 guide requirement 有 `related_to`
+- recall audit 中 `graph_expansion_intent=entity_local`，`dynamic_cross_entity_skipped=true`，
+  used_edges 只有 seed 的 `derived_from`。
+
+根因：
+
+- query planner 把“为什么不能归档”解释成目标实体自己的直接 blocker 查询。
+- 对这类解释目标状态成因、判断条件是否满足的问题，用户往往要的是直接缺口加外部约束
+  和下一层仍需满足的具体前提；只返回 seed blocker 会丢失 evidence-backed recall 的价值。
+
+提示词修复方案：
+
+- 在 `query_planner` 中强化：
+  - 根据用户问题需要的证据范围判断 graph intent，而不是根据问题中的某些词判断。
+  - 如果答案只需要目标主体自己的当前属性，使用 `entity_local`。
+  - 如果答案需要解释“为什么成立”、是否满足条件、还依赖什么、或当前状态受哪些外部约束影响，
+    应输出 `graph_expansion_intent=cross_entity` 或 `uncertain`。
+  - `graph_expansion_reason` 应说明预期需要检查外部约束、依赖主体或治理证据，而不是复述查询词。
+- 在 `answer_composer` 中保留现有窄查询约束，但强调：
+  - 对解释型、依赖型或条件满足型问题，若 payload 中已有跨主体证据链，答案应显式覆盖链路中
+    对结论必要的每一层。
+  - 不要只回答目标主体的直接事实，也不要把外部约束只放在 citation 中暗示。
+
+#### 问题 4：长文单 memory 答案过度压缩，漏并列关键项
+
+失败样本：
+
+- run：`identity_profile_v2_accuracy_more_20260528T055421Z_real_debate_longform`
+- case：`real_debate_policy_summary_601318`
+  - query：`601318.SH 这条政策分析历史记录里最关键的政策驱动是什么？`
+  - partial：答案覆盖 `资本监管优化路径`，漏 `养老金融`。
+- case：`real_debate_conservative_technical_601318`
+  - query：`601318.SH 这条保守分析历史记录为什么偏向回避？`
+  - partial：答案覆盖 `技术面`，漏 `风险暴露期`。
+
+日志证据：
+
+- 两个 case 都成功 resolved entity，recall status 为 `ok`，answer grounded。
+- used_edges 只有单条 `derived_from`，说明不是跨实体召回失败。
+- 证据 content 中确实包含漏掉的关键短语，但 answer_composer 只选择了一个主线。
+
+根因：
+
+- answer_composer 对需要抽象总结主因的问题倾向输出一个压缩主题。
+- 长文 evidence 中多个一级标题或开篇关键句并列存在时，composer 没有稳定保留 2-3 个主因。
+
+提示词修复方案：
+
+- 在 `answer_composer` 中强化长文 evidence selection：
+  - 先判断 evidence 自身是单一主线，还是多个并列主因共同支撑结论。
+  - 如果证据明确给出多个 central drivers，应回答 2-3 个主因，而不是只选一个最详细段落。
+  - 保留 evidence 中用于区分这些主因的关键原词，不要把不同主因压成一个泛化概念。
+  - 用户要求“最关键”时，仍应尊重证据结构；如果证据把多个因素并列为核心原因，应压缩为多点答案。
+
+### 提示词修复优先级
+
+优先级按准确率风险排序：
+
+1. `write_gate` / `extractor` / `linker`：修复完整 owner subject 与底层主体坍缩。该问题会在
+   ingest 阶段污染 entity ownership，影响后续所有 recall。
+2. `merge_judge` / `profile_writer`：修复同粗类型但身份边界不同的误合并。该问题会在后台
+   维护阶段破坏已经正确拆分的实体。
+3. `query_planner` / `answer_composer`：修复解释型查询的跨实体证据链截断。该问题主要
+   影响 answer coverage。
+4. `answer_composer`：修复长文并列主因漏答。该问题主要影响 real-world longform 总结质量。
+
+如果提示词修改后仍出现同类错误，再考虑极小的通用代码守门：
+
+- merge apply 前对 `merged_identity_profile` 做通用风险分类，把“同一粗类型但不同 stable
+  identity boundary 且无等价身份证据”的 proposal 标为 `needs_identity_review`。
+- recall 在 planner 输出 `entity_local` 但 planner 自己的结构化 reason 表明答案需要外部证据时，
+  保守地允许一次动态跨实体扩展。
+
+上述代码守门只能基于 profile 字段和 LLM 输出的通用语义标签，不能基于具体词表或 eval case。
+
 ### Retrieval Index
 
 `project_identity_profile()` 改成 V2 projection：
@@ -789,6 +971,10 @@ LLM 不能做：
 - profile 进化后旧别名仍能召回。
 - profile 进化后不会把当前状态提升为 stable qualifier。
 - merge 后 aliases 和 qualifiers 合并但 facts 不进 profile。
+- 写入侧完整 owner subject 与底层主题共享前缀时，必须按身份粒度判断是否形成不同 entity。
+- 已正确拆分的同名前缀同粗类型主体不能被 merge_judge 后台合并。
+- 解释型、条件满足型和依赖型查询必须能带出必要的跨主体证据链。
+- 单条长文 evidence 中存在多个并列核心驱动或风险主因时，answer_composer 不能只保留一个主题。
 
 Prompt 示例和 eval 名称、领域、措辞必须不同。
 
@@ -810,6 +996,12 @@ Prompt 示例和 eval 名称、领域、措辞必须不同。
 
 - 改 workers schemas 到 V2。
 - 改 identity prompt。
+- 优先按“2026-05-28 实测问题与提示词优先修复方案”调整：
+  - `write_gate`、`extractor`：按 owner-subject 语义决定 identity 粒度。
+  - `linker`：write mode 中共享前缀但身份粒度不同的候选保持保守。
+  - `merge_judge`：同粗类型内仍要尊重 stable identity boundary。
+  - `query_planner`：按答案所需证据范围决定是否保留跨实体扩展可能性。
+  - `answer_composer`：解释链和长文并列主因都要保留关键 evidence terms。
 - 改 profile writer 输出为 proposal。
 - 更新单元测试和 eval case。
 

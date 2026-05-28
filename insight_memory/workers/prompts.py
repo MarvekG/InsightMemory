@@ -36,6 +36,12 @@ Shared identity_profile rules:
 - Reject identity extraction only when no concrete stable subject owns the input or query.
 - A stable subject is a named thing that can be referred to again later, such as a system, document, project,
   team, workflow object, market object, person, or other named object.
+- Decide identity granularity from the owner subject that the durable fact is about, not from a lower-level
+  subject that only appears inside that owner phrase.
+- Do not split the owner subject into a lower-level subject plus a record descriptor when the complete named
+  phrase is the thing receiving the conclusion, requirement, status, decision, or other durable fact.
+- The identity classification must come from the ownership relation in the sentence, not from matching role
+  words in the phrase.
 - If a name is only a missing item, attachment, evidence, prerequisite, reason, or detail inside another
   subject's statement, do not create a separate subject for it.
 - If a name is only mentioned in passing and the input or query does not belong to that name, do not create a
@@ -60,6 +66,8 @@ Shared identity_profile rules:
 - Generic record wording such as "this record", "latest note", "analysis note", "history", or "report content"
   is usually retrieval intent, not identity. If the query names an underlying stable subject, keep the
   underlying subject as identity and keep the generic record wording in query_text or memory content.
+- This generic-record rule does not override owner-subject assignment: if the durable fact is about the named
+  record-like subject itself, keep that full subject as identity.
 - A named report, handbook, policy, plan, checklist, or other artifact can still be identity when the artifact
   itself has a stable name. Do not confuse that with generic wording that only describes the stored record type.
 - When one input or query contains several different subjects with the same prefix, keep the stable qualifier
@@ -241,6 +249,9 @@ Rules:
 - Return link_existing only when one candidate is clearly the same subject and the binding is specific enough to exclude the other candidates.
 - For write mode, prefer link_existing whenever one candidate is still the best match after using stable_qualifiers and representative memories.
 - If the draft and the best candidate share the same surface form but clearly differ in stable identity or function, do not merge them into one entity.
+- In write mode, first check whether the draft and candidate have the same identity granularity.
+- Do not link two entities merely because they share a prefix, topic, or underlying domain entity.
+- Return link_existing only when the draft and candidate could both own the same durable memories without losing a subject boundary.
 - In write mode, when the surface form matches but the role-like identity differs, prefer create_new over forcing link_existing.
   Example: draft `Meridian 项目`, candidate A `Meridian 项目`, candidate B `Meridian 知识文档`.
   Preferred: in write mode, create a new entity for the document if the new draft clearly refers to the document rather than the project.
@@ -379,8 +390,10 @@ Rules:
 - query_focus.time_intent must be one of current, latest, history, or unspecified.
 - `graph_expansion_intent` is the query_focus field that controls dynamic cross-entity graph expansion.
 - query_focus.graph_expansion_intent must be one of `entity_local`, `cross_entity`, or `uncertain`.
+- Decide graph expansion by the evidence scope required to answer, not by matching query words.
 - Use `entity_local` when the query can be answered from the target entity's own recalled memory and local
   evidence, without needing another entity's memory to explain, constrain, or extend the answer.
+- Use `cross_entity` or `uncertain` when the answer requires external constraints, dependencies, governing evidence, or other-entity state to explain why the target answer holds.
 - Use `cross_entity` when the query asks for why/how, dependency chains, surrounding constraints, related gaps,
   external requirements, or other-entity evidence that may explain the target subject.
 - Use `uncertain` when the query has a stable target but you cannot confidently decide whether other-entity
@@ -473,6 +486,7 @@ Rules:
 - Do not invent facts outside the provided payload.
 - Each memory may include `evidence_role`, `relation_types`, and `relation_edges`; use these fields to decide whether the memory is direct evidence, supporting evidence, conflicting evidence, update/history evidence, or weak background.
 - Use `seed`, `updates`, and `contradicts` memories as answer evidence when they address the query.
+- If the query requires an explanation chain, dependency chain, or condition-satisfaction answer, do not truncate after the seed memory when linked evidence supplies necessary external constraints or prerequisites.
 - Treat `supports` memories as explanatory context. Use them in the answer only when the query asks for reasons, dependencies, external
   constraints, why the current answer holds, or what still needs to be satisfied beyond the direct target answer.
 - For narrow target-property questions, keep the answer scoped to the requested target. Do not add a supporting memory's
@@ -484,9 +498,11 @@ Rules:
   unless the query explicitly asks for that deeper layer.
 - A governing handbook/manual/policy/checklist can be relevant without being part of the answer. Mention it only when the query actually asks
   for the governing reason, upstream rule, dependency chain, or still-required next layer.
+- First decide whether long evidence has one central driver or several co-central drivers.
 - When the query asks for key drivers, core risks, or main reasons, enumerate the top points explicitly and keep the important evidence terms visible instead of replacing them with generic paraphrases.
 - If a critical term appears in the evidence, prefer repeating that term directly in the answer.
 - If the query asks for the most important, core, or main point, answer with only the 1-3 central points instead of broadening into a full summary.
+- Do not collapse co-central drivers into one generic umbrella when the evidence presents them as distinct reasons.
 - Avoid adding peripheral details when the query is narrowly focused on the top driver, top risk, or main reason.
 - If the evidence gives a specific manifestation of a broader concept, name both in the answer using `broad concept (specific manifestation)` style when possible.
 - Prefer a `broader concept (specific manifestation)` form only when the broader concept is genuinely supported by the evidence.
@@ -702,6 +718,9 @@ Decide whether two entities should merge.
 Rules:
 - Return merge only when they clearly refer to the same subject.
 - Shared topic, shared requirement, shared blocker, shared workflow, or shared surrounding context is not enough for merge.
+- The same broad entity_type is only eligibility to compare, not evidence to merge.
+- stable_qualifiers are identity-boundary evidence. Different stable identity boundaries should remain separate
+  unless the payload gives explicit identity-equivalence evidence.
 - Do not merge an actor/system/project/person with a document/policy/checklist/report/handbook artifact just because the artifact constrains, explains, or is mentioned by the actor.
   Example source: `Ledger service`
   Example target: `Compliance checklist`
@@ -723,6 +742,8 @@ Rules:
 - If merge, pick the better survivor_entity_key from the provided two candidates.
 - If merge, also return `merged_identity_profile` as the complete final V2 identity profile for the survivor.
 - The merged_identity_profile must follow the shared identity profile rules and must not be a partial patch.
+- The merged_identity_profile must not be a blind union of both profiles. It must describe one coherent subject
+  and preserve only aliases and qualifiers that truly belong to that one subject.
 - Do not rely on code to append aliases or qualifiers; include every surface form and stable qualifier that should remain.
 - Do not include memory facts, blockers, owner values, requirements, or current state in merged_identity_profile.
 - If uncertain, return keep_separate.
