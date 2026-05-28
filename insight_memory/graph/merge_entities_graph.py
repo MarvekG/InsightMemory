@@ -6,6 +6,10 @@ from langgraph.graph import END, StateGraph
 
 from insight_memory.index.retrieval_index import retrieval_index
 from insight_memory.storage.repository import MemoryRepository
+from insight_memory.utils.identity_profile import (
+    identity_profile_refresh_risk,
+    next_profile_metadata,
+)
 from insight_memory.utils.request_context import get_or_create_request_id
 from insight_memory.workers.runtime import MemoryWorkers
 
@@ -137,8 +141,16 @@ class MergeEntitiesGraph:
 
     async def _apply_merge(self, state: MergeEntitiesState) -> dict[str, Any]:
         judgment = state["judgment"]
+        request_id = get_or_create_request_id()
         survivor_entity_key = judgment.survivor_entity_key or state["target_entity_key"]
-        merged_entity_key = state["source_entity_key"] if survivor_entity_key == state["target_entity_key"] else state["target_entity_key"]
+        merged_entity_key = (
+            state["source_entity_key"]
+            if survivor_entity_key == state["target_entity_key"]
+            else state["target_entity_key"]
+        )
+        source = state["source"]
+        target = state["target"]
+        merged_entity = source if merged_entity_key == source.entity_key else target
         async with MemoryRepository() as repository:
             await repository.merge_entities(
                 memory_space=state["memory_space"],
@@ -157,6 +169,36 @@ class MergeEntitiesGraph:
                 else []
             )
             if survivor is not None:
+                survivor_profile = dict(survivor.identity_profile or {})
+                proposed_profile = (
+                    judgment.merged_identity_profile.model_dump()
+                    if judgment.merged_identity_profile is not None
+                    else {}
+                )
+                if proposed_profile:
+                    risk, risk_reason = identity_profile_refresh_risk(
+                        current_profile=survivor_profile,
+                        proposed_profile=proposed_profile,
+                    )
+                else:
+                    risk, risk_reason = "needs_identity_review", "missing_merged_identity_profile"
+                applied_profile = proposed_profile if risk == "safe" else survivor_profile
+                metadata = next_profile_metadata(
+                    current_metadata=dict(survivor.metadata_json or {}),
+                    previous_profile=survivor_profile,
+                    proposed_profile=proposed_profile,
+                    applied_profile=applied_profile,
+                    risk=risk,
+                    reason=f"entity_merged:{risk_reason}",
+                    request_id=request_id,
+                    applied=risk == "safe",
+                )
+                await repository.update_entity_profile(
+                    entity=survivor,
+                    display_name=str(applied_profile.get("who") or survivor.display_name),
+                    identity_profile=applied_profile,
+                    metadata=metadata,
+                )
                 await repository.create_task(
                     memory_space=state["memory_space"],
                     task_type="repair_memory_edges",

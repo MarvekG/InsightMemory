@@ -101,7 +101,7 @@ python -m pip install -r requirements.txt
 python run.py
 ```
 
-源码开发需要自动 reload 时，在 `.env` 中设置 `MEMORY_APP_RELOAD=true`。
+源码开发默认启用自动 reload，配置为 `MEMORY_APP_RELOAD=true`。
 
 ### 验证健康状态
 

@@ -6,6 +6,7 @@ from langgraph.graph import END, StateGraph
 
 from insight_memory.index.retrieval_index import retrieval_index
 from insight_memory.storage.repository import MemoryRepository
+from insight_memory.utils.identity_profile import identity_profile_refresh_risk
 
 
 class DetectMergeCandidatesState(TypedDict, total=False):
@@ -74,6 +75,12 @@ class DetectMergeCandidatesGraph:
             for item in retrieved:
                 other = item.entity
                 if other.entity_key == target.entity_key:
+                    continue
+                risk, _reason = identity_profile_refresh_risk(
+                    current_profile=dict(target.identity_profile or {}),
+                    proposed_profile=dict(other.identity_profile or {}),
+                )
+                if risk != "safe":
                     continue
                 smaller, larger = sorted([target.entity_key, other.entity_key])
                 await repository.create_task(

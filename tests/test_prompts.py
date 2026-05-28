@@ -27,6 +27,16 @@ def test_query_planner_instructions_require_per_draft_query_text() -> None:
     assert "Do not reuse the full multi-subject query as `query_text` for every draft." in instructions
 
 
+def test_query_planner_instructions_require_graph_expansion_intent() -> None:
+    instructions = get_worker_instructions("query_planner")
+
+    assert "`graph_expansion_intent`" in instructions
+    assert "`entity_local`" in instructions
+    assert "`cross_entity`" in instructions
+    assert "`uncertain`" in instructions
+    assert "Do not decide graph expansion with keyword matching" in instructions
+
+
 def test_identity_profile_rules_prioritize_subject_assignment() -> None:
     assert "First decide which named stable subject owns the input or query." in IDENTITY_PROFILE_RULES
     assert "Do not run a second value/type gate over the statement content." in IDENTITY_PROFILE_RULES
@@ -64,7 +74,9 @@ def test_identity_profile_rules_include_shared_examples() -> None:
     assert "Correct identity_profile:" in IDENTITY_PROFILE_RULES
     assert "Input:" in IDENTITY_PROFILE_RULES
     assert '当前主阻塞是数据库迁移失败' in IDENTITY_PROFILE_RULES
-    assert '"distinguishing_context":["项目"]' in IDENTITY_PROFILE_RULES
+    assert '"stable_qualifiers":["项目"]' in IDENTITY_PROFILE_RULES
+    assert "`schema_version` must be exactly 2." in IDENTITY_PROFILE_RULES
+    assert "`entity_type` must be one of:" in IDENTITY_PROFILE_RULES
     assert '`数据库迁移失败` is memory content' in IDENTITY_PROFILE_RULES
     assert '`Radian 运营组 计划本周完成切换；Radian 运行手册 还缺回滚章节。`' in IDENTITY_PROFILE_RULES
     assert "Expected drafts:" in IDENTITY_PROFILE_RULES
@@ -84,8 +96,10 @@ def test_edge_judge_instructions_use_original_query_for_narrow_cross_entity_call
     assert "If `original_query` and `query_identity_profile` are present" in instructions
     assert "judge supports against the current query target" in instructions
     assert "For narrow target-property questions" in instructions
+    assert 'Do not output `edge_type="none"`' in instructions
+    assert "omit that pair from `relations`" in instructions
     assert "`Lattice checklist 当前要求补齐什么？`" in instructions
-    assert "Preferred edge: `related_to` or `none`" in instructions
+    assert "Preferred edge: `related_to` or omit the relation" in instructions
 
 
 def test_answer_composer_instructions_keep_narrow_queries_scoped() -> None:

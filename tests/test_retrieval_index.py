@@ -10,7 +10,7 @@ def test_project_memory_includes_entity_identity() -> None:
         identity_profile={
             "who": "Grayshore bulletin",
             "surface_forms": ["Grayshore bulletin"],
-            "distinguishing_context": ["bulletin", "archive briefing"],
+            "stable_qualifiers": ["bulletin", "archive briefing"],
         }
     )
     memory = SimpleNamespace(

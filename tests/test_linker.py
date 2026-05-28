@@ -40,7 +40,7 @@ def test_linker_does_not_apply_query_side_exact_match_fallback(monkeypatch) -> N
             identity_profile_draft={
                 "who": "Atlas rollout",
                 "surface_forms": ["Atlas rollout", "Atlas"],
-                "distinguishing_context": ["release program", "session history"],
+                "stable_qualifiers": ["release program", "session history"],
             },
             entity_candidates=[
                 {
@@ -49,7 +49,7 @@ def test_linker_does_not_apply_query_side_exact_match_fallback(monkeypatch) -> N
                     "identity_profile": {
                         "who": "Atlas rollout",
                         "surface_forms": ["Atlas rollout"],
-                        "distinguishing_context": ["historical record", "session record"],
+                        "stable_qualifiers": ["historical record", "session record"],
                     },
                     "score": 0.01,
                     "active_memory_summaries": [],
@@ -96,7 +96,7 @@ def test_linker_rejects_selected_entity_key_outside_candidates(monkeypatch) -> N
             identity_profile_draft={
                 "who": "Atlas rollout",
                 "surface_forms": ["Atlas rollout"],
-                "distinguishing_context": ["release program"],
+                "stable_qualifiers": ["release program"],
             },
             entity_candidates=[
                 {
@@ -105,7 +105,7 @@ def test_linker_rejects_selected_entity_key_outside_candidates(monkeypatch) -> N
                     "identity_profile": {
                         "who": "Atlas rollout",
                         "surface_forms": ["Atlas rollout"],
-                        "distinguishing_context": ["release program"],
+                        "stable_qualifiers": ["release program"],
                     },
                     "score": 0.6,
                     "active_memory_summaries": [],
@@ -151,7 +151,7 @@ def test_linker_corrects_single_near_match_candidate_key(monkeypatch) -> None:
             identity_profile_draft={
                 "who": "Quarterly planning doc",
                 "surface_forms": ["Quarterly planning doc"],
-                "distinguishing_context": [],
+                "stable_qualifiers": [],
             },
             entity_candidates=[
                 {
@@ -160,7 +160,7 @@ def test_linker_corrects_single_near_match_candidate_key(monkeypatch) -> None:
                     "identity_profile": {
                         "who": "Quarterly planning doc",
                         "surface_forms": ["Quarterly planning doc"],
-                        "distinguishing_context": ["document"],
+                        "stable_qualifiers": ["document"],
                     },
                     "score": 0.9,
                     "active_memory_summaries": [],
@@ -171,7 +171,7 @@ def test_linker_corrects_single_near_match_candidate_key(monkeypatch) -> None:
                     "identity_profile": {
                         "who": "Fallback checklist",
                         "surface_forms": ["Fallback checklist"],
-                        "distinguishing_context": ["artifact"],
+                        "stable_qualifiers": ["artifact"],
                     },
                     "score": 0.1,
                     "active_memory_summaries": [],

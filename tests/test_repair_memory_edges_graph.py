@@ -146,6 +146,6 @@ def _entity(*, entity_key: str) -> SimpleNamespace:
         identity_profile={
             "who": entity_key,
             "surface_forms": [entity_key],
-            "distinguishing_context": ["test"],
+            "stable_qualifiers": ["test"],
         },
     )

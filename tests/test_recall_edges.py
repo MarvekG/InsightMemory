@@ -20,7 +20,7 @@ def test_edge_judge_memory_payload_requires_identity_profile() -> None:
     identity_profile = {
         "who": "Northridge map",
         "surface_forms": ["Northridge map"],
-        "distinguishing_context": ["map"],
+        "stable_qualifiers": ["map"],
     }
 
     payload = _memory_payload(memory, identity_profile=identity_profile)

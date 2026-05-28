@@ -22,13 +22,16 @@ def _display_name_from_profile(identity_profile: dict[str, Any]) -> str:
         identity_profile: 已规范化的主体画像。
 
     Returns:
-        优先使用首个 surface form；缺失时回退到 `who`，再缺失则返回 `Unknown`。
+        优先使用 `who`；缺失时回退到首个 surface form，再缺失则返回 `Unknown`。
     """
 
+    who = str(identity_profile.get("who") or "").strip()
+    if who:
+        return who
     surface_forms = identity_profile.get("surface_forms") or []
     if surface_forms:
         return str(surface_forms[0])
-    return str(identity_profile.get("who") or "Unknown")
+    return "Unknown"
 
 
 def _identity_profile_key(identity_profile: dict[str, Any]) -> str:
@@ -44,10 +47,11 @@ def _identity_profile_key(identity_profile: dict[str, Any]) -> str:
 
     payload = {
         "who": str(identity_profile.get("who") or "").strip(),
+        "entity_type": str(identity_profile.get("entity_type") or "").strip(),
         "surface_forms": [str(item).strip() for item in identity_profile.get("surface_forms") or []],
-        "distinguishing_context": [
+        "stable_qualifiers": [
             str(item).strip()
-            for item in identity_profile.get("distinguishing_context") or []
+            for item in identity_profile.get("stable_qualifiers") or []
         ],
     }
     return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))

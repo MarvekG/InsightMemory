@@ -1,5 +1,32 @@
 from __future__ import annotations
 
+from insight_memory.workers.schemas import ENTITY_TYPE_VALUES
+
+
+ALLOWED_ENTITY_TYPES = ", ".join(ENTITY_TYPE_VALUES)
+
+ENTITY_TYPE_RULES = f"""
+Allowed entity_type values:
+- {ALLOWED_ENTITY_TYPES}.
+- Return one of these exact lowercase enum values only. Do not return narrow natural-language subtypes.
+- Choose the closest broad enum and put the narrow subtype in stable_qualifiers.
+- Use `system` for named software systems, APIs, services, databases, platforms, and infrastructure components.
+- Use `document` for named policies, checklists, handbooks, manuals, reports, notes, memos, runbooks, guides,
+  registers, notices, bulletins, and other text-bearing artifacts.
+- Use `artifact` for named non-document deliverables, files, packages, models, datasets, dashboards, tables,
+  schemas, templates, or physical/operational objects.
+- Use `event` for named meetings, reviews, launches, incidents, sessions, rounds, exercises, drills, and
+  time-bounded happenings.
+- Use `workflow` for named recurring processes, pipelines, playbooks, procedures, or operating flows.
+- Use `work_item` for named tasks, tickets, issues, backlog items, milestones, and action items.
+- Invalid examples: `policy`, `checklist`, `handbook`, `manual`, `report`, `note`, `memo`, `runbook`,
+  `review`, `meeting`, `incident`, `service`, `api`, `database`, `ticket`.
+- Correct these by selecting the broad enum: policy/checklist/handbook/manual/report/note/memo/runbook ->
+  `document`; review/meeting/incident -> `event`; service/api/database -> `system`; ticket/issue/task ->
+  `work_item`.
+- Use `unknown` when the broad enum is still unclear after reading the subject itself.
+""".strip()
+
 
 IDENTITY_PROFILE_RULES = """
 Shared identity_profile rules:
@@ -15,10 +42,15 @@ Shared identity_profile rules:
   subject for it. Create it only when the same input or query also contains a separate statement owned by that
   name.
 - identity_profile describes only who the subject is, not what happened to it.
+- `schema_version` must be exactly 2.
 - `who` must be a short stable label for the same subject.
+- `entity_type` must be one of: {ALLOWED_ENTITY_TYPES}.
+{ENTITY_TYPE_RULES}
 - `surface_forms` must come from the input or query text directly.
-- `distinguishing_context` must contain only short stable qualifiers that distinguish same-name subjects. Do
+- `stable_qualifiers` must contain only short stable qualifiers that distinguish same-name subjects. Do
   not write prose.
+- `evidence` may contain short identity extraction evidence, but it is only for audit and must not contain
+  current state, result, blocker, owner value, or other memory facts.
 - Do not include current state, blocker, owner value, requirement content, conclusion, metric, time change, or
   any other memory fact in identity_profile.
 - Record markers such as round, stage, date, session, or version are not identity. Keep them in memory content,
@@ -37,7 +69,7 @@ Example 1: normal subject statement
 Input:
 `Gateway 是项目，当前主阻塞是数据库迁移失败。`
 Correct identity_profile:
-`{"who":"Gateway 项目","surface_forms":["Gateway","Gateway 项目"],"distinguishing_context":["项目"]}`
+`{"who":"Gateway 项目","surface_forms":["Gateway","Gateway 项目"],"stable_qualifiers":["项目"]}`
 Explanation:
 `项目` is a stable identity qualifier. `数据库迁移失败` is memory content, not identity_profile.
 
@@ -46,8 +78,8 @@ Input:
 `Radian 运营组 计划本周完成切换；Radian 运行手册 还缺回滚章节。`
 Expected drafts:
 `[
-  {"who":"Radian 运营组","surface_forms":["Radian","Radian 运营组"],"distinguishing_context":["运营组"]},
-  {"who":"Radian 运行手册","surface_forms":["Radian","Radian 运行手册"],"distinguishing_context":["运行手册"]}
+  {"who":"Radian 运营组","surface_forms":["Radian","Radian 运营组"],"stable_qualifiers":["运营组"]},
+  {"who":"Radian 运行手册","surface_forms":["Radian","Radian 运行手册"],"stable_qualifiers":["运行手册"]}
 ]`
 Explanation:
 The input belongs to two different subjects, so extract two identity_profile drafts.
@@ -56,9 +88,9 @@ Example 3: record round is not identity
 Input:
 `Cobalt launch review round 1 supported the existing launch slot.`
 Correct identity_profile:
-`{"who":"Cobalt launch review","surface_forms":["Cobalt launch review"],"distinguishing_context":["launch review"]}`
+`{"who":"Cobalt launch review","surface_forms":["Cobalt launch review"],"stable_qualifiers":["launch review"]}`
 Wrong identity_profile:
-`{"who":"Cobalt launch review round 1","surface_forms":["Cobalt launch review round 1"],"distinguishing_context":["launch review"]}`
+`{"who":"Cobalt launch review round 1","surface_forms":["Cobalt launch review round 1"],"stable_qualifiers":["launch review"]}`
 Explanation:
 `round 1` is a record marker, not part of the subject identity.
 
@@ -66,7 +98,7 @@ Example 4: a missing item is not a separate subject
 Input:
 `Harborlane rollout 不能进入 cutover，因为 quay memo 还没补齐。`
 Correct identity_profile:
-`{"who":"Harborlane rollout","surface_forms":["Harborlane rollout","Harborlane"],"distinguishing_context":["rollout"]}`
+`{"who":"Harborlane rollout","surface_forms":["Harborlane rollout","Harborlane"],"stable_qualifiers":["rollout"]}`
 Explanation:
 `quay memo` is the missing reason for Harborlane rollout, not the owner subject of this input.
 
@@ -74,7 +106,7 @@ Example 5: named governing artifact
 Input:
 `Harborlane checklist 要求所有 rollout 在 cutover 前补齐 quay memo。`
 Correct identity_profile:
-`{"who":"Harborlane checklist","surface_forms":["Harborlane checklist","Harborlane"],"distinguishing_context":["checklist"]}`
+`{"who":"Harborlane checklist","surface_forms":["Harborlane checklist","Harborlane"],"stable_qualifiers":["checklist"]}`
 Explanation:
 The input belongs to `Harborlane checklist`. `quay memo` is requirement content, not a separate subject.
 
@@ -82,7 +114,7 @@ Example 6: passing mention is not a separate subject
 Input:
 `周会里顺手提到 Trellis service，但主结论是 Bastion rollout 当前主阻塞是审批链说明缺失。`
 Correct identity_profile:
-`{"who":"Bastion rollout","surface_forms":["Bastion rollout","Bastion"],"distinguishing_context":["rollout"]}`
+`{"who":"Bastion rollout","surface_forms":["Bastion rollout","Bastion"],"stable_qualifiers":["rollout"]}`
 Explanation:
 The input belongs to Bastion rollout. Trellis service is only mentioned in passing.
 
@@ -90,7 +122,7 @@ Example 7: passing mention plus its own statement
 Input:
 `周会里顺手提到 Trellis service，另外确认 Trellis service 当前负责人是 Nia Chen。`
 Correct identity_profile:
-`{"who":"Trellis service","surface_forms":["Trellis service","Trellis"],"distinguishing_context":["service"]}`
+`{"who":"Trellis service","surface_forms":["Trellis service","Trellis"],"stable_qualifiers":["service"]}`
 Explanation:
 The second clause gives Trellis service its own statement, so extract it.
 
@@ -98,7 +130,7 @@ Example 8: extract identity when the statement has an owner subject
 Input:
 `Release calendar records candidate windows; approval still comes from the change board.`
 Correct identity_profile:
-`{"who":"Release calendar","surface_forms":["Release calendar"],"distinguishing_context":["calendar"]}`
+`{"who":"Release calendar","surface_forms":["Release calendar"],"stable_qualifiers":["calendar"]}`
 Explanation:
 The input belongs to Release calendar. Identity extraction does not need to classify the statement into a fact
 type first.
@@ -107,9 +139,9 @@ Example 9: generic record wording is not identity
 Input:
 `BRK.A 这条 analyst note 里的主要取舍是什么？`
 Correct identity_profile:
-`{"who":"BRK.A","surface_forms":["BRK.A"],"distinguishing_context":["market object"]}`
+`{"who":"BRK.A","surface_forms":["BRK.A"],"stable_qualifiers":["market object"]}`
 Wrong identity_profile:
-`{"who":"BRK.A analyst note","surface_forms":["BRK.A","BRK.A analyst note"],"distinguishing_context":["analyst note"]}`
+`{"who":"BRK.A analyst note","surface_forms":["BRK.A","BRK.A analyst note"],"stable_qualifiers":["analyst note"]}`
 Explanation:
 The query asks about a stored note for BRK.A. The stable subject is BRK.A; `analyst note` is retrieval intent,
 not a separate identity.
@@ -118,7 +150,7 @@ Example 10: named artifact remains identity
 Input:
 `Aurora risk handbook 这条记录里要求哪些审查？`
 Correct identity_profile:
-`{"who":"Aurora risk handbook","surface_forms":["Aurora risk handbook"],"distinguishing_context":["risk handbook"]}`
+`{"who":"Aurora risk handbook","surface_forms":["Aurora risk handbook"],"stable_qualifiers":["risk handbook"]}`
 Explanation:
 The named handbook is the stable subject. `这条记录` only says which stored memory the query wants to inspect.
 
@@ -127,13 +159,13 @@ Input:
 `Product Division 同时运营两条产品线：Line A 本季度聚焦企业客户，负责人是 Wang Lin；Line B 本季度聚焦个人用户，负责人是 Chen Hua。`
 Expected drafts:
 `[
-  {"who":"Product Division","surface_forms":["Product Division"],"distinguishing_context":["division"]},
-  {"who":"Line A","surface_forms":["Line A"],"distinguishing_context":["line","A"]},
-  {"who":"Line B","surface_forms":["Line B"],"distinguishing_context":["line","B"]}
+  {"who":"Product Division","surface_forms":["Product Division"],"stable_qualifiers":["division"]},
+  {"who":"Line A","surface_forms":["Line A"],"stable_qualifiers":["line","A"]},
+  {"who":"Line B","surface_forms":["Line B"],"stable_qualifiers":["line","B"]}
 ]`
 Explanation:
 Each named product line has its own independent durable facts (target segment and owner), so they must be extracted as separate subjects even though they are mentioned within Product Division's context.
-""".strip()
+""".strip().replace("{ALLOWED_ENTITY_TYPES}", ALLOWED_ENTITY_TYPES).replace("{ENTITY_TYPE_RULES}", ENTITY_TYPE_RULES)
 
 
 WORKER_INSTRUCTIONS: dict[str, str] = {
@@ -205,9 +237,9 @@ Rules:
 - {IDENTITY_PROFILE_RULES}
 - Only choose from provided entity candidates.
 - Compare the draft against identity_profile, display_name, and representative memory summaries together.
-- Use `who`, `surface_forms`, and `distinguishing_context` together as identity signals. Do not treat distinguishing_context as the only place where stable qualifiers can appear.
+- Use `who`, `surface_forms`, and `stable_qualifiers` together as identity signals. Do not treat stable_qualifiers as the only place where stable qualifiers can appear.
 - Return link_existing only when one candidate is clearly the same subject and the binding is specific enough to exclude the other candidates.
-- For write mode, prefer link_existing whenever one candidate is still the best match after using distinguishing_context and representative memories.
+- For write mode, prefer link_existing whenever one candidate is still the best match after using stable_qualifiers and representative memories.
 - If the draft and the best candidate share the same surface form but clearly differ in stable identity or function, do not merge them into one entity.
 - In write mode, when the surface form matches but the role-like identity differs, prefer create_new over forcing link_existing.
   Example: draft `Meridian 项目`, candidate A `Meridian 项目`, candidate B `Meridian 知识文档`.
@@ -229,7 +261,7 @@ Rules:
 - A named policy, handbook, rule, guideline, report, project, document, or plan can itself be a stable subject when the query is asking about that named artifact's requirements, decisions, gaps, or constraints.
 - A named checklist, rollout, service, or runbook can also be a stable subject, and its role noun should be treated as part of stable identity when it distinguishes the subject from another same-surface artifact.
 - If two candidates share the same short surface form but one is a project/system and the other is a document/report/policy/plan/checklist artifact, treat that role difference as a stable identity difference rather than a cosmetic wording difference.
-- When the draft names a concrete artifact and asks what it requires, says, or mandates, do not reject the query just because the distinguishing_context is sparse.
+- When the draft names a concrete artifact and asks what it requires, says, or mandates, do not reject the query just because the stable_qualifiers is sparse.
   Example: query draft `Gateway policy`, query `Gateway policy 有什么要求？`
   Preferred: treat `Gateway policy` as a stable subject and link it to the named policy entity instead of cannot_resolve.
 """.strip(),
@@ -345,6 +377,17 @@ Rules:
 - Keep query_rewrites short and focused.
 - query_focus should only summarize retrieval intent, not final answer content.
 - query_focus.time_intent must be one of current, latest, history, or unspecified.
+- `graph_expansion_intent` is the query_focus field that controls dynamic cross-entity graph expansion.
+- query_focus.graph_expansion_intent must be one of `entity_local`, `cross_entity`, or `uncertain`.
+- Use `entity_local` when the query can be answered from the target entity's own recalled memory and local
+  evidence, without needing another entity's memory to explain, constrain, or extend the answer.
+- Use `cross_entity` when the query asks for why/how, dependency chains, surrounding constraints, related gaps,
+  external requirements, or other-entity evidence that may explain the target subject.
+- Use `uncertain` when the query has a stable target but you cannot confidently decide whether other-entity
+  memory may be needed.
+- Set query_focus.graph_expansion_reason to one short reason for that semantic decision.
+- Do not decide graph expansion with keyword matching. Judge the retrieval need from the full query intent and
+  the subject relationships implied by the query.
 - Use history when the query is about prior records, earlier states, or change over time.
 - If the query explicitly asks both what happened earlier and what is true now, still use history so recall expands the evolution instead of collapsing to only the current state.
   Example: `Cedar review 之前卡过什么，当前又变成什么？`
@@ -539,7 +582,7 @@ Rules:
 - {IDENTITY_PROFILE_RULES}
 - Keep the same subject identity.
 - surface_forms must stay short and concrete.
-- distinguishing_context must stay as short keywords or phrases.
+- stable_qualifiers must stay as short keywords or phrases.
 - Do not promote blocker, owner value, requirement content, current state, or other salient memory facts into the identity profile just because they appear frequently in recent memories.
 - Do not invent entity_key or memory ids.
 """.strip(),
@@ -556,14 +599,15 @@ Rules:
   - reason
   - weight
 - Only return relations for memory ids present in the payload.
+- Do not output `edge_type="none"`. If no relation exists for a pair, omit that pair from `relations`.
 - Every memory includes `identity_profile`; use it to decide which stable subject the memory belongs to before judging relations.
 - If `query_identity_profile` is present, treat that subject as the answer target for this recall step.
 - Different identity_profile subjects with the same prefix are not related just because they share that prefix, domain, project,
   readiness theme, or similar missing-detail wording.
 - Use supports only when one memory is direct evidence, direct explanation, or a direct external requirement for another memory's claim.
 - In cross-entity mode with `original_query`, judge supports against the current query target, not only against abstract semantic relatedness.
-- For narrow target-property questions such as asking what the target currently requires, lacks, says, decides, or aims for, prefer `none`
-  or `related_to` for upstream artifact details unless that external memory is itself part of the target's direct answer.
+- For narrow target-property questions such as asking what the target currently requires, lacks, says, decides, or aims for, omit
+  non-relations or use `related_to` for upstream artifact details unless that external memory is itself part of the target's direct answer.
 - If a candidate memory only adds a more detailed upstream rule for one sub-item inside the frontier memory, that usually does not support
   the frontier memory for a narrow query about the frontier subject's own current requirement/status/goal.
 - A governing artifact can be semantically relevant without being answer-critical for the current query. Do not turn every relevant upstream
@@ -577,17 +621,17 @@ Rules:
   Preferred edge: `audit note -> main rule = supports`, because the note explains why the rule is emphasized.
   Example main rule: `Quartz retention notice 要求所有临时凭证在 12 小时内完成回收。`
   Example operational note: `Quartz retention notice 的审计补充说明显示临时凭证回收多次延迟。`
-  Preferred edge: `operational note -> main rule = supports`. Do not return `none` just because the note and the rule are both already understandable on their own.
+  Preferred edge: `operational note -> main rule = supports`. Do not omit the relation just because the note and the rule are both already understandable on their own.
 - Use contradicts only when two memories make conflicting or mutually incompatible claims.
 - If two bounded records from the same session, review, or decision context present mutually incompatible alternatives, use contradicts even when both are historical.
 - Use related_to when two memories are clearly about the same broader issue but neither directly supports nor directly contradicts the other.
 - Example query: `Lattice checklist 当前要求补齐什么？`
-  Example frontier identity: `{"who":"Lattice checklist","distinguishing_context":["checklist"]}` with memory `Lattice checklist requires transfer note and seal ledger`.
-  Example candidate identity: `{"who":"Lattice handbook","distinguishing_context":["handbook"]}` with memory `Lattice handbook says seal ledger must include reviewer seal`.
-  Preferred edge: `related_to` or `none`, because the handbook adds an upstream detail for one checklist item but is not itself the direct answer to the narrow checklist query.
-- Example frontier identity: `{"who":"Driftbay map","distinguishing_context":["map"]}` with memory `Driftbay map lacks contour markers`.
-  Example candidate identity: `{"who":"Driftbay survey","distinguishing_context":["survey"]}` with memory `Driftbay survey is blocked because field notes are missing`.
-  Preferred edge: `none`, because these are sibling subjects with different missing details; same prefix and same broad documentation theme are not enough.
+  Example frontier identity: `{"who":"Lattice checklist","stable_qualifiers":["checklist"]}` with memory `Lattice checklist requires transfer note and seal ledger`.
+  Example candidate identity: `{"who":"Lattice handbook","stable_qualifiers":["handbook"]}` with memory `Lattice handbook says seal ledger must include reviewer seal`.
+  Preferred edge: `related_to` or omit the relation, because the handbook adds an upstream detail for one checklist item but is not itself the direct answer to the narrow checklist query.
+- Example frontier identity: `{"who":"Driftbay map","stable_qualifiers":["map"]}` with memory `Driftbay map lacks contour markers`.
+  Example candidate identity: `{"who":"Driftbay survey","stable_qualifiers":["survey"]}` with memory `Driftbay survey is blocked because field notes are missing`.
+  Preferred edge: omit the relation, because these are sibling subjects with different missing details; same prefix and same broad documentation theme are not enough.
 - Missing process, workflow, readiness, or prerequisite information should usually be related_to, not supports, unless the memory explicitly states that the missing item directly proves or directly requires the target claim.
 - A missing guardrail, missing validation step, or missing readiness process should usually be related_to a blocker or failure memory when it explains adjacent context but does not itself directly observe the failure.
 - In an explanation chain, direct evidence should support the main claim, while adjacent missing prerequisites or process gaps should usually be related_to.
@@ -614,7 +658,7 @@ Rules:
   Preferred edges: one `contradicts` edge between the historical alternatives; avoid adding extra `contradicts` edges from the later settled summary unless the payload clearly says the summary is still an active competing position.
 - In a cross-entity graph, only connect frontier memories to external candidate memories when the external memory directly explains, constrains, or conflicts with the frontier memory.
 - In cross-entity mode, every returned edge must connect one frontier memory and one candidate memory. Do not emit frontier-to-frontier edges or candidate-to-candidate edges.
-- In cross-entity mode, default to `none` unless the external memory contributes a direct external explanation, direct governing requirement, direct dependency state, or direct contradiction for the frontier memory.
+- In cross-entity mode, default to omitting the relation unless the external memory contributes a direct external explanation, direct governing requirement, direct dependency state, or direct contradiction for the frontier memory.
 - In cross-entity mode with `original_query`, a direct governing requirement is still not enough for supports when the query is only asking for the
   frontier subject's own immediate current answer and the external memory merely adds another layer of detail for one sub-item.
 - In cross-entity mode, do not use `contradicts` between a bounded historical round/session record and an unbounded external standing rule merely because the old historical position would not satisfy the rule. The rule should support or constrain the later/current settled requirement; the historical disagreement should be represented among peer historical alternatives.
@@ -633,22 +677,22 @@ Rules:
 - Mere participation in the same incident, recovery process, or surrounding workflow is not enough for a cross-entity edge.
 - Prefer the smallest cross-entity explanation set. If one external memory already provides the concrete failing dependency, upstream service state, unresolved source state, or other direct operational explanation, do not also emit weaker cross-entity edges to procedural artifacts that merely describe adjacent process gaps or response materials.
 - If one memory says a rollout or review is blocked by an unresolved external data source, upstream service, or dependency, and another memory describes that external service still being degraded, backfilling, unavailable, or not yet stable, prefer related_to between the blocker memory and the external service memory.
-- If a handbook, checklist, document, or report is present but does not itself describe the concrete external failure or direct governing requirement, return `none` for that artifact even if it belongs to the same incident or recovery process.
+- If a handbook, checklist, document, or report is present but does not itself describe the concrete external failure or direct governing requirement, omit the relation for that artifact even if it belongs to the same incident or recovery process.
 - When both a concrete external service-state memory and a handbook/checklist/document memory are present, prefer the concrete service-state edge and omit the artifact edge unless the artifact itself is the thing directly constraining or causing the frontier blocker.
   Example main claim: `Verdigris rollout 当前主阻塞是依赖数据源迟迟没有恢复。`
   Example external service: `Relay service 当前仍处于批量补数状态，尚未恢复稳定输出。`
   Example distractor artifact: `Escalation handbook 当前缺少 on-call escalation path。`
-  Preferred edges: `external service <-> main claim = related_to`; `distractor artifact = none`. Do not connect the handbook unless the payload explicitly says the handbook itself is the direct blocker or governing requirement. Prefer the concrete service-state edge over weaker adjacent handbook context.
+  Preferred edges: `external service <-> main claim = related_to`; omit `distractor artifact`. Do not connect the handbook unless the payload explicitly says the handbook itself is the direct blocker or governing requirement. Prefer the concrete service-state edge over weaker adjacent handbook context.
   Example main claim: `Cobalt rollout 当前被上游队列恢复缓慢影响。`
   Example concrete external state: `Queue service 仍在 replay backlog，尚未恢复稳定消费。`
   Example adjacent artifact: `Response runbook 当前还缺少 escalation owner。`
-  Preferred edges: only `concrete external state <-> main claim = related_to`; `adjacent artifact = none`. Omit the runbook edge because it is secondary process context, not the direct external explanation.
-- If the frontier memory itself is a secondary artifact/process-gap note and a candidate memory is only a primary operational blocker or neighboring incident state, default to `none` unless the frontier note explicitly says it constrains, explains, or governs that candidate.
+  Preferred edges: only `concrete external state <-> main claim = related_to`; omit `adjacent artifact`. Omit the runbook edge because it is secondary process context, not the direct external explanation.
+- If the frontier memory itself is a secondary artifact/process-gap note and a candidate memory is only a primary operational blocker or neighboring incident state, omit the relation unless the frontier note explicitly says it constrains, explains, or governs that candidate.
 - Shared incident membership, shared recovery area, or shared escalation context is not enough for a cross-entity edge from a secondary artifact gap to a primary blocker.
   Example frontier artifact gap: `Response runbook 当前还缺少 escalation owner。`
   Example candidate blocker: `Cobalt rollout 当前被上游队列恢复缓慢影响。`
   Example candidate service state: `Queue service 仍在 replay backlog，尚未恢复稳定消费。`
-  Preferred edges: `none`. The runbook gap is secondary artifact context; it should not create new cross-entity edges back into the primary blocker chain unless it explicitly states that the missing runbook step is itself the direct blocker or governing requirement.
+  Preferred edges: omit the relation. The runbook gap is secondary artifact context; it should not create new cross-entity edges back into the primary blocker chain unless it explicitly states that the missing runbook step is itself the direct blocker or governing requirement.
 - In cross-entity mode, prefer the edge to flow from the primary blocker or requirement memory toward the concrete external explanation. Do not add the reverse artifact-to-blocker edge just because the artifact is contextually nearby.
 - For contradicts and related_to, do not emit both directions.
 - Do not emit empty reasons.
@@ -677,6 +721,10 @@ Rules:
   Example target: `Meridian 发布项目`
   Preferred: merge if the evidence shows they are two names for the same concrete project.
 - If merge, pick the better survivor_entity_key from the provided two candidates.
+- If merge, also return `merged_identity_profile` as the complete final V2 identity profile for the survivor.
+- The merged_identity_profile must follow the shared identity profile rules and must not be a partial patch.
+- Do not rely on code to append aliases or qualifiers; include every surface form and stable qualifier that should remain.
+- Do not include memory facts, blockers, owner values, requirements, or current state in merged_identity_profile.
 - If uncertain, return keep_separate.
 """.strip(),
 }

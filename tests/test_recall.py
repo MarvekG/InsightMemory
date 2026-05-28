@@ -5,9 +5,11 @@ from types import SimpleNamespace
 from fastapi.testclient import TestClient
 
 from insight_memory.api import routes as routes_module
+from insight_memory.graph import recall_graph as recall_graph_module
 from insight_memory.graph.recall_graph import RecallGraph
 from insight_memory.main import app
 from insight_memory.services.recall_service import recall_service
+from insight_memory.workers.schemas import LinkerOutput, QueryFocus
 from tests.utils import run_async
 
 
@@ -246,6 +248,108 @@ def test_build_audit_metadata_summarizes_recall_for_system_improvement() -> None
     assert metadata["supporting_observation_ids"] == ["obs_1"]
 
 
+def test_build_audit_metadata_includes_stage_and_draft_timings() -> None:
+    metadata = RecallGraph._build_audit_metadata(
+        query="Orion service 当前负责人是谁？",
+        draft_runs=[
+            {
+                "result": {
+                    "status": "ok",
+                    "answer": "Orion service 当前负责人是 Mina。",
+                    "citations": [],
+                    "uncertainties": [],
+                    "error_code": None,
+                }
+            }
+        ],
+        result={
+            "status": "ok",
+            "answer": "Orion service 当前负责人是 Mina。",
+            "citations": [],
+            "uncertainties": [],
+            "error_code": None,
+        },
+        used_edges=[],
+        citations=[],
+        latency_ms=123,
+        stage_timings_ms={"plan_query": 10, "run_draft_subgraphs": 90},
+        draft_timings_ms=[
+            {
+                "draft_index": 0,
+                "resolve_entity": 20,
+                "memory_candidates": 5,
+                "answer_composer": 40,
+                "total": 70,
+            }
+        ],
+    )
+
+    assert metadata["stage_timings_ms"] == {"plan_query": 10, "run_draft_subgraphs": 90}
+    assert metadata["draft_timings_ms"] == [
+        {
+            "draft_index": 0,
+            "resolve_entity": 20,
+            "memory_candidates": 5,
+            "answer_composer": 40,
+            "total": 70,
+        }
+    ]
+
+
+def test_build_audit_metadata_summarizes_graph_first_entity_resolution() -> None:
+    metadata = RecallGraph._build_audit_metadata(
+        query="Orion service 当前负责人是谁？",
+        draft_runs=[
+            {
+                "resolution_trace": {
+                    "graph_first_entity_resolution": {
+                        "attempted": True,
+                        "used": True,
+                        "fallback_reason": "",
+                        "candidate_count": 1,
+                        "selected_entity_key": "ent_1",
+                    },
+                    "selected_entity_profile_revision": 3,
+                },
+                "result": {
+                    "status": "ok",
+                    "answer": "Orion service 当前负责人是 Mina。",
+                    "citations": [],
+                    "uncertainties": [],
+                    "error_code": None,
+                },
+            },
+            {
+                "resolution_trace": {
+                    "graph_first_entity_resolution": {
+                        "attempted": True,
+                        "used": False,
+                        "fallback_reason": "candidate_count_not_one",
+                        "candidate_count": 2,
+                        "selected_entity_key": None,
+                    }
+                },
+                "result": {
+                    "status": "ok",
+                    "answer": "Orion runbook 当前缺回滚说明。",
+                    "citations": [],
+                    "uncertainties": [],
+                    "error_code": None,
+                },
+            },
+        ],
+        result={"status": "ok", "answer": "", "citations": [], "uncertainties": [], "error_code": None},
+        used_edges=[],
+        citations=[],
+        latency_ms=123,
+    )
+
+    assert metadata["graph_first_entity_resolution_attempted_count"] == 2
+    assert metadata["graph_first_entity_resolution_used_count"] == 1
+    assert metadata["graph_first_entity_resolution_fallback_reasons"] == ["candidate_count_not_one"]
+    assert metadata["selected_entity_profile_revisions"] == [3]
+
+
 def test_recall_audit_preview_route_exposes_improvement_metadata(monkeypatch) -> None:
     calls: list[dict] = []
 
@@ -319,6 +423,7 @@ def test_run_draft_subgraphs_uses_per_draft_query_text() -> None:
             calls.append(dict(state))
             return {
                 "entity_key": None,
+                "stage_timings_ms": {"resolve_entity": 3, "answer_composer": 7, "total": 11},
                 "used_edges": [],
                 "resolution_trace": {},
                 "result": {
@@ -342,13 +447,13 @@ def test_run_draft_subgraphs_uses_per_draft_query_text() -> None:
             {
                 "who": "Atlas 发布项目",
                 "surface_forms": ["Atlas 发布项目", "Atlas"],
-                "distinguishing_context": ["发布项目"],
+                "stable_qualifiers": ["发布项目"],
                 "query_text": "Atlas 发布项目 当前主阻塞是什么？",
             },
             {
                 "who": "Atlas 文档",
                 "surface_forms": ["Atlas 文档", "Atlas"],
-                "distinguishing_context": ["文档"],
+                "stable_qualifiers": ["文档"],
                 "query_text": "Atlas 文档 当前缺什么？",
             },
         ],
@@ -368,3 +473,617 @@ def test_run_draft_subgraphs_uses_per_draft_query_text() -> None:
         "Atlas 发布项目 当前主阻塞是什么？",
         "Atlas 文档 当前缺什么？",
     ]
+    assert [item["stage_timings_ms"] for item in result["draft_runs"]] == [
+        {"resolve_entity": 3, "answer_composer": 7, "total": 11},
+        {"resolve_entity": 3, "answer_composer": 7, "total": 11},
+    ]
+
+
+def test_recall_memories_skips_dynamic_cross_entity_for_entity_local_intent(monkeypatch) -> None:
+    result, supplement_calls = _run_recall_memories_with_graph_intent(monkeypatch, "entity_local")
+
+    assert supplement_calls == []
+    assert result["resolution_trace"]["graph_expansion_intent"] == "entity_local"
+    assert result["resolution_trace"]["dynamic_cross_entity_skipped"] is True
+    assert result["stage_timings_ms"]["dynamic_cross_entity_graph"] == 0
+
+
+def test_recall_memories_runs_dynamic_cross_entity_for_cross_entity_intent(monkeypatch) -> None:
+    result, supplement_calls = _run_recall_memories_with_graph_intent(monkeypatch, "cross_entity")
+
+    assert supplement_calls == ["cross_entity"]
+    assert result["resolution_trace"]["graph_expansion_intent"] == "cross_entity"
+    assert result["resolution_trace"]["dynamic_cross_entity_skipped"] is False
+
+
+def test_recall_memories_runs_dynamic_cross_entity_for_uncertain_intent(monkeypatch) -> None:
+    result, supplement_calls = _run_recall_memories_with_graph_intent(monkeypatch, "uncertain")
+
+    assert supplement_calls == ["uncertain"]
+    assert result["resolution_trace"]["graph_expansion_intent"] == "uncertain"
+    assert result["resolution_trace"]["dynamic_cross_entity_skipped"] is False
+
+
+def test_resolve_entity_uses_graph_first_when_entity_local_has_unique_candidate(monkeypatch) -> None:
+    graph = RecallGraph()
+    entity = SimpleNamespace(
+        entity_key="ent_unique",
+        display_name="Orion service",
+        identity_profile={
+            "schema_version": 2,
+            "who": "Orion service",
+            "entity_type": "system",
+            "surface_forms": ["Orion service"],
+            "stable_qualifiers": ["service"],
+            "evidence": ["The profile names Orion service."],
+        },
+    )
+    memory = SimpleNamespace(summary="Orion service 当前负责人是 Mina。")
+    scored_candidate = SimpleNamespace(entity=entity, score=0.91)
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return [memory]
+
+    class _FakeRetrievalIndex:
+        async def entity_candidates(self, **kwargs):
+            return [scored_candidate]
+
+    class _FakeWorkers:
+        link_calls: list[dict] = []
+
+        async def run_linker(self, **kwargs):
+            self.link_calls.append(dict(kwargs))
+            return LinkerOutput(decision="cannot_resolve", confidence=0.0)
+
+    workers = _FakeWorkers()
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+
+    result = run_async(
+        graph._resolve_entity(
+            {
+                "memory_space": "workspace:orion",
+                "request_id": "req_orion",
+                "workers": workers,
+                "planner": SimpleNamespace(
+                    query_focus=QueryFocus(
+                        graph_expansion_intent="entity_local",
+                        graph_expansion_reason="Direct local entity query.",
+                    )
+                ),
+                "draft_payload": {
+                    "schema_version": 2,
+                    "who": "Orion service",
+                    "entity_type": "system",
+                    "surface_forms": ["Orion service"],
+                    "stable_qualifiers": ["service"],
+                    "evidence": ["The query names Orion service."],
+                    "query_text": "Orion service 当前负责人是谁？",
+                },
+                "stage_timings_ms": {},
+                "resolution_trace": {},
+            }
+        )
+    )
+
+    assert workers.link_calls == []
+    assert result["entity_key"] == "ent_unique"
+    assert result["linker"].decision == "link_existing"
+    assert result["resolution_trace"]["graph_first_entity_resolution"] == {
+        "attempted": True,
+        "used": True,
+        "fallback_reason": "",
+        "candidate_count": 1,
+        "selected_entity_key": "ent_unique",
+    }
+
+
+def test_resolve_entity_falls_back_to_linker_when_graph_first_has_no_unique_identity_match(monkeypatch) -> None:
+    graph = RecallGraph()
+    entities = [
+        SimpleNamespace(
+            entity_key="ent_a",
+            display_name="Orion service",
+            identity_profile={"who": "Orion service", "surface_forms": ["Orion service"]},
+        ),
+        SimpleNamespace(
+            entity_key="ent_b",
+            display_name="Orion runbook",
+            identity_profile={"who": "Orion runbook", "surface_forms": ["Orion runbook"]},
+        ),
+    ]
+    scored_candidates = [SimpleNamespace(entity=entity, score=0.9 - index * 0.1) for index, entity in enumerate(entities)]
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return []
+
+    class _FakeRetrievalIndex:
+        async def entity_candidates(self, **kwargs):
+            return scored_candidates
+
+    class _FakeWorkers:
+        def __init__(self) -> None:
+            self.link_calls: list[dict] = []
+
+        async def run_linker(self, **kwargs):
+            self.link_calls.append(dict(kwargs))
+            return LinkerOutput(
+                decision="link_existing",
+                selected_entity_key="ent_a",
+                confidence=0.83,
+                reason="Selected by fallback linker.",
+            )
+
+    workers = _FakeWorkers()
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+
+    result = run_async(
+        graph._resolve_entity(
+            {
+                "memory_space": "workspace:orion",
+                "request_id": "req_orion",
+                "workers": workers,
+                "planner": SimpleNamespace(query_focus=QueryFocus(graph_expansion_intent="entity_local")),
+                "draft_payload": {
+                    "who": "Orion owner",
+                    "surface_forms": ["Orion owner"],
+                    "stable_qualifiers": ["owner"],
+                    "query_text": "Orion owner 当前负责人是谁？",
+                },
+                "stage_timings_ms": {},
+                "resolution_trace": {},
+            }
+        )
+    )
+
+    assert len(workers.link_calls) == 1
+    assert result["entity_key"] == "ent_a"
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["attempted"] is True
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is False
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "identity_match_not_found"
+
+
+def test_resolve_entity_uses_graph_first_when_multi_candidate_identity_match_is_unique(monkeypatch) -> None:
+    graph = RecallGraph()
+    entities = [
+        SimpleNamespace(
+            entity_key="ent_checklist",
+            display_name="Elmfield checklist",
+            identity_profile={
+                "who": "Elmfield checklist",
+                "surface_forms": ["Elmfield checklist", "Elmfield"],
+                "stable_qualifiers": ["checklist"],
+            },
+        ),
+        SimpleNamespace(
+            entity_key="ent_handbook",
+            display_name="Elmfield handbook",
+            identity_profile={
+                "who": "Elmfield handbook",
+                "surface_forms": ["Elmfield handbook", "Elmfield"],
+                "stable_qualifiers": ["handbook"],
+            },
+        ),
+    ]
+    scored_candidates = [SimpleNamespace(entity=entity, score=0.9 - index * 0.1) for index, entity in enumerate(entities)]
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return []
+
+    class _FakeRetrievalIndex:
+        async def entity_candidates(self, **kwargs):
+            return scored_candidates
+
+    class _FakeWorkers:
+        def __init__(self) -> None:
+            self.link_calls: list[dict] = []
+
+        async def run_linker(self, **kwargs):
+            self.link_calls.append(dict(kwargs))
+            return LinkerOutput(decision="cannot_resolve", confidence=0.0)
+
+    workers = _FakeWorkers()
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+
+    result = run_async(
+        graph._resolve_entity(
+            {
+                "memory_space": "workspace:elmfield",
+                "request_id": "req_elmfield",
+                "workers": workers,
+                "planner": SimpleNamespace(
+                    query_focus=QueryFocus(graph_expansion_intent="entity_local"),
+                    query_identity_profile_drafts=[
+                        SimpleNamespace(
+                            who="Elmfield checklist",
+                            surface_forms=["Elmfield checklist", "Elmfield"],
+                            stable_qualifiers=["checklist"],
+                        ),
+                        SimpleNamespace(
+                            who="Elmfield handbook",
+                            surface_forms=["Elmfield handbook", "Elmfield"],
+                            stable_qualifiers=["handbook"],
+                        )
+                    ],
+                ),
+                "draft_payload": {
+                    "who": "Elmfield handbook",
+                    "surface_forms": ["Elmfield handbook", "Elmfield"],
+                    "stable_qualifiers": ["handbook"],
+                    "query_text": "Elmfield handbook 当前要求什么？",
+                },
+                "stage_timings_ms": {},
+                "resolution_trace": {},
+            }
+        )
+    )
+
+    assert workers.link_calls == []
+    assert result["entity_key"] == "ent_handbook"
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is True
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["selected_entity_key"] == "ent_handbook"
+
+
+def test_resolve_entity_falls_back_to_linker_when_multi_candidate_identity_match_is_ambiguous(monkeypatch) -> None:
+    graph = RecallGraph()
+    entities = [
+        SimpleNamespace(
+            entity_key="ent_primary",
+            display_name="Elmfield handbook",
+            identity_profile={
+                "who": "Elmfield handbook",
+                "surface_forms": ["Elmfield handbook", "Elmfield"],
+                "stable_qualifiers": ["handbook"],
+            },
+        ),
+        SimpleNamespace(
+            entity_key="ent_duplicate",
+            display_name="Elmfield handbook",
+            identity_profile={
+                "who": "Elmfield handbook",
+                "surface_forms": ["Elmfield handbook", "Elmfield"],
+                "stable_qualifiers": ["handbook"],
+            },
+        ),
+    ]
+    scored_candidates = [SimpleNamespace(entity=entity, score=0.9 - index * 0.1) for index, entity in enumerate(entities)]
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return []
+
+    class _FakeRetrievalIndex:
+        async def entity_candidates(self, **kwargs):
+            return scored_candidates
+
+    class _FakeWorkers:
+        def __init__(self) -> None:
+            self.link_calls: list[dict] = []
+
+        async def run_linker(self, **kwargs):
+            self.link_calls.append(dict(kwargs))
+            return LinkerOutput(
+                decision="link_existing",
+                selected_entity_key="ent_primary",
+                confidence=0.72,
+                reason="Ambiguous graph-first candidates require linker.",
+            )
+
+    workers = _FakeWorkers()
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+
+    result = run_async(
+        graph._resolve_entity(
+            {
+                "memory_space": "workspace:elmfield",
+                "request_id": "req_elmfield",
+                "workers": workers,
+                "planner": SimpleNamespace(
+                    query_focus=QueryFocus(graph_expansion_intent="entity_local"),
+                    query_identity_profile_drafts=[
+                        SimpleNamespace(
+                            who="Elmfield handbook",
+                            surface_forms=["Elmfield handbook", "Elmfield"],
+                            stable_qualifiers=["handbook"],
+                        )
+                    ],
+                ),
+                "draft_payload": {
+                    "who": "Elmfield handbook",
+                    "surface_forms": ["Elmfield handbook", "Elmfield"],
+                    "stable_qualifiers": ["handbook"],
+                    "query_text": "Elmfield handbook 当前要求什么？",
+                },
+                "stage_timings_ms": {},
+                "resolution_trace": {},
+            }
+        )
+    )
+
+    assert len(workers.link_calls) == 1
+    assert result["entity_key"] == "ent_primary"
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is False
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "identity_match_not_unique"
+
+
+def test_resolve_entity_falls_back_to_linker_when_planner_intent_is_cross_entity(monkeypatch) -> None:
+    graph = RecallGraph()
+    entity = SimpleNamespace(
+        entity_key="ent_cross",
+        display_name="Orion rollout",
+        identity_profile={"who": "Orion rollout", "surface_forms": ["Orion rollout"]},
+    )
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return []
+
+    class _FakeRetrievalIndex:
+        async def entity_candidates(self, **kwargs):
+            return [SimpleNamespace(entity=entity, score=0.95)]
+
+    class _FakeWorkers:
+        def __init__(self) -> None:
+            self.link_calls: list[dict] = []
+
+        async def run_linker(self, **kwargs):
+            self.link_calls.append(dict(kwargs))
+            return LinkerOutput(
+                decision="link_existing",
+                selected_entity_key="ent_cross",
+                confidence=0.9,
+                reason="Cross entity intent keeps linker.",
+            )
+
+    workers = _FakeWorkers()
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+
+    result = run_async(
+        graph._resolve_entity(
+            {
+                "memory_space": "workspace:orion",
+                "request_id": "req_orion",
+                "workers": workers,
+                "planner": SimpleNamespace(query_focus=QueryFocus(graph_expansion_intent="cross_entity")),
+                "draft_payload": {
+                    "who": "Orion rollout",
+                    "surface_forms": ["Orion rollout"],
+                    "stable_qualifiers": ["rollout"],
+                    "query_text": "为什么 Orion rollout 还不能 cutover？",
+                },
+                "stage_timings_ms": {},
+                "resolution_trace": {},
+            }
+        )
+    )
+
+    assert len(workers.link_calls) == 1
+    assert result["entity_key"] == "ent_cross"
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["attempted"] is False
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "graph_intent_cross_entity"
+
+
+def test_resolve_entity_falls_back_to_linker_when_entity_type_conflicts(monkeypatch) -> None:
+    graph = RecallGraph()
+    entity = SimpleNamespace(
+        entity_key="ent_project",
+        display_name="Orion runbook",
+        identity_profile={
+            "schema_version": 2,
+            "who": "Orion runbook",
+            "entity_type": "project",
+            "surface_forms": ["Orion runbook"],
+            "stable_qualifiers": ["project"],
+            "evidence": ["The profile says this is a project."],
+        },
+    )
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return []
+
+    class _FakeRetrievalIndex:
+        async def entity_candidates(self, **kwargs):
+            return [SimpleNamespace(entity=entity, score=0.95)]
+
+    class _FakeWorkers:
+        def __init__(self) -> None:
+            self.link_calls: list[dict] = []
+
+        async def run_linker(self, **kwargs):
+            self.link_calls.append(dict(kwargs))
+            return LinkerOutput(
+                decision="cannot_resolve",
+                selected_entity_key=None,
+                confidence=0.0,
+                reason="Entity type conflict.",
+            )
+
+    workers = _FakeWorkers()
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+
+    result = run_async(
+        graph._resolve_entity(
+            {
+                "memory_space": "workspace:orion",
+                "request_id": "req_orion",
+                "workers": workers,
+                "planner": SimpleNamespace(query_focus=QueryFocus(graph_expansion_intent="entity_local")),
+                "draft_payload": {
+                    "schema_version": 2,
+                    "who": "Orion runbook",
+                    "entity_type": "document",
+                    "surface_forms": ["Orion runbook"],
+                    "stable_qualifiers": ["runbook"],
+                    "evidence": ["The query names a runbook."],
+                    "query_text": "Orion runbook 当前要求是什么？",
+                },
+                "stage_timings_ms": {},
+                "resolution_trace": {},
+            }
+        )
+    )
+
+    assert len(workers.link_calls) == 1
+    assert result.get("entity_key") is None
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["used"] is False
+    assert result["resolution_trace"]["graph_first_entity_resolution"]["fallback_reason"] == "identity_match_not_found"
+
+
+def _run_recall_memories_with_graph_intent(monkeypatch, graph_expansion_intent: str) -> tuple[dict, list[str]]:
+    graph = RecallGraph()
+    memory = SimpleNamespace(
+        memory_id="mem_1",
+        entity_key="ent_1",
+        status="active",
+        title="Orion owner",
+        summary="Orion service 当前负责人是 Mina。",
+        content="Orion service 当前负责人是 Mina。",
+    )
+    entity = SimpleNamespace(
+        entity_key="ent_1",
+        identity_profile={
+            "who": "Orion service",
+            "surface_forms": ["Orion service"],
+            "stable_qualifiers": ["service"],
+        },
+    )
+    observation = SimpleNamespace(
+        observation_id="obs_1",
+        summary="Orion service 当前负责人是 Mina。",
+        content="Orion service 当前负责人是 Mina。",
+        created_at=1.0,
+    )
+
+    class _FakeRepository:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc_value, traceback):
+            return None
+
+        async def list_memories(self, **kwargs):
+            return [memory]
+
+        async def get_entity(self, **kwargs):
+            return entity
+
+        async def get_observations_by_ids(self, **kwargs):
+            return [observation]
+
+    class _FakeRetrievalIndex:
+        async def memory_candidates(self, **kwargs):
+            return [SimpleNamespace(memory=memory)]
+
+    class _FakeWorkers:
+        async def run_answer_composer(self, **kwargs):
+            return SimpleNamespace(
+                answer="Orion service 当前负责人是 Mina。",
+                citations=[],
+                uncertainties=[],
+            )
+
+    supplement_calls: list[str] = []
+
+    async def fake_expand_graph(**kwargs):
+        return (
+            [memory],
+            ["obs_1"],
+            [],
+            [
+                {
+                    "edge_type": "derived_from",
+                    "from_id": "mem_1",
+                    "to_id": "obs_1",
+                    "reason": "source",
+                    "weight": 1.0,
+                }
+            ],
+        )
+
+    async def fake_supplement_cross_entity_graph(**kwargs):
+        supplement_calls.append(graph_expansion_intent)
+        return (
+            kwargs["expanded_memories"],
+            kwargs["evidence_observation_ids"],
+            kwargs["graph_uncertainties"],
+            kwargs["used_edges"],
+        )
+
+    monkeypatch.setattr(recall_graph_module, "MemoryRepository", _FakeRepository)
+    monkeypatch.setattr(recall_graph_module, "retrieval_index", _FakeRetrievalIndex())
+    monkeypatch.setattr(graph, "_expand_graph", fake_expand_graph)
+    monkeypatch.setattr(graph, "_supplement_cross_entity_graph", fake_supplement_cross_entity_graph)
+
+    state = {
+        "memory_space": "workspace:orion",
+        "query": "Orion service 当前负责人是谁？",
+        "original_query": "Orion service 当前负责人是谁？",
+        "request_id": "req_orion",
+        "workers": _FakeWorkers(),
+        "planner": SimpleNamespace(
+            query_identity_profile_drafts=[object()],
+            query_rewrites=[],
+            query_focus=QueryFocus(
+                topic="Orion service owner",
+                time_intent="current",
+                graph_expansion_intent=graph_expansion_intent,
+                graph_expansion_reason="Planner semantic decision.",
+            ),
+        ),
+        "entity_key": "ent_1",
+        "draft_payload": {
+            "who": "Orion service",
+            "surface_forms": ["Orion service"],
+            "stable_qualifiers": ["service"],
+            "query_text": "Orion service 当前负责人是谁？",
+        },
+        "stage_timings_ms": {"resolve_entity": 1},
+        "resolution_trace": {},
+    }
+
+    return run_async(graph._recall_memories(state)), supplement_calls

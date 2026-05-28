@@ -119,9 +119,24 @@ class MemoryRepository:
         entity: MemoryEntity,
         display_name: str,
         identity_profile: dict[str, Any],
+        metadata: dict[str, Any] | None = None,
     ) -> MemoryEntity:
+        """更新实体画像，并可同步更新实体元数据。
+
+        Args:
+            entity: 需要更新的实体 ORM 对象。
+            display_name: 新的展示名称。
+            identity_profile: 新的身份画像。
+            metadata: 可选的新实体元数据；传入时整体替换 `metadata` JSON。
+
+        Returns:
+            已更新但尚未提交事务的实体对象。
+        """
+
         entity.display_name = display_name
         entity.identity_profile = dict(identity_profile)
+        if metadata is not None:
+            entity.metadata_json = dict(metadata)
         entity.updated_at = self.timestamp_now()
         await self.db.flush()
         return entity

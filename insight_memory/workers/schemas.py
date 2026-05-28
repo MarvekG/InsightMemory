@@ -1,17 +1,68 @@
 from __future__ import annotations
 
+from typing import get_args
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+EntityType = Literal[
+    "person",
+    "organization",
+    "market_object",
+    "system",
+    "document",
+    "artifact",
+    "project",
+    "work_item",
+    "workflow",
+    "event",
+    "decision",
+    "strategy",
+    "concept",
+    "unknown",
+]
+ENTITY_TYPE_VALUES = tuple(get_args(EntityType))
+ENTITY_TYPES = set(ENTITY_TYPE_VALUES)
+
+
+def normalize_entity_type(value: object) -> str:
+    """将 LLM 输出的实体类型规范化为受支持枚举。
+
+    Args:
+        value: LLM 输出的原始实体类型。
+
+    Returns:
+        合法的实体类型；未知或非法时返回 `unknown`，避免 schema 错误变成 HTTP 500。
+    """
+
+    text = str(value or "").strip().lower()
+    return text if text in ENTITY_TYPES else "unknown"
 
 
 class IdentityProfileDraft(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    schema_version: Literal[2]
     draft_id: str = Field(..., min_length=1)
     who: str = Field(..., min_length=1, max_length=255)
+    entity_type: EntityType
     surface_forms: list[str] = Field(default_factory=list)
-    distinguishing_context: list[str] = Field(default_factory=list)
+    stable_qualifiers: list[str] = Field(default_factory=list)
+    evidence: list[str] = Field(default_factory=list)
+
+    @field_validator("entity_type", mode="before")
+    @classmethod
+    def normalize_entity_type_field(cls, value: object) -> str:
+        """将 profile draft 的非法实体类型降级为 `unknown`。
+
+        Args:
+            value: LLM 输出的原始实体类型。
+
+        Returns:
+            合法的实体类型枚举值。
+        """
+
+        return normalize_entity_type(value)
 
 
 class QueryIdentityProfileDraft(IdentityProfileDraft):
@@ -94,9 +145,28 @@ class QueryFocus(BaseModel):
 
     topic: str = ""
     time_intent: Literal["current", "latest", "history", "unspecified"] = "unspecified"
+    graph_expansion_intent: Literal["entity_local", "cross_entity", "uncertain"] = "uncertain"
+    graph_expansion_reason: str = ""
     prefer_status: list[str] = Field(default_factory=list)
     include_history: bool = False
     require_citations: bool = True
+
+    @field_validator("graph_expansion_intent", mode="before")
+    @classmethod
+    def normalize_graph_expansion_intent(cls, value: object) -> str:
+        """
+        将非法图扩展意图降级为保守的 `uncertain`。
+
+        Args:
+            value: LLM 输出的原始图扩展意图。
+
+        Returns:
+            合法的图扩展意图枚举值。
+        """
+        text = str(value or "").strip().lower()
+        if text in {"entity_local", "cross_entity", "uncertain"}:
+            return text
+        return "uncertain"
 
 
 class QueryPlannerOutput(BaseModel):
@@ -143,9 +213,26 @@ class AnswerJudgeOutput(BaseModel):
 class ProfileWriterOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    schema_version: Literal[2]
     who: str = Field(..., min_length=1, max_length=255)
+    entity_type: EntityType
     surface_forms: list[str] = Field(default_factory=list)
-    distinguishing_context: list[str] = Field(default_factory=list)
+    stable_qualifiers: list[str] = Field(default_factory=list)
+    evidence: list[str] = Field(default_factory=list)
+
+    @field_validator("entity_type", mode="before")
+    @classmethod
+    def normalize_entity_type_field(cls, value: object) -> str:
+        """将 profile writer 的非法实体类型降级为 `unknown`。
+
+        Args:
+            value: LLM 输出的原始实体类型。
+
+        Returns:
+            合法的实体类型枚举值。
+        """
+
+        return normalize_entity_type(value)
 
 
 class EdgeRelation(BaseModel):
@@ -163,10 +250,36 @@ class EdgeJudgeOutput(BaseModel):
 
     relations: list[EdgeRelation] = Field(default_factory=list)
 
+    @model_validator(mode="before")
+    @classmethod
+    def drop_none_relations(cls, value: object) -> object:
+        """丢弃 LLM 用 `none` 表示的无关系记录。
+
+        Args:
+            value: LLM 输出的原始结构化结果。
+
+        Returns:
+            删除 `edge_type=none` 后的结构化结果；其他非法 edge_type 继续交给
+            Pydantic 严格校验。
+        """
+
+        if not isinstance(value, dict):
+            return value
+        relations = value.get("relations")
+        if not isinstance(relations, list):
+            return value
+        sanitized = []
+        for relation in relations:
+            if isinstance(relation, dict) and str(relation.get("edge_type") or "").strip().lower() == "none":
+                continue
+            sanitized.append(relation)
+        return {**value, "relations": sanitized}
+
 
 class MergeJudgeOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     decision: Literal["merge", "keep_separate"]
     survivor_entity_key: str | None = None
+    merged_identity_profile: ProfileWriterOutput | None = None
     reason: str = ""

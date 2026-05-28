@@ -6,6 +6,10 @@ from langgraph.graph import END, StateGraph
 
 from insight_memory.index.retrieval_index import retrieval_index
 from insight_memory.storage.repository import MemoryRepository
+from insight_memory.utils.identity_profile import (
+    identity_profile_refresh_risk,
+    next_profile_metadata,
+)
 from insight_memory.utils.request_context import get_or_create_request_id
 from insight_memory.workers.runtime import MemoryWorkers
 
@@ -76,17 +80,25 @@ class RefreshEntityProfileGraph:
         entity = state["entity"]
         memories = state.get("memories") or []
         workers = state["workers"]
+        request_id = get_or_create_request_id()
         profile_writer = await workers.run_profile_writer(
             memory_space=state["memory_space"],
-            request_id=get_or_create_request_id(),
+            request_id=request_id,
             payload={
                 "current_identity_profile": entity.identity_profile,
                 "current_display_name": entity.display_name,
                 "recent_memory_summaries": [memory.summary for memory in memories[:4]],
             },
         )
-        profile = profile_writer.model_dump()
-        display_name = (profile.get("surface_forms") or [entity.display_name, profile.get("who") or entity.display_name])[0]
+        proposed_profile = profile_writer.model_dump()
+        current_profile = dict(entity.identity_profile or {})
+        risk, reason = identity_profile_refresh_risk(
+            current_profile=current_profile,
+            proposed_profile=proposed_profile,
+        )
+        applied = risk == "safe"
+        profile = proposed_profile if applied else current_profile
+        display_name = str(profile.get("who") or entity.display_name)
         async with MemoryRepository() as repository:
             current_entity = await repository.get_entity(
                 memory_space=state["memory_space"],
@@ -94,13 +106,32 @@ class RefreshEntityProfileGraph:
             )
             if current_entity is None:
                 return {"result": {"refreshed": False}}
+            metadata = next_profile_metadata(
+                current_metadata=dict(current_entity.metadata_json or {}),
+                previous_profile=current_profile,
+                proposed_profile=proposed_profile,
+                applied_profile=profile,
+                risk=risk,
+                reason=reason,
+                request_id=request_id,
+                applied=applied,
+            )
             await repository.update_entity_profile(
                 entity=current_entity,
                 display_name=str(display_name),
                 identity_profile=profile,
+                metadata=metadata,
             )
-            await retrieval_index.refresh_entities(entities=[current_entity])
-        return {"profile": profile, "result": {"refreshed": True, "entity_key": state["entity_key"]}}
+            if applied:
+                await retrieval_index.refresh_entities(entities=[current_entity])
+        return {
+            "profile": profile,
+            "result": {
+                "refreshed": applied,
+                "entity_key": state["entity_key"],
+                "refresh_status": "applied" if applied else risk,
+            },
+        }
 
 
 refresh_entity_profile_graph = RefreshEntityProfileGraph()
