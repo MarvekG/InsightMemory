@@ -5,6 +5,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from insight_memory.evals.prompts import get_prompt_eval_instructions
 from insight_memory.evals.prompt_registry import get_prompt_eval_target
 from insight_memory.utils.logger import get_logger
 from insight_memory.workers.llm_provider import llm_provider
@@ -43,7 +44,10 @@ class PromptEvalService:
             )
 
         try:
-            instructions = get_worker_instructions(target.instructions_key)
+            if target.eval_only:
+                instructions = get_prompt_eval_instructions(target.instructions_key)
+            else:
+                instructions = get_worker_instructions(target.instructions_key)
             call = await llm_provider.generate(
                 worker_type=target.prompt_key,
                 instructions=instructions,

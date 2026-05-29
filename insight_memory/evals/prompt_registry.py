@@ -30,6 +30,7 @@ class PromptEvalTarget:
     instructions_key: str
     schema_type: Type[BaseModel]
     description: str
+    eval_only: bool = False
 
 
 PROMPT_EVAL_TARGETS: dict[str, PromptEvalTarget] = {
@@ -98,6 +99,7 @@ PROMPT_EVAL_TARGETS: dict[str, PromptEvalTarget] = {
         instructions_key="identity_definition_judge",
         schema_type=IdentityDefinitionJudgeOutput,
         description="Judge whether an identity definition semantically matches expected subject-boundary definitions.",
+        eval_only=True,
     ),
     "profile_writer": PromptEvalTarget(
         prompt_key="profile_writer",

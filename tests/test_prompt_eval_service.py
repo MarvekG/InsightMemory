@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from insight_memory.evals.prompt_registry import get_prompt_eval_target
+from insight_memory.evals.prompts import get_prompt_eval_instructions
 from insight_memory.services import prompt_eval_service as service_module
 from insight_memory.workers.llm_provider import LLMCallResult
-from insight_memory.workers.prompts import get_worker_instructions
+from insight_memory.workers.prompts import WORKER_INSTRUCTIONS, WORKER_INSTRUCTIONS_EN, get_worker_instructions
 from insight_memory.workers.schemas import IdentityDefinitionJudgeOutput, IdentityProfileExtractionOutput, WriteGateOutput
 from tests.utils import run_async
 
@@ -30,6 +31,15 @@ def test_prompt_registry_maps_identity_definition_judge_to_schema() -> None:
     assert target.prompt_key == "identity_definition_judge"
     assert target.instructions_key == "identity_definition_judge"
     assert target.schema_type is IdentityDefinitionJudgeOutput
+
+
+def test_identity_definition_judge_prompt_is_eval_only_and_chinese() -> None:
+    instructions = get_prompt_eval_instructions("identity_definition_judge")
+
+    assert "identity_definition_judge" not in WORKER_INSTRUCTIONS
+    assert "identity_definition_judge" not in WORKER_INSTRUCTIONS_EN
+    assert "评估 actual_definition 是否语义满足 expected_definitions" in instructions
+    assert "Evaluate whether actual_definition" not in instructions
 
 
 def test_identity_prompt_has_no_removed_type_classification_language() -> None:
