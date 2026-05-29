@@ -188,6 +188,29 @@ def test_identity_profile_prompt_case_suites_are_split_by_focus() -> None:
         }
 
 
+def test_identity_profile_suites_score_definition_boundary_content() -> None:
+    suite_paths = [
+        Path("memory/evals/prompt_cases/identity_profile_rules_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_rules_zh_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_rules_mixed_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_write_context_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_query_target_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_multi_subject_v1.json"),
+    ]
+    missing_cases = []
+
+    for suite_path in suite_paths:
+        suite = load_identity_extraction_suite(suite_path)
+        for case in suite["cases"]:
+            for expected in case.expected_identities:
+                if expected.definition_required and not (
+                    expected.definition_contains_any or expected.definition_contains_all
+                ):
+                    missing_cases.append(f"{suite_path.name}:{case.case_id}:{expected.who_any}")
+
+    assert missing_cases == []
+
+
 def test_identity_profile_prompt_requires_definition_identity_boundary() -> None:
     zh_instructions = get_worker_instructions("identity_profile", system_language="zh")
     en_instructions = get_worker_instructions("identity_profile", system_language="en")
@@ -549,6 +572,44 @@ def test_score_identity_extraction_case_requires_definition_boundary_fragment() 
 
     assert result["passed"] is False
     assert any("definition missing identity boundary" in failure for failure in result["failures"])
+
+
+def test_score_identity_extraction_case_does_not_match_definition_from_repeated_who() -> None:
+    case = IdentityExtractionCase(
+        case_id="definition_repeated_who",
+        category="boundary",
+        prompt_key="identity_profile",
+        payload={"context": "x"},
+        expected_gate_status="passed",
+        expected_identities=[
+            ExpectedIdentityProfile(
+                who_any=["Lanturn deployment"],
+                surface_forms_all=["Lanturn deployment"],
+                definition_required=True,
+                definition_contains_any=["deployment"],
+            )
+        ],
+    )
+
+    result = score_identity_extraction_case(
+        case,
+        {
+            "status": "ok",
+            "output": {
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
+                    {
+                        "who": "Lanturn deployment",
+                        "surface_forms": ["Lanturn deployment"],
+                        "definition": "Lanturn deployment is a named object.",
+                    },
+                ],
+            },
+        },
+    )
+
+    assert result["passed"] is False
+    assert any("definition contains none" in failure for failure in result["failures"])
 
 
 def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:

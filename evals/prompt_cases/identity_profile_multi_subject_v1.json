@@ -19,7 +19,10 @@
           "surface_forms_all": [
             "Ravel import service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         },
         {
           "who_any": [
@@ -28,7 +31,10 @@
           "surface_forms_all": [
             "Ravel import checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -54,7 +60,10 @@
           "surface_forms_all": [
             "Tideline register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         },
         {
           "who_any": [
@@ -63,7 +72,10 @@
           "surface_forms_all": [
             "Tideline checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -89,7 +101,11 @@
           "surface_forms_all": [
             "Aster observatory docket"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "docket",
+            "doc"
+          ]
         },
         {
           "who_any": [
@@ -98,7 +114,10 @@
           "surface_forms_all": [
             "Aster observatory ledger"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "ledger"
+          ]
         },
         {
           "who_any": [
@@ -107,7 +126,10 @@
           "surface_forms_all": [
             "Aster observatory queue"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "queue"
+          ]
         },
         {
           "who_any": [
@@ -116,7 +138,10 @@
           "surface_forms_all": [
             "Aster observatory bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -149,7 +174,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 1,
@@ -179,7 +207,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 1,
@@ -205,7 +236,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 1,
@@ -228,7 +262,10 @@
           "surface_forms_all": [
             "Briarwatch rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -237,7 +274,10 @@
           "surface_forms_all": [
             "Drumlin review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -266,7 +306,10 @@
           "surface_forms_all": [
             "Latchmere plan"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "plan"
+          ]
         },
         {
           "who_any": [
@@ -275,7 +318,10 @@
           "surface_forms_all": [
             "Latchmere review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         },
         {
           "who_any": [
@@ -284,7 +330,10 @@
           "surface_forms_all": [
             "Latchmere bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         },
         {
           "who_any": [
@@ -293,7 +342,10 @@
           "surface_forms_all": [
             "Latchmere register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         },
         {
           "who_any": [
@@ -302,7 +354,10 @@
           "surface_forms_all": [
             "Latchmere checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -328,7 +383,10 @@
           "surface_forms_all": [
             "Oakspan rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -337,7 +395,10 @@
           "surface_forms_all": [
             "Ridgepath checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         },
         {
           "who_any": [
@@ -346,7 +407,10 @@
           "surface_forms_all": [
             "Talon review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         },
         {
           "who_any": [
@@ -355,7 +419,11 @@
           "surface_forms_all": [
             "Quarry dashboard"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "dashboard",
+            "board"
+          ]
         },
         {
           "who_any": [
@@ -364,7 +432,10 @@
           "surface_forms_all": [
             "Westbay handbook"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "handbook"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -396,7 +467,10 @@
           "stable_qualifiers_any": [
             "card"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "card"
+          ]
         },
         {
           "who_any": [
@@ -408,7 +482,10 @@
           "stable_qualifiers_any": [
             "guide"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "guide"
+          ]
         },
         {
           "who_any": [
@@ -420,7 +497,10 @@
           "stable_qualifiers_any": [
             "roster"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "roster"
+          ]
         }
       ],
       "profile_count": 3,
@@ -446,7 +526,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -458,7 +541,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "profile_count": 2,
@@ -484,7 +570,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         },
         {
           "who_any": [
@@ -496,7 +585,10 @@
           "stable_qualifiers_any": [
             "manual"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "manual"
+          ]
         },
         {
           "who_any": [
@@ -508,7 +600,10 @@
           "stable_qualifiers_any": [
             "plan"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "plan"
+          ]
         },
         {
           "who_any": [
@@ -520,7 +615,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 4,
@@ -546,7 +644,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         },
         {
           "who_any": [
@@ -558,7 +659,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         },
         {
           "who_any": [
@@ -570,7 +674,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 3,
@@ -596,7 +703,10 @@
           "stable_qualifiers_any": [
             "procedure"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "procedure"
+          ]
         },
         {
           "who_any": [
@@ -608,7 +718,10 @@
           "stable_qualifiers_any": [
             "procedure"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "procedure"
+          ]
         }
       ],
       "profile_count": 2,
@@ -634,7 +747,10 @@
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         },
         {
           "who_any": [
@@ -646,7 +762,10 @@
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         }
       ],
       "profile_count": 2,
@@ -672,7 +791,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -684,7 +806,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         },
         {
           "who_any": [
@@ -696,7 +821,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 3,
@@ -722,7 +850,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -734,7 +865,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         },
         {
           "who_any": [
@@ -746,7 +880,10 @@
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         },
         {
           "who_any": [
@@ -758,7 +895,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 4,
@@ -784,7 +924,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -796,7 +939,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "profile_count": 2,
@@ -822,7 +968,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -834,7 +983,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 2,
@@ -860,7 +1012,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -872,7 +1027,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         },
         {
           "who_any": [
@@ -884,7 +1042,10 @@
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "handbook"
+          ]
         }
       ],
       "profile_count": 3,
@@ -910,7 +1071,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         },
         {
           "who_any": [
@@ -922,7 +1086,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 2,
@@ -948,7 +1115,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         },
         {
           "who_any": [
@@ -960,7 +1130,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 2,
@@ -986,7 +1159,10 @@
           "stable_qualifiers_any": [
             "stock"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "stock"
+          ]
         },
         {
           "who_any": [
@@ -998,7 +1174,10 @@
           "stable_qualifiers_any": [
             "note"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "note"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1024,7 +1203,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         },
         {
           "who_any": [
@@ -1036,7 +1218,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         },
         {
           "who_any": [
@@ -1048,7 +1233,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 3,
@@ -1074,7 +1262,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -1086,7 +1277,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1112,7 +1306,10 @@
           "stable_qualifiers_any": [
             "doc"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "doc"
+          ]
         },
         {
           "who_any": [
@@ -1124,7 +1321,10 @@
           "stable_qualifiers_any": [
             "guide"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "guide"
+          ]
         },
         {
           "who_any": [
@@ -1136,7 +1336,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 3,
@@ -1162,7 +1365,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         },
         {
           "who_any": [
@@ -1174,7 +1380,10 @@
           "stable_qualifiers_any": [
             "ordinance"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "ordinance"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1200,7 +1409,10 @@
           "stable_qualifiers_any": [
             "transfer"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "transfer"
+          ]
         },
         {
           "who_any": [
@@ -1212,7 +1424,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         },
         {
           "who_any": [
@@ -1224,7 +1439,10 @@
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "handbook"
+          ]
         }
       ],
       "profile_count": 3,
@@ -1250,7 +1468,10 @@
           "stable_qualifiers_any": [
             "project"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "project"
+          ]
         },
         {
           "who_any": [
@@ -1262,7 +1483,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         },
         {
           "who_any": [
@@ -1274,7 +1498,10 @@
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "handbook"
+          ]
         },
         {
           "who_any": [
@@ -1286,7 +1513,10 @@
           "stable_qualifiers_any": [
             "plan"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "plan"
+          ]
         },
         {
           "who_any": [
@@ -1298,7 +1528,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 5,
@@ -1324,7 +1557,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -1336,7 +1572,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1362,7 +1601,10 @@
           "stable_qualifiers_any": [
             "stock"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "stock"
+          ]
         },
         {
           "who_any": [
@@ -1374,7 +1616,10 @@
           "stable_qualifiers_any": [
             "note"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "note"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1400,7 +1645,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         },
         {
           "who_any": [
@@ -1412,7 +1660,10 @@
           "stable_qualifiers_any": [
             "policy"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "policy"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1438,7 +1689,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         },
         {
           "who_any": [
@@ -1450,7 +1704,10 @@
           "stable_qualifiers_any": [
             "finding aid"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "finding aid"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1476,7 +1733,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         },
         {
           "who_any": [
@@ -1488,7 +1748,10 @@
           "stable_qualifiers_any": [
             "finding aid"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "finding aid"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1514,7 +1777,10 @@
           "stable_qualifiers_any": [
             "manual"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "manual"
+          ]
         },
         {
           "who_any": [
@@ -1526,7 +1792,10 @@
           "stable_qualifiers_any": [
             "manual"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "manual"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1552,7 +1821,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         },
         {
           "who_any": [
@@ -1564,7 +1836,10 @@
           "stable_qualifiers_any": [
             "finding aid"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "finding aid"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1590,7 +1865,10 @@
           "stable_qualifiers_any": [
             "vessel"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "vessel"
+          ]
         },
         {
           "who_any": [
@@ -1602,7 +1880,10 @@
           "stable_qualifiers_any": [
             "manifest"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "manifest"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1628,7 +1909,10 @@
           "stable_qualifiers_any": [
             "binder"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "binder"
+          ]
         },
         {
           "who_any": [
@@ -1640,7 +1924,10 @@
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1666,7 +1953,10 @@
           "stable_qualifiers_any": [
             "renovation"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "renovation"
+          ]
         },
         {
           "who_any": [
@@ -1678,7 +1968,10 @@
           "stable_qualifiers_any": [
             "packet"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "packet"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1704,7 +1997,10 @@
           "stable_qualifiers_any": [
             "box"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "box"
+          ]
         },
         {
           "who_any": [
@@ -1716,7 +2012,10 @@
           "stable_qualifiers_any": [
             "tour"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "tour"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1742,7 +2041,10 @@
           "stable_qualifiers_any": [
             "api"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "api"
+          ]
         },
         {
           "who_any": [
@@ -1754,7 +2056,10 @@
           "stable_qualifiers_any": [
             "note"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "note"
+          ]
         }
       ],
       "profile_count": 2,
@@ -1780,7 +2085,11 @@
             "计划",
             "迁移计划"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "迁移计划",
+            "计划"
+          ]
         },
         {
           "who_any": [
@@ -1792,7 +2101,10 @@
           "stable_qualifiers_any": [
             "清单"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "清单"
+          ]
         },
         {
           "who_any": [
@@ -1804,7 +2116,10 @@
           "stable_qualifiers_any": [
             "手册"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "手册"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1835,7 +2150,11 @@
             "流程",
             "发布流程"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "发布流程",
+            "流程"
+          ]
         },
         {
           "who_any": [
@@ -1848,7 +2167,11 @@
             "公告",
             "发布公告"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "发布公告",
+            "公告"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1878,7 +2201,10 @@
           "stable_qualifiers_any": [
             "登记册"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "登记册"
+          ]
         },
         {
           "who_any": [
@@ -1890,7 +2216,10 @@
           "stable_qualifiers_any": [
             "核对表"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "核对表"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1917,7 +2246,11 @@
           "surface_forms_all": [
             "陈岚"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "个人",
+            "人"
+          ]
         },
         {
           "who_any": [
@@ -1929,7 +2262,10 @@
           "stable_qualifiers_any": [
             "数据组"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "数据组"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1955,7 +2291,11 @@
           "surface_forms_all": [
             "海岳电池"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "股票",
+            "市场对象"
+          ]
         },
         {
           "who_any": [
@@ -1968,7 +2308,11 @@
             "纪要",
             "调研纪要"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "调研纪要",
+            "纪要"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1998,7 +2342,10 @@
           "stable_qualifiers_any": [
             "门户"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "门户"
+          ]
         },
         {
           "who_any": [
@@ -2010,7 +2357,10 @@
           "stable_qualifiers_any": [
             "消息中心"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "消息中心"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2039,7 +2389,11 @@
             "策略",
             "防守策略"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "防守策略",
+            "策略"
+          ]
         },
         {
           "who_any": [
@@ -2052,7 +2406,11 @@
             "手册",
             "风控手册"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "风控手册",
+            "手册"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2082,7 +2440,10 @@
           "stable_qualifiers_any": [
             "评审会"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "评审会"
+          ]
         },
         {
           "who_any": [
@@ -2095,7 +2456,11 @@
             "工单",
             "整改工单"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "整改工单",
+            "工单"
+          ]
         }
       ],
       "forbidden_identity_who": [

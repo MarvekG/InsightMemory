@@ -23,7 +23,11 @@
             "上线计划",
             "计划"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "上线计划",
+            "计划"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -50,7 +54,10 @@
           "stable_qualifiers_any": [
             "制度"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "制度"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -74,7 +81,11 @@
           "surface_forms_all": [
             "周明"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "个人",
+            "人"
+          ]
         }
       ],
       "profile_count": 1
@@ -98,7 +109,10 @@
           "stable_qualifiers_any": [
             "运维组"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "运维组"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -125,7 +139,10 @@
           "stable_qualifiers_any": [
             "服务"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "服务"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -152,7 +169,10 @@
           "stable_qualifiers_any": [
             "评审会"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "评审会"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -179,7 +199,10 @@
           "stable_qualifiers_any": [
             "看板"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "看板"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -204,7 +227,11 @@
           "surface_forms_all": [
             "海岳电池"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "股票",
+            "市场对象"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -232,7 +259,10 @@
           "stable_qualifiers_any": [
             "工单"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "工单"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -261,7 +291,11 @@
             "流程",
             "换班流程"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "换班流程",
+            "流程"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -289,7 +323,10 @@
           "stable_qualifiers_any": [
             "手册"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "手册"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -318,7 +355,11 @@
             "策略",
             "防守策略"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "防守策略",
+            "策略"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -347,7 +388,11 @@
             "上线计划",
             "计划"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "上线计划",
+            "计划"
+          ]
         }
       ],
       "profile_count": 1
@@ -371,7 +416,10 @@
           "stable_qualifiers_any": [
             "制度"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "制度"
+          ]
         }
       ],
       "profile_count": 1
@@ -392,7 +440,11 @@
           "surface_forms_all": [
             "周明"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "个人",
+            "人"
+          ]
         }
       ],
       "profile_count": 1
@@ -416,7 +468,10 @@
           "stable_qualifiers_any": [
             "服务"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "服务"
+          ]
         }
       ],
       "profile_count": 1
@@ -440,7 +495,10 @@
           "stable_qualifiers_any": [
             "看板"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "看板"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -464,7 +522,11 @@
           "surface_forms_all": [
             "海岳电池"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "股票",
+            "市场对象"
+          ]
         }
       ],
       "profile_count": 1
@@ -488,7 +550,10 @@
           "stable_qualifiers_any": [
             "评审会"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "评审会"
+          ]
         }
       ],
       "profile_count": 1
@@ -513,7 +578,11 @@
             "流程",
             "换班流程"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "换班流程",
+            "流程"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -537,7 +606,11 @@
           "surface_forms_all": [
             "海岳电池"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "股票",
+            "市场对象"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -565,7 +638,10 @@
           "stable_qualifiers_any": [
             "清单"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "清单"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -592,7 +668,10 @@
           "stable_qualifiers_any": [
             "工单"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "工单"
+          ]
         }
       ],
       "profile_count": 1
@@ -617,7 +696,11 @@
             "策略",
             "防守策略"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "防守策略",
+            "策略"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -645,7 +728,11 @@
             "计划",
             "迁移计划"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "迁移计划",
+            "计划"
+          ]
         },
         {
           "who_any": [
@@ -657,7 +744,10 @@
           "stable_qualifiers_any": [
             "清单"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "清单"
+          ]
         },
         {
           "who_any": [
@@ -669,7 +759,10 @@
           "stable_qualifiers_any": [
             "手册"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "手册"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -699,7 +792,11 @@
             "流程",
             "发布流程"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "发布流程",
+            "流程"
+          ]
         },
         {
           "who_any": [
@@ -712,7 +809,11 @@
             "公告",
             "发布公告"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "发布公告",
+            "公告"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -741,7 +842,10 @@
           "stable_qualifiers_any": [
             "登记册"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "登记册"
+          ]
         },
         {
           "who_any": [
@@ -753,7 +857,10 @@
           "stable_qualifiers_any": [
             "核对表"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "核对表"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -779,7 +886,11 @@
           "surface_forms_all": [
             "陈岚"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "个人",
+            "人"
+          ]
         },
         {
           "who_any": [
@@ -791,7 +902,10 @@
           "stable_qualifiers_any": [
             "数据组"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "数据组"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -816,7 +930,11 @@
           "surface_forms_all": [
             "海岳电池"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "股票",
+            "市场对象"
+          ]
         },
         {
           "who_any": [
@@ -829,7 +947,11 @@
             "纪要",
             "调研纪要"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "调研纪要",
+            "纪要"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -858,7 +980,10 @@
           "stable_qualifiers_any": [
             "门户"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "门户"
+          ]
         },
         {
           "who_any": [
@@ -870,7 +995,10 @@
           "stable_qualifiers_any": [
             "消息中心"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "消息中心"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -898,7 +1026,11 @@
             "策略",
             "防守策略"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "防守策略",
+            "策略"
+          ]
         },
         {
           "who_any": [
@@ -911,7 +1043,11 @@
             "手册",
             "风控手册"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "风控手册",
+            "手册"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -940,7 +1076,10 @@
           "stable_qualifiers_any": [
             "评审会"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "评审会"
+          ]
         },
         {
           "who_any": [
@@ -953,7 +1092,11 @@
             "工单",
             "整改工单"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "整改工单",
+            "工单"
+          ]
         }
       ],
       "forbidden_identity_who": [

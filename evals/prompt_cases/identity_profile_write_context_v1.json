@@ -19,7 +19,10 @@
           "surface_forms_all": [
             "Lanturn deployment"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "deployment"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -44,7 +47,10 @@
           "surface_forms_all": [
             "Cedar QA policy"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "policy"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -70,7 +76,10 @@
           "surface_forms_all": [
             "Vireo billing migration"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "migration"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -97,7 +106,10 @@
           "surface_forms_all": [
             "MX-17A"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "code"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -128,7 +140,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 1,
@@ -154,7 +169,10 @@
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         }
       ],
       "profile_count": 1,
@@ -180,7 +198,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 1,
@@ -206,7 +227,10 @@
           "stable_qualifiers_any": [
             "notice"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "notice"
+          ]
         }
       ],
       "profile_count": 1,
@@ -232,7 +256,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 1,
@@ -261,7 +288,10 @@
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         }
       ],
       "profile_count": 1,
@@ -284,7 +314,11 @@
           "surface_forms_all": [
             "Access policy"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "access policy",
+            "policy"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -313,7 +347,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "profile_count": 1,
@@ -339,7 +376,10 @@
           "stable_qualifiers_any": [
             "card"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "card"
+          ]
         }
       ],
       "profile_count": 1,
@@ -365,7 +405,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -394,7 +437,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 1,
@@ -420,7 +466,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 1,
@@ -446,7 +495,10 @@
           "stable_qualifiers_any": [
             "pipeline"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "pipeline"
+          ]
         }
       ],
       "profile_count": 1,
@@ -472,7 +524,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -501,7 +556,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -530,7 +588,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -559,7 +620,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -588,7 +652,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "profile_count": 1,
@@ -614,7 +681,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -643,7 +713,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -672,7 +745,10 @@
           "stable_qualifiers_any": [
             "memo"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "memo"
+          ]
         }
       ],
       "profile_count": 1,
@@ -698,7 +774,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 1,
@@ -724,7 +803,10 @@
           "stable_qualifiers_any": [
             "policy"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "policy"
+          ]
         }
       ],
       "profile_count": 1,
@@ -750,7 +832,10 @@
           "stable_qualifiers_any": [
             "runbook"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "runbook"
+          ]
         }
       ],
       "profile_count": 1,
@@ -776,7 +861,10 @@
           "stable_qualifiers_any": [
             "doc"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "doc"
+          ]
         }
       ],
       "profile_count": 1,
@@ -802,7 +890,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 1,
@@ -828,7 +919,10 @@
           "stable_qualifiers_any": [
             "transfer"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "transfer"
+          ]
         }
       ],
       "profile_count": 1,
@@ -854,7 +948,10 @@
           "stable_qualifiers_any": [
             "database"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "database"
+          ]
         }
       ],
       "profile_count": 1,
@@ -880,7 +977,10 @@
           "stable_qualifiers_any": [
             "project"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "project"
+          ]
         }
       ],
       "profile_count": 1,
@@ -906,7 +1006,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "profile_count": 1,
@@ -932,7 +1035,10 @@
           "stable_qualifiers_any": [
             "holdings"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "holdings"
+          ]
         }
       ],
       "profile_count": 1,
@@ -958,7 +1064,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "profile_count": 1,
@@ -984,7 +1093,10 @@
           "stable_qualifiers_any": [
             "briefing"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "briefing"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1014,7 +1126,10 @@
           "stable_qualifiers_any": [
             "briefing"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "briefing"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1044,7 +1159,10 @@
           "stable_qualifiers_any": [
             "project"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "project"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1070,7 +1188,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1099,7 +1220,10 @@
           "stable_qualifiers_any": [
             "api"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "api"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1125,7 +1249,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1154,7 +1281,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1183,7 +1313,10 @@
           "stable_qualifiers_any": [
             "manual"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "manual"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1209,7 +1342,10 @@
           "stable_qualifiers_any": [
             "request"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "request"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1238,7 +1374,10 @@
           "stable_qualifiers_any": [
             "vessel"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "vessel"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1267,7 +1406,10 @@
           "stable_qualifiers_any": [
             "binder"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "binder"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1293,7 +1435,10 @@
           "stable_qualifiers_any": [
             "renovation"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "renovation"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1316,7 +1461,11 @@
           "surface_forms_all": [
             "Milo"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "person",
+            "individual"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1339,7 +1488,11 @@
           "surface_forms_all": [
             "Nova"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "person",
+            "individual"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1365,7 +1518,10 @@
           "stable_qualifiers_any": [
             "api"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "api"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1391,7 +1547,10 @@
           "stable_qualifiers_any": [
             "procurement"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "procurement"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1417,7 +1576,10 @@
           "stable_qualifiers_any": [
             "team"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "team"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1443,7 +1605,10 @@
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "handbook"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1469,7 +1634,10 @@
           "stable_qualifiers_any": [
             "handbook"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "handbook"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1495,7 +1663,10 @@
           "stable_qualifiers_any": [
             "dossier"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "dossier"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1524,7 +1695,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1553,7 +1727,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1579,7 +1756,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1605,7 +1785,10 @@
           "stable_qualifiers_any": [
             "plan"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "plan"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -1634,7 +1817,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1660,7 +1846,10 @@
           "stable_qualifiers_any": [
             "project"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "project"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1683,7 +1872,10 @@
           "surface_forms_all": [
             "Jordan Lee"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "person"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1709,7 +1901,10 @@
           "stable_qualifiers_any": [
             "guide"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "guide"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1735,7 +1930,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1761,7 +1959,10 @@
           "stable_qualifiers_any": [
             "manual"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "manual"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1787,7 +1988,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1813,7 +2017,10 @@
           "stable_qualifiers_any": [
             "procedure"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "procedure"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1839,7 +2046,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1865,7 +2075,10 @@
           "stable_qualifiers_any": [
             "checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1891,7 +2104,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1917,7 +2133,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1943,7 +2162,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1969,7 +2191,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 1,
@@ -1995,7 +2220,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 1,
@@ -2047,7 +2275,10 @@
           "stable_qualifiers_any": [
             "rollout"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "rollout"
+          ]
         }
       ],
       "profile_count": 1,
@@ -2073,7 +2304,10 @@
           "stable_qualifiers_any": [
             "roster"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "roster"
+          ]
         }
       ],
       "profile_count": 1,
@@ -2099,7 +2333,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 1,
@@ -2125,7 +2362,10 @@
           "stable_qualifiers_any": [
             "plan"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "plan"
+          ]
         }
       ],
       "profile_count": 1,
@@ -2151,7 +2391,10 @@
           "stable_qualifiers_any": [
             "service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         }
       ],
       "profile_count": 1,
@@ -2177,7 +2420,10 @@
           "stable_qualifiers_any": [
             "procedure"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "procedure"
+          ]
         }
       ],
       "profile_count": 1,
@@ -2203,7 +2449,11 @@
             "上线计划",
             "计划"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "上线计划",
+            "计划"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2231,7 +2481,10 @@
           "stable_qualifiers_any": [
             "制度"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "制度"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2256,7 +2509,11 @@
           "surface_forms_all": [
             "周明"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "个人",
+            "人"
+          ]
         }
       ],
       "profile_count": 1,
@@ -2281,7 +2538,10 @@
           "stable_qualifiers_any": [
             "运维组"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "运维组"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2309,7 +2569,10 @@
           "stable_qualifiers_any": [
             "服务"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "服务"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2337,7 +2600,10 @@
           "stable_qualifiers_any": [
             "评审会"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "评审会"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2365,7 +2631,10 @@
           "stable_qualifiers_any": [
             "看板"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "看板"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2391,7 +2660,11 @@
           "surface_forms_all": [
             "海岳电池"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "股票",
+            "市场对象"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2420,7 +2693,10 @@
           "stable_qualifiers_any": [
             "工单"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "工单"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2450,7 +2726,11 @@
             "流程",
             "换班流程"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "换班流程",
+            "流程"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2479,7 +2759,10 @@
           "stable_qualifiers_any": [
             "手册"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "手册"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -2509,7 +2792,11 @@
             "策略",
             "防守策略"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "防守策略",
+            "策略"
+          ]
         }
       ],
       "forbidden_identity_who": [

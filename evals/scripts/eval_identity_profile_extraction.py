@@ -234,6 +234,7 @@ def _score_profile_fields(profile: dict[str, Any], expected: ExpectedIdentityPro
     failures.extend(
         _score_definition_field(
             profile=profile,
+            expected=expected,
             definition_required=expected.definition_required,
             expected_any=expected.definition_contains_any,
             expected_all=expected.definition_contains_all,
@@ -246,6 +247,7 @@ def _score_profile_fields(profile: dict[str, Any], expected: ExpectedIdentityPro
 def _score_definition_field(
     *,
     profile: dict[str, Any],
+    expected: ExpectedIdentityProfile,
     definition_required: bool,
     expected_any: list[str],
     expected_all: list[str],
@@ -273,9 +275,10 @@ def _score_definition_field(
             failures.append("definition must define who, not repeat it only")
         if _has_generic_definition_placeholder(definition):
             failures.append("definition must define who, not use a generic placeholder")
+    boundary_text = _remove_subject_mentions_from_definition(definition=definition, profile=profile, expected=expected)
     failures.extend(
         _score_contains_list_field(
-            profile=profile,
+            text=boundary_text,
             field_name="definition",
             expected_any=expected_any,
             expected_all=expected_all,
@@ -425,16 +428,12 @@ def _score_exact_list_field(
 
 def _score_contains_list_field(
     *,
-    profile: dict[str, Any],
+    text: str,
     field_name: str,
     expected_any: list[str],
     expected_all: list[str],
 ) -> list[str]:
-    raw_value = profile.get(field_name)
-    if isinstance(raw_value, list):
-        text = _normalize_text(" ".join(str(item) for item in raw_value))
-    else:
-        text = _normalize_text(raw_value)
+    text = _normalize_text(text)
     failures: list[str] = []
     if expected_any and not any(_normalize_text(value) in text for value in expected_any):
         failures.append(f"{field_name} contains none of {expected_any!r}")

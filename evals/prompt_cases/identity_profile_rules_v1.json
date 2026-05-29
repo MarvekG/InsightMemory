@@ -19,7 +19,10 @@
           "surface_forms_all": [
             "Lanturn deployment"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "deployment"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -43,7 +46,10 @@
           "surface_forms_all": [
             "Cedar QA policy"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "policy"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -68,7 +74,10 @@
           "surface_forms_all": [
             "Ravel import service"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "service"
+          ]
         },
         {
           "who_any": [
@@ -77,7 +86,10 @@
           "surface_forms_all": [
             "Ravel import checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -101,7 +113,10 @@
           "surface_forms_all": [
             "STP.N"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "stock"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -126,7 +141,11 @@
           "surface_forms_all": [
             "Meridian onboarding"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "onboarding",
+            "board"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -151,7 +170,10 @@
           "surface_forms_all": [
             "Vireo billing migration"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "migration"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -177,7 +199,10 @@
           "surface_forms_all": [
             "Tideline register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         },
         {
           "who_any": [
@@ -186,7 +211,10 @@
           "surface_forms_all": [
             "Tideline checklist"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "checklist"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -211,7 +239,10 @@
           "surface_forms_all": [
             "MX-17A"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "code"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -238,7 +269,11 @@
           "surface_forms_all": [
             "Aster observatory docket"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "docket",
+            "doc"
+          ]
         },
         {
           "who_any": [
@@ -247,7 +282,10 @@
           "surface_forms_all": [
             "Aster observatory ledger"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "ledger"
+          ]
         },
         {
           "who_any": [
@@ -256,7 +294,10 @@
           "surface_forms_all": [
             "Aster observatory queue"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "queue"
+          ]
         },
         {
           "who_any": [
@@ -265,7 +306,10 @@
           "surface_forms_all": [
             "Aster observatory bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         }
       ],
       "forbidden_identity_who": [
@@ -297,7 +341,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 1
@@ -322,7 +369,10 @@
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         }
       ],
       "profile_count": 1
@@ -347,7 +397,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 1
@@ -372,7 +425,10 @@
           "stable_qualifiers_any": [
             "notice"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "notice"
+          ]
         }
       ],
       "profile_count": 1
@@ -397,7 +453,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 1,
@@ -425,7 +484,10 @@
           "stable_qualifiers_any": [
             "bulletin"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "bulletin"
+          ]
         }
       ],
       "profile_count": 1
@@ -451,7 +513,11 @@
             "packet release",
             "packet"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "packet release",
+            "packet"
+          ]
         }
       ],
       "profile_count": 1,
@@ -479,7 +545,10 @@
           "stable_qualifiers_any": [
             "register"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "register"
+          ]
         }
       ],
       "profile_count": 1,
@@ -508,7 +577,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 1
@@ -533,7 +605,10 @@
           "stable_qualifiers_any": [
             "review"
           ],
-          "definition_required": true
+          "definition_required": true,
+          "definition_contains_any": [
+            "review"
+          ]
         }
       ],
       "profile_count": 1
