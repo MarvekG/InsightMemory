@@ -222,36 +222,6 @@
       "profile_count": 2
     },
     {
-      "case_id": "history_realworld_ticket_row",
-      "category": "history_realworld_ticket",
-      "prompt_key": "identity_profile",
-      "source_case": "generic_realworld_adversarial_v1:ticket_rows_owner_boundary",
-      "payload": {
-        "context": "Ops table row: ticket=MX-17A; asset=freezer bay; blocker=missing gasket photo; owner=Rui."
-      },
-      "expected_gate_status": "passed",
-      "expected_identities": [
-        {
-          "who_any": [
-            "MX-17A"
-          ],
-          "surface_forms_all": [
-            "MX-17A"
-          ],
-          "definition_required": true,
-          "definition_semantics_any": [
-            "MX-17A is the code-like subject named MX-17A."
-          ]
-        }
-      ],
-      "forbidden_identity_who": [
-        "freezer bay",
-        "missing gasket photo",
-        "Rui"
-      ],
-      "profile_count": 1
-    },
-    {
       "case_id": "history_field_record_many_named_objects",
       "category": "history_format_field_record",
       "prompt_key": "identity_profile",
@@ -393,7 +363,7 @@
             "Kestrel transit review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "transit review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -421,7 +391,7 @@
             "Willow handover notice"
           ],
           "stable_qualifiers_any": [
-            "notice"
+            "handover notice"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -572,7 +542,7 @@
             "Kestrel transit review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "transit review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -600,7 +570,7 @@
             "Kestrel transit review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "transit review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
