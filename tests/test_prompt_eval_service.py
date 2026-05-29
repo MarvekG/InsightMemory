@@ -46,6 +46,8 @@ def test_identity_prompt_has_no_removed_type_classification_language() -> None:
     assert "must use only fields defined by schema" not in en_instructions
     assert "rejected_no_identity_profile" not in en_instructions
     assert "`draft_id`" not in en_instructions
+    assert "补充、修订或附录" not in zh_instructions
+    assert "supplement, revision, or appendix" not in en_instructions
 
 
 def test_identity_definition_prompt_defines_subject_not_category() -> None:

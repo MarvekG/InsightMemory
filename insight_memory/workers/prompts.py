@@ -17,6 +17,8 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“南枝策略已废弃旧阈值”，仍先抽取“南枝策略”。
 - 规则：只有完全没有可复用命名名词时，才拒绝身份抽取。
   例：“今晚感觉风险很高”没有命名主体，可拒绝。
+- 规则：查询状态、原因、阻塞或要求时，被询问的完整命名名词就是主体。
+  例：“青川交付为什么不能验收？”主体是“青川交付”。
 - 规则：可复用名词包括系统、文档、计划、团队、流程、代码、人物、事件、任务或工件。
   例：“柳湾权限清单”“云脊结算服务”“孟澜”都可作为主体。
 - 规则：账号、接口端点、运营团队或工作小组承接状态、计划或规则时，也可作为主体。
@@ -39,6 +41,8 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“许诺偏好每周一看汇总”，主体是“许诺”。
 - 规则：`who` 只写主体名词，不写当前状态、阻塞、结论、指标或时间变化。
   例：“云杉风控策略”可以；“云杉风控策略当前阈值上调”不可以。
+- 规则：查询句的 `who` 不要包含疑问词、助动词、动词或时间副词。
+  例：“为什么青川交付现在卡住？”的 `who` 写“青川交付”。
 
 `surface_forms` 字段规则：
 - 规则：`surface_forms` 只能直接来自输入或查询原文，不要发明别名。
@@ -87,8 +91,10 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“岚河平台可登录；岚河平台审计台超时”，要抽取两个主体。
 - 规则：多主体抽取时，每个被直接陈述且有独立状态、规则、负责人或要求的名称都要抽取。
   例：“禾场计划延期；禾场手册改为双签”，两个都抽取。
-- 规则：有独立标题的补充、修订、附录或更新记录可作为主体；普通事实补充不能。
-  例：“星澜手册补充记录要求复核”可抽“星澜手册补充记录”。
+- 规则：标题行后面的内容若是在说明某命名对象的要求，主体仍是这个命名对象。
+  例：“雁栖清单：每个工单要双签”归属“雁栖清单”。
+- 规则：只有标题本身被描述为有维护人、状态、编号或归档事实时，标题才可作为主体。
+  例：“星澜变更记录由法务维护”可抽“星澜变更记录”。
 - 规则：只出现在父级背景、会议背景、旁注或地点里的名称，不单独建主体。
   例：“在沙河办公室讨论栖木发布”，主体不是“沙河办公室”。
 - 规则：缺失项、附件、证据、前置条件、原因、指标、字段值或执行细节，不单独建主体。
@@ -414,6 +420,8 @@ Overall judgment:
   Example: `Southbranch policy retired the old threshold` still extracts `Southbranch policy` first.
 - Rule: Reject identity extraction only when there is no reusable named noun.
   Example: `The risk feels high tonight` has no named subject and may be rejected.
+- Rule: In questions about state, reason, blocker, or requirement, the queried complete named noun is the subject.
+  Example: `Why is Cedar lane handoff blocked?` belongs to `Cedar lane handoff`.
 - Rule: Reusable nouns include systems, documents, plans, teams, workflows, codes, people, events, tasks, or artifacts.
   Example: `Willowbank access checklist`, `Cloudridge settlement service`, and `Mira Lin` can be subjects.
 - Rule: Accounts, endpoints, operations teams, or working groups can be subjects when they own state, plans, or rules.
@@ -436,6 +444,8 @@ Overall judgment:
   Example: `Nora Xu prefers Monday summaries` belongs to `Nora Xu`.
 - Rule: `who` names only the subject; do not include current state, blocker, conclusion, metric, or time change.
   Example: `Fir risk policy` is valid; `Fir risk policy current threshold increased` is not a `who`.
+- Rule: For questions, `who` must not include question words, auxiliaries, verbs, or time adverbs.
+  Example: for `Why is Cedar lane handoff blocked now?`, write `Cedar lane handoff`.
 
 `surface_forms` field rules:
 - Rule: `surface_forms` must come directly from the input or query; do not invent aliases.
@@ -484,8 +494,10 @@ Multi-subject and boundary rules:
   Example: `Mistvale platform works; Mistvale platform audit panel times out` should extract both subjects.
 - Rule: In multi-subject extraction, extract every directly stated name with its own state, rule, owner, or requirement.
   Example: `Hayfield plan slipped; Hayfield handbook now requires dual signoff` extracts both.
-- Rule: A separately titled supplement, revision, appendix, or update record can be a subject; a plain fact update cannot.
-  Example: `Starling manual supplement record requires review` can extract `Starling manual supplement record`.
+- Rule: If text after a titled line states requirements for a named object, that object remains the subject.
+  Example: `Heron checklist: each ticket needs two signatures` belongs to `Heron checklist`.
+- Rule: A title can be the subject only when the title itself has an owner, state, id, or archival fact.
+  Example: `Starling change record is maintained by Legal` can extract `Starling change record`.
 - Rule: Names appearing only in parent context, meeting context, asides, or locations are not separate subjects.
   Example: in `discussed Grove launch in Riverroom`, `Riverroom` is not the subject.
 - Rule: Missing items, attachments, evidence, prerequisites, reasons, metrics, field values, and details are not subjects.
