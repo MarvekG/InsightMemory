@@ -2,7 +2,6 @@
   "suite_id": "identity_profile_query_target_v1",
   "description": "identity_profile query-target suite. Focuses on extracting query target identities, keeping query intent out of who, handling record markers, and ignoring generic record words.",
   "minimum_pass_rate": 1.0,
-  "target_prompt_key": "query_planner",
   "cases": [
     {
       "case_id": "query_planner_market_record_word",

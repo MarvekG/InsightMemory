@@ -11,6 +11,7 @@ from insight_memory.workers.schemas import (
     CrossEntityQueryBuilderOutput,
     EdgeJudgeOutput,
     ExtractorOutput,
+    IdentityProfileExtractionOutput,
     LinkerOutput,
     MergeJudgeOutput,
     ProfileWriterOutput,
@@ -31,6 +32,12 @@ class PromptEvalTarget:
 
 
 PROMPT_EVAL_TARGETS: dict[str, PromptEvalTarget] = {
+    "identity_profile": PromptEvalTarget(
+        prompt_key="identity_profile",
+        instructions_key="identity_profile",
+        schema_type=IdentityProfileExtractionOutput,
+        description="Extract identity profile drafts with the shared identity profile prompt and unified schema.",
+    ),
     "write_gate": PromptEvalTarget(
         prompt_key="write_gate",
         instructions_key="write_gate",

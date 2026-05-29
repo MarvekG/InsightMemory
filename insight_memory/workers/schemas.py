@@ -38,6 +38,14 @@ class QueryIdentityProfileDraft(IdentityProfileDraft):
     query_text: str = Field(..., min_length=1)
 
 
+class IdentityProfileExtractionOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    identity_gate_status: Literal["passed", "rejected_no_identity_profile"]
+    identity_profile_drafts: list[IdentityProfileDraft] = Field(default_factory=list)
+    rejection_reason: str | None = None
+
+
 class RecordMarkers(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

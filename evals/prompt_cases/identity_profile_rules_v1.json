@@ -25,8 +25,7 @@
       "forbidden_identity_who": [
         "escrow approval form"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "write_gate_governing_policy_owner",
@@ -51,8 +50,7 @@
         "parity matrix",
         "release ticket"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "extractor_same_prefix_roles",
@@ -85,8 +83,7 @@
       "forbidden_identity_who": [
         "Ravel import"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "query_planner_market_record_word",
@@ -111,8 +108,7 @@
         "latest analyst note",
         "STP.N latest analyst note"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "query_planner_record_marker_not_identity",
@@ -137,8 +133,7 @@
         "phase 3 review",
         "Meridian onboarding phase 3 review"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "write_gate_background_name_ignored",
@@ -163,8 +158,7 @@
         "Nexus sync",
         "invoice replay tests"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_format_table_register_checklist",
@@ -198,8 +192,7 @@
       "forbidden_identity_who": [
         "crate note"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_realworld_ticket_row",
@@ -226,8 +219,7 @@
         "missing gasket photo",
         "Rui"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_field_record_many_named_objects",
@@ -283,8 +275,7 @@
         "Soren Vale",
         "Nira Holt"
       ],
-      "profile_count": 4,
-      "target_prompt_key": "extractor"
+      "profile_count": 4
     },
     {
       "case_id": "history_write_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment_1",
@@ -309,8 +300,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_cross_format_longform_v1_cross_format_yamlish_phase_record_1",
@@ -335,8 +325,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_format_shift_targeted_v1_format_chat_history_with_requirement_1",
@@ -361,8 +350,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_format_shift_v1_format_yaml_rule_evolution_1",
@@ -387,8 +375,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment_2",
@@ -416,8 +403,7 @@
       "profile_count": 1,
       "forbidden_identity_who": [
         "Correction note for Morrowfield register"
-      ],
-      "target_prompt_key": "write_gate"
+      ]
     },
     {
       "case_id": "history_write_generic_cross_format_longform_v1_cross_format_yamlish_phase_record_2",
@@ -442,8 +428,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_deeper_dependency_chain_v1_deeper_mixed_language_six_hop_1",
@@ -472,8 +457,7 @@
       "profile_count": 1,
       "forbidden_identity_who": [
         "Why can’t Blackthorn packet release"
-      ],
-      "target_prompt_key": "query_planner"
+      ]
     },
     {
       "case_id": "history_multi_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment",
@@ -502,8 +486,7 @@
       "forbidden_identity_who": [
         "Correction note for Morrowfield register",
         "Appendix to Morrowfield register"
-      ],
-      "target_prompt_key": "extractor"
+      ]
     },
     {
       "case_id": "history_multi_generic_format_shift_targeted_v1_format_chat_history_with_requirement",
@@ -528,8 +511,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "extractor"
+      "profile_count": 1
     },
     {
       "case_id": "history_multi_generic_format_shift_v1_format_chat_history_with_requirement",
@@ -554,8 +536,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "extractor"
+      "profile_count": 1
     }
   ]
 }

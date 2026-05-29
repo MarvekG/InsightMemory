@@ -40,7 +40,6 @@ class IdentityExtractionCase:
     case_id: str
     category: str
     prompt_key: str
-    target_prompt_key: str
     payload: dict[str, Any]
     expected_gate_status: str
     expected_identities: list[ExpectedIdentityProfile] = field(default_factory=list)
@@ -64,15 +63,11 @@ def load_identity_extraction_suite(path: Path) -> dict[str, Any]:
         prompt_key = str(item["prompt_key"])
         if prompt_key != "identity_profile":
             raise ValueError("identity_profile extraction suites must use prompt_key='identity_profile'")
-        target_prompt_key = item.get("target_prompt_key") or raw.get("target_prompt_key")
-        if not target_prompt_key:
-            raise ValueError("identity_profile extraction cases require target_prompt_key")
         cases.append(
             IdentityExtractionCase(
                 case_id=str(item["case_id"]),
                 category=str(item.get("category") or ""),
                 prompt_key=prompt_key,
-                target_prompt_key=str(target_prompt_key),
                 payload=dict(item.get("payload") or {}),
                 expected_gate_status=str(item.get("expected_gate_status") or "passed"),
                 expected_identities=[
@@ -193,18 +188,15 @@ def write_report_files(*, report: dict[str, Any], output_dir: Path) -> dict[str,
 
 
 def _extract_gate_status(output: dict[str, Any]) -> str | None:
-    for key in ("identity_gate_status", "query_gate_status"):
-        if output.get(key):
-            return str(output[key])
-    return None
+    status = output.get("identity_gate_status")
+    return str(status) if status else None
 
 
 def _extract_profiles(output: dict[str, Any]) -> list[dict[str, Any]]:
-    for key in ("identity_profile_drafts", "query_identity_profile_drafts"):
-        profiles = output.get(key)
-        if isinstance(profiles, list):
-            return [dict(profile) for profile in profiles if isinstance(profile, dict)]
-    return []
+    profiles = output.get("identity_profile_drafts")
+    if not isinstance(profiles, list):
+        return []
+    return [dict(profile) for profile in profiles if isinstance(profile, dict)]
 
 
 def _normalize_text(value: object) -> str:
@@ -366,7 +358,6 @@ def _case_result(*, case: IdentityExtractionCase, response: dict[str, Any], fail
         "case_id": case.case_id,
         "category": case.category,
         "prompt_key": case.prompt_key,
-        "target_prompt_key": case.target_prompt_key,
         "passed": not failures,
         "failures": failures,
         "expected_gate_status": case.expected_gate_status,
@@ -404,10 +395,7 @@ def _render_markdown(report: dict[str, Any]) -> str:
     ]
     for result in report["cases"]:
         status = "PASS" if result["passed"] else "FAIL"
-        lines.append(
-            f"- `{status}` `{result['case_id']}` "
-            f"`{result['prompt_key']}` -> `{result['target_prompt_key']}`"
-        )
+        lines.append(f"- `{status}` `{result['case_id']}` `{result['prompt_key']}`")
         if result["failures"]:
             lines.append(f"  - failures: {'; '.join(result['failures'])}")
         lines.append(f"  - identities: `{json.dumps(result['actual_identities'], ensure_ascii=False)}`")
@@ -418,7 +406,7 @@ def _render_markdown(report: dict[str, Any]) -> str:
 async def _run_case(client: httpx.AsyncClient, case: IdentityExtractionCase) -> dict[str, Any]:
     response = await client.post(
         "/memory/prompt-evals/run",
-        json={"prompt_key": case.target_prompt_key, "payload": case.payload},
+        json={"prompt_key": case.prompt_key, "payload": case.payload},
     )
     return score_identity_extraction_case(case, response.json())
 

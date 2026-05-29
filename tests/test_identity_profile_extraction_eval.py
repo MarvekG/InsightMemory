@@ -31,7 +31,6 @@ def test_load_identity_extraction_suite_reads_cases(tmp_path: Path) -> None:
                         "case_id": "c1",
                         "category": "boundary",
                         "prompt_key": "identity_profile",
-                        "target_prompt_key": "write_gate",
                         "payload": {"context": "x"},
                         "expected_gate_status": "passed",
                         "expected_identities": [
@@ -57,7 +56,6 @@ def test_load_identity_extraction_suite_reads_cases(tmp_path: Path) -> None:
     assert suite["minimum_pass_rate"] == 0.9
     assert len(suite["cases"]) == 1
     assert suite["cases"][0].prompt_key == "identity_profile"
-    assert suite["cases"][0].target_prompt_key == "write_gate"
     assert suite["cases"][0].expected_identities[0].who_any == ["x"]
     assert suite["cases"][0].expected_identities[0].surface_forms_all == ["x"]
     assert suite["cases"][0].expected_identities[0].stable_qualifiers_any == ["project"]
@@ -107,7 +105,7 @@ def test_identity_prompt_examples_do_not_copy_eval_subjects() -> None:
     ]
     copied_subjects = []
     for language, suite_path in suites:
-        instructions = get_worker_instructions("write_gate", system_language=language)
+        instructions = get_worker_instructions("identity_profile", system_language=language)
         suite = load_identity_extraction_suite(suite_path)
         expected_subjects = {
             subject
@@ -153,40 +151,36 @@ def test_identity_profile_prompt_case_suites_are_split_by_focus() -> None:
     suite_specs = [
         (
             "identity_profile_write_context_v1",
-            "write_gate",
             Path("memory/evals/prompt_cases/identity_profile_write_context_v1.json"),
             "raw context acceptance/rejection",
             97,
         ),
         (
             "identity_profile_query_target_v1",
-            "query_planner",
             Path("memory/evals/prompt_cases/identity_profile_query_target_v1.json"),
             "extracting query target identities",
             90,
         ),
         (
             "identity_profile_multi_subject_v1",
-            "extractor",
             Path("memory/evals/prompt_cases/identity_profile_multi_subject_v1.json"),
             "multi-subject raw context extraction",
             49,
         ),
     ]
 
-    for suite_id, target_prompt_key, path, focus_text, expected_count in suite_specs:
+    for suite_id, path, focus_text, expected_count in suite_specs:
         raw = json.loads(path.read_text(encoding="utf-8"))
         suite = load_identity_extraction_suite(path)
         prompt_keys = {case.prompt_key for case in suite["cases"]}
-        target_prompt_keys = {case.target_prompt_key for case in suite["cases"]}
         source_suites = {str(case.get("source_suite")) for case in raw["cases"]}
 
         assert raw["suite_id"] == suite_id
-        assert raw["target_prompt_key"] == target_prompt_key
+        assert "extraction_mode" not in raw
         assert focus_text in raw["description"]
         assert len(suite["cases"]) == expected_count
         assert prompt_keys == {"identity_profile"}
-        assert target_prompt_keys == {target_prompt_key}
+        assert all("extraction_mode" not in case for case in raw["cases"])
         assert source_suites == {
             "identity_profile_rules_v1",
             "identity_profile_rules_mixed_v1",
@@ -199,7 +193,6 @@ def test_score_identity_extraction_case_passes_write_gate_output() -> None:
         case_id="missing_item_owner",
         category="boundary",
         prompt_key="identity_profile",
-        target_prompt_key="write_gate",
         payload={"context": "x"},
         expected_gate_status="passed",
         expected_identities=[
@@ -240,7 +233,6 @@ def test_score_identity_extraction_case_fails_for_forbidden_identity() -> None:
         case_id="bad_missing_item_owner",
         category="boundary",
         prompt_key="identity_profile",
-        target_prompt_key="write_gate",
         payload={"context": "x"},
         expected_gate_status="passed",
         expected_identities=[ExpectedIdentityProfile(who_any=["Lanturn deployment"])],
@@ -270,7 +262,6 @@ def test_score_identity_extraction_case_reads_query_planner_profiles() -> None:
         case_id="market_record_word",
         category="market",
         prompt_key="identity_profile",
-        target_prompt_key="query_planner",
         payload={"query": "x"},
         expected_gate_status="passed",
         expected_identities=[ExpectedIdentityProfile(who_any=["STP.N"])],
@@ -281,8 +272,8 @@ def test_score_identity_extraction_case_reads_query_planner_profiles() -> None:
         {
             "status": "ok",
             "output": {
-                "query_gate_status": "passed",
-                "query_identity_profile_drafts": [
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
                     {"who": "STP.N"},
                 ],
             },
@@ -298,7 +289,6 @@ def test_score_identity_extraction_case_does_not_require_entity_type() -> None:
         case_id="record_marker",
         category="boundary",
         prompt_key="identity_profile",
-        target_prompt_key="query_planner",
         payload={"query": "x"},
         expected_gate_status="passed",
         expected_identities=[
@@ -313,8 +303,8 @@ def test_score_identity_extraction_case_does_not_require_entity_type() -> None:
         {
             "status": "ok",
             "output": {
-                "query_gate_status": "passed",
-                "query_identity_profile_drafts": [
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
                     {"who": "Meridian onboarding"},
                 ],
             },
@@ -329,7 +319,6 @@ def test_score_identity_extraction_case_checks_surface_qualifiers_and_definition
         case_id="full_profile_fields",
         category="boundary",
         prompt_key="identity_profile",
-        target_prompt_key="write_gate",
         payload={"context": "x"},
         expected_gate_status="passed",
         expected_identities=[
@@ -368,7 +357,6 @@ def test_score_identity_extraction_case_fails_missing_profile_fields() -> None:
         case_id="missing_profile_fields",
         category="boundary",
         prompt_key="identity_profile",
-        target_prompt_key="write_gate",
         payload={"context": "x"},
         expected_gate_status="passed",
         expected_identities=[
@@ -410,7 +398,6 @@ def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:
         case_id="extra_surface_forms",
         category="boundary",
         prompt_key="identity_profile",
-        target_prompt_key="write_gate",
         payload={"context": "x"},
         expected_gate_status="passed",
         expected_identities=[
@@ -446,7 +433,6 @@ def test_score_identity_extraction_case_fails_non_exact_profile_count() -> None:
         case_id="extra_profile",
         category="boundary",
         prompt_key="identity_profile",
-        target_prompt_key="write_gate",
         payload={"context": "x"},
         expected_gate_status="passed",
         expected_identities=[
@@ -501,7 +487,6 @@ def test_write_report_files_outputs_json_and_markdown(tmp_path: Path) -> None:
                 {
                     "case_id": "c1",
                     "prompt_key": "identity_profile",
-                    "target_prompt_key": "write_gate",
                     "passed": True,
                     "failures": [],
                     "actual_identities": [{"who": "x", "definition": "Named subject."}],

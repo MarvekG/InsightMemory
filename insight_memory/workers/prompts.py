@@ -19,6 +19,8 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“今晚感觉风险很高”没有命名主体，可拒绝。
 - 规则：可复用名词包括系统、文档、计划、团队、流程、代码、人物、事件、任务或工件。
   例：“柳湾权限清单”“云脊结算服务”“孟澜”都可作为主体。
+- 规则：账号、接口端点、运营团队或工作小组承接状态、计划或规则时，也可作为主体。
+  例：“松溪客服组下周接手巡检”，主体是“松溪客服组”。
 - 规则：市场代码、证券代码、基金代码和 ticker-like symbol 可作为主体。
   例：“771009.SZ 最新研究记录怎么看？”主体是“771009.SZ”。
 - 规则：结构化记录中的 ticket、case、work_order、id 字段值，承接状态或阻塞时可作为主体。
@@ -55,6 +57,10 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“鹭湾工单”的 `stable_qualifiers` 至少包含“工单”。
 - 规则：中文复合角色短语要同时保留最长稳定短语和末尾角色词。
   例：“枫桥上线计划”放“上线计划”和“计划”；“洛川巡检手册”放“巡检手册”和“手册”。
+- 规则：英文复合主体也要保留最长稳定角色短语和末尾角色词。
+  例：“Ridge access request”放“access request”和“request”。
+- 规则：不要因英文角色词常见就省略它，它常是区分同前缀主体的核心。
+  例：“Cobalt service note”放“service note”和“note”。
 - 规则：人名、股票代码或无角色词的唯一名称，`stable_qualifiers` 可以为空。
   例：“孟澜不希望周五排发布会”，主体是“孟澜”，限定词可为空。
 - 规则：`stable_qualifiers` 不要写记录标记、句子、当前状态或事实摘要。
@@ -79,6 +85,10 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“澜石门户正常，澜石门户消息台延迟”，两个名称都要抽取。
 - 规则：父主体和更长同前缀子主体各有事实时，不要把子主体折叠进父主体。
   例：“岚河平台可登录；岚河平台审计台超时”，要抽取两个主体。
+- 规则：多主体抽取时，每个被直接陈述且有独立状态、规则、负责人或要求的名称都要抽取。
+  例：“禾场计划延期；禾场手册改为双签”，两个都抽取。
+- 规则：有独立标题的补充、修订、附录或更新记录可作为主体；普通事实补充不能。
+  例：“星澜手册补充记录要求复核”可抽“星澜手册补充记录”。
 - 规则：只出现在父级背景、会议背景、旁注或地点里的名称，不单独建主体。
   例：“在沙河办公室讨论栖木发布”，主体不是“沙河办公室”。
 - 规则：缺失项、附件、证据、前置条件、原因、指标、字段值或执行细节，不单独建主体。
@@ -104,6 +114,11 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
 
 
 WORKER_INSTRUCTIONS: dict[str, str] = {
+    "identity_profile": f"""
+从输入中抽取 identity_profile drafts。
+
+{IDENTITY_PROFILE_RULES}
+""".strip(),
     "write_gate": f"""
 判断原始输入是否应被接受进入长期记忆写入。
 只返回 identity_profile drafts，不要创建 candidate memories。
@@ -401,6 +416,8 @@ Overall judgment:
   Example: `The risk feels high tonight` has no named subject and may be rejected.
 - Rule: Reusable nouns include systems, documents, plans, teams, workflows, codes, people, events, tasks, or artifacts.
   Example: `Willowbank access checklist`, `Cloudridge settlement service`, and `Mira Lin` can be subjects.
+- Rule: Accounts, endpoints, operations teams, or working groups can be subjects when they own state, plans, or rules.
+  Example: `Sundale support crew takes over checks next week` belongs to `Sundale support crew`.
 - Rule: Market codes, security codes, fund codes, and ticker-like symbols can be subjects.
   Example: in `What does the latest note say about RQX.N?`, the subject is `RQX.N`.
 - Rule: A ticket, case, work_order, or id field value in a structured record can be the subject when it owns state or blockers.
@@ -437,6 +454,10 @@ Overall judgment:
   Example: `Egret ticket` should include `ticket` in `stable_qualifiers`.
 - Rule: For Chinese compound role phrases, include both the longest stable phrase and the final role word.
   Example: for `枫桥上线计划`, include both `上线计划` and `计划`; for `洛川巡检手册`, include `手册`.
+- Rule: For English compound subjects, include both the longest stable role phrase and the final role noun.
+  Example: for `Ridge access request`, include `access request` and `request`.
+- Rule: Do not omit common English role nouns; they often separate same-prefix subjects.
+  Example: for `Cobalt service note`, include `service note` and `note`.
 - Rule: Person names, stock codes, or unique names with no role word may have empty `stable_qualifiers`.
   Example: `Mira Lin does not want Friday releases` belongs to `Mira Lin`; qualifiers may be empty.
 - Rule: `stable_qualifiers` must not contain record markers, sentences, current states, or fact summaries.
@@ -461,6 +482,10 @@ Multi-subject and boundary rules:
   Example: if `Stoneport portal` works but `Stoneport message panel` is delayed, extract both names.
 - Rule: When a parent subject and a longer same-prefix child subject each have facts, do not fold the child into parent.
   Example: `Mistvale platform works; Mistvale platform audit panel times out` should extract both subjects.
+- Rule: In multi-subject extraction, extract every directly stated name with its own state, rule, owner, or requirement.
+  Example: `Hayfield plan slipped; Hayfield handbook now requires dual signoff` extracts both.
+- Rule: A separately titled supplement, revision, appendix, or update record can be a subject; a plain fact update cannot.
+  Example: `Starling manual supplement record requires review` can extract `Starling manual supplement record`.
 - Rule: Names appearing only in parent context, meeting context, asides, or locations are not separate subjects.
   Example: in `discussed Grove launch in Riverroom`, `Riverroom` is not the subject.
 - Rule: Missing items, attachments, evidence, prerequisites, reasons, metrics, field values, and details are not subjects.
@@ -486,6 +511,11 @@ Multi-subject and boundary rules:
 
 
 WORKER_INSTRUCTIONS_EN: dict[str, str] = {
+    "identity_profile": f"""
+Extract identity_profile drafts from the input.
+
+{IDENTITY_PROFILE_RULES_EN}
+""".strip(),
     "write_gate": f"""
 Decide whether the raw input should be accepted for long-term memory ingest.
 Return identity_profile drafts only; do not create candidate memories.

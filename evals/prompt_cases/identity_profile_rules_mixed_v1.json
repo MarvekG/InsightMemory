@@ -38,8 +38,7 @@
         "Harborlane bulletin",
         "shift note"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_same_prefix_five_artifacts",
@@ -100,8 +99,7 @@
       "forbidden_identity_who": [
         "Latchmere"
       ],
-      "profile_count": 5,
-      "target_prompt_key": "extractor"
+      "profile_count": 5
     },
     {
       "case_id": "history_ultralong_multientity_noise",
@@ -165,8 +163,7 @@
         "午餐统计",
         "访客 badge"
       ],
-      "profile_count": 5,
-      "target_prompt_key": "extractor"
+      "profile_count": 5
     },
     {
       "case_id": "history_query_same_surface_handbook",
@@ -193,8 +190,7 @@
         "rollback note",
         "incident owner"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_manual_temporal_record",
@@ -220,8 +216,7 @@
         "tidal variance note",
         "departure"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_policy_requirement",
@@ -246,8 +241,7 @@
       "forbidden_identity_who": [
         "临时权限"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_accuracy_v1_gate_ingest_accept_service_1",
@@ -272,8 +266,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_answer_boundary_v1_direct_vs_dependency_answer_split_1",
@@ -298,8 +291,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_broad_coverage_v1_broad_three_hop_requirement_chain_1",
@@ -327,8 +319,7 @@
       "forbidden_identity_who": [
         "readiness packet"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_broad_targeted_v1_broad_four_way_same_surface_disambiguation_1",
@@ -353,8 +344,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_concurrency_consistency_v1_concurrency_same_entity_parallel_facts_1",
@@ -379,8 +369,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_cross_domain_transfer_v1_cross_domain_analogous_structure_1",
@@ -405,8 +394,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_deep_association_v1_deep_four_hop_requirement_chain_1",
@@ -434,8 +422,7 @@
       "forbidden_identity_who": [
         "release packet"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_deeper_dependency_chain_v1_deeper_five_hop_requirement_chain_1",
@@ -463,8 +450,7 @@
       "forbidden_identity_who": [
         "release packet"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_extreme_dependency_v1_same_surface_project_vs_checklist_why_query_1",
@@ -492,8 +478,7 @@
       "forbidden_identity_who": [
         "回滚说明"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_extreme_targeted_v11_noisy_meeting_note_with_second_entity_1",
@@ -521,8 +506,7 @@
       "forbidden_identity_who": [
         "Billing"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_extreme_targeted_v9_cross_entity_upstream_with_distractor_handbo_1",
@@ -547,8 +531,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_far_deep_targeted_v1_farfield_herbarium_accession_requirement_1",
@@ -576,8 +559,7 @@
       "forbidden_identity_who": [
         "specimen custody folio"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_farfield_openworld_v1_farfield_herbarium_accession_requirement_1",
@@ -605,8 +587,7 @@
       "forbidden_identity_who": [
         "specimen custody folio"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_finance_generalization_v1_finance_etf_rebalance_requirement_1",
@@ -631,8 +612,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_frontier_targeted_v1_concurrency_same_surface_split_parallel_1",
@@ -657,8 +637,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_generalization_association_v1_generalization_policy_requirement_1",
@@ -683,8 +662,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_hard_generalization_v1_mixed_language_requirement_runbook_1",
@@ -709,8 +687,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_heterogeneous_coverage_v1_heterogeneous_same_surface_artifact_chain_1",
@@ -735,8 +712,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_heterogeneous_targeted_v1_heterogeneous_history_disagreement_with_rule_3",
@@ -761,8 +737,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_identity_boundary_v1_same_prefix_project_checklist_handbook_1",
@@ -787,8 +762,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_implicit_relation_v1_implicit_precondition_inference_1",
@@ -813,8 +787,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_large_scope_graph_v1_large_scope_dense_entity_field_1",
@@ -839,8 +812,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_long_horizon_v1_long_horizon_tracked_blocker_chain_1",
@@ -865,8 +837,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_market_memory_v1_market_equity_risk_recall_1",
@@ -891,8 +862,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_matrix_smoke_v1_gate_ingest_accept_service_1",
@@ -917,8 +887,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_multi_subject_document_targeted_v1_multi_subject_primary_with_side_mentions_1",
@@ -947,8 +916,7 @@
         "Mossledger",
         "berth packet"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_multi_subject_document_v1_multi_subject_primary_with_side_mentions_1",
@@ -977,8 +945,7 @@
         "Mossledger",
         "berth packet"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_negation_conflict_v1_negation_explicit_rejection_1",
@@ -1003,8 +970,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_noise_dependency_v1_cross_entity_policy_explains_blocker_1",
@@ -1032,8 +998,7 @@
       "forbidden_identity_who": [
         "审批链说明"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_numerical_reasoning_v1_numerical_threshold_comparison_1",
@@ -1058,8 +1023,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_openworld_targeted_v1_openworld_archive_finding_aid_requirement_1",
@@ -1087,8 +1051,7 @@
       "forbidden_identity_who": [
         "provenance note"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_openworld_unknown_part_a_v1_openworld_archive_finding_aid_requirement_1",
@@ -1116,8 +1079,7 @@
       "forbidden_identity_who": [
         "provenance note"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_openworld_unknown_part_b_v1_openworld_exhibit_manual_rule_evolution_1",
@@ -1142,8 +1104,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_openworld_unknown_v1_openworld_archive_finding_aid_requirement_1",
@@ -1171,8 +1132,7 @@
       "forbidden_identity_who": [
         "provenance note"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_out_of_distribution_domains_v1_ood_shipping_vessel_1",
@@ -1200,8 +1160,7 @@
       "forbidden_identity_who": [
         "cargo manifest"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_realworld_adversarial_v1_alias_after_correction_not_old_name_2",
@@ -1226,8 +1185,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_realworld_complex_v1_home_renovation_permit_chain_1",
@@ -1252,8 +1210,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_realworld_daily_v1_school_trip_permission_1",
@@ -1275,8 +1232,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_realworld_edge_cases_v1_shared_surface_router_vs_child_schedule_1",
@@ -1298,8 +1254,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_realworld_software_dev_v1_api_contract_breaking_change_1",
@@ -1324,8 +1279,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_realworld_work_ops_v1_vendor_procurement_shipping_1",
@@ -1350,8 +1304,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_regression_targeted_v1_single_fact_team_plan_1",
@@ -1376,8 +1329,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_rule_evolution_matrix_targeted_v1_rule_evolution_handbook_history_current_supp_1",
@@ -1402,8 +1354,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_rule_evolution_matrix_v1_rule_evolution_handbook_history_current_supp_1",
@@ -1428,8 +1379,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_semantic_paraphrase_v1_ferry_dossier_material_paraphrase_1",
@@ -1457,8 +1407,7 @@
       "forbidden_identity_who": [
         "mooring certificate"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_semantic_tail_targeted_v1_deep_four_hop_requirement_chain_1",
@@ -1486,8 +1435,7 @@
       "forbidden_identity_who": [
         "release packet"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_state_transition_boundary_v1_current_blocker_replaces_previous_1",
@@ -1512,8 +1460,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_stress_openworld_v1_stress_three_way_same_surface_split_1",
@@ -1538,8 +1485,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_stress_targeted_v1_stress_same_surface_document_project_require_1",
@@ -1567,8 +1513,7 @@
       "forbidden_identity_who": [
         "owner note"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_stress_targeted_v2_stress_history_with_external_requirement_cur_1",
@@ -1593,8 +1538,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_temporal_reasoning_v1_temporal_sequence_order_1",
@@ -1619,8 +1563,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_accuracy_v1_gate_ingest_accept_person_1",
@@ -1642,8 +1585,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_answer_boundary_v1_direct_vs_dependency_answer_split_2",
@@ -1668,8 +1610,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_broad_coverage_v1_broad_three_hop_requirement_chain_2",
@@ -1694,8 +1635,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_broad_targeted_v1_broad_four_way_same_surface_disambiguation_2",
@@ -1720,8 +1660,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_concurrency_consistency_v1_concurrency_same_entity_parallel_facts_2",
@@ -1746,8 +1685,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_cross_domain_transfer_v1_cross_domain_procedure_analogy_1",
@@ -1772,8 +1710,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_deep_association_v1_deep_four_hop_requirement_chain_2",
@@ -1798,8 +1735,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_deeper_dependency_chain_v1_deeper_five_hop_requirement_chain_2",
@@ -1824,8 +1760,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_extreme_dependency_v1_same_surface_checklist_query_after_project_c_1",
@@ -1850,8 +1785,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_extreme_targeted_v11_noisy_meeting_note_with_second_entity_2",
@@ -1876,8 +1810,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_extreme_targeted_v9_cross_entity_upstream_with_distractor_handbo_2",
@@ -1902,8 +1835,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_far_deep_targeted_v1_farfield_herbarium_accession_requirement_2",
@@ -1928,8 +1860,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_farfield_openworld_v1_farfield_herbarium_accession_requirement_2",
@@ -1954,8 +1885,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_accuracy_v1_gate_query_accept_issue_1",
@@ -1980,8 +1910,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_answer_boundary_v1_direct_vs_dependency_answer_split_1",
@@ -2006,8 +1935,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_broad_coverage_v1_broad_multi_entity_long_briefing_split_1",
@@ -2032,8 +1960,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_broad_targeted_v1_broad_four_way_same_surface_disambiguation_1",
@@ -2058,8 +1985,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_concurrency_consistency_v1_concurrency_same_entity_parallel_facts_1",
@@ -2084,8 +2010,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_cross_domain_transfer_v1_cross_domain_analogous_structure_1",
@@ -2110,8 +2035,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_cross_format_longform_targeted_v1_cross_format_markdown_history_current_supple_1",
@@ -2136,8 +2060,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_cross_format_longform_v1_cross_format_markdown_history_current_supple_1",
@@ -2162,8 +2085,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_deep_association_v1_deep_four_hop_requirement_chain_1",
@@ -2188,8 +2110,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_extreme_dependency_v1_same_surface_project_vs_checklist_why_query_1",
@@ -2214,8 +2135,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_extreme_targeted_v11_noisy_meeting_note_with_second_entity_1",
@@ -2240,8 +2160,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_far_deep_targeted_v1_farfield_herbarium_accession_requirement_1",
@@ -2266,8 +2185,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_farfield_openworld_v1_farfield_herbarium_accession_requirement_1",
@@ -2292,8 +2210,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_finance_generalization_v1_finance_same_surface_stock_vs_sector_note_1",
@@ -2318,8 +2235,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_format_shift_targeted_v1_format_email_thread_multi_subjects_1",
@@ -2344,8 +2260,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_format_shift_v1_format_email_thread_multi_subjects_1",
@@ -2370,8 +2285,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_frontier_targeted_v1_concurrency_same_surface_split_parallel_1",
@@ -2396,8 +2310,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_generalization_association_v1_generalization_policy_requirement_1",
@@ -2422,8 +2335,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_hard_generalization_v1_mixed_language_policy_gap_1",
@@ -2448,8 +2360,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_heterogeneous_coverage_v1_heterogeneous_single_document_four_subjects_1",
@@ -2474,8 +2385,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_heterogeneous_targeted_v1_heterogeneous_single_document_four_subjects_1",
@@ -2500,8 +2410,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_identity_boundary_v1_same_prefix_project_checklist_handbook_1",
@@ -2526,8 +2435,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_implicit_relation_v1_implicit_causality_chain_1",
@@ -2552,8 +2460,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_large_scope_graph_v1_large_scope_dense_entity_field_1",
@@ -2578,8 +2485,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_long_horizon_v1_long_horizon_tracked_blocker_chain_1",
@@ -2604,8 +2510,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_market_memory_v1_market_equity_risk_recall_1",
@@ -2630,8 +2535,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_matrix_smoke_v1_single_fact_owner_1",
@@ -2656,8 +2560,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_multi_subject_document_targeted_v1_multi_subject_primary_with_side_mentions_1",
@@ -2682,8 +2585,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_multi_subject_document_v1_multi_subject_primary_with_side_mentions_1",
@@ -2708,8 +2610,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_negation_conflict_v1_negation_permission_denial_2",
@@ -2734,8 +2635,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_noise_dependency_v1_noisy_policy_requirement_with_chatty_context_1",
@@ -2760,8 +2660,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_numerical_reasoning_v1_numerical_threshold_comparison_2",
@@ -2786,8 +2685,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_openworld_targeted_v1_openworld_archive_finding_aid_requirement_1",
@@ -2812,8 +2710,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_openworld_unknown_part_a_v1_openworld_archive_finding_aid_requirement_1",
@@ -2838,8 +2735,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_openworld_unknown_part_b_v1_openworld_exhibit_manual_rule_evolution_1",
@@ -2864,8 +2760,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_openworld_unknown_v1_openworld_archive_finding_aid_requirement_1",
@@ -2890,8 +2785,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_out_of_distribution_domains_v1_ood_archive_museum_1",
@@ -2916,8 +2810,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_realworld_adversarial_v1_alias_after_correction_not_old_name_1",
@@ -2942,8 +2835,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_realworld_complex_v1_home_renovation_permit_chain_1",
@@ -2968,8 +2860,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_realworld_daily_v1_school_trip_permission_2",
@@ -2991,8 +2882,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_realworld_edge_cases_v1_shared_surface_router_vs_child_schedule_2",
@@ -3017,8 +2907,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_realworld_software_dev_v1_ci_failure_flaky_test_1",
@@ -3043,8 +2932,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_realworld_work_ops_v1_customer_onboarding_handoff_1",
@@ -3069,8 +2957,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_rule_evolution_matrix_targeted_v1_rule_evolution_handbook_history_current_supp_1",
@@ -3095,8 +2982,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_rule_evolution_matrix_v1_rule_evolution_handbook_history_current_supp_1",
@@ -3121,8 +3007,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_semantic_paraphrase_v1_ferry_dossier_material_paraphrase_2",
@@ -3147,8 +3032,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_semantic_tail_targeted_v1_deep_four_hop_requirement_chain_1",
@@ -3173,8 +3057,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_state_transition_boundary_v1_current_blocker_replaces_previous_1",
@@ -3199,8 +3082,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_stress_openworld_v1_stress_long_context_primary_subject_1",
@@ -3225,8 +3107,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_stress_targeted_v2_stress_history_with_external_requirement_cur_1",
@@ -3251,8 +3132,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_temporal_reasoning_v1_temporal_sequence_order_2",
@@ -3277,8 +3157,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_ultralong_multientity_v1_ultralong_single_document_multi_entity_split_1",
@@ -3303,8 +3182,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_real_debate_longform_v1_real_debate_conservative_summary_002142_1",
@@ -3326,8 +3204,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_accuracy_v1_single_fact_preference_1",
@@ -3349,8 +3226,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_answer_boundary_v1_direct_vs_dependency_answer_split_2",
@@ -3375,8 +3251,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_broad_coverage_v1_broad_three_hop_requirement_chain_1",
@@ -3401,8 +3276,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_broad_targeted_v1_broad_three_hop_requirement_chain_1",
@@ -3427,8 +3301,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_concurrency_consistency_v1_concurrency_same_entity_parallel_facts_2",
@@ -3453,8 +3326,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_cross_domain_transfer_v1_cross_domain_analogous_structure_2",
@@ -3479,8 +3351,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_cross_format_longform_targeted_v1_cross_format_markdown_history_current_supple_2",
@@ -3505,8 +3376,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_cross_format_longform_v1_cross_format_markdown_history_current_supple_2",
@@ -3531,8 +3401,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_deep_association_v1_deep_history_current_external_requirement_1",
@@ -3557,8 +3426,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_extreme_dependency_v1_same_surface_checklist_query_after_project_c_1",
@@ -3583,8 +3451,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_far_deep_targeted_v1_deep_four_hop_requirement_chain_1",
@@ -3609,8 +3476,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_farfield_openworld_v1_farfield_orbital_docket_history_current_1",
@@ -3635,8 +3501,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_finance_generalization_v1_finance_portfolio_history_current_1",
@@ -3661,8 +3526,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_format_shift_v1_format_yaml_rule_evolution_1",
@@ -3687,8 +3551,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_frontier_targeted_v1_ultralong_single_document_multi_entity_split_1",
@@ -3713,8 +3576,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_query_generic_generalization_association_v1_generalization_person_preference_1",
@@ -3736,8 +3598,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "history_multi_generic_answer_boundary_v1_direct_vs_dependency_answer_split",
@@ -3786,8 +3647,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 3,
-      "target_prompt_key": "extractor"
+      "profile_count": 3
     },
     {
       "case_id": "history_multi_generic_broad_coverage_v1_broad_three_hop_requirement_chain",
@@ -3824,8 +3684,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_broad_targeted_v1_broad_four_way_same_surface_disambiguation",
@@ -3886,8 +3745,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 4,
-      "target_prompt_key": "extractor"
+      "profile_count": 4
     },
     {
       "case_id": "history_multi_generic_concurrency_consistency_v1_concurrency_same_surface_split_parallel",
@@ -3936,8 +3794,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 3,
-      "target_prompt_key": "extractor"
+      "profile_count": 3
     },
     {
       "case_id": "history_multi_generic_cross_domain_transfer_v1_cross_domain_procedure_analogy",
@@ -3974,8 +3831,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_cross_format_longform_v1_cross_format_bilingual_long_summary",
@@ -4012,8 +3868,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_deep_association_v1_deep_four_hop_requirement_chain",
@@ -4062,8 +3917,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 3,
-      "target_prompt_key": "extractor"
+      "profile_count": 3
     },
     {
       "case_id": "history_multi_generic_deeper_dependency_chain_v1_deeper_five_hop_requirement_chain",
@@ -4124,8 +3978,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 4,
-      "target_prompt_key": "extractor"
+      "profile_count": 4
     },
     {
       "case_id": "history_multi_generic_extreme_dependency_v1_same_surface_checklist_query_after_project_c",
@@ -4162,8 +4015,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_extreme_targeted_v11_noisy_meeting_note_with_second_entity",
@@ -4200,8 +4052,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_extreme_targeted_v9_cross_entity_upstream_with_distractor_handbo",
@@ -4250,8 +4101,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 3,
-      "target_prompt_key": "extractor"
+      "profile_count": 3
     },
     {
       "case_id": "history_multi_generic_far_deep_targeted_v1_farfield_herbarium_accession_requirement",
@@ -4288,8 +4138,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_farfield_openworld_v1_farfield_herbarium_accession_requirement",
@@ -4326,8 +4175,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_finance_generalization_v1_finance_same_surface_stock_vs_sector_note",
@@ -4364,8 +4212,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_frontier_targeted_v1_concurrency_same_surface_split_parallel",
@@ -4414,8 +4261,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 3,
-      "target_prompt_key": "extractor"
+      "profile_count": 3
     },
     {
       "case_id": "history_multi_generic_hard_generalization_v1_multi_entity_mixed_context_split",
@@ -4452,8 +4298,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_heterogeneous_coverage_v1_heterogeneous_same_surface_artifact_chain",
@@ -4502,8 +4347,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 3,
-      "target_prompt_key": "extractor"
+      "profile_count": 3
     },
     {
       "case_id": "history_multi_generic_heterogeneous_targeted_v1_heterogeneous_history_disagreement_with_rule",
@@ -4540,8 +4384,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_identity_boundary_v1_same_prefix_project_checklist_handbook",
@@ -4590,8 +4433,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 3,
-      "target_prompt_key": "extractor"
+      "profile_count": 3
     },
     {
       "case_id": "history_multi_generic_large_scope_graph_v1_large_scope_same_prefix_split",
@@ -4664,8 +4506,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 5,
-      "target_prompt_key": "extractor"
+      "profile_count": 5
     },
     {
       "case_id": "history_multi_generic_long_horizon_v1_long_horizon_tracked_blocker_chain",
@@ -4702,8 +4543,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_market_memory_v1_market_same_surface_stock_vs_note",
@@ -4740,8 +4580,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_noise_dependency_v1_cross_entity_policy_explains_blocker",
@@ -4778,8 +4617,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_openworld_targeted_v1_openworld_archive_finding_aid_requirement",
@@ -4816,8 +4654,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_openworld_unknown_part_a_v1_openworld_archive_finding_aid_requirement",
@@ -4854,8 +4691,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_openworld_unknown_part_b_v1_openworld_exhibit_manual_rule_evolution",
@@ -4892,8 +4728,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_openworld_unknown_v1_openworld_archive_finding_aid_requirement",
@@ -4930,8 +4765,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_out_of_distribution_domains_v1_ood_shipping_vessel",
@@ -4968,8 +4802,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_realworld_adversarial_v1_alias_after_correction_not_old_name",
@@ -5006,8 +4839,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_realworld_complex_v1_home_renovation_permit_chain",
@@ -5044,8 +4876,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_realworld_edge_cases_v1_archive_box_accession_dependency",
@@ -5082,8 +4913,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_multi_generic_realworld_software_dev_v1_api_contract_breaking_change",
@@ -5120,8 +4950,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "history_reject_write_generic_accuracy_v1_gate_ingest_reject_subjectless_1",
@@ -5133,8 +4962,7 @@
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0,
-      "target_prompt_key": "write_gate"
+      "profile_count": 0
     },
     {
       "case_id": "history_reject_write_generic_accuracy_v1_gate_ingest_reject_noise_1",
@@ -5146,8 +4974,7 @@
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0,
-      "target_prompt_key": "write_gate"
+      "profile_count": 0
     },
     {
       "case_id": "history_reject_query_generic_accuracy_v1_gate_query_reject_subjectless_1",
@@ -5159,8 +4986,7 @@
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0,
-      "target_prompt_key": "query_planner"
+      "profile_count": 0
     },
     {
       "case_id": "history_reject_query_generic_accuracy_v1_gate_query_reject_abstract_1",
@@ -5172,8 +4998,7 @@
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0,
-      "target_prompt_key": "query_planner"
+      "profile_count": 0
     },
     {
       "case_id": "history_write_generic_accuracy_v1_gate_query_accept_issue_1",
@@ -5198,8 +5023,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_answer_boundary_v1_direct_vs_dependency_answer_split_3",
@@ -5224,8 +5048,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_broad_coverage_v1_broad_four_way_same_surface_disambiguation_1",
@@ -5250,8 +5073,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_broad_targeted_v1_broad_four_way_same_surface_disambiguation_3",
@@ -5276,8 +5098,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_concurrency_consistency_v1_concurrency_same_surface_split_parallel_1",
@@ -5302,8 +5123,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "history_write_generic_cross_domain_transfer_v1_cross_domain_procedure_analogy_2",
@@ -5328,8 +5148,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     }
   ]
 }

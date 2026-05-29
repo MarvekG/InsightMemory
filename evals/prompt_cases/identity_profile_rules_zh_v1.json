@@ -29,8 +29,7 @@
       "forbidden_identity_who": [
         "回滚说明"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_policy_requirement_owner",
@@ -57,8 +56,7 @@
       "forbidden_identity_who": [
         "临时权限"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_person_preference",
@@ -79,8 +77,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_team_delivery_blocker",
@@ -107,8 +104,7 @@
       "forbidden_identity_who": [
         "电池审计表"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_service_owner",
@@ -135,8 +131,7 @@
       "forbidden_identity_who": [
         "林舟"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_event_decision",
@@ -163,8 +158,7 @@
       "forbidden_identity_who": [
         "安全检查单"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_artifact_threshold",
@@ -192,8 +186,7 @@
         "红色阈值",
         "黄色阈值"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_market_object_risk",
@@ -218,8 +211,7 @@
         "渠道库存",
         "毛利修复"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_work_item_ticket",
@@ -247,8 +239,7 @@
         "设备铭牌",
         "值班组"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_workflow_current_state",
@@ -277,8 +268,7 @@
         "封签核对",
         "异常照片"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_document_revision",
@@ -306,8 +296,7 @@
         "交接包",
         "值班长确认页"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_write_strategy_update",
@@ -336,8 +325,7 @@
         "仓位",
         "成交量"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "write_gate"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_project_blocker",
@@ -362,8 +350,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_document_requirement",
@@ -387,8 +374,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_person_preference",
@@ -409,8 +395,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_system_owner",
@@ -434,8 +419,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_artifact_threshold",
@@ -462,8 +446,7 @@
       "forbidden_identity_who": [
         "红色阈值"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_market_risk",
@@ -484,8 +467,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_event_decision",
@@ -509,8 +491,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_record_marker_not_identity",
@@ -538,8 +519,7 @@
       "forbidden_identity_who": [
         "第三阶段"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_latest_note_not_identity",
@@ -564,8 +544,7 @@
         "最新记录",
         "风险结论"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_same_prefix_checklist",
@@ -592,8 +571,7 @@
       "forbidden_identity_who": [
         "青竹迁移"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_work_item_ticket",
@@ -617,8 +595,7 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_query_strategy_current",
@@ -646,8 +623,7 @@
       "forbidden_identity_who": [
         "仓位"
       ],
-      "profile_count": 1,
-      "target_prompt_key": "query_planner"
+      "profile_count": 1
     },
     {
       "case_id": "zh_extract_same_prefix_artifacts",
@@ -701,8 +677,7 @@
         "封签照片",
         "审批页"
       ],
-      "profile_count": 3,
-      "target_prompt_key": "extractor"
+      "profile_count": 3
     },
     {
       "case_id": "zh_extract_meeting_noise_two_subjects",
@@ -745,8 +720,7 @@
         "午餐安排",
         "灰度说明"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "zh_extract_table_like_records",
@@ -787,8 +761,7 @@
         "封条照片",
         "异常备注"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "zh_extract_person_and_team",
@@ -825,8 +798,7 @@
         "孟然",
         "夜间同步窗口"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "zh_extract_market_and_note",
@@ -865,8 +837,7 @@
         "库存周转",
         "毛利修复"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "zh_extract_child_component",
@@ -905,8 +876,7 @@
       "forbidden_identity_who": [
         "队列消费者"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "zh_extract_strategy_and_document",
@@ -949,8 +919,7 @@
         "触发原因",
         "复核人"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "zh_extract_event_and_work_item",
@@ -991,8 +960,7 @@
         "赵宁",
         "安全检查单"
       ],
-      "profile_count": 2,
-      "target_prompt_key": "extractor"
+      "profile_count": 2
     },
     {
       "case_id": "zh_reject_subjectless_write",
@@ -1003,8 +971,7 @@
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0,
-      "target_prompt_key": "write_gate"
+      "profile_count": 0
     },
     {
       "case_id": "zh_reject_abstract_process_write",
@@ -1015,8 +982,7 @@
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0,
-      "target_prompt_key": "write_gate"
+      "profile_count": 0
     },
     {
       "case_id": "zh_reject_subjectless_query",
@@ -1027,8 +993,7 @@
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0,
-      "target_prompt_key": "query_planner"
+      "profile_count": 0
     },
     {
       "case_id": "zh_reject_generic_record_query",
@@ -1039,8 +1004,7 @@
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0,
-      "target_prompt_key": "query_planner"
+      "profile_count": 0
     }
   ]
 }

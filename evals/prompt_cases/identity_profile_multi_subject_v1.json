@@ -2,7 +2,6 @@
   "suite_id": "identity_profile_multi_subject_v1",
   "description": "identity_profile multi-subject suite. Focuses on multi-subject raw context extraction, structured and long inputs, same-prefix boundaries, and noisy context separation.",
   "minimum_pass_rate": 1.0,
-  "target_prompt_key": "extractor",
   "cases": [
     {
       "case_id": "extractor_same_prefix_roles",

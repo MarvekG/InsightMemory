@@ -2,7 +2,6 @@
   "suite_id": "identity_profile_write_context_v1",
   "description": "identity_profile write-context suite. Focuses on raw context acceptance/rejection, stable owner selection, field-value boundaries, and avoiding identities for missing items, owners, and noise.",
   "minimum_pass_rate": 1.0,
-  "target_prompt_key": "write_gate",
   "cases": [
     {
       "case_id": "write_gate_missing_item_owner",

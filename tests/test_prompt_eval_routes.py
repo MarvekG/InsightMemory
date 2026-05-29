@@ -22,7 +22,7 @@ def test_prompt_eval_route_is_registered_under_memory_path() -> None:
 def test_prompt_eval_request_forbids_extra_fields() -> None:
     try:
         PromptEvalRequest(
-            prompt_key="write_gate",
+            prompt_key="identity_profile",
             payload={"context": "x"},
             case_id="unused",
         )
@@ -54,12 +54,12 @@ def test_prompt_eval_route_returns_service_result(monkeypatch) -> None:
     result = run_async(
         routes.run_prompt_eval_memory(
             PromptEvalRequest(
-                prompt_key="write_gate",
+                prompt_key="identity_profile",
                 payload={"context": "x"},
             )
         )
     )
 
     assert result.status == "ok"
-    assert result.prompt_key == "write_gate"
+    assert result.prompt_key == "identity_profile"
     assert result.output == {"echo": {"context": "x"}}
