@@ -83,8 +83,21 @@ def test_identity_definition_prompt_defines_subject_not_category() -> None:
 
     assert "主体类别" not in zh_instructions
     assert "natural-language category" not in en_instructions
-    assert "对具体主体的定义，不是类别标签" in zh_instructions
-    assert "defines the concrete subject; it is not a category label" in en_instructions
+    assert "回答“这个主体是什么”" in zh_instructions
+    assert "不是给一个类别标签" in zh_instructions
+    assert 'answers "what is this subject?"' in en_instructions
+    assert "it is not a category label" in en_instructions
+
+
+def test_identity_profile_schema_describes_definition_quality_rule() -> None:
+    schema = IdentityProfileExtractionOutput.model_json_schema()
+    properties = schema["$defs"]["IdentityProfileDraft"]["properties"]
+    definition_schema = properties["definition"]
+    surface_forms_schema = properties["surface_forms"]
+
+    assert "what `who` is" in definition_schema["description"]
+    assert "generic placeholder" in definition_schema["description"]
+    assert "exclude record-scope markers" in surface_forms_schema["description"]
 
 
 def test_prompt_eval_service_returns_llm_output_and_usage(monkeypatch) -> None:

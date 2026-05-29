@@ -51,6 +51,8 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：原文只写“枫桥上线计划”，就保留“枫桥上线计划”。
 - 规则：不要把通用记录词拼进 `surface_forms`，除非记录本身有独立标题。
   例：“771009.SZ 的最新分析笔记”保留“771009.SZ”，不是“最新分析笔记”。
+- 规则：`surface_forms` 不要把记录范围标记拼进主体称呼。
+  例：“榆岭交接单第四轮”保留“榆岭交接单”，不是完整带轮次短语。
 
 `stable_qualifiers` 字段规则：
 - 规则：`stable_qualifiers` 用来区分同名或同前缀主体，只写短稳定限定词。
@@ -71,16 +73,28 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：不要把“当前暂停”“第二轮”放进 `stable_qualifiers`。
 - 规则：主体名末尾用于区分同前缀对象的角色词，要放入 `stable_qualifiers`。
   例：“墨池运营面板”的 `stable_qualifiers` 应包含“面板”。
+- 规则：若角色词后接编号、序号或代码，限定词要同时保留带编号短语和基础角色词。
+  例：“鹤湾任务乙二”放“任务乙二”和“任务”。
 
 `definition` 字段规则：
-- 规则：`definition` 只解释 `who` 是什么，不写记忆事实。
+- 规则：`definition` 要回答“这个主体是什么”，用自然语言定义 `who`。
   例：“碧湾发布公告指碧湾相关的发布公告”可以；“要求补齐审批链”不可以。
-- 规则：`definition` 不要包含当前状态、结果、阻塞、负责人值或要求内容。
-  例：“云脊结算服务指云脊相关的结算服务”可以；“负责人是赵奕”不可以。
-- 规则：`definition` 是对具体主体的定义，不是类别标签。
+- 规则：`definition` 是对这个主体本身下定义，不是给一个类别标签。
   例：“枫桥上线计划指枫桥相关的上线计划”可以；只写“命名上线计划”不可以。
-- 规则：`definition` 要指向这个具体名称，不要只写泛化身份词。
+- 规则：`definition` 要保留能识别该主体的边界，可包含 `who` 或其关键名词。
   例：“孟澜指名为孟澜的个人”可以；只写“某个人”不可以。
+- 规则：不用强行写角色或用途；只要清楚定义这个主体是什么即可。
+  例：“璃岸指名为璃岸的个人”可以；不要硬写成项目或文档。
+- 规则：`definition` 不能只重复 `who`，也不能用空泛占位词。
+  例：“霁川交付指霁川相关的交付事项”可以；只写“霁川交付这个对象”不可以。
+- 规则：`definition` 不写这条记忆里的状态、结果、阻塞、负责人值或要求内容。
+  例：“云脊结算服务指云脊相关的结算服务”可以；“负责人是赵奕”不可以。
+- 规则：若 `who` 含编号、序号或代码，定义要说明整个带编号名称是什么。
+  例：“杉川相关的任务丙九”可以；“杉川任务指丙九相关任务”不够清晰。
+- 规则：结构化字段值作为主体时，要定义整个字段值代表的对象。
+  例：“对象：松林登记表”可写“松林相关的登记表”，不要拆成“松林登记”。
+- 规则：不知道更细定义时，也要写成自然定义，不能写空泛占位词。
+  例：“禾舟记录指名为禾舟记录的记录”可以；只写“禾舟记录这个对象”不可以。
 
 多主体和边界规则：
 - 规则：一条输入有多个名称时，只抽取被直接陈述或直接查询的名称。
@@ -454,6 +468,8 @@ Overall judgment:
   Example: if the text only says `Maplebridge launch plan`, keep `Maplebridge launch plan`.
 - Rule: Do not add generic record words into `surface_forms` unless the record itself has an independent title.
   Example: `latest analyst note for RQX.N` belongs to `RQX.N`, not `latest analyst note`.
+- Rule: Do not include record-scope markers inside `surface_forms`.
+  Example: for `Elm handover record round four`, keep `Elm handover record`, not the phrase with the round marker.
 
 `stable_qualifiers` field rules:
 - Rule: `stable_qualifiers` separates same-name or same-prefix subjects; use short stable terms only.
@@ -474,16 +490,28 @@ Overall judgment:
   Example: do not put `currently paused` or `round two` in `stable_qualifiers`.
 - Rule: Add the final role word when it separates a subject from same-prefix objects.
   Example: `Inkpool operations panel` should include `panel`.
+- Rule: If a role word is followed by a number, serial label, or code, keep both the numbered role phrase and base role word.
+  Example: for `Harbor task B2`, include both `task B2` and `task`.
 
 `definition` field rules:
-- Rule: `definition` defines what `who` is; it must not include memory facts.
+- Rule: `definition` answers "what is this subject?" and defines `who` in natural language.
   Example: `Jadebay release bulletin refers to the release bulletin for Jadebay` is valid; `requires approval chain` is not.
+- Rule: `definition` defines the subject itself; it is not a category label.
+  Example: `Maplebridge launch plan refers to the launch plan for Maplebridge` is valid; only `named launch plan` is not.
+- Rule: `definition` must preserve enough identity boundary to identify that subject.
+  Example: `Mira Lin refers to the individual named Mira Lin` is valid; only `a person` is not.
+- Rule: Do not force a role or purpose; define what the subject is.
+  Example: `Lira Coast refers to the individual named Lira Coast` is valid; do not force it into a project.
+- Rule: `definition` must not only repeat `who` or use a vague placeholder.
+  Example: `Ridge handoff refers to the handoff for Ridge` is valid; `Ridge handoff is a named item` is not.
 - Rule: `definition` must not include current state, result, blocker, owner value, or requirement content.
   Example: `Cloudridge settlement service refers to the settlement service for Cloudridge` is valid; `owner is Jules Wei` is not.
-- Rule: `definition` defines the concrete subject; it is not a category label.
-  Example: `Maplebridge launch plan refers to the launch plan for Maplebridge` is valid; only `named launch plan` is not.
-- Rule: `definition` must point to the specific name, not only a generic identity word.
-  Example: `Mira Lin refers to the individual named Mira Lin` is valid; only `a person` is not.
+- Rule: If `who` contains a number, serial label, or code, define what the whole numbered name is.
+  Example: `task C9 for Ridge` is valid; `Ridge task refers to C9` is unclear.
+- Rule: If `who` comes from a structured field value, define what the whole field value represents.
+  Example: for `object: Pine register`, write `the register for Pine`, not `Pine refers to register`.
+- Rule: When unsure how to define it more deeply, still write a natural definition, not a vague placeholder.
+  Example: `Harbor record refers to the record named Harbor record` is valid; `Harbor record is a named item` is not.
 
 Multi-subject and boundary rules:
 - Rule: When one input has several names, extract only names that are directly stated or queried.

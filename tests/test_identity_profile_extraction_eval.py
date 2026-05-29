@@ -216,7 +216,7 @@ def test_score_identity_extraction_case_passes_write_gate_output() -> None:
                     {
                         "who": "Lanturn deployment",
                         "surface_forms": ["Lanturn deployment"],
-                        "definition": "Named deployment.",
+                        "definition": "Lanturn deployment is a named deployment.",
                     }
                 ],
             },
@@ -225,7 +225,7 @@ def test_score_identity_extraction_case_passes_write_gate_output() -> None:
 
     assert result["passed"] is True
     assert result["actual_gate_status"] == "passed"
-    assert result["actual_identities"][0]["definition"] == "Named deployment."
+    assert result["actual_identities"][0]["definition"] == "Lanturn deployment is a named deployment."
 
 
 def test_score_identity_extraction_case_fails_for_forbidden_identity() -> None:
@@ -342,7 +342,7 @@ def test_score_identity_extraction_case_checks_surface_qualifiers_and_definition
                         "who": "Cedar QA policy",
                         "surface_forms": ["Cedar QA policy"],
                         "stable_qualifiers": ["policy"],
-                        "definition": "Named QA policy.",
+                        "definition": "Cedar QA policy is a named QA policy.",
                     },
                 ],
             },
@@ -391,6 +391,115 @@ def test_score_identity_extraction_case_fails_missing_profile_fields() -> None:
     assert any("surface_forms missing" in failure for failure in result["failures"])
     assert any("stable_qualifiers missing" in failure for failure in result["failures"])
     assert any("definition is required" in failure for failure in result["failures"])
+
+
+def test_score_identity_extraction_case_fails_weak_definition_quality() -> None:
+    case = IdentityExtractionCase(
+        case_id="weak_definition",
+        category="boundary",
+        prompt_key="identity_profile",
+        payload={"context": "x"},
+        expected_gate_status="passed",
+        expected_identities=[
+            ExpectedIdentityProfile(
+                who_any=["Cedar QA policy"],
+                stable_qualifiers_any=["policy"],
+                definition_required=True,
+                definition_contains_all=["cedar", "qa policy"],
+            )
+        ],
+    )
+
+    concrete_definition_result = score_identity_extraction_case(
+        case,
+        {
+            "status": "ok",
+            "output": {
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
+                    {
+                        "who": "Cedar QA policy",
+                        "stable_qualifiers": ["policy"],
+                        "definition": "Cedar QA policy is the QA policy for Cedar.",
+                    },
+                ],
+            },
+        },
+    )
+    bare_who_result = score_identity_extraction_case(
+        case,
+        {
+            "status": "ok",
+            "output": {
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
+                    {
+                        "who": "Cedar QA policy",
+                        "stable_qualifiers": ["policy"],
+                        "definition": "Cedar QA policy",
+                    },
+                ],
+            },
+        },
+    )
+    category_label_result = score_identity_extraction_case(
+        case,
+        {
+            "status": "ok",
+            "output": {
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
+                    {
+                        "who": "Cedar QA policy",
+                        "stable_qualifiers": ["policy"],
+                        "definition": "A QA policy.",
+                    },
+                ],
+            },
+        },
+    )
+    generic_definition_result = score_identity_extraction_case(
+        case,
+        {
+            "status": "ok",
+            "output": {
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
+                    {
+                        "who": "Cedar QA policy",
+                        "stable_qualifiers": ["policy"],
+                        "definition": "Specific subject.",
+                    },
+                ],
+            },
+        },
+    )
+    generic_repeat_result = score_identity_extraction_case(
+        case,
+        {
+            "status": "ok",
+            "output": {
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
+                    {
+                        "who": "Cedar QA policy",
+                        "stable_qualifiers": ["policy"],
+                        "definition": "Cedar QA policy is the specific subject named Cedar QA policy.",
+                    },
+                ],
+            },
+        },
+    )
+
+    assert concrete_definition_result["passed"] is True
+    assert bare_who_result["passed"] is False
+    assert any("definition must define who" in failure for failure in bare_who_result["failures"])
+    assert category_label_result["passed"] is False
+    assert any("definition missing expected fragments" in failure for failure in category_label_result["failures"])
+    assert generic_definition_result["passed"] is False
+    assert any("definition must define who" in failure for failure in generic_definition_result["failures"])
+    assert generic_repeat_result["passed"] is False
+    assert any("definition must define who" in failure for failure in generic_repeat_result["failures"])
 
 
 def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:

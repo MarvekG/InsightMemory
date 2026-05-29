@@ -249,11 +249,29 @@ def _score_definition_field(
     expected_any: list[str],
     expected_all: list[str],
 ) -> list[str]:
+    """检查 definition 是否像定义，而不是只重复主体名或给空泛占位。
+
+    Args:
+        profile: LLM 返回的单个 identity_profile。
+        definition_required: 是否要求 definition 非空。
+        expected_any: 至少命中一个即可的期望片段。
+        expected_all: 必须全部命中的期望片段。
+
+    Returns:
+        失败原因列表；没有失败时返回空列表。
+    """
+
     failures: list[str] = []
     definition = _normalize_text(profile.get("definition"))
     if definition_required and not definition:
         failures.append("definition is required")
         return failures
+    who = _normalize_text(profile.get("who"))
+    if definition_required and who:
+        if definition == who:
+            failures.append("definition must define who, not repeat it only")
+        if _has_generic_definition_placeholder(definition):
+            failures.append("definition must define who, not use a generic placeholder")
     failures.extend(
         _score_contains_list_field(
             profile=profile,
@@ -263,6 +281,28 @@ def _score_definition_field(
         )
     )
     return failures
+
+
+def _has_generic_definition_placeholder(definition: str) -> bool:
+    """识别不构成定义的空泛占位表达。
+
+    Args:
+        definition: 已标准化的 definition 文本。
+
+    Returns:
+        如果文本使用“具体主体”这类空泛占位，则返回 True。
+    """
+
+    generic_placeholders = (
+        "具体主体",
+        "命名主体",
+        "特定主体",
+        "generic subject",
+        "specific subject",
+        "named subject",
+        "concrete subject",
+    )
+    return any(placeholder in definition for placeholder in generic_placeholders)
 
 
 def _score_surface_forms_field(

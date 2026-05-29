@@ -11,9 +11,19 @@ class IdentityProfileDraft(BaseModel):
     schema_version: Literal[2] = 2
     draft_id: str = Field(..., min_length=1)
     who: str = Field(..., min_length=1, max_length=255)
-    surface_forms: list[str] = Field(default_factory=list)
+    surface_forms: list[str] = Field(
+        default_factory=list,
+        description="Exact source mentions of `who`; exclude record-scope markers such as round, stage, time, or version.",
+    )
     stable_qualifiers: list[str] = Field(default_factory=list)
-    definition: str = Field(default="", max_length=512)
+    definition: str = Field(
+        default="",
+        max_length=512,
+        description=(
+            "Answer what `who` is with a concrete natural-language definition; "
+            "omit memory facts and do not merely repeat `who` or use a generic placeholder."
+        ),
+    )
 
     @model_validator(mode="before")
     @classmethod
