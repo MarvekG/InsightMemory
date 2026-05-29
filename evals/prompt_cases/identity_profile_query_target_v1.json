@@ -20,8 +20,8 @@
             "STP.N"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "stock"
+          "definition_semantics_any": [
+            "STP.N is the stock or market object named STP.N."
           ]
         }
       ],
@@ -49,9 +49,8 @@
             "Meridian onboarding"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "onboarding",
-            "board"
+          "definition_semantics_any": [
+            "Meridian onboarding is an onboarding subject named Meridian onboarding."
           ]
         }
       ],
@@ -84,9 +83,8 @@
             "packet"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "packet release",
-            "packet"
+          "definition_semantics_any": [
+            "Blackthorn packet release is a packet release subject named Blackthorn packet release."
           ]
         }
       ],
@@ -114,8 +112,8 @@
             "Elmfield handbook"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "handbook"
+          "definition_semantics_any": [
+            "Elmfield handbook is a handbook subject named Elmfield handbook."
           ]
         }
       ],
@@ -145,9 +143,8 @@
             "North Quill chart manual"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "chart manual",
-            "manual"
+          "definition_semantics_any": [
+            "North Quill chart manual is a chart manual subject named North Quill chart manual."
           ]
         }
       ],
@@ -179,8 +176,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Atlas rollout is a rollout subject named Atlas rollout."
           ]
         }
       ],
@@ -208,8 +205,8 @@
             "card"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "card"
+          "definition_semantics_any": [
+            "Briar release card is a card subject named Briar release card."
           ]
         }
       ],
@@ -237,8 +234,8 @@
             "service"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "service"
+          "definition_semantics_any": [
+            "Quartz relay service is a service subject named Quartz relay service."
           ]
         }
       ],
@@ -266,8 +263,8 @@
             "manual"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "manual"
+          "definition_semantics_any": [
+            "Aurora manual is a manual subject named Aurora manual."
           ]
         }
       ],
@@ -295,8 +292,8 @@
             "service"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "service"
+          "definition_semantics_any": [
+            "Deltaframe service is a service subject named Deltaframe service."
           ]
         }
       ],
@@ -324,8 +321,8 @@
             "pipeline"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "pipeline"
+          "definition_semantics_any": [
+            "Code review pipeline is a pipeline subject named Code review pipeline."
           ]
         }
       ],
@@ -353,8 +350,8 @@
             "manual"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "manual"
+          "definition_semantics_any": [
+            "Pinewick manual is a manual subject named Pinewick manual."
           ]
         }
       ],
@@ -382,8 +379,8 @@
             "manual"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "manual"
+          "definition_semantics_any": [
+            "Pinewick manual is a manual subject named Pinewick manual."
           ]
         }
       ],
@@ -411,8 +408,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Sundial rollout is a rollout subject named Sundial rollout."
           ]
         }
       ],
@@ -440,8 +437,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Atlas rollout is a rollout subject named Atlas rollout."
           ]
         }
       ],
@@ -469,8 +466,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Atlas rollout is a rollout subject named Atlas rollout."
           ]
         }
       ],
@@ -498,8 +495,8 @@
             "request"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "request"
+          "definition_semantics_any": [
+            "Marlowe herbarium accession request is a request subject named Marlowe herbarium accession request."
           ]
         }
       ],
@@ -527,8 +524,8 @@
             "request"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "request"
+          "definition_semantics_any": [
+            "Marlowe herbarium accession request is a request subject named Marlowe herbarium accession request."
           ]
         }
       ],
@@ -556,8 +553,8 @@
             "note"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "note"
+          "definition_semantics_any": [
+            "Everpoint sector note is a note subject named Everpoint sector note."
           ]
         }
       ],
@@ -585,8 +582,8 @@
             "doc"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "doc"
+          "definition_semantics_any": [
+            "Juniper quay docket is a doc subject named Juniper quay docket."
           ]
         }
       ],
@@ -614,8 +611,8 @@
             "doc"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "doc"
+          "definition_semantics_any": [
+            "Juniper quay docket is a doc subject named Juniper quay docket."
           ]
         }
       ],
@@ -643,8 +640,8 @@
             "checklist"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "checklist"
+          "definition_semantics_any": [
+            "Seaborne checklist is a checklist subject named Seaborne checklist."
           ]
         }
       ],
@@ -672,8 +669,8 @@
             "policy"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "policy"
+          "definition_semantics_any": [
+            "Access recovery policy is a policy subject named Access recovery policy."
           ]
         }
       ],
@@ -701,8 +698,8 @@
             "policy"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "policy"
+          "definition_semantics_any": [
+            "Access recovery policy is a policy subject named Access recovery policy."
           ]
         }
       ],
@@ -730,8 +727,8 @@
             "queue"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "queue"
+          "definition_semantics_any": [
+            "Nacre berth queue is a queue subject named Nacre berth queue."
           ]
         }
       ],
@@ -759,8 +756,8 @@
             "queue"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "queue"
+          "definition_semantics_any": [
+            "Nacre berth queue is a queue subject named Nacre berth queue."
           ]
         }
       ],
@@ -788,8 +785,8 @@
             "checklist"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "checklist"
+          "definition_semantics_any": [
+            "Orchid transfer checklist is a checklist subject named Orchid transfer checklist."
           ]
         }
       ],
@@ -817,8 +814,8 @@
             "service"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "service"
+          "definition_semantics_any": [
+            "Payment Service is a service subject named Payment Service."
           ]
         }
       ],
@@ -846,8 +843,8 @@
             "project"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "project"
+          "definition_semantics_any": [
+            "Verdant project is a project subject named Verdant project."
           ]
         }
       ],
@@ -875,8 +872,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Rook rollout is a rollout subject named Rook rollout."
           ]
         }
       ],
@@ -904,8 +901,8 @@
             "holdings"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "holdings"
+          "definition_semantics_any": [
+            "Bluepeak Holdings is a holdings subject named Bluepeak Holdings."
           ]
         }
       ],
@@ -933,8 +930,8 @@
             "service"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "service"
+          "definition_semantics_any": [
+            "Billing service is a service subject named Billing service."
           ]
         }
       ],
@@ -962,8 +959,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Briarwatch rollout is a rollout subject named Briarwatch rollout."
           ]
         }
       ],
@@ -991,8 +988,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Briarwatch rollout is a rollout subject named Briarwatch rollout."
           ]
         }
       ],
@@ -1020,8 +1017,8 @@
             "account"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "account"
+          "definition_semantics_any": [
+            "Guest account is an account subject named Guest account."
           ]
         }
       ],
@@ -1049,8 +1046,8 @@
             "policy"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "policy"
+          "definition_semantics_any": [
+            "Access retention policy is a policy subject named Access retention policy."
           ]
         }
       ],
@@ -1078,8 +1075,8 @@
             "api"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "api"
+          "definition_semantics_any": [
+            "API Endpoint is an api subject named API Endpoint."
           ]
         }
       ],
@@ -1107,8 +1104,8 @@
             "request"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "request"
+          "definition_semantics_any": [
+            "Kite archive digitization request is a request subject named Kite archive digitization request."
           ]
         }
       ],
@@ -1136,8 +1133,8 @@
             "request"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "request"
+          "definition_semantics_any": [
+            "Kite archive digitization request is a request subject named Kite archive digitization request."
           ]
         }
       ],
@@ -1165,8 +1162,8 @@
             "manual"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "manual"
+          "definition_semantics_any": [
+            "Coral exhibit manual is a manual subject named Coral exhibit manual."
           ]
         }
       ],
@@ -1194,8 +1191,8 @@
             "request"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "request"
+          "definition_semantics_any": [
+            "Kite archive digitization request is a request subject named Kite archive digitization request."
           ]
         }
       ],
@@ -1223,8 +1220,8 @@
             "catalog"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "catalog"
+          "definition_semantics_any": [
+            "Archive Hall catalog is a catalog subject named Archive Hall catalog."
           ]
         }
       ],
@@ -1252,8 +1249,8 @@
             "binder"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "binder"
+          "definition_semantics_any": [
+            "NPI binder is a binder subject named NPI binder."
           ]
         }
       ],
@@ -1281,8 +1278,8 @@
             "renovation"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "renovation"
+          "definition_semantics_any": [
+            "Willow kitchen renovation is a renovation subject named Willow kitchen renovation."
           ]
         }
       ],
@@ -1307,9 +1304,8 @@
             "Milo"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "person",
-            "individual"
+          "definition_semantics_any": [
+            "Milo is an individual subject named Milo."
           ]
         }
       ],
@@ -1337,8 +1333,8 @@
             "router"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "router"
+          "definition_semantics_any": [
+            "Nova router is a router subject named Nova router."
           ]
         }
       ],
@@ -1366,8 +1362,8 @@
             "repo"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "repo"
+          "definition_semantics_any": [
+            "Beacon repo is a repo subject named Beacon repo."
           ]
         }
       ],
@@ -1395,8 +1391,8 @@
             "board"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "board"
+          "definition_semantics_any": [
+            "KiteWorks onboarding is a board subject named KiteWorks onboarding."
           ]
         }
       ],
@@ -1424,8 +1420,8 @@
             "handbook"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "handbook"
+          "definition_semantics_any": [
+            "Ashgrove handbook is a handbook subject named Ashgrove handbook."
           ]
         }
       ],
@@ -1453,8 +1449,8 @@
             "handbook"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "handbook"
+          "definition_semantics_any": [
+            "Ashgrove handbook is a handbook subject named Ashgrove handbook."
           ]
         }
       ],
@@ -1482,8 +1478,8 @@
             "dossier"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "dossier"
+          "definition_semantics_any": [
+            "Lumen ferry dossier is a dossier subject named Lumen ferry dossier."
           ]
         }
       ],
@@ -1511,8 +1507,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Sundial rollout is a rollout subject named Sundial rollout."
           ]
         }
       ],
@@ -1540,8 +1536,8 @@
             "review"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "review"
+          "definition_semantics_any": [
+            "Sable clinic review is a review subject named Sable clinic review."
           ]
         }
       ],
@@ -1569,8 +1565,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Aster rollout is a rollout subject named Aster rollout."
           ]
         }
       ],
@@ -1598,8 +1594,8 @@
             "review"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "review"
+          "definition_semantics_any": [
+            "Nova review is a review subject named Nova review."
           ]
         }
       ],
@@ -1627,8 +1623,8 @@
             "project"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "project"
+          "definition_semantics_any": [
+            "Project Aurora is a project subject named Project Aurora."
           ]
         }
       ],
@@ -1656,8 +1652,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Oakspan rollout is a rollout subject named Oakspan rollout."
           ]
         }
       ],
@@ -1682,8 +1678,8 @@
             "002142.SZ"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "stock"
+          "definition_semantics_any": [
+            "002142.SZ is the stock or market object named 002142.SZ."
           ]
         }
       ],
@@ -1708,8 +1704,8 @@
             "Jordan Lee"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "person"
+          "definition_semantics_any": [
+            "Jordan Lee is the individual named Jordan Lee."
           ]
         }
       ],
@@ -1737,8 +1733,8 @@
             "card"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "card"
+          "definition_semantics_any": [
+            "Briar release card is a card subject named Briar release card."
           ]
         }
       ],
@@ -1766,8 +1762,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Driftwood rollout is a rollout subject named Driftwood rollout."
           ]
         }
       ],
@@ -1795,8 +1791,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Driftwood rollout is a rollout subject named Driftwood rollout."
           ]
         }
       ],
@@ -1824,8 +1820,8 @@
             "service"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "service"
+          "definition_semantics_any": [
+            "Deltaframe service is a service subject named Deltaframe service."
           ]
         }
       ],
@@ -1853,8 +1849,8 @@
             "process"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "process"
+          "definition_semantics_any": [
+            "Quality gate process is a process subject named Quality gate process."
           ]
         }
       ],
@@ -1882,8 +1878,8 @@
             "manual"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "manual"
+          "definition_semantics_any": [
+            "Pinewick manual is a manual subject named Pinewick manual."
           ]
         }
       ],
@@ -1911,8 +1907,8 @@
             "manual"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "manual"
+          "definition_semantics_any": [
+            "Pinewick manual is a manual subject named Pinewick manual."
           ]
         }
       ],
@@ -1940,8 +1936,8 @@
             "review"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "review"
+          "definition_semantics_any": [
+            "Torchline review is a review subject named Torchline review."
           ]
         }
       ],
@@ -1969,8 +1965,8 @@
             "checklist"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "checklist"
+          "definition_semantics_any": [
+            "Atlas checklist is a checklist subject named Atlas checklist."
           ]
         }
       ],
@@ -1998,8 +1994,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Sundial rollout is a rollout subject named Sundial rollout."
           ]
         }
       ],
@@ -2027,8 +2023,8 @@
             "doc"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "doc"
+          "definition_semantics_any": [
+            "Perigee survey docket is a doc subject named Perigee survey docket."
           ]
         }
       ],
@@ -2056,8 +2052,8 @@
             "review"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "review"
+          "definition_semantics_any": [
+            "Pinecrest portfolio review is a review subject named Pinecrest portfolio review."
           ]
         }
       ],
@@ -2085,8 +2081,8 @@
             "notice"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "notice"
+          "definition_semantics_any": [
+            "Willow handover notice is a notice subject named Willow handover notice."
           ]
         }
       ],
@@ -2114,8 +2110,8 @@
             "rollout"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "rollout"
+          "definition_semantics_any": [
+            "Oakspan rollout is a rollout subject named Oakspan rollout."
           ]
         }
       ],
@@ -2140,8 +2136,8 @@
             "Mina Chen"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "person"
+          "definition_semantics_any": [
+            "Mina Chen is the individual named Mina Chen."
           ]
         }
       ],
@@ -2195,9 +2191,8 @@
             "计划"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "上线计划",
-            "计划"
+          "definition_semantics_any": [
+            "松岭上线计划 是名为 松岭上线计划 的上线计划主体。"
           ]
         }
       ],
@@ -2224,8 +2219,8 @@
             "制度"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "制度"
+          "definition_semantics_any": [
+            "临时权限回收制度 是名为 临时权限回收制度 的制度主体。"
           ]
         }
       ],
@@ -2249,9 +2244,8 @@
             "周明"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "个人",
-            "人"
+          "definition_semantics_any": [
+            "周明 是名为 周明 的个人主体。"
           ]
         }
       ],
@@ -2278,8 +2272,8 @@
             "服务"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "服务"
+          "definition_semantics_any": [
+            "青岚结算服务 是名为 青岚结算服务 的服务主体。"
           ]
         }
       ],
@@ -2306,8 +2300,8 @@
             "看板"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "看板"
+          "definition_semantics_any": [
+            "流量告警看板 是名为 流量告警看板 的看板主体。"
           ]
         }
       ],
@@ -2334,9 +2328,8 @@
             "海岳电池"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "股票",
-            "市场对象"
+          "definition_semantics_any": [
+            "海岳电池 是名为 海岳电池 的市场对象或股票主体。"
           ]
         }
       ],
@@ -2363,8 +2356,8 @@
             "评审会"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "评审会"
+          "definition_semantics_any": [
+            "槐庭评审会 是名为 槐庭评审会 的评审会主体。"
           ]
         }
       ],
@@ -2392,9 +2385,8 @@
             "换班流程"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "换班流程",
-            "流程"
+          "definition_semantics_any": [
+            "白塔换班流程 是名为 白塔换班流程 的换班流程主体。"
           ]
         }
       ],
@@ -2421,9 +2413,8 @@
             "海岳电池"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "股票",
-            "市场对象"
+          "definition_semantics_any": [
+            "海岳电池 是名为 海岳电池 的市场对象或股票主体。"
           ]
         }
       ],
@@ -2454,8 +2445,8 @@
             "清单"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "清单"
+          "definition_semantics_any": [
+            "青竹迁移清单 是名为 青竹迁移清单 的清单主体。"
           ]
         }
       ],
@@ -2485,8 +2476,8 @@
             "工单"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "工单"
+          "definition_semantics_any": [
+            "南仓工单甲十七 是名为 南仓工单甲十七 的工单主体。"
           ]
         }
       ],
@@ -2514,9 +2505,8 @@
             "防守策略"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "防守策略",
-            "策略"
+          "definition_semantics_any": [
+            "春谷防守策略 是名为 春谷防守策略 的防守策略主体。"
           ]
         }
       ],

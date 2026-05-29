@@ -5,7 +5,9 @@ import re
 from pathlib import Path
 
 from memory.evals.scripts.eval_identity_profile_extraction import (
+    DefinitionSemanticJudgeResult,
     ExpectedIdentityProfile,
+    HttpDefinitionSemanticJudge,
     IdentityExtractionCase,
     load_identity_extraction_suite,
     score_identity_extraction_case,
@@ -13,6 +15,7 @@ from memory.evals.scripts.eval_identity_profile_extraction import (
     write_report_files,
 )
 from insight_memory.workers.prompts import get_worker_instructions
+from tests.utils import run_async
 
 
 CJK_PATTERN = re.compile(r"[\u4e00-\u9fff]")
@@ -188,7 +191,7 @@ def test_identity_profile_prompt_case_suites_are_split_by_focus() -> None:
         }
 
 
-def test_identity_profile_suites_score_definition_boundary_content() -> None:
+def test_identity_profile_suites_score_definition_boundary_semantics() -> None:
     suite_paths = [
         Path("memory/evals/prompt_cases/identity_profile_rules_v1.json"),
         Path("memory/evals/prompt_cases/identity_profile_rules_zh_v1.json"),
@@ -204,7 +207,7 @@ def test_identity_profile_suites_score_definition_boundary_content() -> None:
         for case in suite["cases"]:
             for expected in case.expected_identities:
                 if expected.definition_required and not (
-                    expected.definition_contains_any or expected.definition_contains_all
+                    expected.definition_semantics_any
                 ):
                     missing_cases.append(f"{suite_path.name}:{case.case_id}:{expected.who_any}")
 
@@ -537,7 +540,19 @@ def test_score_identity_extraction_case_fails_weak_definition_quality() -> None:
     assert any("definition must define who" in failure for failure in generic_repeat_result["failures"])
 
 
-def test_score_identity_extraction_case_requires_definition_boundary_fragment() -> None:
+def test_score_identity_extraction_case_uses_semantic_definition_judge() -> None:
+    calls = []
+
+    def fake_judge(**kwargs):
+        calls.append(kwargs)
+        return DefinitionSemanticJudgeResult(
+            verdict="fail",
+            matched_expected="",
+            reason="definition says only named artifact and misses the policy identity boundary",
+            missing_identity_boundary=["policy"],
+            included_memory_fact=False,
+        )
+
     case = IdentityExtractionCase(
         case_id="definition_boundary",
         category="boundary",
@@ -549,6 +564,7 @@ def test_score_identity_extraction_case_requires_definition_boundary_fragment() 
                 who_any=["Cedar QA policy"],
                 stable_qualifiers_any=["QA policy", "policy"],
                 definition_required=True,
+                definition_semantics_any=["Cedar QA policy is a QA policy artifact for Cedar."],
             )
         ],
     )
@@ -568,15 +584,34 @@ def test_score_identity_extraction_case_requires_definition_boundary_fragment() 
                 ],
             },
         },
+        definition_judge=fake_judge,
     )
 
     assert result["passed"] is False
-    assert any("definition missing identity boundary" in failure for failure in result["failures"])
+    assert calls == [
+        {
+            "who": "Cedar QA policy",
+            "surface_forms": [],
+            "stable_qualifiers": ["policy"],
+            "actual_definition": "Cedar QA policy is a named Cedar artifact.",
+            "expected_definitions": ["Cedar QA policy is a QA policy artifact for Cedar."],
+        }
+    ]
+    assert any("definition semantic judge failed" in failure for failure in result["failures"])
 
 
-def test_score_identity_extraction_case_does_not_match_definition_from_repeated_who() -> None:
+def test_score_identity_extraction_case_accepts_semantic_definition_match() -> None:
+    def fake_judge(**kwargs):
+        return DefinitionSemanticJudgeResult(
+            verdict="pass",
+            matched_expected="Lanturn deployment is a deployment subject.",
+            reason="actual definition identifies the subject as a deployment",
+            missing_identity_boundary=[],
+            included_memory_fact=False,
+        )
+
     case = IdentityExtractionCase(
-        case_id="definition_repeated_who",
+        case_id="definition_semantic_pass",
         category="boundary",
         prompt_key="identity_profile",
         payload={"context": "x"},
@@ -586,7 +621,7 @@ def test_score_identity_extraction_case_does_not_match_definition_from_repeated_
                 who_any=["Lanturn deployment"],
                 surface_forms_all=["Lanturn deployment"],
                 definition_required=True,
-                definition_contains_any=["deployment"],
+                definition_semantics_any=["Lanturn deployment is a deployment subject."],
             )
         ],
     )
@@ -601,15 +636,67 @@ def test_score_identity_extraction_case_does_not_match_definition_from_repeated_
                     {
                         "who": "Lanturn deployment",
                         "surface_forms": ["Lanturn deployment"],
-                        "definition": "Lanturn deployment is a named object.",
+                        "definition": "The subject is the deployment named Lanturn deployment.",
                     },
                 ],
             },
         },
+        definition_judge=fake_judge,
     )
 
-    assert result["passed"] is False
-    assert any("definition contains none" in failure for failure in result["failures"])
+    assert result["passed"] is True
+
+
+def test_http_definition_semantic_judge_calls_prompt_eval_api() -> None:
+    class FakeResponse:
+        def json(self) -> dict:
+            return {
+                "status": "ok",
+                "output": {
+                    "verdict": "pass",
+                    "matched_expected": "Lanturn deployment is a deployment subject.",
+                    "reason": "definition preserves the deployment boundary",
+                    "missing_identity_boundary": [],
+                    "included_memory_fact": False,
+                },
+            }
+
+    class FakeClient:
+        def __init__(self) -> None:
+            self.calls = []
+
+        async def post(self, path: str, json: dict) -> FakeResponse:
+            self.calls.append({"path": path, "json": json})
+            return FakeResponse()
+
+    client = FakeClient()
+    result = run_async(
+        HttpDefinitionSemanticJudge(client).judge(
+            who="Lanturn deployment",
+            surface_forms=["Lanturn deployment"],
+            stable_qualifiers=["deployment"],
+            actual_definition="The subject is the deployment named Lanturn deployment.",
+            expected_definitions=["Lanturn deployment is a deployment subject."],
+        )
+    )
+
+    assert client.calls == [
+        {
+            "path": "/memory/prompt-evals/run",
+            "json": {
+                "prompt_key": "identity_definition_judge",
+                "payload": {
+                    "who": "Lanturn deployment",
+                    "surface_forms": ["Lanturn deployment"],
+                    "stable_qualifiers": ["deployment"],
+                    "actual_definition": "The subject is the deployment named Lanturn deployment.",
+                    "expected_definitions": ["Lanturn deployment is a deployment subject."],
+                },
+            },
+        }
+    ]
+    assert result.verdict == "pass"
+    assert result.matched_expected == "Lanturn deployment is a deployment subject."
 
 
 def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:

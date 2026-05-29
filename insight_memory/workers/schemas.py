@@ -195,6 +195,16 @@ class AnswerJudgeOutput(BaseModel):
     reason: str = ""
 
 
+class IdentityDefinitionJudgeOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    verdict: Literal["pass", "fail"]
+    matched_expected: str = ""
+    reason: str = ""
+    missing_identity_boundary: list[str] = Field(default_factory=list)
+    included_memory_fact: bool = False
+
+
 class ProfileWriterOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

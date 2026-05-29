@@ -6,7 +6,7 @@ import json
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from uuid import uuid4
 
 import httpx
@@ -31,6 +31,85 @@ class ExpectedIdentityProfile:
     definition_required: bool = False
     definition_contains_any: list[str] = field(default_factory=list)
     definition_contains_all: list[str] = field(default_factory=list)
+    definition_semantics_any: list[str] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class DefinitionSemanticJudgeResult:
+    """definition 语义判分结果。"""
+
+    verdict: str
+    matched_expected: str
+    reason: str
+    missing_identity_boundary: list[str] = field(default_factory=list)
+    included_memory_fact: bool = False
+
+
+DefinitionSemanticJudge = Callable[..., DefinitionSemanticJudgeResult]
+
+
+class HttpDefinitionSemanticJudge:
+    """通过 Prompt Eval API 调用 Memory LLM 进行 definition 语义判分。"""
+
+    def __init__(self, client: httpx.AsyncClient) -> None:
+        """初始化 HTTP 语义判分器。
+
+        Args:
+            client: 已配置 base_url 和 timeout 的 HTTP client。
+        """
+
+        self._client = client
+
+    async def judge(
+        self,
+        *,
+        who: str,
+        surface_forms: list[str],
+        stable_qualifiers: list[str],
+        actual_definition: str,
+        expected_definitions: list[str],
+    ) -> DefinitionSemanticJudgeResult:
+        """调用 live Memory 服务判断 definition 是否语义满足期望。
+
+        Args:
+            who: 实际 identity_profile 的 who。
+            surface_forms: 实际 identity_profile 的 surface_forms。
+            stable_qualifiers: 实际 identity_profile 的 stable_qualifiers。
+            actual_definition: 实际 identity_profile 的 definition。
+            expected_definitions: 可接受的语义定义列表。
+
+        Returns:
+            结构化语义判分结果。
+        """
+
+        response = await self._client.post(
+            "/memory/prompt-evals/run",
+            json={
+                "prompt_key": "identity_definition_judge",
+                "payload": {
+                    "who": who,
+                    "surface_forms": surface_forms,
+                    "stable_qualifiers": stable_qualifiers,
+                    "actual_definition": actual_definition,
+                    "expected_definitions": expected_definitions,
+                },
+            },
+        )
+        payload = response.json()
+        if payload.get("status") != "ok":
+            return DefinitionSemanticJudgeResult(
+                verdict="fail",
+                matched_expected="",
+                reason=f"definition judge call failed: {payload.get('error_code') or payload.get('status')}",
+            )
+        output = dict(payload.get("output") or {})
+        return DefinitionSemanticJudgeResult(
+            verdict=str(output.get("verdict") or "fail"),
+            matched_expected=str(output.get("matched_expected") or ""),
+            reason=str(output.get("reason") or ""),
+            missing_identity_boundary=[str(value) for value in output.get("missing_identity_boundary") or []],
+            included_memory_fact=bool(output.get("included_memory_fact", False)),
+        )
 
 
 @dataclass(slots=True)
@@ -88,6 +167,9 @@ def load_identity_extraction_suite(path: Path) -> dict[str, Any]:
                         definition_contains_all=[
                             str(value) for value in profile.get("definition_contains_all") or []
                         ],
+                        definition_semantics_any=[
+                            str(value) for value in profile.get("definition_semantics_any") or []
+                        ],
                     )
                     for profile in item.get("expected_identities") or []
                 ],
@@ -103,7 +185,12 @@ def load_identity_extraction_suite(path: Path) -> dict[str, Any]:
     }
 
 
-def score_identity_extraction_case(case: IdentityExtractionCase, response: dict[str, Any]) -> dict[str, Any]:
+def score_identity_extraction_case(
+    case: IdentityExtractionCase,
+    response: dict[str, Any],
+    *,
+    definition_judge: DefinitionSemanticJudge | None = None,
+) -> dict[str, Any]:
     """对单条 identity_profile 提取响应进行本地判分。
 
     Args:
@@ -133,7 +220,53 @@ def score_identity_extraction_case(case: IdentityExtractionCase, response: dict[
         if matched_profile is None:
             failures.append(f"missing expected identity who_any={expected.who_any!r}")
             continue
-        failures.extend(_score_profile_fields(matched_profile, expected))
+        failures.extend(_score_profile_fields(matched_profile, expected, definition_judge=definition_judge))
+
+    profile_names = {_normalize_text(profile.get("who")) for profile in profiles}
+    for forbidden in case.forbidden_identity_who:
+        if _normalize_text(forbidden) in profile_names:
+            failures.append(f"forbidden identity was returned: {forbidden!r}")
+
+    return _case_result(case=case, response=response, failures=failures)
+
+
+async def score_identity_extraction_case_async(
+    case: IdentityExtractionCase,
+    response: dict[str, Any],
+    *,
+    definition_judge: HttpDefinitionSemanticJudge | None = None,
+) -> dict[str, Any]:
+    """异步对单条 identity_profile 提取响应进行语义判分。
+
+    Args:
+        case: 用例期望。
+        response: `/memory/prompt-evals/run` 返回的完整 JSON。
+        definition_judge: 可选的 live definition 语义判分器。
+
+    Returns:
+        判分结果，包含是否通过和失败原因。
+    """
+
+    failures: list[str] = []
+    if response.get("status") != "ok":
+        failures.append(f"response status is {response.get('status')!r}, expected 'ok'")
+        return _case_result(case=case, response=response, failures=failures)
+
+    output = dict(response.get("output") or {})
+    gate_status = _extract_gate_status(output)
+    if gate_status != case.expected_gate_status:
+        failures.append(f"gate status is {gate_status!r}, expected {case.expected_gate_status!r}")
+
+    profiles = _extract_profiles(output)
+    if case.profile_count is not None and len(profiles) != case.profile_count:
+        failures.append(f"profile count is {len(profiles)}, expected exactly {case.profile_count}")
+
+    for expected in case.expected_identities:
+        matched_profile = _find_matching_identity_profile(profiles, expected)
+        if matched_profile is None:
+            failures.append(f"missing expected identity who_any={expected.who_any!r}")
+            continue
+        failures.extend(await _score_profile_fields_async(matched_profile, expected, definition_judge=definition_judge))
 
     profile_names = {_normalize_text(profile.get("who")) for profile in profiles}
     for forbidden in case.forbidden_identity_who:
@@ -214,7 +347,12 @@ def _find_matching_identity_profile(
     return None
 
 
-def _score_profile_fields(profile: dict[str, Any], expected: ExpectedIdentityProfile) -> list[str]:
+def _score_profile_fields(
+    profile: dict[str, Any],
+    expected: ExpectedIdentityProfile,
+    *,
+    definition_judge: DefinitionSemanticJudge | None = None,
+) -> list[str]:
     failures: list[str] = []
     failures.extend(
         _score_surface_forms_field(
@@ -234,20 +372,70 @@ def _score_profile_fields(profile: dict[str, Any], expected: ExpectedIdentityPro
     failures.extend(
         _score_definition_field(
             profile=profile,
-            expected=expected,
             definition_required=expected.definition_required,
             expected_any=expected.definition_contains_any,
             expected_all=expected.definition_contains_all,
         )
     )
-    failures.extend(_score_definition_identity_boundary(profile=profile, expected=expected))
+    failures.extend(
+        _score_definition_semantics(
+            profile=profile,
+            expected=expected,
+            definition_judge=definition_judge,
+        )
+    )
+    return failures
+
+
+async def _score_profile_fields_async(
+    profile: dict[str, Any],
+    expected: ExpectedIdentityProfile,
+    *,
+    definition_judge: HttpDefinitionSemanticJudge | None,
+) -> list[str]:
+    """异步检查单个 identity_profile 是否满足字段和 definition 语义期望。
+
+    Args:
+        profile: LLM 返回的单个 identity_profile。
+        expected: 测试用例中对该 identity_profile 的期望。
+        definition_judge: 可选的 live definition 语义判分器。
+
+    Returns:
+        失败原因列表；没有失败时返回空列表。
+    """
+
+    failures = _score_profile_fields(profile, expected)
+    if not expected.definition_semantics_any:
+        return failures
+    if definition_judge is None:
+        if "definition semantic judge is required when definition_semantics_any is set" not in failures:
+            failures.append("definition semantic judge is required when definition_semantics_any is set")
+        return failures
+    failures = [
+        failure
+        for failure in failures
+        if failure != "definition semantic judge is required when definition_semantics_any is set"
+    ]
+    result = await definition_judge.judge(
+        who=str(profile.get("who") or ""),
+        surface_forms=_list_field(profile, "surface_forms"),
+        stable_qualifiers=_list_field(profile, "stable_qualifiers"),
+        actual_definition=str(profile.get("definition") or ""),
+        expected_definitions=list(expected.definition_semantics_any),
+    )
+    if result.verdict != "pass":
+        failures.append(
+            "definition semantic judge failed: "
+            f"reason={result.reason!r}; "
+            f"missing_identity_boundary={result.missing_identity_boundary!r}; "
+            f"included_memory_fact={result.included_memory_fact!r}"
+        )
     return failures
 
 
 def _score_definition_field(
     *,
     profile: dict[str, Any],
-    expected: ExpectedIdentityProfile,
     definition_required: bool,
     expected_any: list[str],
     expected_all: list[str],
@@ -275,10 +463,9 @@ def _score_definition_field(
             failures.append("definition must define who, not repeat it only")
         if _has_generic_definition_placeholder(definition):
             failures.append("definition must define who, not use a generic placeholder")
-    boundary_text = _remove_subject_mentions_from_definition(definition=definition, profile=profile, expected=expected)
     failures.extend(
         _score_contains_list_field(
-            text=boundary_text,
+            text=definition,
             field_name="definition",
             expected_any=expected_any,
             expected_all=expected_all,
@@ -309,67 +496,46 @@ def _has_generic_definition_placeholder(definition: str) -> bool:
     return any(placeholder in definition for placeholder in generic_placeholders)
 
 
-def _score_definition_identity_boundary(
+def _score_definition_semantics(
     *,
     profile: dict[str, Any],
     expected: ExpectedIdentityProfile,
+    definition_judge: DefinitionSemanticJudge | None,
 ) -> list[str]:
-    """检查 definition 是否覆盖评测期望中的稳定身份边界。
+    """检查 definition 是否语义匹配期望的主体定义。
 
     Args:
         profile: LLM 返回的单个 identity_profile。
         expected: 测试用例中对该 identity_profile 的期望。
+        definition_judge: 可选的 definition 语义判分器。
 
     Returns:
         失败原因列表；没有失败时返回空列表。
     """
 
-    if not expected.definition_required:
+    expected_definitions = list(expected.definition_semantics_any)
+    if not expected_definitions:
         return []
     definition = _normalize_text(profile.get("definition"))
     if not definition:
         return []
-    boundary_text = _remove_subject_mentions_from_definition(definition=definition, profile=profile, expected=expected)
-
-    expected_all = [_normalize_text(value) for value in expected.stable_qualifiers_all if _normalize_text(value)]
-    missing_all = [value for value in expected_all if value not in boundary_text]
-    if missing_all:
-        return [f"definition missing identity boundary fragments {missing_all!r}"]
-
-    expected_any = [_normalize_text(value) for value in expected.stable_qualifiers_any if _normalize_text(value)]
-    if expected_any and not any(value in boundary_text for value in expected_any):
-        return [f"definition missing identity boundary from {expected.stable_qualifiers_any!r}"]
+    if definition_judge is None:
+        return ["definition semantic judge is required when definition_semantics_any is set"]
+    result = definition_judge(
+        who=str(profile.get("who") or ""),
+        surface_forms=_list_field(profile, "surface_forms"),
+        stable_qualifiers=_list_field(profile, "stable_qualifiers"),
+        actual_definition=str(profile.get("definition") or ""),
+        expected_definitions=expected_definitions,
+    )
+    if result.verdict != "pass":
+        return [
+            "definition semantic judge failed: "
+            f"reason={result.reason!r}; "
+            f"missing_identity_boundary={result.missing_identity_boundary!r}; "
+            f"included_memory_fact={result.included_memory_fact!r}"
+        ]
     return []
-
-
-def _remove_subject_mentions_from_definition(
-    *,
-    definition: str,
-    profile: dict[str, Any],
-    expected: ExpectedIdentityProfile,
-) -> str:
-    """从 definition 中去掉主体名，避免只靠重复 who 满足定义边界。
-
-    Args:
-        definition: 已标准化的 definition 文本。
-        profile: LLM 返回的单个 identity_profile。
-        expected: 测试用例中对该 identity_profile 的期望。
-
-    Returns:
-        去掉主体名和原始称呼后的 definition 文本。
-    """
-
-    subject_mentions = {
-        _normalize_text(profile.get("who")),
-        *(_normalize_text(value) for value in _list_field(profile, "surface_forms")),
-        *(_normalize_text(value) for value in expected.who_any),
-        *(_normalize_text(value) for value in expected.surface_forms_any),
-        *(_normalize_text(value) for value in expected.surface_forms_all),
-    }
-    boundary_text = definition
-    for mention in sorted((value for value in subject_mentions if value), key=len, reverse=True):
-        boundary_text = boundary_text.replace(mention, " ")
-    return _normalize_text(boundary_text)
 
 
 def _score_surface_forms_field(
@@ -511,7 +677,11 @@ async def _run_case(client: httpx.AsyncClient, case: IdentityExtractionCase) -> 
         "/memory/prompt-evals/run",
         json={"prompt_key": case.prompt_key, "payload": case.payload},
     )
-    return score_identity_extraction_case(case, response.json())
+    return await score_identity_extraction_case_async(
+        case,
+        response.json(),
+        definition_judge=HttpDefinitionSemanticJudge(client),
+    )
 
 
 async def _run(args: argparse.Namespace) -> int:

@@ -11,6 +11,7 @@ from insight_memory.workers.schemas import (
     CrossEntityQueryBuilderOutput,
     EdgeJudgeOutput,
     ExtractorOutput,
+    IdentityDefinitionJudgeOutput,
     IdentityProfileExtractionOutput,
     LinkerOutput,
     MergeJudgeOutput,
@@ -91,6 +92,12 @@ PROMPT_EVAL_TARGETS: dict[str, PromptEvalTarget] = {
         instructions_key="answer_judge",
         schema_type=AnswerJudgeOutput,
         description="Judge whether an answer satisfies required facts, forbidden facts, and citation constraints.",
+    ),
+    "identity_definition_judge": PromptEvalTarget(
+        prompt_key="identity_definition_judge",
+        instructions_key="identity_definition_judge",
+        schema_type=IdentityDefinitionJudgeOutput,
+        description="Judge whether an identity definition semantically matches expected subject-boundary definitions.",
     ),
     "profile_writer": PromptEvalTarget(
         prompt_key="profile_writer",

@@ -354,6 +354,23 @@ WORKER_INSTRUCTIONS: dict[str, str] = {
 - 额外 grounded details 不会降低 pass，只要 required facts 都覆盖且没有 forbidden facts。
 - reason 保持简短具体。
 """.strip(),
+    "identity_definition_judge": """
+评估 actual_definition 是否语义满足 expected_definitions 中至少一个对 identity_profile.definition 的期望。
+
+输入包含 who、surface_forms、stable_qualifiers、actual_definition 和 expected_definitions。
+
+规则：
+- 只判断 definition 是否说明这个主体是什么，不判断记忆事实是否正确。
+- pass：actual_definition 能定义同一个主体，并保留足以区分同名或同前缀主体的稳定身份边界。
+- pass：actual_definition 可使用同义或更自然表达，不要求逐字包含 expected_definitions。
+- fail：actual_definition 只是重复 who、只说 named object/specific subject/某个对象，或缺少角色、工件、主体类型等身份边界。
+- fail：actual_definition 把当前阻塞、负责人值、要求正文、阈值、结论、时间变化等 memory fact 当成定义。
+- fail：actual_definition 定义成另一个主体，或把缺失项、附件、原因、属性值当作主体。
+- matched_expected 写被满足的 expected definition；没有满足时写空字符串。
+- missing_identity_boundary 列出缺失的稳定身份边界；没有则为空数组。
+- included_memory_fact 仅当 actual_definition 混入 memory fact 时为 true。
+- reason 保持一句简短具体说明。
+""".strip(),
     "profile_writer": f"""
 根据当前 profile 和近期 identity signals 重写实体 identity profile。
 规则：
@@ -982,6 +999,23 @@ Rules:
 - Example: `Lantern checklist 明确要求补 Trellis note 和 Bastion ledger，而 Opal manual 进一步要求所有 Bastion ledger 记录附 Selene seal。` satisfies the required groups `Lantern checklist || checklist` and `Selene seal || Opal manual || manual`.
 - Extra grounded details do not reduce a pass result as long as all required facts are covered and no forbidden facts are introduced.
 - Keep reason short and concrete.
+""".strip(),
+    "identity_definition_judge": """
+Evaluate whether actual_definition semantically satisfies at least one expected definition for identity_profile.definition.
+
+The payload contains who, surface_forms, stable_qualifiers, actual_definition, and expected_definitions.
+
+Rules:
+- Judge only whether the definition explains what this subject is; do not judge whether the memory fact is true.
+- Return pass when actual_definition defines the same subject and preserves enough stable identity boundary to distinguish same-name or same-prefix subjects.
+- Return pass for synonymous or more natural wording; exact substring overlap is not required.
+- Return fail when actual_definition only repeats who, only says named object/specific subject, or misses the role, artifact, or subject-type boundary.
+- Return fail when actual_definition includes current blocker, owner value, requirement body, threshold, conclusion, or time change as if it were the definition.
+- Return fail when actual_definition defines another subject or promotes a missing item, attachment, reason, or attribute value into the subject.
+- matched_expected must copy the satisfied expected definition; use an empty string if none is satisfied.
+- missing_identity_boundary lists missing stable identity boundaries, or an empty list when none are missing.
+- included_memory_fact is true only when actual_definition mixes in memory facts.
+- Keep reason short and specific.
 """.strip(),
     "profile_writer": f"""
 Rewrite the entity identity profile from current profile and recent identity signals.

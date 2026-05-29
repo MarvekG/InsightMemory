@@ -4,7 +4,7 @@ from insight_memory.evals.prompt_registry import get_prompt_eval_target
 from insight_memory.services import prompt_eval_service as service_module
 from insight_memory.workers.llm_provider import LLMCallResult
 from insight_memory.workers.prompts import get_worker_instructions
-from insight_memory.workers.schemas import IdentityProfileExtractionOutput, WriteGateOutput
+from insight_memory.workers.schemas import IdentityDefinitionJudgeOutput, IdentityProfileExtractionOutput, WriteGateOutput
 from tests.utils import run_async
 
 
@@ -22,6 +22,14 @@ def test_prompt_registry_maps_identity_profile_to_shared_prompt_and_schema() -> 
     assert target.prompt_key == "identity_profile"
     assert target.instructions_key == "identity_profile"
     assert target.schema_type is IdentityProfileExtractionOutput
+
+
+def test_prompt_registry_maps_identity_definition_judge_to_schema() -> None:
+    target = get_prompt_eval_target("identity_definition_judge")
+
+    assert target.prompt_key == "identity_definition_judge"
+    assert target.instructions_key == "identity_definition_judge"
+    assert target.schema_type is IdentityDefinitionJudgeOutput
 
 
 def test_identity_prompt_has_no_removed_type_classification_language() -> None:

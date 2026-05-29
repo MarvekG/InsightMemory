@@ -20,8 +20,8 @@
             "Lanturn deployment"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "deployment"
+          "definition_semantics_any": [
+            "Lanturn deployment is a deployment subject named Lanturn deployment."
           ]
         }
       ],
@@ -47,8 +47,8 @@
             "Cedar QA policy"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "policy"
+          "definition_semantics_any": [
+            "Cedar QA policy is a policy subject named Cedar QA policy."
           ]
         }
       ],
@@ -75,8 +75,8 @@
             "Ravel import service"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "service"
+          "definition_semantics_any": [
+            "Ravel import service is a service subject named Ravel import service."
           ]
         },
         {
@@ -87,8 +87,8 @@
             "Ravel import checklist"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "checklist"
+          "definition_semantics_any": [
+            "Ravel import checklist is a checklist subject named Ravel import checklist."
           ]
         }
       ],
@@ -114,8 +114,8 @@
             "STP.N"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "stock"
+          "definition_semantics_any": [
+            "STP.N is the stock or market object named STP.N."
           ]
         }
       ],
@@ -142,9 +142,8 @@
             "Meridian onboarding"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "onboarding",
-            "board"
+          "definition_semantics_any": [
+            "Meridian onboarding is an onboarding subject named Meridian onboarding."
           ]
         }
       ],
@@ -171,8 +170,8 @@
             "Vireo billing migration"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "migration"
+          "definition_semantics_any": [
+            "Vireo billing migration is a migration subject named Vireo billing migration."
           ]
         }
       ],
@@ -200,8 +199,8 @@
             "Tideline register"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "register"
+          "definition_semantics_any": [
+            "Tideline register is a register subject named Tideline register."
           ]
         },
         {
@@ -212,8 +211,8 @@
             "Tideline checklist"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "checklist"
+          "definition_semantics_any": [
+            "Tideline checklist is a checklist subject named Tideline checklist."
           ]
         }
       ],
@@ -240,8 +239,8 @@
             "MX-17A"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "code"
+          "definition_semantics_any": [
+            "MX-17A is the code-like subject named MX-17A."
           ]
         }
       ],
@@ -270,9 +269,8 @@
             "Aster observatory docket"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "docket",
-            "doc"
+          "definition_semantics_any": [
+            "Aster observatory docket is a docket subject named Aster observatory docket."
           ]
         },
         {
@@ -283,8 +281,8 @@
             "Aster observatory ledger"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "ledger"
+          "definition_semantics_any": [
+            "Aster observatory ledger is a ledger subject named Aster observatory ledger."
           ]
         },
         {
@@ -295,8 +293,8 @@
             "Aster observatory queue"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "queue"
+          "definition_semantics_any": [
+            "Aster observatory queue is a queue subject named Aster observatory queue."
           ]
         },
         {
@@ -307,8 +305,8 @@
             "Aster observatory bulletin"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "bulletin"
+          "definition_semantics_any": [
+            "Aster observatory bulletin is a bulletin subject named Aster observatory bulletin."
           ]
         }
       ],
@@ -342,8 +340,8 @@
             "register"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "register"
+          "definition_semantics_any": [
+            "Morrowfield register is a register subject named Morrowfield register."
           ]
         }
       ],
@@ -370,8 +368,8 @@
             "bulletin"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "bulletin"
+          "definition_semantics_any": [
+            "Siltmere bulletin is a bulletin subject named Siltmere bulletin."
           ]
         }
       ],
@@ -398,8 +396,8 @@
             "review"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "review"
+          "definition_semantics_any": [
+            "Kestrel transit review is a review subject named Kestrel transit review."
           ]
         }
       ],
@@ -426,8 +424,8 @@
             "notice"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "notice"
+          "definition_semantics_any": [
+            "Willow handover notice is a notice subject named Willow handover notice."
           ]
         }
       ],
@@ -454,8 +452,8 @@
             "register"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "register"
+          "definition_semantics_any": [
+            "Morrowfield register is a register subject named Morrowfield register."
           ]
         }
       ],
@@ -485,8 +483,8 @@
             "bulletin"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "bulletin"
+          "definition_semantics_any": [
+            "Siltmere bulletin is a bulletin subject named Siltmere bulletin."
           ]
         }
       ],
@@ -514,9 +512,8 @@
             "packet"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "packet release",
-            "packet"
+          "definition_semantics_any": [
+            "Blackthorn packet release is a packet release subject named Blackthorn packet release."
           ]
         }
       ],
@@ -546,8 +543,8 @@
             "register"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "register"
+          "definition_semantics_any": [
+            "Morrowfield register is a register subject named Morrowfield register."
           ]
         }
       ],
@@ -578,8 +575,8 @@
             "review"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "review"
+          "definition_semantics_any": [
+            "Kestrel transit review is a review subject named Kestrel transit review."
           ]
         }
       ],
@@ -606,8 +603,8 @@
             "review"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "review"
+          "definition_semantics_any": [
+            "Kestrel transit review is a review subject named Kestrel transit review."
           ]
         }
       ],

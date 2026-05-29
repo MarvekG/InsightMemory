@@ -24,9 +24,8 @@
             "计划"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "上线计划",
-            "计划"
+          "definition_semantics_any": [
+            "松岭上线计划 是名为 松岭上线计划 的上线计划主体。"
           ]
         }
       ],
@@ -55,8 +54,8 @@
             "制度"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "制度"
+          "definition_semantics_any": [
+            "临时权限回收制度 是名为 临时权限回收制度 的制度主体。"
           ]
         }
       ],
@@ -82,9 +81,8 @@
             "周明"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "个人",
-            "人"
+          "definition_semantics_any": [
+            "周明 是名为 周明 的个人主体。"
           ]
         }
       ],
@@ -110,8 +108,8 @@
             "运维组"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "运维组"
+          "definition_semantics_any": [
+            "北桥运维组 是名为 北桥运维组 的运维组主体。"
           ]
         }
       ],
@@ -140,8 +138,8 @@
             "服务"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "服务"
+          "definition_semantics_any": [
+            "青岚结算服务 是名为 青岚结算服务 的服务主体。"
           ]
         }
       ],
@@ -170,8 +168,8 @@
             "评审会"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "评审会"
+          "definition_semantics_any": [
+            "槐庭评审会 是名为 槐庭评审会 的评审会主体。"
           ]
         }
       ],
@@ -200,8 +198,8 @@
             "看板"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "看板"
+          "definition_semantics_any": [
+            "流量告警看板 是名为 流量告警看板 的看板主体。"
           ]
         }
       ],
@@ -228,9 +226,8 @@
             "海岳电池"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "股票",
-            "市场对象"
+          "definition_semantics_any": [
+            "海岳电池 是名为 海岳电池 的市场对象或股票主体。"
           ]
         }
       ],
@@ -260,8 +257,8 @@
             "工单"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "工单"
+          "definition_semantics_any": [
+            "南仓工单甲十七 是名为 南仓工单甲十七 的工单主体。"
           ]
         }
       ],
@@ -292,9 +289,8 @@
             "换班流程"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "换班流程",
-            "流程"
+          "definition_semantics_any": [
+            "白塔换班流程 是名为 白塔换班流程 的换班流程主体。"
           ]
         }
       ],
@@ -324,8 +320,8 @@
             "手册"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "手册"
+          "definition_semantics_any": [
+            "霞港交接手册 是名为 霞港交接手册 的手册主体。"
           ]
         }
       ],
@@ -356,9 +352,8 @@
             "防守策略"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "防守策略",
-            "策略"
+          "definition_semantics_any": [
+            "春谷防守策略 是名为 春谷防守策略 的防守策略主体。"
           ]
         }
       ],
@@ -389,9 +384,8 @@
             "计划"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "上线计划",
-            "计划"
+          "definition_semantics_any": [
+            "松岭上线计划 是名为 松岭上线计划 的上线计划主体。"
           ]
         }
       ],
@@ -417,8 +411,8 @@
             "制度"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "制度"
+          "definition_semantics_any": [
+            "临时权限回收制度 是名为 临时权限回收制度 的制度主体。"
           ]
         }
       ],
@@ -441,9 +435,8 @@
             "周明"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "个人",
-            "人"
+          "definition_semantics_any": [
+            "周明 是名为 周明 的个人主体。"
           ]
         }
       ],
@@ -469,8 +462,8 @@
             "服务"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "服务"
+          "definition_semantics_any": [
+            "青岚结算服务 是名为 青岚结算服务 的服务主体。"
           ]
         }
       ],
@@ -496,8 +489,8 @@
             "看板"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "看板"
+          "definition_semantics_any": [
+            "流量告警看板 是名为 流量告警看板 的看板主体。"
           ]
         }
       ],
@@ -523,9 +516,8 @@
             "海岳电池"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "股票",
-            "市场对象"
+          "definition_semantics_any": [
+            "海岳电池 是名为 海岳电池 的市场对象或股票主体。"
           ]
         }
       ],
@@ -551,8 +543,8 @@
             "评审会"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "评审会"
+          "definition_semantics_any": [
+            "槐庭评审会 是名为 槐庭评审会 的评审会主体。"
           ]
         }
       ],
@@ -579,9 +571,8 @@
             "换班流程"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "换班流程",
-            "流程"
+          "definition_semantics_any": [
+            "白塔换班流程 是名为 白塔换班流程 的换班流程主体。"
           ]
         }
       ],
@@ -607,9 +598,8 @@
             "海岳电池"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "股票",
-            "市场对象"
+          "definition_semantics_any": [
+            "海岳电池 是名为 海岳电池 的市场对象或股票主体。"
           ]
         }
       ],
@@ -639,8 +629,8 @@
             "清单"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "清单"
+          "definition_semantics_any": [
+            "青竹迁移清单 是名为 青竹迁移清单 的清单主体。"
           ]
         }
       ],
@@ -669,8 +659,8 @@
             "工单"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "工单"
+          "definition_semantics_any": [
+            "南仓工单甲十七 是名为 南仓工单甲十七 的工单主体。"
           ]
         }
       ],
@@ -697,9 +687,8 @@
             "防守策略"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "防守策略",
-            "策略"
+          "definition_semantics_any": [
+            "春谷防守策略 是名为 春谷防守策略 的防守策略主体。"
           ]
         }
       ],
@@ -729,9 +718,8 @@
             "迁移计划"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "迁移计划",
-            "计划"
+          "definition_semantics_any": [
+            "青竹迁移计划 是名为 青竹迁移计划 的迁移计划主体。"
           ]
         },
         {
@@ -745,8 +733,8 @@
             "清单"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "清单"
+          "definition_semantics_any": [
+            "青竹迁移清单 是名为 青竹迁移清单 的清单主体。"
           ]
         },
         {
@@ -760,8 +748,8 @@
             "手册"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "手册"
+          "definition_semantics_any": [
+            "青竹迁移手册 是名为 青竹迁移手册 的手册主体。"
           ]
         }
       ],
@@ -793,9 +781,8 @@
             "发布流程"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "发布流程",
-            "流程"
+          "definition_semantics_any": [
+            "霜河发布流程 是名为 霜河发布流程 的发布流程主体。"
           ]
         },
         {
@@ -810,9 +797,8 @@
             "发布公告"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "发布公告",
-            "公告"
+          "definition_semantics_any": [
+            "霜河发布公告 是名为 霜河发布公告 的发布公告主体。"
           ]
         }
       ],
@@ -843,8 +829,8 @@
             "登记册"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "登记册"
+          "definition_semantics_any": [
+            "南港登记册 是名为 南港登记册 的登记册主体。"
           ]
         },
         {
@@ -858,8 +844,8 @@
             "核对表"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "核对表"
+          "definition_semantics_any": [
+            "南港核对表 是名为 南港核对表 的核对表主体。"
           ]
         }
       ],
@@ -887,9 +873,8 @@
             "陈岚"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "个人",
-            "人"
+          "definition_semantics_any": [
+            "陈岚 是名为 陈岚 的个人主体。"
           ]
         },
         {
@@ -903,8 +888,8 @@
             "数据组"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "数据组"
+          "definition_semantics_any": [
+            "东桥数据组 是名为 东桥数据组 的数据组主体。"
           ]
         }
       ],
@@ -931,9 +916,8 @@
             "海岳电池"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "股票",
-            "市场对象"
+          "definition_semantics_any": [
+            "海岳电池 是名为 海岳电池 的市场对象或股票主体。"
           ]
         },
         {
@@ -948,9 +932,8 @@
             "调研纪要"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "调研纪要",
-            "纪要"
+          "definition_semantics_any": [
+            "海岳调研纪要 是名为 海岳调研纪要 的调研纪要主体。"
           ]
         }
       ],
@@ -981,8 +964,8 @@
             "门户"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "门户"
+          "definition_semantics_any": [
+            "星河门户 是名为 星河门户 的门户主体。"
           ]
         },
         {
@@ -996,8 +979,8 @@
             "消息中心"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "消息中心"
+          "definition_semantics_any": [
+            "星河门户消息中心 是名为 星河门户消息中心 的消息中心主体。"
           ]
         }
       ],
@@ -1027,9 +1010,8 @@
             "防守策略"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "防守策略",
-            "策略"
+          "definition_semantics_any": [
+            "春谷防守策略 是名为 春谷防守策略 的防守策略主体。"
           ]
         },
         {
@@ -1044,9 +1026,8 @@
             "风控手册"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "风控手册",
-            "手册"
+          "definition_semantics_any": [
+            "春谷风控手册 是名为 春谷风控手册 的风控手册主体。"
           ]
         }
       ],
@@ -1077,8 +1058,8 @@
             "评审会"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "评审会"
+          "definition_semantics_any": [
+            "槐庭评审会 是名为 槐庭评审会 的评审会主体。"
           ]
         },
         {
@@ -1093,9 +1074,8 @@
             "整改工单"
           ],
           "definition_required": true,
-          "definition_contains_any": [
-            "整改工单",
-            "工单"
+          "definition_semantics_any": [
+            "槐庭整改工单 是名为 槐庭整改工单 的整改工单主体。"
           ]
         }
       ],
