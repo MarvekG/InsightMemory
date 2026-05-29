@@ -19,14 +19,14 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“今晚感觉风险很高”没有命名主体，可拒绝。
 - 规则：查询状态、原因、阻塞或要求时，被询问的完整命名名词就是主体。
   例：“青川交付为什么不能验收？”主体是“青川交付”。
-- 规则：可复用名词包括系统、文档、计划、团队、流程、代码、人物、事件、任务或工件。
-  例：“柳湾权限清单”“云脊结算服务”“孟澜”都可作为主体。
-- 规则：账号、接口端点、运营团队或工作小组承接状态、计划或规则时，也可作为主体。
+- 规则：能被后续记忆稳定复指，并承接状态、规则、负责人或要求的命名短语，可作为主体。
+  例：“柳湾权限清单要求双签”“孟澜不希望周五发布”都有稳定主体。
+- 规则：名称形式不像普通人名或标题时，只要它被直接陈述或查询，也可作为主体。
   例：“松溪客服组下周接手巡检”，主体是“松溪客服组”。
-- 规则：市场代码、证券代码、基金代码和 ticker-like symbol 可作为主体。
+- 规则：短代码式名称如果是被查询或陈述的对象，不要因为形式短而拒绝。
   例：“771009.SZ 最新研究记录怎么看？”主体是“771009.SZ”。
-- 规则：结构化记录中的 ticket、case、work_order、id 字段值，承接状态或阻塞时可作为主体。
-  例：“ticket=QF-42B; blocker=缺照片”主体是“QF-42B”，不是“缺照片”。
+- 规则：结构化字段里承接状态或阻塞的对象值可作主体，原因或属性值不可作主体。
+  例：“编号=QF-42B；原因=缺照片”主体是“QF-42B”，不是“缺照片”。
 
 `who` 字段规则：
 - 规则：`who` 是同一主体的简短稳定标签，要写完整命名名词。
@@ -37,7 +37,7 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“云脊结算服务”和“云脊结算手册”是两个主体。
 - 规则：能区分主体的角色词必须保留在 `who` 中。
   例：“鹭湾工单”的 `who` 写“鹭湾工单”，不要只写“鹭湾”。
-- 规则：人物偏好、习惯、要求或不希望做的事，属于这个人物。
+- 规则：偏好、习惯、要求或不希望做的事，归属提出这些约束的命名主体。
   例：“许诺偏好每周一看汇总”，主体是“许诺”。
 - 规则：`who` 只写主体名词，不写当前状态、阻塞、结论、指标或时间变化。
   例：“云杉风控策略”可以；“云杉风控策略当前阈值上调”不可以。
@@ -65,12 +65,12 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“Ridge access request”放“access request”和“request”。
 - 规则：不要因英文角色词常见就省略它，它常是区分同前缀主体的核心。
   例：“Cobalt service note”放“service note”和“note”。
-- 规则：人名、股票代码或无角色词的唯一名称，`stable_qualifiers` 可以为空。
+- 规则：没有角色限定词的唯一名称或短代码式名称，`stable_qualifiers` 可以为空。
   例：“孟澜不希望周五排发布会”，主体是“孟澜”，限定词可为空。
 - 规则：`stable_qualifiers` 不要写记录标记、句子、当前状态或事实摘要。
   例：不要把“当前暂停”“第二轮”放进 `stable_qualifiers`。
-- 规则：中文“看板”如果是主体名的一部分，要放入 `stable_qualifiers`。
-  例：“墨池运营看板”的 `stable_qualifiers` 应包含“看板”。
+- 规则：主体名末尾用于区分同前缀对象的角色词，要放入 `stable_qualifiers`。
+  例：“墨池运营面板”的 `stable_qualifiers` 应包含“面板”。
 
 `definition` 字段规则：
 - 规则：`definition` 只解释 `who` 是什么，不写记忆事实。
@@ -79,13 +79,13 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“云脊结算服务指云脊相关的结算服务”可以；“负责人是赵奕”不可以。
 - 规则：`definition` 是对具体主体的定义，不是类别标签。
   例：“枫桥上线计划指枫桥相关的上线计划”可以；只写“命名上线计划”不可以。
-- 规则：人物主体也要定义具体是谁，不要只写“人物”。
-  例：“孟澜指名为孟澜的人”可以；只写“人物”不可以。
+- 规则：`definition` 要指向这个具体名称，不要只写泛化身份词。
+  例：“孟澜指名为孟澜的个人”可以；只写“某个人”不可以。
 
 多主体和边界规则：
 - 规则：一条输入有多个名称时，只抽取被直接陈述或直接查询的名称。
   例：“周会提到澜缓存服务，但柏港评审会决定延期”，只抽取“柏港评审会”。
-- 规则：子项目、子系统、子组件、产品线或流程节点被直接描述时，必须单独成主体。
+- 规则：更长名称代表独立下级对象且被直接描述时，必须单独成主体。
   例：“澜石门户正常，澜石门户消息台延迟”，两个名称都要抽取。
 - 规则：父主体和更长同前缀子主体各有事实时，不要把子主体折叠进父主体。
   例：“岚河平台可登录；岚河平台审计台超时”，要抽取两个主体。
@@ -97,21 +97,21 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“星澜变更记录由法务维护”可抽“星澜变更记录”。
 - 规则：只出现在父级背景、会议背景、旁注或地点里的名称，不单独建主体。
   例：“在沙河办公室讨论栖木发布”，主体不是“沙河办公室”。
-- 规则：缺失项、附件、证据、前置条件、原因、指标、字段值或执行细节，不单独建主体。
+- 规则：只作为另一个主体的条件、原因、属性或执行细节的短语，不单独建主体。
   例：“南渡发布项目缺回滚说明”，主体是“南渡发布项目”，不是“回滚说明”。
-- 规则：负责人、审批人和复核人是属性值，不是要单独建的主体。
+- 规则：承担人的姓名或角色值是属性值，不是要单独建的主体。
   例：“鹭湾工单负责人是赵奕”，主体是“鹭湾工单”，不是“赵奕”。
 - 规则：如果 X 因 Y 缺失而不能推进，主体是 X；Y 是原因。
   例：“岩庭上线因封板照片缺失暂停”，主体是“岩庭上线”。
 - 规则：只有文本直接说明 Y 自己的状态、规则、负责人、决定或查询时，才把 Y 建主体。
   例：“封板照片由何组维护？”这时“封板照片”才可以成为查询主体。
-- 规则：命名手册、清单或政策要求 X 补 Y 时，主体是这个治理工件。
+- 规则：命名治理对象要求 X 补 Y 时，主体是这个治理对象。
   例：“栖梧准入手册要求项目补值班表”，主体是“栖梧准入手册”。
-- 规则：通用记录词表示要查哪类记录，不是主体名称。
+- 规则：说明要查哪类记录的普通短语，不是主体名称。
   例：“771009.SZ 的最新分析笔记”主体是“771009.SZ”，不是“分析笔记”。
-- 规则：只有记录或文档有独立标题、编号、治理职责或维护状态时，记录本身才是主体。
+- 规则：只有一段记录本身有独立标题、编号、治理职责或维护状态时，它才是主体。
   例：“沧澜交接记录由法务维护”，主体是“沧澜交接记录”。
-- 规则：round、stage、date、session、version、phase、batch 等是记录标记，不是主体。
+- 规则：表达记录顺序、时间范围、版本或分组的词语只限定记录，不是主体。
   例：“沧澜交接记录第二轮”仍归属“沧澜交接记录”。
 - 规则：同一主体的历史记录和当前记录，使用同一个 identity_profile。
   例：“南枝策略之前宽松、当前收紧”，主体仍是“南枝策略”。
@@ -422,14 +422,14 @@ Overall judgment:
   Example: `The risk feels high tonight` has no named subject and may be rejected.
 - Rule: In questions about state, reason, blocker, or requirement, the queried complete named noun is the subject.
   Example: `Why is Cedar lane handoff blocked?` belongs to `Cedar lane handoff`.
-- Rule: Reusable nouns include systems, documents, plans, teams, workflows, codes, people, events, tasks, or artifacts.
-  Example: `Willowbank access checklist`, `Cloudridge settlement service`, and `Mira Lin` can be subjects.
-- Rule: Accounts, endpoints, operations teams, or working groups can be subjects when they own state, plans, or rules.
+- Rule: A named phrase can be a subject when future memories can stably refer to it and it owns state, rules, owners, or requirements.
+  Example: `Willowbank access checklist requires dual signoff` and `Mira Lin avoids Friday releases` have stable subjects.
+- Rule: Even if a name does not look like a normal person name or title, keep it when it is directly stated or queried.
   Example: `Sundale support crew takes over checks next week` belongs to `Sundale support crew`.
-- Rule: Market codes, security codes, fund codes, and ticker-like symbols can be subjects.
+- Rule: Do not reject short code-like names when they are the object being queried or described.
   Example: in `What does the latest note say about RQX.N?`, the subject is `RQX.N`.
-- Rule: A ticket, case, work_order, or id field value in a structured record can be the subject when it owns state or blockers.
-  Example: `ticket=QL-42B; blocker=missing photo` belongs to `QL-42B`, not `missing photo`.
+- Rule: In structured fields, a value that owns state or blockers can be the subject; reason or attribute values cannot.
+  Example: `ref=QL-42B; reason=missing photo` belongs to `QL-42B`, not `missing photo`.
 
 `who` field rules:
 - Rule: `who` is the short stable label for the same subject; write the complete named noun.
@@ -440,7 +440,7 @@ Overall judgment:
   Example: `Cloudridge settlement service` and `Cloudridge settlement handbook` are different subjects.
 - Rule: Role words that separate subjects must stay in `who`.
   Example: `Egret ticket` should use `Egret ticket`, not only `Egret`.
-- Rule: A person's preferences, habits, requirements, or dislikes belong to that person.
+- Rule: Preferences, habits, requirements, or dislikes belong to the named subject that states those constraints.
   Example: `Nora Xu prefers Monday summaries` belongs to `Nora Xu`.
 - Rule: `who` names only the subject; do not include current state, blocker, conclusion, metric, or time change.
   Example: `Fir risk policy` is valid; `Fir risk policy current threshold increased` is not a `who`.
@@ -468,12 +468,12 @@ Overall judgment:
   Example: for `Ridge access request`, include `access request` and `request`.
 - Rule: Do not omit common English role nouns; they often separate same-prefix subjects.
   Example: for `Cobalt service note`, include `service note` and `note`.
-- Rule: Person names, stock codes, or unique names with no role word may have empty `stable_qualifiers`.
+- Rule: Unique names or short code-like names with no role word may have empty `stable_qualifiers`.
   Example: `Mira Lin does not want Friday releases` belongs to `Mira Lin`; qualifiers may be empty.
 - Rule: `stable_qualifiers` must not contain record markers, sentences, current states, or fact summaries.
   Example: do not put `currently paused` or `round two` in `stable_qualifiers`.
-- Rule: If Chinese 看板 is part of the subject name, add it to `stable_qualifiers`.
-  Example: `墨池运营看板` should include `看板`.
+- Rule: Add the final role word when it separates a subject from same-prefix objects.
+  Example: `Inkpool operations panel` should include `panel`.
 
 `definition` field rules:
 - Rule: `definition` defines what `who` is; it must not include memory facts.
@@ -482,13 +482,13 @@ Overall judgment:
   Example: `Cloudridge settlement service refers to the settlement service for Cloudridge` is valid; `owner is Jules Wei` is not.
 - Rule: `definition` defines the concrete subject; it is not a category label.
   Example: `Maplebridge launch plan refers to the launch plan for Maplebridge` is valid; only `named launch plan` is not.
-- Rule: Person subjects must define the specific person, not only say `person`.
-  Example: `Mira Lin refers to the person named Mira Lin` is valid; only `person` is not.
+- Rule: `definition` must point to the specific name, not only a generic identity word.
+  Example: `Mira Lin refers to the individual named Mira Lin` is valid; only `a person` is not.
 
 Multi-subject and boundary rules:
 - Rule: When one input has several names, extract only names that are directly stated or queried.
   Example: if a meeting mentions `Slatecache service` but decides on `Alderport review`, extract `Alderport review`.
-- Rule: Subprojects, subsystems, subcomponents, product lines, or workflow nodes must be subjects when directly described.
+- Rule: A longer name that denotes an independent lower-level object must be a separate subject when directly described.
   Example: if `Stoneport portal` works but `Stoneport message panel` is delayed, extract both names.
 - Rule: When a parent subject and a longer same-prefix child subject each have facts, do not fold the child into parent.
   Example: `Mistvale platform works; Mistvale platform audit panel times out` should extract both subjects.
@@ -500,21 +500,21 @@ Multi-subject and boundary rules:
   Example: `Starling change record is maintained by Legal` can extract `Starling change record`.
 - Rule: Names appearing only in parent context, meeting context, asides, or locations are not separate subjects.
   Example: in `discussed Grove launch in Riverroom`, `Riverroom` is not the subject.
-- Rule: Missing items, attachments, evidence, prerequisites, reasons, metrics, field values, and details are not subjects.
+- Rule: Phrases that only serve as another subject's condition, reason, attribute, or execution detail are not subjects.
   Example: `Southford rollout lacks rollback memo` belongs to `Southford rollout`, not `rollback memo`.
-- Rule: Owners, approvers, and reviewers are attribute values, not separate subjects.
+- Rule: Names or role values for responsible people are attributes, not separate subjects.
   Example: `Egret ticket owner is Jules Wei` belongs to `Egret ticket`, not `Jules Wei`.
 - Rule: If X cannot proceed because Y is missing, X is the subject and Y is the reason.
   Example: `Ridgecourt launch paused because gate photo is missing` belongs to `Ridgecourt launch`.
 - Rule: Create a subject for Y only when the text directly describes Y's state, rule, owner, decision, or query.
   Example: `Which team maintains gate photo?` can make `gate photo` the query subject.
-- Rule: If a named handbook, checklist, or policy requires X to provide Y, the governing artifact is the subject.
+- Rule: If a named governing object requires X to provide Y, that governing object is the subject.
   Example: `Grove entry handbook requires projects to add the duty roster` belongs to `Grove entry handbook`.
-- Rule: Generic record words describe what to retrieve; they are not the subject name.
+- Rule: Plain phrases that only say what kind of record to retrieve are not subject names.
   Example: `latest analyst note for RQX.N` belongs to `RQX.N`, not `analyst note`.
-- Rule: A record or document is the subject only when it has its own title, number, governance role, or state.
+- Rule: A record-like text is the subject only when it has its own title, number, governance role, or state.
   Example: `Bluewater handover record is maintained by Legal` belongs to `Bluewater handover record`.
-- Rule: round, stage, date, session, version, phase, and batch are record markers, not subjects.
+- Rule: Wording that expresses a record's order, time span, version, or grouping only limits the record; it is not the subject.
   Example: `Bluewater handover record round two` still belongs to `Bluewater handover record`.
 - Rule: Historical and current records for the same subject use the same identity_profile.
   Example: `Southbranch policy was loose before but is stricter now` still belongs to `Southbranch policy`.

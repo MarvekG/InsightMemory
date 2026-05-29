@@ -48,6 +48,33 @@ def test_identity_prompt_has_no_removed_type_classification_language() -> None:
     assert "`draft_id`" not in en_instructions
     assert "补充、修订或附录" not in zh_instructions
     assert "supplement, revision, or appendix" not in en_instructions
+    zh_removed_keyword_lists = [
+        "可复用名词包括系统、文档、计划、团队、流程、代码、人物、事件、任务或工件",
+        "账号、接口端点、运营团队或工作小组",
+        "市场代码、证券代码、基金代码",
+        "ticket、case、work_order、id",
+        "中文“看板”",
+        "命名手册、清单或政策",
+        "缺失项、附件、证据、前置条件、原因、指标、字段值或执行细节",
+        "负责人、审批人和复核人",
+        "round、stage、date、session、version、phase、batch",
+    ]
+    en_removed_keyword_lists = [
+        "Reusable nouns include systems, documents, plans, teams, workflows, codes, people, events, tasks, or artifacts",
+        "Accounts, endpoints, operations teams, or working groups",
+        "Market codes, security codes, fund codes",
+        "ticket, case, work_order, or id",
+        "Chinese 看板",
+        "named handbook, checklist, or policy",
+        "Missing items, attachments, evidence, prerequisites, reasons, metrics, field values, and details",
+        "Owners, approvers, and reviewers",
+        "round, stage, date, session, version, phase, and batch",
+    ]
+
+    for text in zh_removed_keyword_lists:
+        assert text not in zh_instructions
+    for text in en_removed_keyword_lists:
+        assert text not in en_instructions
 
 
 def test_identity_definition_prompt_defines_subject_not_category() -> None:
