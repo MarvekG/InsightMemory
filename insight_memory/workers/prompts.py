@@ -9,6 +9,7 @@ IDENTITY_PROFILE_RULES = """
 [identity_profile提取规则]
 提取目标：判断“这条记忆属于谁”，从文本里找出承接这条记忆的命名名词。
 identity_profile 只记录这个名词是谁，不记录它发生了什么。
+输出格式：所有 identity_profile 字符串字段都应输出为小写；中文字符小写后不变，英文、代码和混合文本需要统一小写。
 
 整体判断：
 - 规则：先读完整输入或查询，找主要承接这条记忆的命名名词。
@@ -59,6 +60,10 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“柳湾权限清单”可写“权限清单”和“清单”。
 - 规则：稳定限定词必须来自 `who` 或 `surface_forms`，不要从 `definition` 推断。
   例：“碧湾发布公告”可放“公告”，不要因为定义写了文档就放“文档”。
+- 规则：稳定限定词应优先使用原文连续词或短语，不要生成原文没有出现的缩写。
+  例：“青石访问 document”可放“document”，不要把 document 缩写成 doc。
+- 规则：多词身份边界优先完整保留，不要截成过宽的单词。
+  例：“南枝 api contract”优先放“api contract”，不要只放“api”。
 - 规则：能区分主体的角色词要放入 `stable_qualifiers`。
   例：“鹭湾工单”的 `stable_qualifiers` 至少包含“工单”。
 - 规则：中文复合角色短语要同时保留最长稳定短语和末尾角色词。
@@ -93,6 +98,8 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“璃岸指名为璃岸的个人”可以；不要硬写成项目或文档。
 - 规则：`definition` 不能只重复 `who`，也不能用空泛占位词。
   例：“霁川交付指霁川相关的交付事项”可以；只写“霁川交付这个对象”不可以。
+- 规则：不要只写与 who 同义的循环定义，非人名主体必须包含来自原文的稳定身份边界词或短语。
+  例：“岚桥发布流程是岚桥相关的发布流程”可以；“岚桥发布流程是岚桥发布流程”不可以。
 - 规则：`definition` 不写这条记忆里的状态、结果、阻塞、负责人值或要求内容。
   例：“云脊结算服务指云脊相关的结算服务”可以；“负责人是赵奕”不可以。
 - 规则：若 `who` 含编号、序号或代码，定义要说明整个带编号名称是什么。
@@ -105,6 +112,8 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
 多主体和边界规则：
 - 规则：一条输入有多个名称时，只抽取被直接陈述或直接查询的名称。
   例：“周会提到澜缓存服务，但柏港评审会决定延期”，只抽取“柏港评审会”。
+- 规则：只抽取有独立持久事实的主体；背景提及、顺带提到、没有独立结论或没有新事实的名称不单独抽取。
+  例：“顺带提到河湾服务，但主结论是松林发布暂停”，只抽取“松林发布”。
 - 规则：更长名称代表独立下级对象且被直接描述时，必须单独成主体。
   例：“澜石门户正常，澜石门户消息台延迟”，两个名称都要抽取。
 - 规则：父主体和更长同前缀子主体各有事实时，不要把子主体折叠进父主体。
@@ -115,6 +124,8 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“雁栖清单：每个工单要双签”归属“雁栖清单”。
 - 规则：只有标题本身被描述为有维护人、状态、编号或归档事实时，标题才可作为主体。
   例：“星澜变更记录由法务维护”可抽“星澜变更记录”。
+- 规则：文档、简报、邮件或报告标题默认是容器；只有事实直接描述这个标题本身时，才把它作为主体。
+  例：“月度运维简报：柏港计划延期”主体是“柏港计划”，不是“月度运维简报”。
 - 规则：只出现在父级背景、会议背景、旁注或地点里的名称，不单独建主体。
   例：“在沙河办公室讨论栖木发布”，主体不是“沙河办公室”。
 - 规则：只作为另一个主体的条件、原因、属性或执行细节的短语，不单独建主体。
@@ -432,6 +443,7 @@ IDENTITY_PROFILE_RULES_EN = """
 [identity_profile extraction rules]
 Goal: decide "who does this memory belong to" by finding the named noun that owns this memory.
 identity_profile records only who that noun is, not what happened to it.
+Output format: all identity_profile string fields must be lowercase; Chinese characters are unchanged by lowercase, while English, codes, and mixed text must be normalized to lowercase.
 
 Overall judgment:
 - Rule: Read the full input or query, then find the named noun that mainly owns this memory.
@@ -482,6 +494,10 @@ Overall judgment:
   Example: for `Willowbank access checklist`, use `access checklist` and `checklist`.
 - Rule: `stable_qualifiers` must come from `who` or `surface_forms`; do not infer them from `definition`.
   Example: for `Jadebay release bulletin`, use `bulletin`; do not add `document` only from its definition.
+- Rule: stable qualifiers should prefer contiguous source words or phrases, and must not invent abbreviations that are absent from the source.
+  Example: for `bluestone access document`, use `document`; do not shorten document to doc.
+- Rule: Prefer the complete multi-word identity boundary over an overly broad single word.
+  Example: for `southbranch api contract`, prefer `api contract`; do not use only `api`.
 - Rule: Role words that separate subjects must be added to `stable_qualifiers`.
   Example: `Egret ticket` should include `ticket` in `stable_qualifiers`.
 - Rule: For Chinese compound role phrases, include both the longest stable phrase and the final role word.
@@ -516,6 +532,8 @@ Overall judgment:
   Example: `Lira Coast refers to the individual named Lira Coast` is valid; do not force it into a project.
 - Rule: `definition` must not only repeat `who` or use a vague placeholder.
   Example: `Ridge handoff refers to the handoff for Ridge` is valid; `Ridge handoff is a named item` is not.
+- Rule: Do not write a circular definition that only restates `who`; non-person subjects must include a stable identity-boundary word or phrase from the source.
+  Example: `marble access checklist is the access checklist for marble` is valid; `marble access checklist is marble access checklist` is not.
 - Rule: `definition` must not include current state, result, blocker, owner value, or requirement content.
   Example: `Cloudridge settlement service refers to the settlement service for Cloudridge` is valid; `owner is Jules Wei` is not.
 - Rule: If `who` contains a number, serial label, or code, define what the whole numbered name is.
@@ -528,6 +546,8 @@ Overall judgment:
 Multi-subject and boundary rules:
 - Rule: When one input has several names, extract only names that are directly stated or queried.
   Example: if a meeting mentions `Slatecache service` but decides on `Alderport review`, extract `Alderport review`.
+- Rule: extract only subjects that carry independent durable facts; names that appear only as background, incidental mentions, or without an independent conclusion or new fact are not separate subjects.
+  Example: if a note incidentally mentions `Riverlane service` but the main conclusion is `Cairn rollout paused`, extract `Cairn rollout` only.
 - Rule: A longer name that denotes an independent lower-level object must be a separate subject when directly described.
   Example: if `Stoneport portal` works but `Stoneport message panel` is delayed, extract both names.
 - Rule: When a parent subject and a longer same-prefix child subject each have facts, do not fold the child into parent.
@@ -538,6 +558,8 @@ Multi-subject and boundary rules:
   Example: `Heron checklist: each ticket needs two signatures` belongs to `Heron checklist`.
 - Rule: A title can be the subject only when the title itself has an owner, state, id, or archival fact.
   Example: `Starling change record is maintained by Legal` can extract `Starling change record`.
+- Rule: document, briefing, email, or report titles are containers by default; extract the title itself only when the fact directly describes that title.
+  Example: `Monthly operations memo: Alder plan slipped` belongs to `Alder plan`, not `Monthly operations memo`.
 - Rule: Names appearing only in parent context, meeting context, asides, or locations are not separate subjects.
   Example: in `discussed Grove launch in Riverroom`, `Riverroom` is not the subject.
 - Rule: Phrases that only serve as another subject's condition, reason, attribute, or execution detail are not subjects.

@@ -214,6 +214,32 @@ def test_identity_profile_suites_score_definition_boundary_semantics() -> None:
     assert missing_cases == []
 
 
+def test_identity_profile_suites_do_not_expect_abbreviated_stable_qualifiers() -> None:
+    suite_paths = [
+        Path("memory/evals/prompt_cases/identity_profile_rules_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_rules_zh_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_rules_mixed_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_write_context_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_query_target_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_multi_subject_v1.json"),
+    ]
+    forbidden_abbreviations = {"doc"}
+    abbreviated = []
+
+    for suite_path in suite_paths:
+        suite = load_identity_extraction_suite(suite_path)
+        for case in suite["cases"]:
+            for expected in case.expected_identities:
+                qualifiers = expected.stable_qualifiers_any + expected.stable_qualifiers_all
+                abbreviated.extend(
+                    f"{suite_path.name}:{case.case_id}:{qualifier}"
+                    for qualifier in qualifiers
+                    if qualifier.lower() in forbidden_abbreviations
+                )
+
+    assert abbreviated == []
+
+
 def test_identity_profile_prompt_requires_definition_identity_boundary() -> None:
     zh_instructions = get_worker_instructions("identity_profile", system_language="zh")
     en_instructions = get_worker_instructions("identity_profile", system_language="en")

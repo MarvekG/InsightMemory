@@ -5,7 +5,13 @@ from insight_memory.evals.prompts import get_prompt_eval_instructions
 from insight_memory.services import prompt_eval_service as service_module
 from insight_memory.workers.llm_provider import LLMCallResult
 from insight_memory.workers.prompts import WORKER_INSTRUCTIONS, WORKER_INSTRUCTIONS_EN, get_worker_instructions
-from insight_memory.workers.schemas import IdentityDefinitionJudgeOutput, IdentityProfileExtractionOutput, WriteGateOutput
+from insight_memory.workers.schemas import (
+    IdentityDefinitionJudgeOutput,
+    IdentityProfileExtractionOutput,
+    ProfileWriterOutput,
+    QueryPlannerOutput,
+    WriteGateOutput,
+)
 from tests.utils import run_async
 
 
@@ -40,6 +46,16 @@ def test_identity_definition_judge_prompt_is_eval_only_and_chinese() -> None:
     assert "identity_definition_judge" not in WORKER_INSTRUCTIONS_EN
     assert "评估 actual_definition 是否语义满足 expected_definitions" in instructions
     assert "Evaluate whether actual_definition" not in instructions
+
+
+def test_identity_definition_judge_allows_person_name_definition_without_role() -> None:
+    instructions = get_prompt_eval_instructions("identity_definition_judge")
+
+    assert "纯人名" in instructions
+    assert "不要求额外职位、角色、团队或职责" in instructions
+    assert "周明" not in instructions
+    assert "陈岚" not in instructions
+    assert "Milo" not in instructions
 
 
 def test_identity_prompt_has_no_removed_type_classification_language() -> None:
@@ -105,6 +121,75 @@ def test_identity_definition_prompt_defines_subject_not_category() -> None:
     assert "不是给一个类别标签" in zh_instructions
     assert 'answers "what is this subject?"' in en_instructions
     assert "it is not a category label" in en_instructions
+
+
+def test_identity_prompt_requires_lowercase_and_source_qualifiers() -> None:
+    zh_instructions = get_worker_instructions("identity_profile", system_language="zh")
+    en_instructions = get_worker_instructions("identity_profile", system_language="en")
+
+    assert "所有 identity_profile 字符串字段都应输出为小写" in zh_instructions
+    assert "不要把 document 缩写成 doc" in zh_instructions
+    assert "稳定限定词应优先使用原文连续词或短语" in zh_instructions
+    assert "all identity_profile string fields must be lowercase" in en_instructions
+    assert "do not shorten document to doc" in en_instructions
+    assert "stable qualifiers should prefer contiguous source words or phrases" in en_instructions
+
+
+def test_identity_prompt_uses_abstract_rules_for_extraction_boundaries() -> None:
+    zh_instructions = get_worker_instructions("identity_profile", system_language="zh")
+    en_instructions = get_worker_instructions("identity_profile", system_language="en")
+
+    assert "只抽取有独立持久事实的主体" in zh_instructions
+    assert "文档、简报、邮件或报告标题默认是容器" in zh_instructions
+    assert "不要只写与 who 同义的循环定义" in zh_instructions
+    assert "extract only subjects that carry independent durable facts" in en_instructions
+    assert "document, briefing, email, or report titles are containers by default" in en_instructions
+    assert "Do not write a circular definition" in en_instructions
+
+
+def test_identity_profile_schema_lowercases_identity_fields_but_not_query_text() -> None:
+    output = QueryPlannerOutput.model_validate(
+        {
+            "query_gate_status": "passed",
+            "query_identity_profile_drafts": [
+                {
+                    "schema_version": 2,
+                    "draft_id": "d1",
+                    "who": "STP.N",
+                    "surface_forms": ["STP.N", "青岚结算服务"],
+                    "stable_qualifiers": ["API Contract", "服务"],
+                    "definition": "STP.N Is The Stock Or Market Object Named STP.N.",
+                    "query_text": "What does STP.N require next?",
+                }
+            ],
+            "query_rewrites": [],
+            "query_focus": {},
+        }
+    )
+
+    draft = output.query_identity_profile_drafts[0]
+    assert draft.who == "stp.n"
+    assert draft.surface_forms == ["stp.n", "青岚结算服务"]
+    assert draft.stable_qualifiers == ["api contract", "服务"]
+    assert draft.definition == "stp.n is the stock or market object named stp.n."
+    assert draft.query_text == "What does STP.N require next?"
+
+
+def test_profile_writer_schema_lowercases_identity_fields() -> None:
+    profile = ProfileWriterOutput.model_validate(
+        {
+            "schema_version": 2,
+            "who": "Ravel Import Service",
+            "surface_forms": ["Ravel Import Service", "青岚结算服务"],
+            "stable_qualifiers": ["Import Service", "服务"],
+            "definition": "Ravel Import Service Is The Import Service Related To Ravel.",
+        }
+    )
+
+    assert profile.who == "ravel import service"
+    assert profile.surface_forms == ["ravel import service", "青岚结算服务"]
+    assert profile.stable_qualifiers == ["import service", "服务"]
+    assert profile.definition == "ravel import service is the import service related to ravel."
 
 
 def test_identity_profile_schema_describes_definition_quality_rule() -> None:

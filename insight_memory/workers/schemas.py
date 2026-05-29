@@ -5,6 +5,36 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
+def _lower_text(value: object) -> object:
+    """将字符串转为小写，非字符串保持原值。
+
+    Args:
+        value: 待规范化的原始值。
+
+    Returns:
+        字符串小写结果；非字符串原样返回。
+    """
+
+    if isinstance(value, str):
+        return value.lower()
+    return value
+
+
+def _lower_text_list(value: object) -> object:
+    """将字符串列表中的每个元素转为小写。
+
+    Args:
+        value: 待规范化的原始列表值。
+
+    Returns:
+        字符串列表的小写结果；非列表原样返回。
+    """
+
+    if not isinstance(value, list):
+        return value
+    return [item.lower() if isinstance(item, str) else item for item in value]
+
+
 class IdentityProfileDraft(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -27,19 +57,26 @@ class IdentityProfileDraft(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def fix_schema_version(cls, value: object) -> object:
-        """在服务端固定 identity profile 结构版本。
+    def normalize_identity_profile_fields(cls, value: object) -> object:
+        """在服务端固定结构版本，并规范化 identity_profile 字符串字段。
 
         Args:
             value: LLM 输出的原始 identity profile draft。
 
         Returns:
-            补齐并固定 `schema_version=2` 的原始结构。
+            补齐结构版本且将 identity_profile 字符串字段转为小写后的原始结构。
         """
 
         if not isinstance(value, dict):
             return value
-        return {**value, "schema_version": 2}
+        return {
+            **value,
+            "schema_version": 2,
+            "who": _lower_text(value.get("who")),
+            "surface_forms": _lower_text_list(value.get("surface_forms")),
+            "stable_qualifiers": _lower_text_list(value.get("stable_qualifiers")),
+            "definition": _lower_text(value.get("definition")),
+        }
 
 
 class QueryIdentityProfileDraft(IdentityProfileDraft):
@@ -216,19 +253,26 @@ class ProfileWriterOutput(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def fix_schema_version(cls, value: object) -> object:
-        """在服务端固定完整 identity profile 结构版本。
+    def normalize_identity_profile_fields(cls, value: object) -> object:
+        """在服务端固定结构版本，并规范化完整 identity profile 字符串字段。
 
         Args:
             value: LLM 输出的原始 profile writer 结果。
 
         Returns:
-            补齐并固定 `schema_version=2` 的原始结构。
+            补齐结构版本且将 identity_profile 字符串字段转为小写后的原始结构。
         """
 
         if not isinstance(value, dict):
             return value
-        return {**value, "schema_version": 2}
+        return {
+            **value,
+            "schema_version": 2,
+            "who": _lower_text(value.get("who")),
+            "surface_forms": _lower_text_list(value.get("surface_forms")),
+            "stable_qualifiers": _lower_text_list(value.get("stable_qualifiers")),
+            "definition": _lower_text(value.get("definition")),
+        }
 
 
 class EdgeRelation(BaseModel):

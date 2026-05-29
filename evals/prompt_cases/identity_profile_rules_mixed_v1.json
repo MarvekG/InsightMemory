@@ -803,7 +803,7 @@
             "Rill custody docket"
           ],
           "stable_qualifiers_any": [
-            "doc"
+            "document"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2534,7 +2534,7 @@
             "Juniper quay docket"
           ],
           "stable_qualifiers_any": [
-            "doc"
+            "document"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2562,7 +2562,7 @@
             "Juniper quay docket"
           ],
           "stable_qualifiers_any": [
-            "doc"
+            "document"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3925,7 +3925,7 @@
             "Perigee survey docket"
           ],
           "stable_qualifiers_any": [
-            "doc"
+            "document"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4885,7 +4885,7 @@
             "Rill custody docket"
           ],
           "stable_qualifiers_any": [
-            "doc"
+            "document"
           ],
           "definition_required": true,
           "definition_semantics_any": [
