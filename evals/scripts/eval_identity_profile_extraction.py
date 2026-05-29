@@ -239,6 +239,7 @@ def _score_profile_fields(profile: dict[str, Any], expected: ExpectedIdentityPro
             expected_all=expected.definition_contains_all,
         )
     )
+    failures.extend(_score_definition_identity_boundary(profile=profile, expected=expected))
     return failures
 
 
@@ -303,6 +304,69 @@ def _has_generic_definition_placeholder(definition: str) -> bool:
         "concrete subject",
     )
     return any(placeholder in definition for placeholder in generic_placeholders)
+
+
+def _score_definition_identity_boundary(
+    *,
+    profile: dict[str, Any],
+    expected: ExpectedIdentityProfile,
+) -> list[str]:
+    """检查 definition 是否覆盖评测期望中的稳定身份边界。
+
+    Args:
+        profile: LLM 返回的单个 identity_profile。
+        expected: 测试用例中对该 identity_profile 的期望。
+
+    Returns:
+        失败原因列表；没有失败时返回空列表。
+    """
+
+    if not expected.definition_required:
+        return []
+    definition = _normalize_text(profile.get("definition"))
+    if not definition:
+        return []
+    boundary_text = _remove_subject_mentions_from_definition(definition=definition, profile=profile, expected=expected)
+
+    expected_all = [_normalize_text(value) for value in expected.stable_qualifiers_all if _normalize_text(value)]
+    missing_all = [value for value in expected_all if value not in boundary_text]
+    if missing_all:
+        return [f"definition missing identity boundary fragments {missing_all!r}"]
+
+    expected_any = [_normalize_text(value) for value in expected.stable_qualifiers_any if _normalize_text(value)]
+    if expected_any and not any(value in boundary_text for value in expected_any):
+        return [f"definition missing identity boundary from {expected.stable_qualifiers_any!r}"]
+    return []
+
+
+def _remove_subject_mentions_from_definition(
+    *,
+    definition: str,
+    profile: dict[str, Any],
+    expected: ExpectedIdentityProfile,
+) -> str:
+    """从 definition 中去掉主体名，避免只靠重复 who 满足定义边界。
+
+    Args:
+        definition: 已标准化的 definition 文本。
+        profile: LLM 返回的单个 identity_profile。
+        expected: 测试用例中对该 identity_profile 的期望。
+
+    Returns:
+        去掉主体名和原始称呼后的 definition 文本。
+    """
+
+    subject_mentions = {
+        _normalize_text(profile.get("who")),
+        *(_normalize_text(value) for value in _list_field(profile, "surface_forms")),
+        *(_normalize_text(value) for value in expected.who_any),
+        *(_normalize_text(value) for value in expected.surface_forms_any),
+        *(_normalize_text(value) for value in expected.surface_forms_all),
+    }
+    boundary_text = definition
+    for mention in sorted((value for value in subject_mentions if value), key=len, reverse=True):
+        boundary_text = boundary_text.replace(mention, " ")
+    return _normalize_text(boundary_text)
 
 
 def _score_surface_forms_field(

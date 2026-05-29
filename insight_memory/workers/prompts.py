@@ -79,11 +79,17 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
 `definition` 字段规则：
 - 规则：`definition` 要回答“这个主体是什么”，用自然语言定义 `who`。
   例：“碧湾发布公告指碧湾相关的发布公告”可以；“要求补齐审批链”不可以。
+- 规则：`definition` 是身份边界说明，要说明 `who` 是哪一类稳定主体，并帮助区分同名或同前缀主体。
+  例：“云脊结算服务”定义为“云脊相关的结算服务”；“云脊结算手册”定义为“云脊相关的结算手册”。
 - 规则：`definition` 是对这个主体本身下定义，不是给一个类别标签。
   例：“枫桥上线计划指枫桥相关的上线计划”可以；只写“命名上线计划”不可以。
 - 规则：`definition` 要保留能识别该主体的边界，可包含 `who` 或其关键名词。
   例：“孟澜指名为孟澜的个人”可以；只写“某个人”不可以。
-- 规则：不用强行写角色或用途；只要清楚定义这个主体是什么即可。
+- 规则：如果 `who` 含角色词、工件词或主体类型词，`definition` 必须保留并解释这个身份边界。
+  例：“墨池运营面板”定义为“墨池相关的运营面板”，不要定义为“墨池相关对象”。
+- 规则：只有当 `who` 是人名、短代码或纯专名且没有可解释角色词时，才允许用“名为 X 的个人/代码/对象”这类定义。
+  例：“璃岸指名为璃岸的个人”可以；“璃岸上线计划”不能只写“名为璃岸上线计划的对象”。
+- 规则：不用强行发明角色或用途；只要清楚定义这个主体是什么即可。
   例：“璃岸指名为璃岸的个人”可以；不要硬写成项目或文档。
 - 规则：`definition` 不能只重复 `who`，也不能用空泛占位词。
   例：“霁川交付指霁川相关的交付事项”可以；只写“霁川交付这个对象”不可以。
@@ -496,11 +502,17 @@ Overall judgment:
 `definition` field rules:
 - Rule: `definition` answers "what is this subject?" and defines `who` in natural language.
   Example: `Jadebay release bulletin refers to the release bulletin for Jadebay` is valid; `requires approval chain` is not.
+- Rule: `definition` is an identity-boundary sentence. It must explain what stable kind of subject `who` is and help distinguish same-name or same-prefix subjects.
+  Example: `Cloudridge settlement service` is the settlement service for Cloudridge; `Cloudridge settlement handbook` is the settlement handbook for Cloudridge.
 - Rule: `definition` defines the subject itself; it is not a category label.
   Example: `Maplebridge launch plan refers to the launch plan for Maplebridge` is valid; only `named launch plan` is not.
 - Rule: `definition` must preserve enough identity boundary to identify that subject.
   Example: `Mira Lin refers to the individual named Mira Lin` is valid; only `a person` is not.
-- Rule: Do not force a role or purpose; define what the subject is.
+- Rule: If `who` contains a role, artifact, or subject-type word, the definition must preserve and explain that identity boundary.
+  Example: `Inkpool operations panel` should be defined as the operations panel for Inkpool, not as an Inkpool item.
+- Rule: Use fallback definitions like `the object named X` only for people, short codes, or pure proper names with no interpretable role word.
+  Example: `Lira Coast refers to the individual named Lira Coast` is valid; `Lira Coast launch plan` must not be only `the object named Lira Coast launch plan`.
+- Rule: Do not invent a role or purpose; define what the subject is.
   Example: `Lira Coast refers to the individual named Lira Coast` is valid; do not force it into a project.
 - Rule: `definition` must not only repeat `who` or use a vague placeholder.
   Example: `Ridge handoff refers to the handoff for Ridge` is valid; `Ridge handoff is a named item` is not.

@@ -188,6 +188,18 @@ def test_identity_profile_prompt_case_suites_are_split_by_focus() -> None:
         }
 
 
+def test_identity_profile_prompt_requires_definition_identity_boundary() -> None:
+    zh_instructions = get_worker_instructions("identity_profile", system_language="zh")
+    en_instructions = get_worker_instructions("identity_profile", system_language="en")
+
+    assert "身份边界说明" in zh_instructions
+    assert "同名或同前缀主体" in zh_instructions
+    assert "只有当 `who` 是人名、短代码或纯专名" in zh_instructions
+    assert "identity-boundary sentence" in en_instructions
+    assert "same-name or same-prefix subjects" in en_instructions
+    assert "only for people, short codes, or pure proper names" in en_instructions
+
+
 def test_score_identity_extraction_case_passes_write_gate_output() -> None:
     case = IdentityExtractionCase(
         case_id="missing_item_owner",
@@ -500,6 +512,43 @@ def test_score_identity_extraction_case_fails_weak_definition_quality() -> None:
     assert any("definition must define who" in failure for failure in generic_definition_result["failures"])
     assert generic_repeat_result["passed"] is False
     assert any("definition must define who" in failure for failure in generic_repeat_result["failures"])
+
+
+def test_score_identity_extraction_case_requires_definition_boundary_fragment() -> None:
+    case = IdentityExtractionCase(
+        case_id="definition_boundary",
+        category="boundary",
+        prompt_key="identity_profile",
+        payload={"context": "x"},
+        expected_gate_status="passed",
+        expected_identities=[
+            ExpectedIdentityProfile(
+                who_any=["Cedar QA policy"],
+                stable_qualifiers_any=["QA policy", "policy"],
+                definition_required=True,
+            )
+        ],
+    )
+
+    result = score_identity_extraction_case(
+        case,
+        {
+            "status": "ok",
+            "output": {
+                "identity_gate_status": "passed",
+                "identity_profile_drafts": [
+                    {
+                        "who": "Cedar QA policy",
+                        "stable_qualifiers": ["policy"],
+                        "definition": "Cedar QA policy is a named Cedar artifact.",
+                    },
+                ],
+            },
+        },
+    )
+
+    assert result["passed"] is False
+    assert any("definition missing identity boundary" in failure for failure in result["failures"])
 
 
 def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:
