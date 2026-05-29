@@ -20,8 +20,7 @@
             "松岭上线计划"
           ],
           "stable_qualifiers_any": [
-            "上线计划",
-            "计划"
+            "上线计划"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -135,7 +134,7 @@
             "青岚结算服务"
           ],
           "stable_qualifiers_any": [
-            "服务"
+            "结算服务"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -254,7 +253,7 @@
             "南仓工单甲十七"
           ],
           "stable_qualifiers_any": [
-            "工单"
+            "工单甲十七"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -285,7 +284,6 @@
             "白塔换班流程"
           ],
           "stable_qualifiers_any": [
-            "流程",
             "换班流程"
           ],
           "definition_required": true,
@@ -317,7 +315,7 @@
             "霞港交接手册"
           ],
           "stable_qualifiers_any": [
-            "手册"
+            "交接手册"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -348,7 +346,6 @@
             "春谷防守策略"
           ],
           "stable_qualifiers_any": [
-            "策略",
             "防守策略"
           ],
           "definition_required": true,
@@ -380,8 +377,7 @@
             "松岭上线计划"
           ],
           "stable_qualifiers_any": [
-            "上线计划",
-            "计划"
+            "上线计划"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -459,7 +455,7 @@
             "青岚结算服务"
           ],
           "stable_qualifiers_any": [
-            "服务"
+            "结算服务"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -567,7 +563,6 @@
             "白塔换班流程"
           ],
           "stable_qualifiers_any": [
-            "流程",
             "换班流程"
           ],
           "definition_required": true,
@@ -626,7 +621,7 @@
             "青竹迁移清单"
           ],
           "stable_qualifiers_any": [
-            "清单"
+            "迁移清单"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -656,7 +651,7 @@
             "南仓工单甲十七"
           ],
           "stable_qualifiers_any": [
-            "工单"
+            "工单甲十七"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -683,7 +678,6 @@
             "春谷防守策略"
           ],
           "stable_qualifiers_any": [
-            "策略",
             "防守策略"
           ],
           "definition_required": true,
@@ -714,7 +708,6 @@
             "青竹迁移计划"
           ],
           "stable_qualifiers_any": [
-            "计划",
             "迁移计划"
           ],
           "definition_required": true,
@@ -730,7 +723,7 @@
             "青竹迁移清单"
           ],
           "stable_qualifiers_any": [
-            "清单"
+            "迁移清单"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -745,7 +738,7 @@
             "青竹迁移手册"
           ],
           "stable_qualifiers_any": [
-            "手册"
+            "迁移手册"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -777,7 +770,6 @@
             "霜河发布流程"
           ],
           "stable_qualifiers_any": [
-            "流程",
             "发布流程"
           ],
           "definition_required": true,
@@ -793,7 +785,6 @@
             "霜河发布公告"
           ],
           "stable_qualifiers_any": [
-            "公告",
             "发布公告"
           ],
           "definition_required": true,
@@ -928,7 +919,6 @@
             "海岳调研纪要"
           ],
           "stable_qualifiers_any": [
-            "纪要",
             "调研纪要"
           ],
           "definition_required": true,
@@ -1006,7 +996,6 @@
             "春谷防守策略"
           ],
           "stable_qualifiers_any": [
-            "策略",
             "防守策略"
           ],
           "definition_required": true,
@@ -1022,7 +1011,6 @@
             "春谷风控手册"
           ],
           "stable_qualifiers_any": [
-            "手册",
             "风控手册"
           ],
           "definition_required": true,
@@ -1070,7 +1058,6 @@
             "槐庭整改工单"
           ],
           "stable_qualifiers_any": [
-            "工单",
             "整改工单"
           ],
           "definition_required": true,

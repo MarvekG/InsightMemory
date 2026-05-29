@@ -26,7 +26,7 @@ identity_profile 只描述主体是谁，不描述主体发生了什么。
 从属提及归属规则：
 - 当整句主要说明 X 的状态、决定、阻塞、目标或要求，而 Y 只是原因、缺口、附件、材料、前置条件、依赖、输入输出或要求项时，主体是 X，Y 留在事实内容里。
   例：“棠湾交付包无法提交，因为封存确认页还少签章”，主体是“棠湾交付包”，不是“封存确认页”。
-- 从属对象即使带有缺失、未完成、未提交、未签名、可用性或完整性状态，也不因此拥有独立身份；只有文本直接说明或询问它自己的负责人、规则、生命周期、版本、职责、状态或决定时，才把它建主体。
+- 从属对象即使带有缺失、未完成、未提交、未签名、可用性或完整性状态，也不因此拥有独立身份；只有事实直接落在它自身的负责人、规则、生命周期、版本、职责或独立状态/决定上，而不是作为 X 的条件或缺口时，才把它建主体。
   例：“封存确认页由文控组维护？”这时“封存确认页”可作查询主体。
 - 命名规则、手册、清单、制度、公告或记录本身陈述规则时，它可以是主体；规则正文中被约束、被引用或被要求提供的对象默认不是主体。
   例：“澄湾准入手册要求候选包附备案页”，主体是“澄湾准入手册”，不是“候选包”或“备案页”。
@@ -36,9 +36,9 @@ identity_profile 只描述主体是谁，不描述主体发生了什么。
   例：“月度摘要：柏港计划延期”主体是“柏港计划”；“柏港交接记录由法务维护”主体是“柏港交接记录”。
 
 主体边界：
-- `who` 必须保留完整命名短语和区分身份的角色词，不要拆成裸名称或泛化描述；同前缀不同角色的主体不能合并。
+- `who` 必须保留完整命名短语和区分身份的角色词，不要拆成裸名称或泛化描述；但个人的偏好、习惯或要求归属个人名，不把属性词并入主体；同前缀不同角色的主体不能合并。
   例：“云脊结算服务”和“云脊结算手册”是两个主体，不要合并成“云脊结算”。
-- 父主体和更长同前缀子主体各自有事实时，分别抽取；更长名称只在自己被直接描述时才单独成主体。
+- 父主体和更长同前缀子主体各自有事实时，分别抽取；更长名称被直接描述时单独成主体，不要把子主体状态合并进父主体定义。
   例：“岚河平台可登录；岚河平台审计台超时”，两个主体都抽取。
 - 表达历史、当前、最新、阶段、轮次或版本的记录标记只限定记忆内容；同一命名主体的历史和当前记录使用同一个 identity_profile。
   例：“南枝策略之前宽松、当前收紧”，主体仍是“南枝策略”。
@@ -50,10 +50,10 @@ identity_profile 只描述主体是谁，不描述主体发生了什么。
   例：“枫桥上线计划当前卡在回归窗口”的 `who` 写“枫桥上线计划”。
 - `surface_forms`：只能使用输入或查询原文中能无歧义指向同一主体的完整称呼；不要发明别名，不要把记录范围标记或共享短码强行加入。
   例：“榆岭交接单第四轮”保留“榆岭交接单”，不是带轮次的完整短语。
-- `stable_qualifiers`：只写来自 `who` 或 `surface_forms` 的短稳定身份边界词，用于区分同名或同前缀主体；不要从 `definition` 推断，不写状态、事实摘要、记录标记或句子。
-  例：“青石 access document”可放“access document”和“document”，不要把 document 缩写成 doc。
-- 多词或复合主体优先保留最长连续身份边界短语，再保留末尾角色词；没有角色限定词的唯一名称、纯人名或短代码可以为空。
-  例：“market alert endpoint”放“alert endpoint”和“endpoint”；“孟澜偏好周一汇总”可不放限定词。
+- `stable_qualifiers`：只写一个来自 `who` 或 `surface_forms`、短于完整 `who` 的最长连续角色/类型边界短语，用于区分同名或同前缀主体；不要从 `definition` 推断，不写状态、事实摘要、记录标记或句子。
+  例：“青石 access document”只放“access document”，不要放完整主体或缩写成 doc。
+- 多词或复合主体只保留最长角色/类型边界短语；没有角色限定词的唯一名称、纯人名或短代码可以为空。
+  例：“market alert endpoint”只放“alert endpoint”；“孟澜偏好周一看周报”的主体是“孟澜”，限定词可为空。
 - `definition` 要回答“这个主体是什么”，用自然语言解释主体本身和身份边界；不要只重复 `who`，不要写空泛占位词。
   例：“碧湾发布公告指碧湾相关的发布公告”可以；“碧湾发布公告这个对象”不可以。
 - `definition` 不写这条记忆里的状态、结果、阻塞、负责人值、要求内容或当前变化；不要为了定义主体而发明原文没有支持的用途。
@@ -374,7 +374,7 @@ Subject priority:
 Subordinate mention ownership rules:
 - When the full sentence mainly describes X's state, decision, blocker, target, or requirement, and Y is only a reason, gap, attachment, material, prerequisite, dependency, input/output, or required item, X is the subject and Y stays in the fact content.
   Example: `Maple delivery packet cannot be submitted because the sealing confirmation page lacks signatures` belongs to `Maple delivery packet`, not `sealing confirmation page`.
-- A subordinate item does not become an independent identity only because it has missing, incomplete, unavailable, unsigned, or unsubmitted state. Create Y only when the text directly states or asks about Y's own owner, rule, lifecycle, version, responsibility, state, or decision.
+- A subordinate item does not become an independent identity only because it has missing, incomplete, unavailable, unsigned, or unsubmitted state. Create Y only when the fact lands directly on Y's own owner, rule, lifecycle, version, responsibility, or independent state/decision, not when Y is a condition or gap for X.
   Example: `Which team maintains the sealing confirmation page?` can make `sealing confirmation page` the query subject.
 - A named rule, handbook, checklist, policy, bulletin, or record can be the subject when it states a rule. Objects constrained, cited, or required inside its rule body are not subjects by default.
   Example: `Clearbay admission handbook says candidate packets need a filing page` belongs to `Clearbay admission handbook`, not `candidate packets` or `filing page`.
@@ -384,9 +384,9 @@ Subordinate mention ownership rules:
   Example: `Monthly summary: Alder plan slipped` belongs to `Alder plan`; `Alder handover record is maintained by Legal` belongs to `Alder handover record`.
 
 Subject boundaries:
-- `who` must keep the complete named phrase and role words that separate identities. Do not split a subject into a bare name or generic description; same-prefix subjects with different roles must remain separate.
+- `who` must keep the complete named phrase and role words that separate identities. Do not split a subject into a bare name or generic description; a person's own preference, habit, or requirement belongs to the person name and should not absorb the property word; same-prefix subjects with different roles must remain separate.
   Example: `Cloudridge settlement service` and `Cloudridge settlement handbook` are different subjects, not one `Cloudridge settlement` subject.
-- If a parent subject and a longer same-prefix child subject each have facts, extract both. A longer name becomes separate only when it is directly described.
+- If a parent subject and a longer same-prefix child subject each have facts, extract both. A longer name becomes separate when it is directly described; do not fold child-subject state into the parent definition.
   Example: `Mistvale platform works; Mistvale platform audit panel times out` extracts both subjects.
 - Historical, current, latest, phase, round, or version wording limits memory content. Historical and current records for the same named subject use the same identity_profile.
   Example: `Southbranch policy was loose before but is stricter now` still belongs to `Southbranch policy`.
@@ -398,10 +398,10 @@ Field rules:
   Example: for `Maplebridge launch plan waits for regression window`, write `Maplebridge launch plan`.
 - `surface_forms`: use only complete source mentions from the input or query that unambiguously point to the same subject. Do not invent aliases, include record-scope markers, or add shared short codes unless the context uses them as unambiguous references.
   Example: for `Elm handover record round four`, keep `Elm handover record`, not the phrase with the round marker.
-- `stable_qualifiers`: use short stable identity-boundary words from `who` or `surface_forms` to distinguish same-name or same-prefix subjects. Do not infer them from `definition`, and do not include states, fact summaries, record markers, or sentences.
-  Example: for `bluestone access document`, use `access document` and `document`; do not shorten document to doc.
-- For multi-word or compound subjects, prefer the longest contiguous identity-boundary phrase, then the final role noun. Unique names, pure person names, or short codes with no role word may have empty qualifiers.
-  Example: for `market alert endpoint`, include `alert endpoint` and `endpoint`; `Mira Lin prefers Monday summaries` may have no qualifier.
+- `stable_qualifiers`: use exactly one longest contiguous role/type boundary phrase from `who` or `surface_forms`, shorter than the full `who`, to distinguish same-name or same-prefix subjects. Do not infer it from `definition`, and do not include states, fact summaries, record markers, or sentences.
+  Example: for `bluestone access document`, use only `access document`; do not use the full subject or shorten it to doc.
+- For multi-word or compound subjects, keep only the longest role/type boundary phrase. Unique names, pure person names, or short codes with no role word may have empty qualifiers.
+  Example: for `market alert endpoint`, include only `alert endpoint`; for `mira lin prefers monday summaries`, the subject is `mira lin` and may have no qualifier.
 - `definition` answers "what is this subject?" in natural language and explains the subject itself and its identity boundary. Do not only repeat `who` or use a vague placeholder.
   Example: `Jadebay release bulletin refers to the release bulletin for Jadebay` is valid; `Jadebay release bulletin is a named item` is not.
 - `definition` must not include current state, result, blocker, owner value, requirement content, or time change from this memory. Do not invent an unsupported purpose just to define the subject.
