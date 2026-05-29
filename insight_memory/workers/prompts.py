@@ -51,19 +51,22 @@ identity_profile 只描述主体是谁，不描述主体发生了什么。
   例：“记录：柏溪权限制度；版本：当前；要求：延期必须单独审批”，主体是“柏溪权限制度”，不是“记录”或“版本”。
 
 从属提及归属规则：
-- 当整句主要说明 X 的状态、决定、阻塞、目标或要求，而 Y 只是原因、缺口、附件、材料、前置条件、依赖、输入输出或要求项时，主体是 X，Y 留在事实内容里；“直到/等待/因为 Y 补齐、签字、提交、可用”这类条件仍归属 X，不把 Y 建为主体。
+- 当整句主要说明 X 的状态、决定、阻塞、目标或要求，而 Y 只是原因、缺口、附件、材料、前置条件、依赖、输入输出、被治理类别或要求项时，主体是 X，Y 留在事实内容里；“直到/等待/因为 Y 补齐、签字、提交、可用”这类条件仍归属 X，不把 Y 建为主体。
   例：“棠湾交付包无法提交，因为封存确认页还少签章”，主体是“棠湾交付包”，不是“封存确认页”。
   例：“松岭切换计划不能开始，因为审批截图缺失”，主体是“松岭切换计划”，不是“审批截图”。
   例：“柏川复盘会决定暂缓归档，直到封存确认页补齐主管签章”，主体是“柏川复盘会”，不是“封存确认页”。
-- 从属对象即使带有缺失、未完成、未提交、未签名、可用性或完整性状态，也不因此拥有独立身份；只有事实直接落在它自身的负责人、规则、生命周期、版本、职责或独立状态/决定上，而不是作为 X 的条件或缺口时，才把它建主体；负责人值仍只是事实内容，不是被建的主体。
+- 从属对象即使带有缺失、未完成、未提交、未签名、可用性或完整性状态，也不因此拥有独立身份；更正说明中“实际缺少的是 Y，不是 Z”里的 Y/Z 也是 X 的缺口值，不是主体。只有事实直接落在它自身的负责人、规则、生命周期、版本、职责或独立状态/决定上，而不是作为 X 的条件或缺口时，才把它建主体；负责人值仍只是事实内容，不是被建的主体。
   例：“封存确认页当前版本是什么？”这时“封存确认页”可作查询主体。
   例：“审批截图当前版本已冻结”，这时“审批截图”可作主体。
-- 命名规则、手册、清单、制度、公告或记录本身陈述规则时，它可以是主体；规则正文中被约束、被引用或被要求提供的对象默认不是主体。
+  例：“青羽归档夹更正：当前实际缺少的是湾口通行页，不是旧收据”，主体是“青羽归档夹”，不是“湾口通行页”或“旧收据”。
+- 命名规则、手册、清单、制度、公告或记录本身陈述规则时，它可以是主体；规则正文中 “所有/每个/all/every Y 必须/需要/include/provide Z” 里的 Y 是被治理类别，Z 是要求项，默认都不是主体；即使同一个 packet、form、folio、slip、说明页、材料包等要求项同时出现在另一个主体的缺口和治理工件的规则正文中，也只是连接事实，不因此独立建主体。
   例：“澄湾准入手册要求候选包附备案页”，主体是“澄湾准入手册”，不是“候选包”或“备案页”。
   例：“栎港巡检制度要求夜班补设备照片”，主体是“栎港巡检制度”，不是“夜班”或“设备照片”。
-- 如果某个名称只是在交代场景、来源、属性值、范围限定或顺带信息，没有承接自己的独立持久事实，不单独建主体。
+  例：“岚溪登记册要求所有采样申请归档前补齐样本托管页”，主体是“岚溪登记册”，不是“采样申请”或“样本托管页”。
+- 如果某个名称只是在交代场景、来源、属性值、范围限定或顺带信息，没有承接自己的独立持久事实，不单独建主体；文本明确说某个顺带对象只是背景、没有形成可保存结论或没有独立结论时，即使它带有近期活动状态，也不要抽取。
   例：“北岸值班记录：松林发布暂停”，主体是“松林发布”，不是“北岸值班记录”。
   例：“周会备注：云台迁移仍等回滚说明”，主体是“云台迁移”，不是“周会备注”。
+  例：“旁听记录提到雾湾通知通道最近在排班试验，但只是背景，没有形成可保存结论；主结论是蓝桥切换计划继续等待审批”，主体是“蓝桥切换计划”，不是“雾湾通知通道”。
 - 当一个名称只是承载后续内容的来源或容器时，不因出现在开头就成为主体；只有事实直接落在这个名称本身时，才把它作为主体。
   例：“月度摘要：柏港计划延期”，主体是“柏港计划”，不是“月度摘要”。
   例：“柏港交接记录需要季度归档”，主体是“柏港交接记录”。
@@ -86,13 +89,14 @@ identity_profile 只描述主体是谁，不描述主体发生了什么。
 - `who`：写完整主体名词，不写状态、动作、原因、阻塞、结论、指标、时间变化、疑问词或助动词。
   例：“枫桥上线计划当前卡在回归窗口”的 `who` 写“枫桥上线计划”。
   例：“为什么河杉调拨清单还没关闭？”的 `who` 写“河杉调拨清单”。
-- `surface_forms`：只能使用输入或查询原文中能无歧义指向同一主体的完整称呼；不要发明别名，不要把记录范围标记或共享短码强行加入。
+- `surface_forms`：只能使用输入或查询原文中能无歧义指向同一主体的完整称呼；不要发明别名，不要抽取完整名称内部的局部片段，不要把记录范围标记或共享短码强行加入。若同一个短码、编号或片段同时出现在两个不同完整主体中，不能把该短码单独作为任何一方的 surface form。
   例：“榆岭交接单第四轮”保留“榆岭交接单”，不是带轮次的完整短语。
   例：“最新的石泉回滚说明”保留“石泉回滚说明”，不是“最新的石泉回滚说明”。
-- `stable_qualifiers`：只写一个来自 `who` 或 `surface_forms`、短于完整 `who` 的最长连续角色/类型边界短语，用于区分同名或同前缀主体；不要从 `definition` 推断，不写状态、事实摘要、记录标记或句子。中文复合类型词不能缩成过泛的尾词，也不要漏掉团队、服务、流程、计划、制度、手册、清单、看板、工单等角色/类型边界。
+  例：“archive box q-31”和“q-31 visitor booking”同时出现时，前者的 `surface_forms` 不要加入单独的“q-31”。
+- `stable_qualifiers`：只写一个来自 `who` 或 `surface_forms`、短于完整 `who` 的最长连续角色/类型边界短语，用于区分同名或同前缀主体；不要从 `definition` 推断，不写状态、事实摘要、记录标记或句子。中文复合类型词不能缩成过泛的尾词，也不要漏掉团队、服务、流程、计划、制度、手册、清单、看板、门户、工单、rollout 等角色/类型边界；如果候选短语等于完整 `who`，必须缩短到仍能表示角色/类型的词。仅由领域描述词加角色词组成的两词英文主体，限定词取角色词，不复制完整主体。
   例：“柏溪权限回收制度”只放“权限回收制度”，不要缩成“制度”。
   例：“北岬巡检运维组”只放“巡检运维组”，不要漏写限定词或缩成“组”。
-  例：“苍岭 release checklist”只放“release checklist”，不要放完整主体或缩写成 checklist。
+  例：“plover rollout”只放“rollout”；“harbor archive box t-8”只放“archive box”；“data sync service”只放“sync service”，不要缩成“service”。
 - 多词或复合主体只保留最长角色/类型边界短语；没有角色限定词的唯一名称、纯人名或短代码可以为空。
   例：“market alert endpoint”只放“alert endpoint”。
   例：“孟澜偏好周一看周报”的主体是“孟澜”，限定词可为空。
@@ -442,19 +446,22 @@ Structured record subject rules:
   Example: `record: Cypress Creek access policy; version: current; requirement: delay needs separate approval` belongs to `Cypress Creek access policy`, not `record` or `version`.
 
 Subordinate mention ownership rules:
-- When the full sentence mainly describes X's state, decision, blocker, target, or requirement, and Y is only a reason, gap, attachment, material, prerequisite, dependency, input/output, or required item, X is the subject and Y stays in the fact content. Conditions like `until/waiting for/because Y is completed, signed, submitted, or available` still belong to X; do not create Y as the subject.
+- When the full sentence mainly describes X's state, decision, blocker, target, or requirement, and Y is only a reason, gap, attachment, material, prerequisite, dependency, input/output, governed class, or required item, X is the subject and Y stays in the fact content. Conditions like `until/waiting for/because Y is completed, signed, submitted, or available` still belong to X; do not create Y as the subject.
   Example: `Maple delivery packet cannot be submitted because the sealing confirmation page lacks signatures` belongs to `Maple delivery packet`, not `sealing confirmation page`.
   Example: `Pine Ridge cutover plan cannot start because the approval screenshot is missing` belongs to `Pine Ridge cutover plan`, not `approval screenshot`.
   Example: `Brookfield review paused archiving until the sealing confirmation page gets manager signoff` belongs to `Brookfield review`, not `sealing confirmation page`.
-- A subordinate item does not become an independent identity only because it has missing, incomplete, unavailable, unsigned, or unsubmitted state. Create Y only when the fact lands directly on Y's own owner, rule, lifecycle, version, responsibility, or independent state/decision, not when Y is a condition or gap for X; the owner value is still fact content, not the created subject.
+- A subordinate item does not become an independent identity only because it has missing, incomplete, unavailable, unsigned, or unsubmitted state. In correction notes, `the actual missing item is Y, not Z` still makes Y/Z gap values for X, not subjects. Create Y only when the fact lands directly on Y's own owner, rule, lifecycle, version, responsibility, or independent state/decision, not when Y is a condition or gap for X; the owner value is still fact content, not the created subject.
   Example: `What is the current version of the sealing confirmation page?` can make `sealing confirmation page` the query subject.
   Example: `The approval screenshot version is now frozen` can make `approval screenshot` the subject.
-- A named rule, handbook, checklist, policy, bulletin, or record can be the subject when it states a rule. Objects constrained, cited, or required inside its rule body are not subjects by default.
+  Example: `Granite binder correction: the actual missing item is signed berth waiver, not the old receipt` belongs to `Granite binder`, not `signed berth waiver` or `old receipt`.
+- A named rule, handbook, checklist, policy, bulletin, or record can be the subject when it states a rule. In a rule body like `all/every Y must/needs to/include/provide Z`, Y is a governed class and Z is a required item; neither is a subject by default. Even if the same required packet, form, folio, slip, note page, or material bundle appears both as another subject's gap and inside a governing artifact's rule body, it remains connecting fact content rather than an independent subject.
   Example: `Clearbay admission handbook says candidate packets need a filing page` belongs to `Clearbay admission handbook`, not `candidate packets` or `filing page`.
   Example: `Oakport inspection policy requires night shifts to add equipment photos` belongs to `Oakport inspection policy`, not `night shifts` or `equipment photos`.
-- If a name only provides context, source, attribute value, scope boundary, or incidental information, and does not own an independent durable fact, do not create a separate subject for it.
+  Example: `Larkspur register requires every sampling request to include a custody folio before filing` belongs to `Larkspur register`, not `sampling request` or `custody folio`.
+- If a name only provides context, source, attribute value, scope boundary, or incidental information, and does not own an independent durable fact, do not create a separate subject for it. When the text explicitly says an incidental object is background, has no stored conclusion, or has no independent conclusion, do not extract it even if it carries recent activity wording.
   Example: `Northbank duty log: Cairn rollout paused` belongs to `Cairn rollout`, not `Northbank duty log`.
   Example: `Weekly note: Cloudtable migration still waits for rollback notes` belongs to `Cloudtable migration`, not `Weekly note`.
+  Example: `Observer notes mention Fogbay alert channel running schedule experiments, but only as background with no durable conclusion; the main conclusion is Bluebridge cutover still waits for approval` belongs to `Bluebridge cutover`, not `Fogbay alert channel`.
 - When a name only acts as the source or container for later content, it is not the subject merely because it appears first. Extract it only when the fact directly lands on that name itself.
   Example: `Monthly summary: Alder plan slipped` belongs to `Alder plan`, not `Monthly summary`.
   Example: `Alder handover record needs quarterly archiving` belongs to `Alder handover record`.
@@ -477,13 +484,14 @@ Field rules:
 - `who`: write the complete subject noun only. Do not include state, action, reason, blocker, conclusion, metric, time change, question word, or auxiliary.
   Example: for `Maplebridge launch plan waits for regression window`, write `Maplebridge launch plan`.
   Example: for `Why is Rivercedar transfer checklist still open?`, write `Rivercedar transfer checklist`.
-- `surface_forms`: use only complete source mentions from the input or query that unambiguously point to the same subject. Do not invent aliases, include record-scope markers, or add shared short codes unless the context uses them as unambiguous references.
+- `surface_forms`: use only complete source mentions from the input or query that unambiguously point to the same subject. Do not invent aliases, extract partial spans from inside a complete name, include record-scope markers, or add shared short codes unless the context uses them as unambiguous references. If the same short code, number, or fragment appears inside two different complete subjects, do not add that short code alone as a surface form for either subject.
   Example: for `Elm handover record round four`, keep `Elm handover record`, not the phrase with the round marker.
   Example: for `latest Stone Spring rollback note`, keep `Stone Spring rollback note`, not the phrase with `latest`.
-- `stable_qualifiers`: use exactly one longest contiguous role/type boundary phrase from `who` or `surface_forms`, shorter than the full `who`, to distinguish same-name or same-prefix subjects. Do not infer it from `definition`, and do not include states, fact summaries, record markers, or sentences. Do not collapse compound type phrases to an over-broad tail noun, and do not omit team, service, workflow, plan, policy, handbook, checklist, dashboard, ticket, or similar role/type boundaries.
+  Example: when `archive box q-31` and `q-31 visitor booking` both appear, do not add bare `q-31` to the surface forms of `archive box q-31`.
+- `stable_qualifiers`: use exactly one longest contiguous role/type boundary phrase from `who` or `surface_forms`, shorter than the full `who`, to distinguish same-name or same-prefix subjects. Do not infer it from `definition`, and do not include states, fact summaries, record markers, or sentences. Do not collapse compound type phrases to an over-broad tail noun, and do not omit team, service, workflow, rollout, plan, policy, handbook, checklist, dashboard, portal, ticket, or similar role/type boundaries. If the candidate phrase equals the full `who`, shorten it to a still-meaningful role/type word. For a two-word English subject made only of a domain descriptor plus a role noun, the qualifier is the role noun, not the full subject.
   Example: for `brookfield access retirement policy`, use only `access retirement policy`; do not shorten it to `policy`.
   Example: for `northbay inspection operations crew`, use only `inspection operations crew`; do not omit the qualifier or shorten it to `crew`.
-  Example: for `grayridge release checklist`, use only `release checklist`; do not use the full subject or shorten it to checklist.
+  Example: for `plover rollout`, use only `rollout`; for `harbor archive box t-8`, use only `archive box`; for `data sync service`, use only `sync service`, not `service`.
 - For multi-word or compound subjects, keep only the longest role/type boundary phrase. Unique names, pure person names, or short codes with no role word may have empty qualifiers.
   Example: for `market alert endpoint`, include only `alert endpoint`.
   Example: for `mira lin prefers monday summaries`, the subject is `mira lin` and may have no qualifier.
