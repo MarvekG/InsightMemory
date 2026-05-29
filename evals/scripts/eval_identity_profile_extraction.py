@@ -6,7 +6,7 @@ import json
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Awaitable, Callable
 from uuid import uuid4
 
 import httpx
@@ -17,6 +17,7 @@ MEMORY_ROOT = SCRIPT_DIR.parents[1]
 DEFAULT_BASE_URL = "http://127.0.0.1:8010"
 DEFAULT_CASES_PATH = MEMORY_ROOT / "evals" / "prompt_cases" / "identity_profile_rules_v1.json"
 DEFAULT_REPORT_DIR = MEMORY_ROOT / "evals" / "reports" / "identity_profile_extraction"
+DEFAULT_MAX_CONCURRENCY = 16
 
 
 @dataclass(slots=True)
@@ -124,6 +125,9 @@ class IdentityExtractionCase:
     expected_identities: list[ExpectedIdentityProfile] = field(default_factory=list)
     forbidden_identity_who: list[str] = field(default_factory=list)
     profile_count: int | None = None
+
+
+CaseRunner = Callable[[IdentityExtractionCase], Awaitable[dict[str, Any]]]
 
 
 def load_identity_extraction_suite(path: Path) -> dict[str, Any]:
@@ -684,18 +688,57 @@ async def _run_case(client: httpx.AsyncClient, case: IdentityExtractionCase) -> 
     )
 
 
+async def run_identity_extraction_cases(
+    cases: list[IdentityExtractionCase],
+    *,
+    run_case: CaseRunner,
+    max_concurrency: int = DEFAULT_MAX_CONCURRENCY,
+) -> list[dict[str, Any]]:
+    """按有界并发运行同一 identity_profile 套件内的用例。
+
+    Args:
+        cases: 需要执行的评测用例，返回结果会保持该顺序。
+        run_case: 执行单个用例的异步函数。
+        max_concurrency: 同时运行的最大用例数，默认 16。
+
+    Returns:
+        与输入用例顺序一致的用例结果列表。
+
+    Raises:
+        ValueError: `max_concurrency` 小于 1 时抛出。
+    """
+
+    if max_concurrency < 1:
+        raise ValueError("max_concurrency must be >= 1")
+
+    semaphore = asyncio.Semaphore(max_concurrency)
+
+    async def _run_guarded(index: int, case: IdentityExtractionCase) -> tuple[int, dict[str, Any]]:
+        async with semaphore:
+            return index, await run_case(case)
+
+    tasks = [asyncio.create_task(_run_guarded(index, case)) for index, case in enumerate(cases)]
+    results_by_index: dict[int, dict[str, Any]] = {}
+    for finished in asyncio.as_completed(tasks):
+        index, result = await finished
+        results_by_index[index] = result
+        status = "PASS" if result["passed"] else "FAIL"
+        print(f"Identity extraction case {status}: {result['case_id']}", flush=True)
+        for failure in result["failures"]:
+            print(f"  - {failure}", flush=True)
+
+    return [results_by_index[index] for index in range(len(cases))]
+
+
 async def _run(args: argparse.Namespace) -> int:
     suite = load_identity_extraction_suite(Path(args.cases))
     run_id = args.run_id or datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     async with httpx.AsyncClient(base_url=args.base_url, timeout=args.timeout_seconds) as client:
-        results = []
-        for case in suite["cases"]:
-            result = await _run_case(client, case)
-            results.append(result)
-            status = "PASS" if result["passed"] else "FAIL"
-            print(f"Identity extraction case {status}: {result['case_id']}", flush=True)
-            for failure in result["failures"]:
-                print(f"  - {failure}", flush=True)
+        results = await run_identity_extraction_cases(
+            suite["cases"],
+            run_case=lambda case: _run_case(client, case),
+            max_concurrency=args.max_concurrency,
+        )
 
     summary = summarize_results(results)
     report = {
@@ -728,7 +771,15 @@ def main() -> int:
     parser.add_argument("--output-dir", default=str(DEFAULT_REPORT_DIR), help="Directory for reports.")
     parser.add_argument("--run-id", default=None, help="Optional explicit run id.")
     parser.add_argument("--timeout-seconds", type=float, default=120.0, help="Per-request HTTP timeout.")
+    parser.add_argument(
+        "--max-concurrency",
+        type=int,
+        default=DEFAULT_MAX_CONCURRENCY,
+        help="Maximum number of cases to evaluate concurrently within one suite.",
+    )
     args = parser.parse_args()
+    if args.max_concurrency < 1:
+        parser.error("--max-concurrency must be >= 1")
     return asyncio.run(_run(args))
 
 

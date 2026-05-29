@@ -1,15 +1,18 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import re
 from pathlib import Path
 
 from memory.evals.scripts.eval_identity_profile_extraction import (
+    DEFAULT_MAX_CONCURRENCY,
     DefinitionSemanticJudgeResult,
     ExpectedIdentityProfile,
     HttpDefinitionSemanticJudge,
     IdentityExtractionCase,
     load_identity_extraction_suite,
+    run_identity_extraction_cases,
     score_identity_extraction_case,
     summarize_results,
     write_report_files,
@@ -758,6 +761,64 @@ def test_http_definition_semantic_judge_calls_prompt_eval_api() -> None:
     ]
     assert result.verdict == "pass"
     assert result.matched_expected == "Lanturn deployment is a deployment subject."
+
+
+def test_run_identity_extraction_cases_defaults_to_sixteen_concurrent_cases() -> None:
+    active = 0
+    max_active = 0
+
+    cases = [
+        IdentityExtractionCase(
+            case_id=f"case_{index}",
+            category="concurrency",
+            prompt_key="identity_profile",
+            payload={"context": f"subject {index}"},
+            expected_gate_status="passed",
+        )
+        for index in range(DEFAULT_MAX_CONCURRENCY + 4)
+    ]
+
+    async def fake_run_case(case: IdentityExtractionCase) -> dict:
+        nonlocal active, max_active
+        active += 1
+        max_active = max(max_active, active)
+        await asyncio.sleep(0.01)
+        active -= 1
+        return {"case_id": case.case_id, "passed": True, "failures": []}
+
+    results = run_async(run_identity_extraction_cases(cases, run_case=fake_run_case))
+
+    assert DEFAULT_MAX_CONCURRENCY == 16
+    assert max_active == DEFAULT_MAX_CONCURRENCY
+    assert [result["case_id"] for result in results] == [case.case_id for case in cases]
+
+
+def test_run_identity_extraction_cases_honors_explicit_concurrency() -> None:
+    active = 0
+    max_active = 0
+    cases = [
+        IdentityExtractionCase(
+            case_id=f"case_{index}",
+            category="concurrency",
+            prompt_key="identity_profile",
+            payload={"context": f"subject {index}"},
+            expected_gate_status="passed",
+        )
+        for index in range(5)
+    ]
+
+    async def fake_run_case(case: IdentityExtractionCase) -> dict:
+        nonlocal active, max_active
+        active += 1
+        max_active = max(max_active, active)
+        await asyncio.sleep(0.01)
+        active -= 1
+        return {"case_id": case.case_id, "passed": True, "failures": []}
+
+    results = run_async(run_identity_extraction_cases(cases, run_case=fake_run_case, max_concurrency=2))
+
+    assert max_active == 2
+    assert [result["case_id"] for result in results] == [case.case_id for case in cases]
 
 
 def test_score_identity_extraction_case_fails_extra_surface_forms() -> None:
