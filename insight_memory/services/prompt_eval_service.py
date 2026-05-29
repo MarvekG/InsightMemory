@@ -88,7 +88,7 @@ class PromptEvalService:
             "prompt_key": prompt_key,
             "model": call.model,
             "latency_ms": call.latency_ms,
-            "output": call.output_json,
+            "output": call.parsed.model_dump(mode="json"),
             "usage": {
                 "input_tokens": call.input_tokens,
                 "output_tokens": call.output_tokens,

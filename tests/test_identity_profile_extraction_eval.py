@@ -191,6 +191,41 @@ def test_identity_profile_prompt_case_suites_are_split_by_focus() -> None:
         }
 
 
+def test_identity_profile_split_suites_match_source_suite_expectations() -> None:
+    source_path = Path("memory/evals/prompt_cases/identity_profile_rules_mixed_v1.json")
+    split_paths = [
+        Path("memory/evals/prompt_cases/identity_profile_write_context_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_query_target_v1.json"),
+        Path("memory/evals/prompt_cases/identity_profile_multi_subject_v1.json"),
+    ]
+    source_cases = {
+        str(case["case_id"]): {
+            "expected_identities": case.get("expected_identities") or [],
+            "forbidden_identity_who": case.get("forbidden_identity_who") or [],
+            "profile_count": case.get("profile_count"),
+        }
+        for case in json.loads(source_path.read_text(encoding="utf-8"))["cases"]
+    }
+    mismatches = []
+
+    for split_path in split_paths:
+        split_cases = json.loads(split_path.read_text(encoding="utf-8"))["cases"]
+        for case in split_cases:
+            if case.get("source_suite") != "identity_profile_rules_mixed_v1":
+                continue
+            case_id = str(case["case_id"])
+            expected = source_cases[case_id]
+            actual = {
+                "expected_identities": case.get("expected_identities") or [],
+                "forbidden_identity_who": case.get("forbidden_identity_who") or [],
+                "profile_count": case.get("profile_count"),
+            }
+            if actual != expected:
+                mismatches.append(f"{split_path.name}:{case_id}")
+
+    assert mismatches == []
+
+
 def test_identity_profile_suites_score_definition_boundary_semantics() -> None:
     suite_paths = [
         Path("memory/evals/prompt_cases/identity_profile_rules_v1.json"),

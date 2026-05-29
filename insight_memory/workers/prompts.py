@@ -12,8 +12,8 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
 输出格式：所有 identity_profile 字符串字段都应输出为小写；中文字符小写后不变，英文、代码和混合文本需要统一小写。
 
 整体判断：
-- 规则：先读完整输入或查询，找主要承接这条记忆的命名名词。
-  例：“洛川巡检手册要求夜班复核”，主体是“洛川巡检手册”。
+- 规则：先读完整输入或查询，找所有承载独立持久事实的命名名词；只有一个时它就是主主体，多个时都抽取。
+  例：“洛川巡检手册要求夜班复核；青涧排期单改到周三”，主体是“洛川巡检手册”和“青涧排期单”。
 - 规则：不要先判断事实类型或写入价值；身份抽取只回答“属于谁”。
   例：“南枝策略已废弃旧阈值”，仍先抽取“南枝策略”。
 - 规则：只有完全没有可复用命名名词时，才拒绝身份抽取。
@@ -80,6 +80,10 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“墨池运营面板”的 `stable_qualifiers` 应包含“面板”。
 - 规则：若角色词后接编号、序号或代码，限定词要同时保留带编号短语和基础角色词。
   例：“鹤湾任务乙二”放“任务乙二”和“任务”。
+- 规则：主体类型词无论出现在 who 的开头、中间还是结尾，只要承担身份边界，都要放入 `stable_qualifiers`。
+  例：“Program Helios”放“program”；“Helios release program”放“release program”和“program”。
+- 规则：`stable_qualifiers` 可以是短词或短语；连续多个词共同构成身份边界时，优先保留完整短语，再保留末尾角色词。
+  例：“market alert endpoint”放“alert endpoint”和“endpoint”。
 
 `definition` 字段规则：
 - 规则：`definition` 要回答“这个主体是什么”，用自然语言定义 `who`。
@@ -110,15 +114,17 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“禾舟记录指名为禾舟记录的记录”可以；只写“禾舟记录这个对象”不可以。
 
 多主体和边界规则：
-- 规则：一条输入有多个名称时，只抽取被直接陈述或直接查询的名称。
-  例：“周会提到澜缓存服务，但柏港评审会决定延期”，只抽取“柏港评审会”。
+- 规则：一条输入有多个名称时，分别判断每个名称是否承载自己的独立持久事实；不要只因为一个名称在前面或标题里就忽略其他主体。
+  例：“周会提到澜缓存服务；柏港评审会决定延期”只抽取“柏港评审会”，因为澜缓存服务只是背景。
 - 规则：只抽取有独立持久事实的主体；背景提及、顺带提到、没有独立结论或没有新事实的名称不单独抽取。
   例：“顺带提到河湾服务，但主结论是松林发布暂停”，只抽取“松林发布”。
+- 规则：背景标签不能覆盖后文独立事实；如果一个名称某处只是背景，但另一处陈述它自己的属性、状态、职责、约束、目标或决定，则要抽取它。
+  例：“会议里顺带提到河湾服务。另确认河湾服务的维护窗口已迁到周三。”应抽取“河湾服务”。
 - 规则：更长名称代表独立下级对象且被直接描述时，必须单独成主体。
   例：“澜石门户正常，澜石门户消息台延迟”，两个名称都要抽取。
 - 规则：父主体和更长同前缀子主体各有事实时，不要把子主体折叠进父主体。
   例：“岚河平台可登录；岚河平台审计台超时”，要抽取两个主体。
-- 规则：多主体抽取时，每个被直接陈述且有独立状态、规则、负责人或要求的名称都要抽取。
+- 规则：多主体抽取时，每个被直接陈述且语义上拥有自己独立事实的名称都要抽取。
   例：“禾场计划延期；禾场手册改为双签”，两个都抽取。
 - 规则：标题行后面的内容若是在说明某命名对象的要求，主体仍是这个命名对象。
   例：“雁栖清单：每个工单要双签”归属“雁栖清单”。
@@ -130,14 +136,18 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“在沙河办公室讨论栖木发布”，主体不是“沙河办公室”。
 - 规则：只作为另一个主体的条件、原因、属性或执行细节的短语，不单独建主体。
   例：“南渡发布项目缺回滚说明”，主体是“南渡发布项目”，不是“回滚说明”。
+- 规则：一个名称只出现在另一个主体的规则正文、条件、依赖、材料、输入、输出或说明内容中，且没有自己的独立事实时，不单独建主体。
+  例：“蓝湾准入记录说明：所有候选包需要附备案页。”主体是“蓝湾准入记录”，不是“候选包”或“备案页”。
 - 规则：承担人的姓名或角色值是属性值，不是要单独建的主体。
   例：“鹭湾工单负责人是赵奕”，主体是“鹭湾工单”，不是“赵奕”。
-- 规则：如果 X 因 Y 缺失而不能推进，主体是 X；Y 是原因。
+- 规则：当事实谓词主要落在 X 上，而 Y 只是解释、约束、缺口、前置条件或要求内容时，主体是 X；Y 留在事实内容里。
   例：“岩庭上线因封板照片缺失暂停”，主体是“岩庭上线”。
-- 规则：只有文本直接说明 Y 自己的状态、规则、负责人、决定或查询时，才把 Y 建主体。
+- 规则：因果或前置条件从句中的从属对象即使带有可用性、完整性或提交状态，也不因此拥有独立身份；先判断整句主要在说明哪个主体不能推进、不能完成或需要满足条件。
+  例：“松岭交付不能进入验收，因为签收页仍未补齐”，主体是“松岭交付”，不是“签收页”。
+- 规则：只有文本语义上直接说明 Y 自己的属性、状态、职责、约束、目标、决定或查询时，才把 Y 建主体。
   例：“封板照片由何组维护？”这时“封板照片”才可以成为查询主体。
-- 规则：命名治理对象要求 X 补 Y 时，主体是这个治理对象。
-  例：“栖梧准入手册要求项目补值班表”，主体是“栖梧准入手册”。
+- 规则：当一个命名主体承载规则、说明或约束时，规则正文中被约束、被引用、被作为条件的对象不因被命名就单独成主体。
+  例：“栖梧准入手册说明：候选项目需提供值班表。”主体是“栖梧准入手册”，不是“候选项目”或“值班表”。
 - 规则：说明要查哪类记录的普通短语，不是主体名称。
   例：“771009.SZ 的最新分析笔记”主体是“771009.SZ”，不是“分析笔记”。
 - 规则：只有一段记录本身有独立标题、编号、治理职责或维护状态时，它才是主体。
@@ -146,6 +156,10 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“沧澜交接记录第二轮”仍归属“沧澜交接记录”。
 - 规则：同一主体的历史记录和当前记录，使用同一个 identity_profile。
   例：“南枝策略之前宽松、当前收紧”，主体仍是“南枝策略”。
+- 规则：共享编号、短码、代号或前缀不是同一主体的充分证据；完整命名短语的身份边界不同且各自有独立事实时，应拆成不同主体。
+  例：“Archive Box Q-31 已归档；Q-31 visitor tour 取消。”应抽取两个主体，而不是只建“Q-31”。
+- 规则：`surface_forms` 只保留能无歧义指向同一完整主体的原文称呼；共享短码不要单独作为某个主体的 surface form，除非上下文明确无歧义复指它。
+  例：“Archive Box Q-31”和“Q-31 visitor tour”共享 Q-31，但不要把“Q-31”单独放进前者的 surface forms。
 """.strip()
 
 
@@ -446,8 +460,8 @@ identity_profile records only who that noun is, not what happened to it.
 Output format: all identity_profile string fields must be lowercase; Chinese characters are unchanged by lowercase, while English, codes, and mixed text must be normalized to lowercase.
 
 Overall judgment:
-- Rule: Read the full input or query, then find the named noun that mainly owns this memory.
-  Example: `Lorcan inspection handbook requires night-shift review` belongs to `Lorcan inspection handbook`.
+- Rule: Read the full input or query, then find every named noun that carries an independent durable fact; if there is only one, it is the primary subject, and if there are several, extract them all.
+  Example: `Lorcan inspection handbook requires night-shift review; Cedar schedule moved to Wednesday` extracts both `Lorcan inspection handbook` and `Cedar schedule`.
 - Rule: Do not first judge fact type or write value; identity extraction only answers "who".
   Example: `Southbranch policy retired the old threshold` still extracts `Southbranch policy` first.
 - Rule: Reject identity extraction only when there is no reusable named noun.
@@ -514,6 +528,10 @@ Overall judgment:
   Example: `Inkpool operations panel` should include `panel`.
 - Rule: If a role word is followed by a number, serial label, or code, keep both the numbered role phrase and base role word.
   Example: for `Harbor task B2`, include both `task B2` and `task`.
+- Rule: any word or phrase that acts as the subject-type boundary must appear in `stable_qualifiers`, whether it appears at the start, middle, or end of `who`.
+  Example: for `Program Helios`, include `program`; for `Helios release program`, include `release program` and `program`.
+- Rule: `stable_qualifiers` can be short words or short phrases. When contiguous words together form the identity boundary, prefer the complete phrase first, then the final role noun.
+  Example: for `market alert endpoint`, include `alert endpoint` and `endpoint`.
 
 `definition` field rules:
 - Rule: `definition` answers "what is this subject?" and defines `who` in natural language.
@@ -544,15 +562,17 @@ Overall judgment:
   Example: `Harbor record refers to the record named Harbor record` is valid; `Harbor record is a named item` is not.
 
 Multi-subject and boundary rules:
-- Rule: When one input has several names, extract only names that are directly stated or queried.
-  Example: if a meeting mentions `Slatecache service` but decides on `Alderport review`, extract `Alderport review`.
+- Rule: When one input has several names, judge each name by whether it owns an independent durable fact; do not ignore other subjects just because one name appears first or in a title.
+  Example: if a meeting mentions `Slatecache service` but decides on `Alderport review`, extract `Alderport review` only because `Slatecache service` is only background.
 - Rule: extract only subjects that carry independent durable facts; names that appear only as background, incidental mentions, or without an independent conclusion or new fact are not separate subjects.
   Example: if a note incidentally mentions `Riverlane service` but the main conclusion is `Cairn rollout paused`, extract `Cairn rollout` only.
+- Rule: A background label must not override a later independent fact; if a name is only background in one place but elsewhere states that subject's own attribute, state, responsibility, constraint, goal, or decision, extract it.
+  Example: `The meeting briefly mentioned Riverlane service. Separately, Riverlane service's maintenance window moved to Wednesday.` should extract `Riverlane service`.
 - Rule: A longer name that denotes an independent lower-level object must be a separate subject when directly described.
   Example: if `Stoneport portal` works but `Stoneport message panel` is delayed, extract both names.
 - Rule: When a parent subject and a longer same-prefix child subject each have facts, do not fold the child into parent.
   Example: `Mistvale platform works; Mistvale platform audit panel times out` should extract both subjects.
-- Rule: In multi-subject extraction, extract every directly stated name with its own state, rule, owner, or requirement.
+- Rule: In multi-subject extraction, extract every directly stated name that semantically owns its own independent fact.
   Example: `Hayfield plan slipped; Hayfield handbook now requires dual signoff` extracts both.
 - Rule: If text after a titled line states requirements for a named object, that object remains the subject.
   Example: `Heron checklist: each ticket needs two signatures` belongs to `Heron checklist`.
@@ -564,14 +584,18 @@ Multi-subject and boundary rules:
   Example: in `discussed Grove launch in Riverroom`, `Riverroom` is not the subject.
 - Rule: Phrases that only serve as another subject's condition, reason, attribute, or execution detail are not subjects.
   Example: `Southford rollout lacks rollback memo` belongs to `Southford rollout`, not `rollback memo`.
+- Rule: If a named phrase appears only inside another subject's rule body, condition, dependency, material, input, output, or explanatory content, and has no independent fact of its own, do not make it a separate subject.
+  Example: `Bluebay admission record says every candidate packet needs a filing page` belongs to `Bluebay admission record`, not `candidate packet` or `filing page`.
 - Rule: Names or role values for responsible people are attributes, not separate subjects.
   Example: `Egret ticket owner is Jules Wei` belongs to `Egret ticket`, not `Jules Wei`.
-- Rule: If X cannot proceed because Y is missing, X is the subject and Y is the reason.
+- Rule: When the main predicate lands on X and Y is only an explanation, constraint, gap, prerequisite, or requirement content, X is the subject and Y stays inside the fact content.
   Example: `Ridgecourt launch paused because gate photo is missing` belongs to `Ridgecourt launch`.
-- Rule: Create a subject for Y only when the text directly describes Y's state, rule, owner, decision, or query.
+- Rule: A subordinate item inside a causal or prerequisite clause may carry availability, completeness, or submission state, but that does not make it an independent identity; first decide which subject the full sentence says cannot proceed, cannot complete, or must satisfy a condition.
+  Example: `Oakvale handoff cannot enter acceptance because the signoff page is still incomplete` belongs to `Oakvale handoff`, not `signoff page`.
+- Rule: Create a subject for Y only when the text semantically describes Y's own attribute, state, responsibility, constraint, goal, decision, or query.
   Example: `Which team maintains gate photo?` can make `gate photo` the query subject.
-- Rule: If a named governing object requires X to provide Y, that governing object is the subject.
-  Example: `Grove entry handbook requires projects to add the duty roster` belongs to `Grove entry handbook`.
+- Rule: When a named subject carries a rule, statement, or constraint, objects that are constrained, cited, or used as conditions inside that rule body are not separate subjects only because they are named.
+  Example: `Grove entry handbook says candidate projects must provide the duty roster` belongs to `Grove entry handbook`, not `candidate projects` or `duty roster`.
 - Rule: Plain phrases that only say what kind of record to retrieve are not subject names.
   Example: `latest analyst note for RQX.N` belongs to `RQX.N`, not `analyst note`.
 - Rule: A record-like text is the subject only when it has its own title, number, governance role, or state.
@@ -580,6 +604,10 @@ Multi-subject and boundary rules:
   Example: `Bluewater handover record round two` still belongs to `Bluewater handover record`.
 - Rule: Historical and current records for the same subject use the same identity_profile.
   Example: `Southbranch policy was loose before but is stricter now` still belongs to `Southbranch policy`.
+- Rule: Shared numbers, short codes, aliases, or prefixes are not sufficient evidence that two complete named phrases are the same subject; if their identity boundaries differ and each carries an independent fact, split them.
+  Example: `Archive Box Q-31 is filed; Q-31 visitor tour was canceled` extracts two subjects, not only `Q-31`.
+- Rule: `surface_forms` should keep only source mentions that unambiguously point to the same complete subject; do not add a shared short code as a surface form unless the context clearly uses it as an unambiguous reference to that subject.
+  Example: `Archive Box Q-31` and `Q-31 visitor tour` share Q-31, but do not put bare `Q-31` into the box subject's surface_forms.
 """.strip()
 
 

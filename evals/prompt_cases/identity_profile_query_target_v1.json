@@ -579,11 +579,12 @@
             "Juniper quay docket"
           ],
           "stable_qualifiers_any": [
-            "document"
+            "quay docket",
+            "docket"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Juniper quay docket is a doc subject named Juniper quay docket."
+            "Juniper quay docket is a quay docket subject named Juniper quay docket."
           ]
         }
       ],
@@ -608,11 +609,12 @@
             "Juniper quay docket"
           ],
           "stable_qualifiers_any": [
-            "document"
+            "quay docket",
+            "docket"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Juniper quay docket is a doc subject named Juniper quay docket."
+            "Juniper quay docket is a quay docket subject named Juniper quay docket."
           ]
         }
       ],
@@ -1072,11 +1074,12 @@
             "API Endpoint"
           ],
           "stable_qualifiers_any": [
-            "api"
+            "api endpoint",
+            "endpoint"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "API Endpoint is an api subject named API Endpoint."
+            "API Endpoint is an API endpoint subject named API Endpoint."
           ]
         }
       ],
@@ -1298,14 +1301,18 @@
       "expected_identities": [
         {
           "who_any": [
-            "Milo"
+            "Milo 的午餐账户"
           ],
           "surface_forms_all": [
-            "Milo"
+            "Milo 的午餐账户"
+          ],
+          "stable_qualifiers_any": [
+            "午餐账户",
+            "账户"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Milo is an individual subject named Milo."
+            "Milo 的午餐账户 is a lunch account subject associated with Milo."
           ]
         }
       ],
@@ -1388,11 +1395,11 @@
             "KiteWorks onboarding"
           ],
           "stable_qualifiers_any": [
-            "board"
+            "onboarding"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "KiteWorks onboarding is a board subject named KiteWorks onboarding."
+            "KiteWorks onboarding is an onboarding subject named KiteWorks onboarding."
           ]
         }
       ],
@@ -2020,11 +2027,12 @@
             "Perigee survey docket"
           ],
           "stable_qualifiers_any": [
-            "document"
+            "survey docket",
+            "docket"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Perigee survey docket is a doc subject named Perigee survey docket."
+            "Perigee survey docket is a survey docket subject named Perigee survey docket."
           ]
         }
       ],

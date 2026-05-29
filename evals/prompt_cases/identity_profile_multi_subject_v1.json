@@ -749,24 +749,9 @@
           "definition_semantics_any": [
             "Junebay bulletin is a bulletin subject named Junebay bulletin."
           ]
-        },
-        {
-          "who_any": [
-            "Junebay bulletin 最新补充"
-          ],
-          "surface_forms_all": [
-            "Junebay bulletin 最新补充"
-          ],
-          "stable_qualifiers_any": [
-            "bulletin"
-          ],
-          "definition_required": true,
-          "definition_semantics_any": [
-            "Junebay bulletin 最新补充 是名为 Junebay bulletin 最新补充 的bulletin主体。"
-          ]
         }
       ],
-      "profile_count": 2,
+      "profile_count": 1,
       "source_suite": "identity_profile_rules_mixed_v1"
     },
     {
@@ -1302,11 +1287,12 @@
             "Rill custody docket"
           ],
           "stable_qualifiers_any": [
-            "document"
+            "custody docket",
+            "docket"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Rill custody docket is a doc subject named Rill custody docket."
+            "Rill custody docket is a custody docket subject named Rill custody docket."
           ]
         },
         {
@@ -1405,11 +1391,12 @@
             "Orchid transfer project"
           ],
           "stable_qualifiers_any": [
-            "transfer"
+            "transfer project",
+            "project"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Orchid transfer project is a transfer subject named Orchid transfer project."
+            "Orchid transfer project is a transfer project subject named Orchid transfer project."
           ]
         },
         {
@@ -1488,17 +1475,17 @@
         },
         {
           "who_any": [
-            "Verdant handbook 规定所有 rollback note 必须附 incident"
+            "Verdant handbook"
           ],
           "surface_forms_all": [
-            "Verdant handbook 规定所有 rollback note 必须附 incident"
+            "Verdant handbook"
           ],
           "stable_qualifiers_any": [
             "handbook"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Verdant handbook 规定所有 rollback note 必须附 incident 是名为 Verdant handbook 规定所有 rollback note 必须附 incident 的handbook主体。"
+            "Verdant handbook is a handbook subject named Verdant handbook."
           ]
         },
         {
@@ -1559,24 +1546,9 @@
           "definition_semantics_any": [
             "Rook rollout is a rollout subject named Rook rollout."
           ]
-        },
-        {
-          "who_any": [
-            "Rook rollout 最新更新"
-          ],
-          "surface_forms_all": [
-            "Rook rollout 最新更新"
-          ],
-          "stable_qualifiers_any": [
-            "rollout"
-          ],
-          "definition_required": true,
-          "definition_semantics_any": [
-            "Rook rollout 最新更新 是名为 Rook rollout 最新更新 的rollout主体。"
-          ]
         }
       ],
-      "profile_count": 2,
+      "profile_count": 1,
       "source_suite": "identity_profile_rules_mixed_v1"
     },
     {
@@ -1773,30 +1745,16 @@
             "Coral exhibit manual"
           ],
           "stable_qualifiers_any": [
+            "exhibit manual",
             "manual"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Coral exhibit manual is a manual subject named Coral exhibit manual."
-          ]
-        },
-        {
-          "who_any": [
-            "Coral exhibit manual 最新补充"
-          ],
-          "surface_forms_all": [
-            "Coral exhibit manual 最新补充"
-          ],
-          "stable_qualifiers_any": [
-            "manual"
-          ],
-          "definition_required": true,
-          "definition_semantics_any": [
-            "Coral exhibit manual 最新补充 是名为 Coral exhibit manual 最新补充 的manual主体。"
+            "Coral exhibit manual is an exhibit manual subject named Coral exhibit manual."
           ]
         }
       ],
-      "profile_count": 2,
+      "profile_count": 1,
       "source_suite": "identity_profile_rules_mixed_v1"
     },
     {
@@ -2037,11 +1995,12 @@
             "Atlas checkout API v2"
           ],
           "stable_qualifiers_any": [
-            "api"
+            "checkout API v2",
+            "API v2"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Atlas checkout API v2 is an api subject named Atlas checkout API v2."
+            "Atlas checkout API v2 is a checkout API v2 subject named Atlas checkout API v2."
           ]
         },
         {
@@ -2052,11 +2011,12 @@
             "Atlas API review note"
           ],
           "stable_qualifiers_any": [
-            "note"
+            "API review note",
+            "review note"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Atlas API review note is a note subject named Atlas API review note."
+            "Atlas API review note is an API review note subject named Atlas API review note."
           ]
         }
       ],

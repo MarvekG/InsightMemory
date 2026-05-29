@@ -858,11 +858,12 @@
             "Rill custody docket"
           ],
           "stable_qualifiers_any": [
-            "document"
+            "custody docket",
+            "docket"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Rill custody docket is a doc subject named Rill custody docket."
+            "Rill custody docket is a custody docket subject named Rill custody docket."
           ]
         }
       ],
@@ -916,11 +917,12 @@
             "Orchid transfer project"
           ],
           "stable_qualifiers_any": [
-            "transfer"
+            "transfer project",
+            "project"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Orchid transfer project is a transfer subject named Orchid transfer project."
+            "Orchid transfer project is a transfer project subject named Orchid transfer project."
           ]
         }
       ],
@@ -945,11 +947,12 @@
             "Database migration"
           ],
           "stable_qualifiers_any": [
-            "database"
+            "database migration",
+            "migration"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Database migration is a database subject named Database migration."
+            "Database migration is a database migration subject named Database migration."
           ]
         }
       ],
@@ -1084,25 +1087,42 @@
       "expected_identities": [
         {
           "who_any": [
-            "Quarterly transfer briefing"
+            "Briarwatch rollout"
           ],
           "surface_forms_all": [
-            "Quarterly transfer briefing"
+            "Briarwatch rollout"
           ],
           "stable_qualifiers_any": [
-            "briefing"
+            "rollout"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Quarterly transfer briefing is a briefing subject named Quarterly transfer briefing."
+            "Briarwatch rollout is a rollout subject named Briarwatch rollout."
+          ]
+        },
+        {
+          "who_any": [
+            "Drumlin review"
+          ],
+          "surface_forms_all": [
+            "Drumlin review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Drumlin review is a review subject named Drumlin review."
           ]
         }
       ],
       "forbidden_identity_who": [
+        "Quarterly transfer briefing",
         "Mossledger",
+        "Mossledger service",
         "berth packet"
       ],
-      "profile_count": 1,
+      "profile_count": 2,
       "source_suite": "identity_profile_rules_mixed_v1"
     },
     {
@@ -1117,25 +1137,42 @@
       "expected_identities": [
         {
           "who_any": [
-            "Quarterly transfer briefing"
+            "Briarwatch rollout"
           ],
           "surface_forms_all": [
-            "Quarterly transfer briefing"
+            "Briarwatch rollout"
           ],
           "stable_qualifiers_any": [
-            "briefing"
+            "rollout"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Quarterly transfer briefing is a briefing subject named Quarterly transfer briefing."
+            "Briarwatch rollout is a rollout subject named Briarwatch rollout."
+          ]
+        },
+        {
+          "who_any": [
+            "Drumlin review"
+          ],
+          "surface_forms_all": [
+            "Drumlin review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Drumlin review is a review subject named Drumlin review."
           ]
         }
       ],
       "forbidden_identity_who": [
+        "Quarterly transfer briefing",
         "Mossledger",
+        "Mossledger service",
         "berth packet"
       ],
-      "profile_count": 1,
+      "profile_count": 2,
       "source_suite": "identity_profile_rules_mixed_v1"
     },
     {
@@ -1217,11 +1254,12 @@
             "API Endpoint"
           ],
           "stable_qualifiers_any": [
-            "api"
+            "api endpoint",
+            "endpoint"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "API Endpoint is an api subject named API Endpoint."
+            "API Endpoint is an API endpoint subject named API Endpoint."
           ]
         }
       ],
@@ -1455,14 +1493,18 @@
       "expected_identities": [
         {
           "who_any": [
-            "Milo"
+            "Milo 的 school field trip"
           ],
           "surface_forms_all": [
-            "Milo"
+            "Milo 的 school field trip"
+          ],
+          "stable_qualifiers_any": [
+            "school field trip",
+            "field trip"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Milo is an individual subject named Milo."
+            "Milo 的 school field trip is a school field trip subject associated with Milo."
           ]
         }
       ],
@@ -1481,14 +1523,18 @@
       "expected_identities": [
         {
           "who_any": [
-            "Nova"
+            "Nova 的 after-school robotics club"
           ],
           "surface_forms_all": [
-            "Nova"
+            "Nova 的 after-school robotics club"
+          ],
+          "stable_qualifiers_any": [
+            "after-school robotics club",
+            "club"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Nova is an individual subject named Nova."
+            "Nova 的 after-school robotics club is an after-school robotics club subject associated with Nova."
           ]
         }
       ],
@@ -1513,11 +1559,12 @@
             "Atlas checkout API v2"
           ],
           "stable_qualifiers_any": [
-            "api"
+            "checkout API v2",
+            "API v2"
           ],
           "definition_required": true,
           "definition_semantics_any": [
-            "Atlas checkout API v2 is an api subject named Atlas checkout API v2."
+            "Atlas checkout API v2 is a checkout API v2 subject named Atlas checkout API v2."
           ]
         }
       ],

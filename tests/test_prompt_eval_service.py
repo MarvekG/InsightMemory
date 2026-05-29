@@ -147,6 +147,22 @@ def test_identity_prompt_uses_abstract_rules_for_extraction_boundaries() -> None
     assert "Do not write a circular definition" in en_instructions
 
 
+def test_identity_prompt_resolves_remaining_boundary_ambiguities_abstractly() -> None:
+    zh_instructions = get_worker_instructions("identity_profile", system_language="zh")
+    en_instructions = get_worker_instructions("identity_profile", system_language="en")
+
+    assert "主体类型词无论出现在 who 的开头、中间还是结尾" in zh_instructions
+    assert "只出现在另一个主体的规则正文、条件、依赖、材料、输入、输出或说明内容中" in zh_instructions
+    assert "因果或前置条件从句中的从属对象即使带有可用性、完整性或提交状态" in zh_instructions
+    assert "背景标签不能覆盖后文独立事实" in zh_instructions
+    assert "共享编号、短码、代号或前缀不是同一主体的充分证据" in zh_instructions
+    assert "any word or phrase that acts as the subject-type boundary" in en_instructions
+    assert "appears only inside another subject's rule body, condition, dependency, material, input, output, or explanatory content" in en_instructions
+    assert "A subordinate item inside a causal or prerequisite clause may carry availability, completeness, or submission state" in en_instructions
+    assert "A background label must not override a later independent fact" in en_instructions
+    assert "Shared numbers, short codes, aliases, or prefixes are not sufficient evidence" in en_instructions
+
+
 def test_identity_profile_schema_lowercases_identity_fields_but_not_query_text() -> None:
     output = QueryPlannerOutput.model_validate(
         {
@@ -251,7 +267,20 @@ def test_prompt_eval_service_returns_llm_output_and_usage(monkeypatch) -> None:
     assert result["prompt_key"] == "identity_profile"
     assert result["model"] == "test-model"
     assert result["latency_ms"] == 123
-    assert result["output"] == output
+    assert result["output"] == {
+        "identity_gate_status": "passed",
+        "identity_profile_drafts": [
+            {
+                "schema_version": 2,
+                "draft_id": "d1",
+                "who": "harborlane rollout",
+                "surface_forms": ["harborlane rollout"],
+                "stable_qualifiers": ["rollout"],
+                "definition": "named rollout.",
+            }
+        ],
+        "rejection_reason": None,
+    }
     assert "prompt_version" not in result
     assert "output_json" not in result
     assert "parsed_output" not in result
