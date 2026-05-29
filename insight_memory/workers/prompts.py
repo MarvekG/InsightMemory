@@ -21,6 +21,8 @@ identity_profile 只记录这个名词是谁，不记录它发生了什么。
   例：“柳湾权限清单”“云脊结算服务”“孟澜”都可作为主体。
 - 规则：市场代码、证券代码、基金代码和 ticker-like symbol 可作为主体。
   例：“771009.SZ 最新研究记录怎么看？”主体是“771009.SZ”。
+- 规则：结构化记录中的 ticket、case、work_order、id 字段值，承接状态或阻塞时可作为主体。
+  例：“ticket=QF-42B; blocker=缺照片”主体是“QF-42B”，不是“缺照片”。
 
 `who` 字段规则：
 - 规则：`who` 是同一主体的简短稳定标签，要写完整命名名词。
@@ -401,6 +403,8 @@ Overall judgment:
   Example: `Willowbank access checklist`, `Cloudridge settlement service`, and `Mira Lin` can be subjects.
 - Rule: Market codes, security codes, fund codes, and ticker-like symbols can be subjects.
   Example: in `What does the latest note say about RQX.N?`, the subject is `RQX.N`.
+- Rule: A ticket, case, work_order, or id field value in a structured record can be the subject when it owns state or blockers.
+  Example: `ticket=QL-42B; blocker=missing photo` belongs to `QL-42B`, not `missing photo`.
 
 `who` field rules:
 - Rule: `who` is the short stable label for the same subject; write the complete named noun.

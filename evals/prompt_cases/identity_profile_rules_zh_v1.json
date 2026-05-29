@@ -6,7 +6,7 @@
     {
       "case_id": "zh_write_project_missing_attachment_owner",
       "category": "zh_write_owner_boundary",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "松岭上线计划当前不能进入验收，因为回滚说明还没有补齐。"
       },
@@ -29,12 +29,13 @@
       "forbidden_identity_who": [
         "回滚说明"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_policy_requirement_owner",
       "category": "zh_write_governing_document",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "临时权限回收制度要求所有临时权限在二十四小时内关闭，延期必须单独审批。"
       },
@@ -56,12 +57,13 @@
       "forbidden_identity_who": [
         "临时权限"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_person_preference",
       "category": "zh_write_person",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "周明偏好每周三下午集中查看事故复盘，不希望拆成多次会议。"
       },
@@ -77,12 +79,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_team_delivery_blocker",
       "category": "zh_write_organization",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "北桥运维组当前无法交付巡检包，因为电池审计表还缺两项签名。"
       },
@@ -104,12 +107,13 @@
       "forbidden_identity_who": [
         "电池审计表"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_service_owner",
       "category": "zh_write_system",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "青岚结算服务当前负责人是林舟，负责处理月底对账窗口。"
       },
@@ -131,12 +135,13 @@
       "forbidden_identity_who": [
         "林舟"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_event_decision",
       "category": "zh_write_event",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "槐庭评审会第二轮决定暂缓发布，直到安全检查单补齐责任人签字。"
       },
@@ -158,12 +163,13 @@
       "forbidden_identity_who": [
         "安全检查单"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_artifact_threshold",
       "category": "zh_write_artifact",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "流量告警看板的红色阈值调整为错误率超过百分之一，黄色阈值保持不变。"
       },
@@ -186,12 +192,13 @@
         "红色阈值",
         "黄色阈值"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_market_object_risk",
       "category": "zh_write_market_object",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "海岳电池当前主风险是渠道库存周转放慢，毛利修复还没有确认。"
       },
@@ -211,12 +218,13 @@
         "渠道库存",
         "毛利修复"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_work_item_ticket",
       "category": "zh_write_work_item",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "南仓工单甲十七当前卡在设备铭牌复核，完成后才能移交给值班组。"
       },
@@ -239,12 +247,13 @@
         "设备铭牌",
         "值班组"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_workflow_current_state",
       "category": "zh_write_workflow",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "白塔换班流程当前要求交接前完成封签核对和异常照片归档。"
       },
@@ -268,12 +277,13 @@
         "封签核对",
         "异常照片"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_document_revision",
       "category": "zh_write_document",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "霞港交接手册当前版本新增要求，所有交接包必须附上值班长确认页。"
       },
@@ -296,12 +306,13 @@
         "交接包",
         "值班长确认页"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_write_strategy_update",
       "category": "zh_write_strategy",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "春谷防守策略当前改为先降低仓位，再等待成交量恢复后分批回补。"
       },
@@ -325,12 +336,13 @@
         "仓位",
         "成交量"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_query_project_blocker",
       "category": "zh_query_owner",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "松岭上线计划当前为什么不能进入验收？"
       },
@@ -350,12 +362,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_document_requirement",
       "category": "zh_query_document",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "临时权限回收制度对延期有什么要求？"
       },
@@ -374,12 +387,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_person_preference",
       "category": "zh_query_person",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "周明更偏好什么时候看事故复盘？"
       },
@@ -395,12 +409,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_system_owner",
       "category": "zh_query_system",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "青岚结算服务当前负责人是谁？"
       },
@@ -419,12 +434,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_artifact_threshold",
       "category": "zh_query_artifact",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "流量告警看板的红色阈值是多少？"
       },
@@ -446,12 +462,13 @@
       "forbidden_identity_who": [
         "红色阈值"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_market_risk",
       "category": "zh_query_market_object",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "海岳电池当前主风险是什么？"
       },
@@ -467,12 +484,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_event_decision",
       "category": "zh_query_event",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "槐庭评审会第二轮为什么暂缓发布？"
       },
@@ -491,12 +509,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_record_marker_not_identity",
       "category": "zh_query_record_marker",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "白塔换班流程第三阶段还需要补什么？"
       },
@@ -519,12 +538,13 @@
       "forbidden_identity_who": [
         "第三阶段"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_latest_note_not_identity",
       "category": "zh_query_record_word",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "海岳电池最新记录里的风险结论是什么？"
       },
@@ -544,12 +564,13 @@
         "最新记录",
         "风险结论"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_same_prefix_checklist",
       "category": "zh_query_same_prefix",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "青竹迁移清单当前要求补齐哪些材料？"
       },
@@ -571,12 +592,13 @@
       "forbidden_identity_who": [
         "青竹迁移"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_work_item_ticket",
       "category": "zh_query_work_item",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "南仓工单甲十七现在卡在哪里？"
       },
@@ -595,12 +617,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_query_strategy_current",
       "category": "zh_query_strategy",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "春谷防守策略当前怎么调整仓位？"
       },
@@ -623,12 +646,13 @@
       "forbidden_identity_who": [
         "仓位"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_extract_same_prefix_artifacts",
       "category": "zh_extract_same_prefix",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "青竹迁移计划当前主阻塞是窗口未确认。青竹迁移清单要求补齐封签照片和审批页。青竹迁移手册规定审批页必须有值班长签字。"
       },
@@ -677,12 +701,13 @@
         "封签照片",
         "审批页"
       ],
-      "profile_count": 3
+      "profile_count": 3,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "zh_extract_meeting_noise_two_subjects",
       "category": "zh_extract_noise_boundary",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "晨会里顺手提到旧门禁和午餐安排，正式结论只有两条：霜河发布流程当前不能推进，因为灰度说明还缺复核人；霜河发布公告要求所有灰度说明附上影响范围。"
       },
@@ -720,12 +745,13 @@
         "午餐安排",
         "灰度说明"
       ],
-      "profile_count": 2
+      "profile_count": 2,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "zh_extract_table_like_records",
       "category": "zh_extract_structured_text",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "对象：南港登记册；阶段：当前；规则：所有靠泊记录必须在交班前补齐码头编号。\n对象：南港核对表；阶段：当前；规则：每次交班必须确认封条照片和异常备注。"
       },
@@ -761,12 +787,13 @@
         "封条照片",
         "异常备注"
       ],
-      "profile_count": 2
+      "profile_count": 2,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "zh_extract_person_and_team",
       "category": "zh_extract_mixed_subjects",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "陈岚偏好在周五上午看风险复盘。东桥数据组当前负责人是孟然，负责维护夜间同步窗口。"
       },
@@ -798,12 +825,13 @@
         "孟然",
         "夜间同步窗口"
       ],
-      "profile_count": 2
+      "profile_count": 2,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "zh_extract_market_and_note",
       "category": "zh_extract_market_document",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "海岳电池当前主风险是库存周转放慢。海岳调研纪要当前结论是先观察毛利修复，再考虑提高评级。"
       },
@@ -837,12 +865,13 @@
         "库存周转",
         "毛利修复"
       ],
-      "profile_count": 2
+      "profile_count": 2,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "zh_extract_child_component",
       "category": "zh_extract_child_subject",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "星河门户当前可正常登录。星河门户消息中心当前延迟超过十分钟，需要先恢复队列消费者。"
       },
@@ -876,12 +905,13 @@
       "forbidden_identity_who": [
         "队列消费者"
       ],
-      "profile_count": 2
+      "profile_count": 2,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "zh_extract_strategy_and_document",
       "category": "zh_extract_strategy_document",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "春谷防守策略当前先降低仓位。春谷风控手册要求降仓后必须记录触发原因和复核人。"
       },
@@ -919,12 +949,13 @@
         "触发原因",
         "复核人"
       ],
-      "profile_count": 2
+      "profile_count": 2,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "zh_extract_event_and_work_item",
       "category": "zh_extract_event_work_item",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "槐庭评审会决定暂缓发布。槐庭整改工单当前负责人是赵宁，需要补齐安全检查单。"
       },
@@ -960,51 +991,56 @@
         "赵宁",
         "安全检查单"
       ],
-      "profile_count": 2
+      "profile_count": 2,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "zh_reject_subjectless_write",
       "category": "zh_reject_subjectless",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "现在情况比较复杂，需要尽快确认责任人和时间表。"
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0
+      "profile_count": 0,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_reject_abstract_process_write",
       "category": "zh_reject_abstract",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "流程、规范、表格和审批都还没有统一，但文本没有说明具体属于哪个对象。"
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0
+      "profile_count": 0,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "zh_reject_subjectless_query",
       "category": "zh_reject_query",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "现在还有哪些风险需要注意？"
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0
+      "profile_count": 0,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "zh_reject_generic_record_query",
       "category": "zh_reject_record_word",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "最新记录里有什么变化？"
       },
       "expected_gate_status": "rejected_no_identity_profile",
       "expected_identities": [],
-      "profile_count": 0
+      "profile_count": 0,
+      "target_prompt_key": "query_planner"
     }
   ]
 }

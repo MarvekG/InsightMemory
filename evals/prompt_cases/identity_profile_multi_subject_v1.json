@@ -1,0 +1,2110 @@
+{
+  "suite_id": "identity_profile_multi_subject_v1",
+  "description": "identity_profile multi-subject suite. Focuses on multi-subject raw context extraction, structured and long inputs, same-prefix boundaries, and noisy context separation.",
+  "minimum_pass_rate": 1.0,
+  "target_prompt_key": "extractor",
+  "cases": [
+    {
+      "case_id": "extractor_same_prefix_roles",
+      "category": "same_prefix_role_boundary",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "Ravel import service is owned by Priya. Ravel import checklist is maintained by Tomas and tracks customs packet readiness."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Ravel import service"
+          ],
+          "surface_forms_all": [
+            "Ravel import service"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Ravel import checklist"
+          ],
+          "surface_forms_all": [
+            "Ravel import checklist"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "Ravel import"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_format_table_register_checklist",
+      "category": "history_format_shift_table",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_v1:format_table_record",
+      "payload": {
+        "context": "artifact | state | note\nTideline register | blocked | cannot close because crate note is missing\n\nartifact | rule | note\nTideline checklist | requirement | every register must include crate note before closure\n"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Tideline register"
+          ],
+          "surface_forms_all": [
+            "Tideline register"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Tideline checklist"
+          ],
+          "surface_forms_all": [
+            "Tideline checklist"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "crate note"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_field_record_many_named_objects",
+      "category": "history_format_field_record",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_v1:format_field_record_many_named_objects",
+      "payload": {
+        "context": "name: Aster observatory docket\nowner: Ilya North\n\nname: Aster observatory ledger\nowner: Mara Pike\n\nname: Aster observatory queue\nowner: Soren Vale\n\nname: Aster observatory bulletin\nowner: Nira Holt\n"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aster observatory docket"
+          ],
+          "surface_forms_all": [
+            "Aster observatory docket"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Aster observatory ledger"
+          ],
+          "surface_forms_all": [
+            "Aster observatory ledger"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Aster observatory queue"
+          ],
+          "surface_forms_all": [
+            "Aster observatory queue"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Aster observatory bulletin"
+          ],
+          "surface_forms_all": [
+            "Aster observatory bulletin"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "Aster observatory",
+        "Ilya North",
+        "Mara Pike",
+        "Soren Vale",
+        "Nira Holt"
+      ],
+      "profile_count": 4,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_multi_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment",
+      "category": "history_multi_cross_format_correction_note",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_targeted_v1:cross_format_correction_note_amendment:writes",
+      "payload": {
+        "context": "Morrowfield register earlier allowed teams to file quay note within 10 hours after release.\nCorrection note for Morrowfield register: the earlier 10-hour grace window is withdrawn; every quay note must be filed before release.\nAppendix to Morrowfield register: every quay note must also include berth owner signature."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Morrowfield register"
+          ],
+          "surface_forms_all": [
+            "Morrowfield register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "forbidden_identity_who": [
+        "Correction note for Morrowfield register",
+        "Appendix to Morrowfield register"
+      ],
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_multi_generic_format_shift_targeted_v1_format_chat_history_with_requirement",
+      "category": "history_multi_format_chat_transcript",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_targeted_v1:format_chat_history_with_requirement:writes",
+      "payload": {
+        "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window\n[10:20] coordinator: Kestrel transit review current decision has shifted to attach the ballast memo before re-scheduling transfer"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kestrel transit review"
+          ],
+          "surface_forms_all": [
+            "Kestrel transit review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_multi_generic_format_shift_v1_format_chat_history_with_requirement",
+      "category": "history_multi_format_chat_transcript",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_v1:format_chat_history_with_requirement:writes",
+      "payload": {
+        "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window\n[10:20] coordinator: Kestrel transit review current decision has shifted to attach the ballast memo before re-scheduling transfer"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kestrel transit review"
+          ],
+          "surface_forms_all": [
+            "Kestrel transit review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_multi_subject_document_noise",
+      "category": "history_multi_subject_noise",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_multi_subject_document_targeted_v1:multi_subject_briefing_background_noise",
+      "payload": {
+        "context": "Quarterly transfer briefing: Briarwatch rollout 当前仍不能进入 turnover，因为 berth packet 还没有补齐。周会里顺手提到 Mossledger service 近期也在调整批处理窗口，但没有给出它的独立结论。另有一条明确更新：Drumlin review 当前负责人是 Mila Song。其余段落只是在背景中提到 Harborlane checklist、Harborlane bulletin 和旧的 shift note，没有给出这些对象新的独立 durable fact。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Briarwatch rollout"
+          ],
+          "surface_forms_all": [
+            "Briarwatch rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Drumlin review"
+          ],
+          "surface_forms_all": [
+            "Drumlin review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "Mossledger service",
+        "Harborlane checklist",
+        "Harborlane bulletin",
+        "shift note"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_same_prefix_five_artifacts",
+      "category": "history_same_prefix_artifacts",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_multi_subject_document_targeted_v1:multi_subject_same_prefix_artifacts_split",
+      "payload": {
+        "context": "Field operations digest: Latchmere plan 当前目标是周五前补齐 berth packet；Latchmere review 当前负责人是 Noor Patel；Latchmere bulletin 当前要求 every berth packet include quay tag；Latchmere register 之前允许 quay tag 在 departure 后 8 hours 内补录；Latchmere checklist 当前要求 quay tag 和 seal memo 一起提交。以上五个对象名称相近，但分别是 plan、review、bulletin、register、checklist。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Latchmere plan"
+          ],
+          "surface_forms_all": [
+            "Latchmere plan"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Latchmere review"
+          ],
+          "surface_forms_all": [
+            "Latchmere review"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Latchmere bulletin"
+          ],
+          "surface_forms_all": [
+            "Latchmere bulletin"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Latchmere register"
+          ],
+          "surface_forms_all": [
+            "Latchmere register"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Latchmere checklist"
+          ],
+          "surface_forms_all": [
+            "Latchmere checklist"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "Latchmere"
+      ],
+      "profile_count": 5,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_ultralong_multientity_noise",
+      "category": "history_ultralong_multientity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_ultralong_multientity_v1:ultralong_five_durable_facts",
+      "payload": {
+        "context": "超长周报记录：前半段反复提到旧白板、访客登记、照明巡检、会议室门卡、走廊摄像头、临时工位、午餐统计和几位旁听者姓名。中段真正形成的持久结论有五条：Oakspan rollout 当前主阻塞是 rollback annex missing；Ridgepath checklist 当前要求所有 cutover 先补 rollback annex 和 approver signature；Talon review 当前负责人是 Mira Chen；Quarry dashboard 当前数据延迟 18 分钟；Westbay handbook 当前要求 incident timeline 记录附在 handoff packet 中。后半段仍然是闲聊、排班、访客 badge 和仓库灯光测试，这些都不应成为单独记忆。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Oakspan rollout"
+          ],
+          "surface_forms_all": [
+            "Oakspan rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Ridgepath checklist"
+          ],
+          "surface_forms_all": [
+            "Ridgepath checklist"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Talon review"
+          ],
+          "surface_forms_all": [
+            "Talon review"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Quarry dashboard"
+          ],
+          "surface_forms_all": [
+            "Quarry dashboard"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Westbay handbook"
+          ],
+          "surface_forms_all": [
+            "Westbay handbook"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "旧白板",
+        "访客登记",
+        "午餐统计",
+        "访客 badge"
+      ],
+      "profile_count": 5,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_answer_boundary_v1_direct_vs_dependency_answer_split",
+      "category": "history_multi_answer_direct_vs_dependency",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_answer_boundary_v1:direct_vs_dependency_answer_split:writes",
+      "payload": {
+        "context": "Briar release card 当前还需要补齐 gate stamp 和 load receipt。\nBriar compliance guide 要求所有 gate stamp 必须包含 approver code。\nBriar training roster 显示周二完成 forklift drill。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Briar release card"
+          ],
+          "surface_forms_all": [
+            "Briar release card"
+          ],
+          "stable_qualifiers_any": [
+            "card"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Briar compliance guide"
+          ],
+          "surface_forms_all": [
+            "Briar compliance guide"
+          ],
+          "stable_qualifiers_any": [
+            "guide"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Briar training roster"
+          ],
+          "surface_forms_all": [
+            "Briar training roster"
+          ],
+          "stable_qualifiers_any": [
+            "roster"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 3,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_broad_coverage_v1_broad_three_hop_requirement_chain",
+      "category": "history_multi_broad_deep_association",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_broad_coverage_v1:broad_three_hop_requirement_chain:writes",
+      "payload": {
+        "context": "Driftwood rollout 当前还不能进入执行阶段，因为 readiness packet 还没有补齐 approval matrix。\nReadiness checklist 要求所有 readiness packet 在进入执行阶段前补齐 approval matrix。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Driftwood rollout"
+          ],
+          "surface_forms_all": [
+            "Driftwood rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Readiness checklist"
+          ],
+          "surface_forms_all": [
+            "Readiness checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_broad_targeted_v1_broad_four_way_same_surface_disambiguation",
+      "category": "history_multi_broad_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_broad_targeted_v1:broad_four_way_same_surface_disambiguation:writes",
+      "payload": {
+        "context": "Aurora service 当前主阻塞是 cert rotation missing。\nAurora manual 当前要求所有 cert rotation 记录附上 reviewer signature。\nAurora plan 当前负责人是 Devin Cole。\nAurora review 当前结论是先补 cert inventory 再继续排期。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aurora service"
+          ],
+          "surface_forms_all": [
+            "Aurora service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Aurora manual"
+          ],
+          "surface_forms_all": [
+            "Aurora manual"
+          ],
+          "stable_qualifiers_any": [
+            "manual"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Aurora plan"
+          ],
+          "surface_forms_all": [
+            "Aurora plan"
+          ],
+          "stable_qualifiers_any": [
+            "plan"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Aurora review"
+          ],
+          "surface_forms_all": [
+            "Aurora review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 4,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_concurrency_consistency_v1_concurrency_same_surface_split_parallel",
+      "category": "history_multi_concurrency_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_concurrency_consistency_v1:concurrency_same_surface_split_parallel:writes",
+      "payload": {
+        "context": "Seaborne service 当前主阻塞是 rollback packet missing。\nSeaborne checklist 当前要求上线前补齐 rollback packet 和 owner signature。\nSeaborne review 当前负责人是 Kara Yin。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Seaborne service"
+          ],
+          "surface_forms_all": [
+            "Seaborne service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Seaborne checklist"
+          ],
+          "surface_forms_all": [
+            "Seaborne checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Seaborne review"
+          ],
+          "surface_forms_all": [
+            "Seaborne review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 3,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_cross_domain_transfer_v1_cross_domain_procedure_analogy",
+      "category": "history_multi_cross_domain_procedure",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_domain_transfer_v1:cross_domain_procedure_analogy:writes",
+      "payload": {
+        "context": "在软件开发中，System rollback procedure 要求先停止服务、恢复数据库快照、重新部署上一个稳定版本、验证核心功能。\n在手术医疗中，Surgical rollback procedure 要求先稳定患者生命体征、移除植入物、恢复原始生理结构、监测术后反应。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "System rollback procedure"
+          ],
+          "surface_forms_all": [
+            "System rollback procedure"
+          ],
+          "stable_qualifiers_any": [
+            "procedure"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Surgical rollback procedure"
+          ],
+          "surface_forms_all": [
+            "Surgical rollback procedure"
+          ],
+          "stable_qualifiers_any": [
+            "procedure"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_cross_format_longform_v1_cross_format_bilingual_long_summary",
+      "category": "history_multi_cross_format_bilingual",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_v1:cross_format_bilingual_long_summary:writes",
+      "payload": {
+        "context": "Junebay bulletin 之前允许 teams 在 departure 后 12 hours 内补录 route note。\nJunebay bulletin 最新补充：所有 route note 还必须附在 cargo packet 中。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Junebay bulletin"
+          ],
+          "surface_forms_all": [
+            "Junebay bulletin"
+          ],
+          "stable_qualifiers_any": [
+            "bulletin"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Junebay bulletin 最新补充"
+          ],
+          "surface_forms_all": [
+            "Junebay bulletin 最新补充"
+          ],
+          "stable_qualifiers_any": [
+            "bulletin"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_deep_association_v1_deep_four_hop_requirement_chain",
+      "category": "history_multi_deep_requirement_chain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_deep_association_v1:deep_four_hop_requirement_chain:writes",
+      "payload": {
+        "context": "Sundial rollout 当前还不能进入执行阶段，因为 release packet 缺少 rollback annex。\nRelease checklist 要求所有 release packet 在进入执行阶段前补齐 rollback annex。\nUplink register 要求所有 reviewer charter 记录补齐 on-call roster。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Sundial rollout"
+          ],
+          "surface_forms_all": [
+            "Sundial rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Release checklist"
+          ],
+          "surface_forms_all": [
+            "Release checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Uplink register"
+          ],
+          "surface_forms_all": [
+            "Uplink register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 3,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_deeper_dependency_chain_v1_deeper_five_hop_requirement_chain",
+      "category": "history_multi_deep_requirement_chain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_deeper_dependency_chain_v1:deeper_five_hop_requirement_chain:writes",
+      "payload": {
+        "context": "Aetherpoint rollout 当前还不能进入 cutover，因为 release packet 缺少 dock seal note。\nAetherpoint checklist 要求所有 release packet 在进入 cutover 前补齐 dock seal note。\nCrestline bulletin 要求所有 harbor annex 在进入执行前补齐 reviewer charter。\nDawnfield register 要求所有 reviewer charter 记录补齐 on-call roster。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aetherpoint rollout"
+          ],
+          "surface_forms_all": [
+            "Aetherpoint rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Aetherpoint checklist"
+          ],
+          "surface_forms_all": [
+            "Aetherpoint checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Crestline bulletin"
+          ],
+          "surface_forms_all": [
+            "Crestline bulletin"
+          ],
+          "stable_qualifiers_any": [
+            "bulletin"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Dawnfield register"
+          ],
+          "surface_forms_all": [
+            "Dawnfield register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 4,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_extreme_dependency_v1_same_surface_checklist_query_after_project_c",
+      "category": "history_multi_same_surface_cross_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_extreme_dependency_v1:same_surface_checklist_query_after_project_context:writes",
+      "payload": {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败。\nAtlas checklist 当前缺少回滚附录。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Atlas checklist"
+          ],
+          "surface_forms_all": [
+            "Atlas checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_extreme_targeted_v11_noisy_meeting_note_with_second_entity",
+      "category": "history_multi_noisy_cross_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_extreme_targeted_v11:noisy_meeting_note_with_second_entity:writes",
+      "payload": {
+        "context": "周会里顺手提到 Billing service，但主结论是 Atlas rollout 当前主阻塞是审批链说明缺失。\nBilling service 当前负责人是 Owen Tan。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Billing service"
+          ],
+          "surface_forms_all": [
+            "Billing service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_extreme_targeted_v9_cross_entity_upstream_with_distractor_handbo",
+      "category": "history_multi_noisy_cross_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_extreme_targeted_v9:cross_entity_upstream_with_distractor_handbook:writes",
+      "payload": {
+        "context": "Atlas rollout 当前主阻塞是依赖数据源迟迟没有恢复。\nData sync service 当前仍处于批量补数状态，尚未恢复稳定输出。\nRecovery handbook 当前缺少 on-call escalation path。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Data sync service"
+          ],
+          "surface_forms_all": [
+            "Data sync service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Recovery handbook"
+          ],
+          "surface_forms_all": [
+            "Recovery handbook"
+          ],
+          "stable_qualifiers_any": [
+            "handbook"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 3,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_far_deep_targeted_v1_farfield_herbarium_accession_requirement",
+      "category": "history_multi_farfield_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_far_deep_targeted_v1:farfield_herbarium_accession_requirement:writes",
+      "payload": {
+        "context": "Marlowe herbarium accession request 当前还不能归档，因为 specimen custody folio 还没有补齐。\nCustody register 要求所有 herbarium accession request 在归档前补齐 specimen custody folio。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Marlowe herbarium accession request"
+          ],
+          "surface_forms_all": [
+            "Marlowe herbarium accession request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Custody register"
+          ],
+          "surface_forms_all": [
+            "Custody register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_farfield_openworld_v1_farfield_herbarium_accession_requirement",
+      "category": "history_multi_farfield_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_farfield_openworld_v1:farfield_herbarium_accession_requirement:writes",
+      "payload": {
+        "context": "Marlowe herbarium accession request 当前还不能归档，因为 specimen custody folio 还没有补齐。\nCustody register 要求所有 herbarium accession request 在归档前补齐 specimen custody folio。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Marlowe herbarium accession request"
+          ],
+          "surface_forms_all": [
+            "Marlowe herbarium accession request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Custody register"
+          ],
+          "surface_forms_all": [
+            "Custody register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_finance_generalization_v1_finance_same_surface_stock_vs_sector_note",
+      "category": "history_multi_finance_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_finance_generalization_v1:finance_same_surface_stock_vs_sector_note:writes",
+      "payload": {
+        "context": "Everpoint stock 当前主风险是渠道库存压力。\nEverpoint sector note 当前结论是半导体库存去化仍慢，先维持中性。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Everpoint stock"
+          ],
+          "surface_forms_all": [
+            "Everpoint stock"
+          ],
+          "stable_qualifiers_any": [
+            "stock"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Everpoint sector note"
+          ],
+          "surface_forms_all": [
+            "Everpoint sector note"
+          ],
+          "stable_qualifiers_any": [
+            "note"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_frontier_targeted_v1_concurrency_same_surface_split_parallel",
+      "category": "history_multi_concurrency_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_frontier_targeted_v1:concurrency_same_surface_split_parallel:writes",
+      "payload": {
+        "context": "Seaborne service 当前主阻塞是 rollback packet missing。\nSeaborne checklist 当前要求上线前补齐 rollback packet 和 owner signature。\nSeaborne review 当前负责人是 Kara Yin。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Seaborne service"
+          ],
+          "surface_forms_all": [
+            "Seaborne service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Seaborne checklist"
+          ],
+          "surface_forms_all": [
+            "Seaborne checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Seaborne review"
+          ],
+          "surface_forms_all": [
+            "Seaborne review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 3,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_hard_generalization_v1_multi_entity_mixed_context_split",
+      "category": "history_multi_multi_entity_mixed",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_hard_generalization_v1:multi_entity_mixed_context_split:writes",
+      "payload": {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败。\nBilling service 当前负责人是 Owen Tan。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Billing service"
+          ],
+          "surface_forms_all": [
+            "Billing service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_heterogeneous_coverage_v1_heterogeneous_same_surface_artifact_chain",
+      "category": "history_multi_heterogeneous_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_heterogeneous_coverage_v1:heterogeneous_same_surface_artifact_chain:writes",
+      "payload": {
+        "context": "Rill custody docket 当前还不能归档，因为 crate transfer slip 缺失。\nRill custody guide 要求所有 custody docket 在归档前补齐 crate transfer slip。\nRill custody register 要求所有 crate transfer slip 记录再附 watch roster。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Rill custody docket"
+          ],
+          "surface_forms_all": [
+            "Rill custody docket"
+          ],
+          "stable_qualifiers_any": [
+            "doc"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Rill custody guide"
+          ],
+          "surface_forms_all": [
+            "Rill custody guide"
+          ],
+          "stable_qualifiers_any": [
+            "guide"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Rill custody register"
+          ],
+          "surface_forms_all": [
+            "Rill custody register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 3,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_heterogeneous_targeted_v1_heterogeneous_history_disagreement_with_rule",
+      "category": "history_multi_heterogeneous_history_rule",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_heterogeneous_targeted_v1:heterogeneous_history_disagreement_with_rule:writes",
+      "payload": {
+        "context": "Mica transit review 当前决定已经变成先补 ballast variance note 再重新排期转运。\nDeparture ordinance 要求所有转运前决策补齐 ballast variance note。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Mica transit review"
+          ],
+          "surface_forms_all": [
+            "Mica transit review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Departure ordinance"
+          ],
+          "surface_forms_all": [
+            "Departure ordinance"
+          ],
+          "stable_qualifiers_any": [
+            "ordinance"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_identity_boundary_v1_same_prefix_project_checklist_handbook",
+      "category": "history_multi_identity_same_prefix_artifacts",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_identity_boundary_v1:same_prefix_project_checklist_handbook:writes",
+      "payload": {
+        "context": "Orchid transfer project 当前主阻塞是 staging window 未确认。\nOrchid transfer checklist 当前要求补齐 seal note 和 cargo tag。\nOrchid transfer handbook 要求所有 seal note 必须包含 reviewer initials。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Orchid transfer project"
+          ],
+          "surface_forms_all": [
+            "Orchid transfer project"
+          ],
+          "stable_qualifiers_any": [
+            "transfer"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Orchid transfer checklist"
+          ],
+          "surface_forms_all": [
+            "Orchid transfer checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Orchid transfer handbook"
+          ],
+          "surface_forms_all": [
+            "Orchid transfer handbook"
+          ],
+          "stable_qualifiers_any": [
+            "handbook"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 3,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_large_scope_graph_v1_large_scope_same_prefix_split",
+      "category": "history_multi_large_scope_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_large_scope_graph_v1:large_scope_same_prefix_split:writes",
+      "payload": {
+        "context": "Verdant project 当前 blocker 是 migration script 未通过 staging 验证。\nVerdant checklist 当前要求补齐 migration script、rollback note 和 seal ledger。\nVerdant handbook 规定所有 rollback note 必须附 incident owner 签名。\nVerdant plan 当前目标是下周完成 rehearsal packet。\nVerdant register 要求所有 rehearsal packet 在进入执行前补齐 duty roster。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Verdant project"
+          ],
+          "surface_forms_all": [
+            "Verdant project"
+          ],
+          "stable_qualifiers_any": [
+            "project"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Verdant checklist"
+          ],
+          "surface_forms_all": [
+            "Verdant checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Verdant handbook 规定所有 rollback note 必须附 incident"
+          ],
+          "surface_forms_all": [
+            "Verdant handbook 规定所有 rollback note 必须附 incident"
+          ],
+          "stable_qualifiers_any": [
+            "handbook"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Verdant plan"
+          ],
+          "surface_forms_all": [
+            "Verdant plan"
+          ],
+          "stable_qualifiers_any": [
+            "plan"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Verdant register"
+          ],
+          "surface_forms_all": [
+            "Verdant register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 5,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_long_horizon_v1_long_horizon_tracked_blocker_chain",
+      "category": "history_multi_long_horizon_drift",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_long_horizon_v1:long_horizon_tracked_blocker_chain:writes",
+      "payload": {
+        "context": "Rook rollout 之前卡在 schema note missing。\nRook rollout 最新更新：schema note 问题已关闭，当前仍因 approval appendix missing 无法切换。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Rook rollout"
+          ],
+          "surface_forms_all": [
+            "Rook rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Rook rollout 最新更新"
+          ],
+          "surface_forms_all": [
+            "Rook rollout 最新更新"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_market_memory_v1_market_same_surface_stock_vs_note",
+      "category": "history_multi_market_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_market_memory_v1:market_same_surface_stock_vs_note:writes",
+      "payload": {
+        "context": "Northfield stock 当前主风险是渠道库存压力。\nNorthfield earnings note 当前结论是先观察毛利率修复，再考虑加仓。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Northfield stock"
+          ],
+          "surface_forms_all": [
+            "Northfield stock"
+          ],
+          "stable_qualifiers_any": [
+            "stock"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Northfield earnings note"
+          ],
+          "surface_forms_all": [
+            "Northfield earnings note"
+          ],
+          "stable_qualifiers_any": [
+            "note"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_noise_dependency_v1_cross_entity_policy_explains_blocker",
+      "category": "history_multi_cross_entity_dependency",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_noise_dependency_v1:cross_entity_policy_explains_blocker:writes",
+      "payload": {
+        "context": "Northstar rollout 当前仍不能上线，因为审批链说明还没有补齐。\nDeployment approval policy 要求所有生产发布在执行前必须补齐审批链说明。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Northstar rollout"
+          ],
+          "surface_forms_all": [
+            "Northstar rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Deployment approval policy"
+          ],
+          "surface_forms_all": [
+            "Deployment approval policy"
+          ],
+          "stable_qualifiers_any": [
+            "policy"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_openworld_targeted_v1_openworld_archive_finding_aid_requirement",
+      "category": "history_multi_openworld_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_openworld_targeted_v1:openworld_archive_finding_aid_requirement:writes",
+      "payload": {
+        "context": "Kite archive digitization request 当前还不能提交，因为 provenance note 还没有补齐。\nReference finding aid 要求所有 digitization request 在提交前补齐 provenance note。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kite archive digitization request"
+          ],
+          "surface_forms_all": [
+            "Kite archive digitization request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Reference finding aid"
+          ],
+          "surface_forms_all": [
+            "Reference finding aid"
+          ],
+          "stable_qualifiers_any": [
+            "finding aid"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_openworld_unknown_part_a_v1_openworld_archive_finding_aid_requirement",
+      "category": "history_multi_openworld_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_openworld_unknown_part_a_v1:openworld_archive_finding_aid_requirement:writes",
+      "payload": {
+        "context": "Kite archive digitization request 当前还不能提交，因为 provenance note 还没有补齐。\nReference finding aid 要求所有 digitization request 在提交前补齐 provenance note。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kite archive digitization request"
+          ],
+          "surface_forms_all": [
+            "Kite archive digitization request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Reference finding aid"
+          ],
+          "surface_forms_all": [
+            "Reference finding aid"
+          ],
+          "stable_qualifiers_any": [
+            "finding aid"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_openworld_unknown_part_b_v1_openworld_exhibit_manual_rule_evolution",
+      "category": "history_multi_openworld_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_openworld_unknown_part_b_v1:openworld_exhibit_manual_rule_evolution:writes",
+      "payload": {
+        "context": "Coral exhibit manual 之前允许团队自行调整 light cycle。\nCoral exhibit manual 最新补充：审批记录还必须附在 maintenance packet 中。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Coral exhibit manual"
+          ],
+          "surface_forms_all": [
+            "Coral exhibit manual"
+          ],
+          "stable_qualifiers_any": [
+            "manual"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Coral exhibit manual 最新补充"
+          ],
+          "surface_forms_all": [
+            "Coral exhibit manual 最新补充"
+          ],
+          "stable_qualifiers_any": [
+            "manual"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_openworld_unknown_v1_openworld_archive_finding_aid_requirement",
+      "category": "history_multi_openworld_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_openworld_unknown_v1:openworld_archive_finding_aid_requirement:writes",
+      "payload": {
+        "context": "Kite archive digitization request 当前还不能提交，因为 provenance note 还没有补齐。\nReference finding aid 要求所有 digitization request 在提交前补齐 provenance note。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kite archive digitization request"
+          ],
+          "surface_forms_all": [
+            "Kite archive digitization request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Reference finding aid"
+          ],
+          "surface_forms_all": [
+            "Reference finding aid"
+          ],
+          "stable_qualifiers_any": [
+            "finding aid"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_out_of_distribution_domains_v1_ood_shipping_vessel",
+      "category": "history_multi_ood_shipping",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_out_of_distribution_domains_v1:ood_shipping_vessel:writes",
+      "payload": {
+        "context": "Seaford vessel 当前还不能离港，因为 cargo manifest 缺少 customs seal。\nSeaford manifest 要求所有离港 vessel 的 cargo manifest 在进入执行前补齐 customs seal。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Seaford vessel"
+          ],
+          "surface_forms_all": [
+            "Seaford vessel"
+          ],
+          "stable_qualifiers_any": [
+            "vessel"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Seaford manifest"
+          ],
+          "surface_forms_all": [
+            "Seaford manifest"
+          ],
+          "stable_qualifiers_any": [
+            "manifest"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_realworld_adversarial_v1_alias_after_correction_not_old_name",
+      "category": "history_multi_realworld_adversarial_alias",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_adversarial_v1:alias_after_correction_not_old_name:writes",
+      "payload": {
+        "context": "NPI binder 更正：当前实际缺少的是 signed dock waiver，不是 blue receipt。\nNorth Pier incident bulletin 今天只更新了 visitor badge color。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "NPI binder"
+          ],
+          "surface_forms_all": [
+            "NPI binder"
+          ],
+          "stable_qualifiers_any": [
+            "binder"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "North Pier incident bulletin"
+          ],
+          "surface_forms_all": [
+            "North Pier incident bulletin"
+          ],
+          "stable_qualifiers_any": [
+            "bulletin"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_realworld_complex_v1_home_renovation_permit_chain",
+      "category": "history_multi_realworld_complex_renovation",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_complex_v1:home_renovation_permit_chain:writes",
+      "payload": {
+        "context": "Willow kitchen renovation 当前不能开工，因为 building permit 还缺 contractor insurance certificate。\nWillow contractor packet 显示 insurance certificate 还需要 broker stamp。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Willow kitchen renovation"
+          ],
+          "surface_forms_all": [
+            "Willow kitchen renovation"
+          ],
+          "stable_qualifiers_any": [
+            "renovation"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Willow contractor packet"
+          ],
+          "surface_forms_all": [
+            "Willow contractor packet"
+          ],
+          "stable_qualifiers_any": [
+            "packet"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_realworld_edge_cases_v1_archive_box_accession_dependency",
+      "category": "history_multi_realworld_edge_archive",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_edge_cases_v1:archive_box_accession_dependency:writes",
+      "payload": {
+        "context": "Archive Box K-17 不能移交给 reading room，因为 accession slip 缺 donor initials。\nK-17 gallery tour 预约在周六 11:00，由 docent Mira 接待。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Archive Box K-17"
+          ],
+          "surface_forms_all": [
+            "Archive Box K-17"
+          ],
+          "stable_qualifiers_any": [
+            "box"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "K-17 gallery tour"
+          ],
+          "surface_forms_all": [
+            "K-17 gallery tour"
+          ],
+          "stable_qualifiers_any": [
+            "tour"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_multi_generic_realworld_software_dev_v1_api_contract_breaking_change",
+      "category": "history_multi_realworld_software_api_contract",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_software_dev_v1:api_contract_breaking_change:writes",
+      "payload": {
+        "context": "Atlas checkout API v2 当前不能发布，因为 response schema 还缺 idempotency_key 字段。\nAtlas API review note 要求 v2 发布前补齐 backward compatibility test。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas checkout API v2"
+          ],
+          "surface_forms_all": [
+            "Atlas checkout API v2"
+          ],
+          "stable_qualifiers_any": [
+            "api"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "Atlas API review note"
+          ],
+          "surface_forms_all": [
+            "Atlas API review note"
+          ],
+          "stable_qualifiers_any": [
+            "note"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "zh_extract_same_prefix_artifacts",
+      "category": "zh_extract_same_prefix",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "青竹迁移计划当前主阻塞是窗口未确认。青竹迁移清单要求补齐封签照片和审批页。青竹迁移手册规定审批页必须有值班长签字。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "青竹迁移计划"
+          ],
+          "surface_forms_all": [
+            "青竹迁移计划"
+          ],
+          "stable_qualifiers_any": [
+            "计划",
+            "迁移计划"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "青竹迁移清单"
+          ],
+          "surface_forms_all": [
+            "青竹迁移清单"
+          ],
+          "stable_qualifiers_any": [
+            "清单"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "青竹迁移手册"
+          ],
+          "surface_forms_all": [
+            "青竹迁移手册"
+          ],
+          "stable_qualifiers_any": [
+            "手册"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "青竹迁移",
+        "封签照片",
+        "审批页"
+      ],
+      "profile_count": 3,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_extract_meeting_noise_two_subjects",
+      "category": "zh_extract_noise_boundary",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "晨会里顺手提到旧门禁和午餐安排，正式结论只有两条：霜河发布流程当前不能推进，因为灰度说明还缺复核人；霜河发布公告要求所有灰度说明附上影响范围。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "霜河发布流程"
+          ],
+          "surface_forms_all": [
+            "霜河发布流程"
+          ],
+          "stable_qualifiers_any": [
+            "流程",
+            "发布流程"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "霜河发布公告"
+          ],
+          "surface_forms_all": [
+            "霜河发布公告"
+          ],
+          "stable_qualifiers_any": [
+            "公告",
+            "发布公告"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "旧门禁",
+        "午餐安排",
+        "灰度说明"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_extract_table_like_records",
+      "category": "zh_extract_structured_text",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "对象：南港登记册；阶段：当前；规则：所有靠泊记录必须在交班前补齐码头编号。\n对象：南港核对表；阶段：当前；规则：每次交班必须确认封条照片和异常备注。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "南港登记册"
+          ],
+          "surface_forms_all": [
+            "南港登记册"
+          ],
+          "stable_qualifiers_any": [
+            "登记册"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "南港核对表"
+          ],
+          "surface_forms_all": [
+            "南港核对表"
+          ],
+          "stable_qualifiers_any": [
+            "核对表"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "码头编号",
+        "封条照片",
+        "异常备注"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_extract_person_and_team",
+      "category": "zh_extract_mixed_subjects",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "陈岚偏好在周五上午看风险复盘。东桥数据组当前负责人是孟然，负责维护夜间同步窗口。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "陈岚"
+          ],
+          "surface_forms_all": [
+            "陈岚"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "东桥数据组"
+          ],
+          "surface_forms_all": [
+            "东桥数据组"
+          ],
+          "stable_qualifiers_any": [
+            "数据组"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "孟然",
+        "夜间同步窗口"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_extract_market_and_note",
+      "category": "zh_extract_market_document",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "海岳电池当前主风险是库存周转放慢。海岳调研纪要当前结论是先观察毛利修复，再考虑提高评级。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "海岳电池"
+          ],
+          "surface_forms_all": [
+            "海岳电池"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "海岳调研纪要"
+          ],
+          "surface_forms_all": [
+            "海岳调研纪要"
+          ],
+          "stable_qualifiers_any": [
+            "纪要",
+            "调研纪要"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "海岳",
+        "库存周转",
+        "毛利修复"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_extract_child_component",
+      "category": "zh_extract_child_subject",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "星河门户当前可正常登录。星河门户消息中心当前延迟超过十分钟，需要先恢复队列消费者。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "星河门户"
+          ],
+          "surface_forms_all": [
+            "星河门户"
+          ],
+          "stable_qualifiers_any": [
+            "门户"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "星河门户消息中心"
+          ],
+          "surface_forms_all": [
+            "星河门户消息中心"
+          ],
+          "stable_qualifiers_any": [
+            "消息中心"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "队列消费者"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_extract_strategy_and_document",
+      "category": "zh_extract_strategy_document",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "春谷防守策略当前先降低仓位。春谷风控手册要求降仓后必须记录触发原因和复核人。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "春谷防守策略"
+          ],
+          "surface_forms_all": [
+            "春谷防守策略"
+          ],
+          "stable_qualifiers_any": [
+            "策略",
+            "防守策略"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "春谷风控手册"
+          ],
+          "surface_forms_all": [
+            "春谷风控手册"
+          ],
+          "stable_qualifiers_any": [
+            "手册",
+            "风控手册"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "仓位",
+        "触发原因",
+        "复核人"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_extract_event_and_work_item",
+      "category": "zh_extract_event_work_item",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "槐庭评审会决定暂缓发布。槐庭整改工单当前负责人是赵宁，需要补齐安全检查单。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "槐庭评审会"
+          ],
+          "surface_forms_all": [
+            "槐庭评审会"
+          ],
+          "stable_qualifiers_any": [
+            "评审会"
+          ],
+          "definition_required": true
+        },
+        {
+          "who_any": [
+            "槐庭整改工单"
+          ],
+          "surface_forms_all": [
+            "槐庭整改工单"
+          ],
+          "stable_qualifiers_any": [
+            "工单",
+            "整改工单"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "赵宁",
+        "安全检查单"
+      ],
+      "profile_count": 2,
+      "source_suite": "identity_profile_rules_zh_v1"
+    }
+  ]
+}

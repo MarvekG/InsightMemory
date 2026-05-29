@@ -1,0 +1,2548 @@
+{
+  "suite_id": "identity_profile_write_context_v1",
+  "description": "identity_profile write-context suite. Focuses on raw context acceptance/rejection, stable owner selection, field-value boundaries, and avoiding identities for missing items, owners, and noise.",
+  "minimum_pass_rate": 1.0,
+  "target_prompt_key": "write_gate",
+  "cases": [
+    {
+      "case_id": "write_gate_missing_item_owner",
+      "category": "causal_missing_item_boundary",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "Lanturn deployment cannot enter final validation because the escrow approval form is still missing."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Lanturn deployment"
+          ],
+          "surface_forms_all": [
+            "Lanturn deployment"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "escrow approval form"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "write_gate_governing_policy_owner",
+      "category": "governing_artifact_owner",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "Cedar QA policy requires every release ticket to attach a parity matrix before manager signoff."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Cedar QA policy"
+          ],
+          "surface_forms_all": [
+            "Cedar QA policy"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "parity matrix",
+        "release ticket"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "write_gate_background_name_ignored",
+      "category": "background_name_boundary",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "During the Nexus sync, Vireo billing migration moved to amber because invoice replay tests failed overnight."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Vireo billing migration"
+          ],
+          "surface_forms_all": [
+            "Vireo billing migration"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "Nexus sync",
+        "invoice replay tests"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_realworld_ticket_row",
+      "category": "history_realworld_ticket",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_adversarial_v1:ticket_rows_owner_boundary",
+      "payload": {
+        "context": "Ops table row: ticket=MX-17A; asset=freezer bay; blocker=missing gasket photo; owner=Rui."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "MX-17A"
+          ],
+          "surface_forms_all": [
+            "MX-17A"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "freezer bay",
+        "missing gasket photo",
+        "Rui"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_write_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment_1",
+      "category": "history_write_cross_format_correction_note",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_targeted_v1:cross_format_correction_note_amendment:write:0",
+      "payload": {
+        "context": "Morrowfield register earlier allowed teams to file quay note within 10 hours after release."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Morrowfield register"
+          ],
+          "surface_forms_all": [
+            "Morrowfield register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_write_generic_cross_format_longform_v1_cross_format_yamlish_phase_record_1",
+      "category": "history_write_cross_format_yamlish",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_v1:cross_format_yamlish_phase_record:write:0",
+      "payload": {
+        "context": "artifact: Siltmere bulletin\nphase: history\nrule: teams could attach berth sheet within 18 hours after shift"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Siltmere bulletin"
+          ],
+          "surface_forms_all": [
+            "Siltmere bulletin"
+          ],
+          "stable_qualifiers_any": [
+            "bulletin"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_write_generic_format_shift_targeted_v1_format_chat_history_with_requirement_1",
+      "category": "history_write_format_chat_transcript",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_targeted_v1:format_chat_history_with_requirement:write:0",
+      "payload": {
+        "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kestrel transit review"
+          ],
+          "surface_forms_all": [
+            "Kestrel transit review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_write_generic_format_shift_v1_format_yaml_rule_evolution_1",
+      "category": "history_write_format_yaml_record",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_v1:format_yaml_rule_evolution:write:0",
+      "payload": {
+        "context": "record: Willow handover notice\nphase: history\nrule: teams could attach seal note within 24 hours after shift"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Willow handover notice"
+          ],
+          "surface_forms_all": [
+            "Willow handover notice"
+          ],
+          "stable_qualifiers_any": [
+            "notice"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_write_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment_2",
+      "category": "history_write_cross_format_correction_note",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_targeted_v1:cross_format_correction_note_amendment:write:1",
+      "payload": {
+        "context": "Correction note for Morrowfield register: the earlier 10-hour grace window is withdrawn; every quay note must be filed before release."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Morrowfield register"
+          ],
+          "surface_forms_all": [
+            "Morrowfield register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "forbidden_identity_who": [
+        "Correction note for Morrowfield register"
+      ],
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_write_generic_cross_format_longform_v1_cross_format_yamlish_phase_record_2",
+      "category": "history_write_cross_format_yamlish",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_v1:cross_format_yamlish_phase_record:write:1",
+      "payload": {
+        "context": "artifact: Siltmere bulletin\nphase: current\nrule: every berth sheet must be completed before handoff"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Siltmere bulletin"
+          ],
+          "surface_forms_all": [
+            "Siltmere bulletin"
+          ],
+          "stable_qualifiers_any": [
+            "bulletin"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_v1"
+    },
+    {
+      "case_id": "history_policy_requirement",
+      "category": "history_policy_requirement",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_accuracy_v1:single_fact_policy",
+      "payload": {
+        "context": "Access policy 要求所有临时权限在24小时内回收。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Access policy"
+          ],
+          "surface_forms_all": [
+            "Access policy"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "临时权限"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_accuracy_v1_gate_ingest_accept_service_1",
+      "category": "history_write_gate_ingest",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_accuracy_v1:gate_ingest_accept_service:write:0",
+      "payload": {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败，需要先回滚。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_answer_boundary_v1_direct_vs_dependency_answer_split_1",
+      "category": "history_write_answer_direct_vs_dependency",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_answer_boundary_v1:direct_vs_dependency_answer_split:write:0",
+      "payload": {
+        "context": "Briar release card 当前还需要补齐 gate stamp 和 load receipt。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Briar release card"
+          ],
+          "surface_forms_all": [
+            "Briar release card"
+          ],
+          "stable_qualifiers_any": [
+            "card"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_broad_coverage_v1_broad_three_hop_requirement_chain_1",
+      "category": "history_write_broad_deep_association",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_broad_coverage_v1:broad_three_hop_requirement_chain:write:0",
+      "payload": {
+        "context": "Driftwood rollout 当前还不能进入执行阶段，因为 readiness packet 还没有补齐 approval matrix。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Driftwood rollout"
+          ],
+          "surface_forms_all": [
+            "Driftwood rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "readiness packet"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_broad_targeted_v1_broad_four_way_same_surface_disambiguation_1",
+      "category": "history_write_broad_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_broad_targeted_v1:broad_four_way_same_surface_disambiguation:write:0",
+      "payload": {
+        "context": "Aurora service 当前主阻塞是 cert rotation missing。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aurora service"
+          ],
+          "surface_forms_all": [
+            "Aurora service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_concurrency_consistency_v1_concurrency_same_entity_parallel_facts_1",
+      "category": "history_write_concurrency_same_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_concurrency_consistency_v1:concurrency_same_entity_parallel_facts:write:0",
+      "payload": {
+        "context": "Deltaframe service 当前负责人是 Juno Park。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Deltaframe service"
+          ],
+          "surface_forms_all": [
+            "Deltaframe service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_cross_domain_transfer_v1_cross_domain_analogous_structure_1",
+      "category": "history_write_cross_domain_analogy",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_domain_transfer_v1:cross_domain_analogous_structure:write:0",
+      "payload": {
+        "context": "软件开发中，Code review pipeline 要求所有提交在合并前必须通过自动化测试和人工审查两道关卡。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Code review pipeline"
+          ],
+          "surface_forms_all": [
+            "Code review pipeline"
+          ],
+          "stable_qualifiers_any": [
+            "pipeline"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_deep_association_v1_deep_four_hop_requirement_chain_1",
+      "category": "history_write_deep_requirement_chain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_deep_association_v1:deep_four_hop_requirement_chain:write:0",
+      "payload": {
+        "context": "Sundial rollout 当前还不能进入执行阶段，因为 release packet 缺少 rollback annex。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Sundial rollout"
+          ],
+          "surface_forms_all": [
+            "Sundial rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "release packet"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_deeper_dependency_chain_v1_deeper_five_hop_requirement_chain_1",
+      "category": "history_write_deep_requirement_chain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_deeper_dependency_chain_v1:deeper_five_hop_requirement_chain:write:0",
+      "payload": {
+        "context": "Aetherpoint rollout 当前还不能进入 cutover，因为 release packet 缺少 dock seal note。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aetherpoint rollout"
+          ],
+          "surface_forms_all": [
+            "Aetherpoint rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "release packet"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_extreme_dependency_v1_same_surface_project_vs_checklist_why_query_1",
+      "category": "history_write_same_surface_cross_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_extreme_dependency_v1:same_surface_project_vs_checklist_why_query:write:0",
+      "payload": {
+        "context": "Atlas rollout 当前还不能切换到新流程，因为回滚说明还没有补齐。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "回滚说明"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_extreme_targeted_v11_noisy_meeting_note_with_second_entity_1",
+      "category": "history_write_noisy_cross_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_extreme_targeted_v11:noisy_meeting_note_with_second_entity:write:0",
+      "payload": {
+        "context": "周会里顺手提到 Billing service，但主结论是 Atlas rollout 当前主阻塞是审批链说明缺失。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "Billing"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_extreme_targeted_v9_cross_entity_upstream_with_distractor_handbo_1",
+      "category": "history_write_noisy_cross_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_extreme_targeted_v9:cross_entity_upstream_with_distractor_handbook:write:0",
+      "payload": {
+        "context": "Atlas rollout 当前主阻塞是依赖数据源迟迟没有恢复。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_far_deep_targeted_v1_farfield_herbarium_accession_requirement_1",
+      "category": "history_write_farfield_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_far_deep_targeted_v1:farfield_herbarium_accession_requirement:write:0",
+      "payload": {
+        "context": "Marlowe herbarium accession request 当前还不能归档，因为 specimen custody folio 还没有补齐。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Marlowe herbarium accession request"
+          ],
+          "surface_forms_all": [
+            "Marlowe herbarium accession request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "specimen custody folio"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_farfield_openworld_v1_farfield_herbarium_accession_requirement_1",
+      "category": "history_write_farfield_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_farfield_openworld_v1:farfield_herbarium_accession_requirement:write:0",
+      "payload": {
+        "context": "Marlowe herbarium accession request 当前还不能归档，因为 specimen custody folio 还没有补齐。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Marlowe herbarium accession request"
+          ],
+          "surface_forms_all": [
+            "Marlowe herbarium accession request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "specimen custody folio"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_finance_generalization_v1_finance_etf_rebalance_requirement_1",
+      "category": "history_write_finance_etf",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_finance_generalization_v1:finance_etf_rebalance_requirement:write:0",
+      "payload": {
+        "context": "Stonebridge ETF rebalance memo 要求调仓前确认 tracking error band。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Stonebridge ETF rebalance memo"
+          ],
+          "surface_forms_all": [
+            "Stonebridge ETF rebalance memo"
+          ],
+          "stable_qualifiers_any": [
+            "memo"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_frontier_targeted_v1_concurrency_same_surface_split_parallel_1",
+      "category": "history_write_concurrency_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_frontier_targeted_v1:concurrency_same_surface_split_parallel:write:0",
+      "payload": {
+        "context": "Seaborne service 当前主阻塞是 rollback packet missing。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Seaborne service"
+          ],
+          "surface_forms_all": [
+            "Seaborne service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_generalization_association_v1_generalization_policy_requirement_1",
+      "category": "history_write_generalization",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_generalization_association_v1:generalization_policy_requirement:write:0",
+      "payload": {
+        "context": "Access recovery policy 要求所有临时权限在24小时内回收。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Access recovery policy"
+          ],
+          "surface_forms_all": [
+            "Access recovery policy"
+          ],
+          "stable_qualifiers_any": [
+            "policy"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_hard_generalization_v1_mixed_language_requirement_runbook_1",
+      "category": "history_write_mixed_language",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_hard_generalization_v1:mixed_language_requirement_runbook:write:0",
+      "payload": {
+        "context": "Database failover runbook 要求 before cutover 必须完成 shadow replay。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Database failover runbook"
+          ],
+          "surface_forms_all": [
+            "Database failover runbook"
+          ],
+          "stable_qualifiers_any": [
+            "runbook"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_heterogeneous_coverage_v1_heterogeneous_same_surface_artifact_chain_1",
+      "category": "history_write_heterogeneous_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_heterogeneous_coverage_v1:heterogeneous_same_surface_artifact_chain:write:0",
+      "payload": {
+        "context": "Rill custody docket 当前还不能归档，因为 crate transfer slip 缺失。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Rill custody docket"
+          ],
+          "surface_forms_all": [
+            "Rill custody docket"
+          ],
+          "stable_qualifiers_any": [
+            "doc"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_heterogeneous_targeted_v1_heterogeneous_history_disagreement_with_rule_3",
+      "category": "history_write_heterogeneous_history_rule",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_heterogeneous_targeted_v1:heterogeneous_history_disagreement_with_rule:write:2",
+      "payload": {
+        "context": "Mica transit review 当前决定已经变成先补 ballast variance note 再重新排期转运。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Mica transit review"
+          ],
+          "surface_forms_all": [
+            "Mica transit review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_identity_boundary_v1_same_prefix_project_checklist_handbook_1",
+      "category": "history_write_identity_same_prefix_artifacts",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_identity_boundary_v1:same_prefix_project_checklist_handbook:write:0",
+      "payload": {
+        "context": "Orchid transfer project 当前主阻塞是 staging window 未确认。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Orchid transfer project"
+          ],
+          "surface_forms_all": [
+            "Orchid transfer project"
+          ],
+          "stable_qualifiers_any": [
+            "transfer"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_implicit_relation_v1_implicit_precondition_inference_1",
+      "category": "history_write_precondition_inference",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_implicit_relation_v1:implicit_precondition_inference:write:0",
+      "payload": {
+        "context": "Database migration 要求先关闭写流量、再创建快照备份、最后执行 schema 变更。Schema 变更完成后需要验证数据一致性，然后才能恢复写流量。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Database migration"
+          ],
+          "surface_forms_all": [
+            "Database migration"
+          ],
+          "stable_qualifiers_any": [
+            "database"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_large_scope_graph_v1_large_scope_dense_entity_field_1",
+      "category": "history_write_large_scope_density",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_large_scope_graph_v1:large_scope_dense_entity_field:write:0",
+      "payload": {
+        "context": "Verdant project 当前 blocker 是 migration script 未通过 staging 验证。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Verdant project"
+          ],
+          "surface_forms_all": [
+            "Verdant project"
+          ],
+          "stable_qualifiers_any": [
+            "project"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_long_horizon_v1_long_horizon_tracked_blocker_chain_1",
+      "category": "history_write_long_horizon_drift",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_long_horizon_v1:long_horizon_tracked_blocker_chain:write:0",
+      "payload": {
+        "context": "Rook rollout 之前卡在 schema note missing。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Rook rollout"
+          ],
+          "surface_forms_all": [
+            "Rook rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_market_memory_v1_market_equity_risk_recall_1",
+      "category": "history_write_market_equity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_market_memory_v1:market_equity_risk_recall:write:0",
+      "payload": {
+        "context": "Bluepeak Holdings 当前主风险是库存周转天数上升。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Bluepeak Holdings"
+          ],
+          "surface_forms_all": [
+            "Bluepeak Holdings"
+          ],
+          "stable_qualifiers_any": [
+            "holdings"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_matrix_smoke_v1_gate_ingest_accept_service_1",
+      "category": "history_write_gate_ingest",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_matrix_smoke_v1:gate_ingest_accept_service:write:0",
+      "payload": {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败，需要先回滚。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_multi_subject_document_targeted_v1_multi_subject_primary_with_side_mentions_1",
+      "category": "history_write_multi_subject_primary",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_multi_subject_document_targeted_v1:multi_subject_primary_with_side_mentions:write:0",
+      "payload": {
+        "context": "Quarterly transfer briefing: Briarwatch rollout 当前仍不能进入 turnover，因为 berth packet 还没有补齐。周会里顺手提到 Mossledger service 近期也在调整批处理窗口，但没有给出它的独立结论。另有一条明确更新：Drumlin review 当前负责人是 Mila Song。其余段落只是在背景中提到 Harborlane checklist、Harborlane bulletin 和旧的 shift note，没有给出这些对象新的独立 durable fact。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Quarterly transfer briefing"
+          ],
+          "surface_forms_all": [
+            "Quarterly transfer briefing"
+          ],
+          "stable_qualifiers_any": [
+            "briefing"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "Mossledger",
+        "berth packet"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_multi_subject_document_v1_multi_subject_primary_with_side_mentions_1",
+      "category": "history_write_multi_subject_primary",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_multi_subject_document_v1:multi_subject_primary_with_side_mentions:write:0",
+      "payload": {
+        "context": "Quarterly transfer briefing: Briarwatch rollout 当前仍不能进入 turnover，因为 berth packet 还没有补齐。周会里顺手提到 Mossledger service 近期也在调整批处理窗口，但没有给出它的独立结论。另有一条明确更新：Drumlin review 当前负责人是 Mila Song。其余段落只是在背景中提到 Harborlane checklist、Harborlane bulletin 和旧的 shift note，没有给出这些对象新的独立 durable fact。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Quarterly transfer briefing"
+          ],
+          "surface_forms_all": [
+            "Quarterly transfer briefing"
+          ],
+          "stable_qualifiers_any": [
+            "briefing"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "Mossledger",
+        "berth packet"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_negation_conflict_v1_negation_explicit_rejection_1",
+      "category": "history_write_negation_rejection",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_negation_conflict_v1:negation_explicit_rejection:write:0",
+      "payload": {
+        "context": "Project Titan 当前不采用微服务架构，仍保持单体应用模式。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Project Titan"
+          ],
+          "surface_forms_all": [
+            "Project Titan"
+          ],
+          "stable_qualifiers_any": [
+            "project"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_noise_dependency_v1_cross_entity_policy_explains_blocker_1",
+      "category": "history_write_cross_entity_dependency",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_noise_dependency_v1:cross_entity_policy_explains_blocker:write:0",
+      "payload": {
+        "context": "Northstar rollout 当前仍不能上线，因为审批链说明还没有补齐。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Northstar rollout"
+          ],
+          "surface_forms_all": [
+            "Northstar rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "审批链说明"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_numerical_reasoning_v1_numerical_threshold_comparison_1",
+      "category": "history_write_threshold_comparison",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_numerical_reasoning_v1:numerical_threshold_comparison:write:0",
+      "payload": {
+        "context": "API Endpoint 的告警阈值：CPU 使用率超过 80% 触发黄色预警，超过 95% 触发红色预警，P99 延迟超过 500ms 触发性能告警，错误率超过 1% 触发质量告警。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "API Endpoint"
+          ],
+          "surface_forms_all": [
+            "API Endpoint"
+          ],
+          "stable_qualifiers_any": [
+            "api"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_openworld_targeted_v1_openworld_archive_finding_aid_requirement_1",
+      "category": "history_write_openworld_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_openworld_targeted_v1:openworld_archive_finding_aid_requirement:write:0",
+      "payload": {
+        "context": "Kite archive digitization request 当前还不能提交，因为 provenance note 还没有补齐。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kite archive digitization request"
+          ],
+          "surface_forms_all": [
+            "Kite archive digitization request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "provenance note"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_openworld_unknown_part_a_v1_openworld_archive_finding_aid_requirement_1",
+      "category": "history_write_openworld_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_openworld_unknown_part_a_v1:openworld_archive_finding_aid_requirement:write:0",
+      "payload": {
+        "context": "Kite archive digitization request 当前还不能提交，因为 provenance note 还没有补齐。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kite archive digitization request"
+          ],
+          "surface_forms_all": [
+            "Kite archive digitization request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "provenance note"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_openworld_unknown_part_b_v1_openworld_exhibit_manual_rule_evolution_1",
+      "category": "history_write_openworld_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_openworld_unknown_part_b_v1:openworld_exhibit_manual_rule_evolution:write:0",
+      "payload": {
+        "context": "Coral exhibit manual 之前允许团队自行调整 light cycle。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Coral exhibit manual"
+          ],
+          "surface_forms_all": [
+            "Coral exhibit manual"
+          ],
+          "stable_qualifiers_any": [
+            "manual"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_openworld_unknown_v1_openworld_archive_finding_aid_requirement_1",
+      "category": "history_write_openworld_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_openworld_unknown_v1:openworld_archive_finding_aid_requirement:write:0",
+      "payload": {
+        "context": "Kite archive digitization request 当前还不能提交，因为 provenance note 还没有补齐。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kite archive digitization request"
+          ],
+          "surface_forms_all": [
+            "Kite archive digitization request"
+          ],
+          "stable_qualifiers_any": [
+            "request"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "provenance note"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_out_of_distribution_domains_v1_ood_shipping_vessel_1",
+      "category": "history_write_ood_shipping",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_out_of_distribution_domains_v1:ood_shipping_vessel:write:0",
+      "payload": {
+        "context": "Seaford vessel 当前还不能离港，因为 cargo manifest 缺少 customs seal。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Seaford vessel"
+          ],
+          "surface_forms_all": [
+            "Seaford vessel"
+          ],
+          "stable_qualifiers_any": [
+            "vessel"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "cargo manifest"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_realworld_adversarial_v1_alias_after_correction_not_old_name_2",
+      "category": "history_write_realworld_adversarial_alias",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_adversarial_v1:alias_after_correction_not_old_name:write:1",
+      "payload": {
+        "context": "NPI binder 更正：当前实际缺少的是 signed dock waiver，不是 blue receipt。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "NPI binder"
+          ],
+          "surface_forms_all": [
+            "NPI binder"
+          ],
+          "stable_qualifiers_any": [
+            "binder"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_realworld_complex_v1_home_renovation_permit_chain_1",
+      "category": "history_write_realworld_complex_renovation",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_complex_v1:home_renovation_permit_chain:write:0",
+      "payload": {
+        "context": "Willow kitchen renovation 当前不能开工，因为 building permit 还缺 contractor insurance certificate。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Willow kitchen renovation"
+          ],
+          "surface_forms_all": [
+            "Willow kitchen renovation"
+          ],
+          "stable_qualifiers_any": [
+            "renovation"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_realworld_daily_v1_school_trip_permission_1",
+      "category": "history_write_realworld_daily_school",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_daily_v1:school_trip_permission:write:0",
+      "payload": {
+        "context": "Milo 的 school field trip 当前还缺家长签字的 permission slip，周五前要交给 homeroom teacher。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Milo"
+          ],
+          "surface_forms_all": [
+            "Milo"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_realworld_edge_cases_v1_shared_surface_router_vs_child_schedule_1",
+      "category": "history_write_realworld_edge_identity_boundary",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_edge_cases_v1:shared_surface_router_vs_child_schedule:write:0",
+      "payload": {
+        "context": "Nova 的 after-school robotics club 本周改到周四 16:30，接送地点在 west gate。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Nova"
+          ],
+          "surface_forms_all": [
+            "Nova"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_realworld_software_dev_v1_api_contract_breaking_change_1",
+      "category": "history_write_realworld_software_api_contract",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_software_dev_v1:api_contract_breaking_change:write:0",
+      "payload": {
+        "context": "Atlas checkout API v2 当前不能发布，因为 response schema 还缺 idempotency_key 字段。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas checkout API v2"
+          ],
+          "surface_forms_all": [
+            "Atlas checkout API v2"
+          ],
+          "stable_qualifiers_any": [
+            "api"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_realworld_work_ops_v1_vendor_procurement_shipping_1",
+      "category": "history_write_realworld_work_procurement",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_realworld_work_ops_v1:vendor_procurement_shipping:write:0",
+      "payload": {
+        "context": "Harbor printer procurement 还不能下 PO，因为 vendor W-9 form 没收到。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Harbor printer procurement"
+          ],
+          "surface_forms_all": [
+            "Harbor printer procurement"
+          ],
+          "stable_qualifiers_any": [
+            "procurement"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_regression_targeted_v1_single_fact_team_plan_1",
+      "category": "history_write_single_fact_recall",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_regression_targeted_v1:single_fact_team_plan:write:0",
+      "payload": {
+        "context": "Operations team 接下来先补监控告警，再做回归演练。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Operations team"
+          ],
+          "surface_forms_all": [
+            "Operations team"
+          ],
+          "stable_qualifiers_any": [
+            "team"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_rule_evolution_matrix_targeted_v1_rule_evolution_handbook_history_current_supp_1",
+      "category": "history_write_rule_evolution_history_current",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_rule_evolution_matrix_targeted_v1:rule_evolution_handbook_history_current_supplement:write:0",
+      "payload": {
+        "context": "Ashgrove handbook 之前允许团队在 shift 后 24 小时内补录 fallback schedule。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Ashgrove handbook"
+          ],
+          "surface_forms_all": [
+            "Ashgrove handbook"
+          ],
+          "stable_qualifiers_any": [
+            "handbook"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_rule_evolution_matrix_v1_rule_evolution_handbook_history_current_supp_1",
+      "category": "history_write_rule_evolution_history_current",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_rule_evolution_matrix_v1:rule_evolution_handbook_history_current_supplement:write:0",
+      "payload": {
+        "context": "Ashgrove handbook 之前允许团队在 shift 后 24 小时内补录 fallback schedule。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Ashgrove handbook"
+          ],
+          "surface_forms_all": [
+            "Ashgrove handbook"
+          ],
+          "stable_qualifiers_any": [
+            "handbook"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_semantic_paraphrase_v1_ferry_dossier_material_paraphrase_1",
+      "category": "history_write_semantic_paraphrase_dependency",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_semantic_paraphrase_v1:ferry_dossier_material_paraphrase:write:0",
+      "payload": {
+        "context": "Lumen ferry dossier 当前不能归档，因为 mooring certificate 缺少 harbor seal。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Lumen ferry dossier"
+          ],
+          "surface_forms_all": [
+            "Lumen ferry dossier"
+          ],
+          "stable_qualifiers_any": [
+            "dossier"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "mooring certificate"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_semantic_tail_targeted_v1_deep_four_hop_requirement_chain_1",
+      "category": "history_write_deep_requirement_chain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_semantic_tail_targeted_v1:deep_four_hop_requirement_chain:write:0",
+      "payload": {
+        "context": "Sundial rollout 当前还不能进入执行阶段，因为 release packet 缺少 rollback annex。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Sundial rollout"
+          ],
+          "surface_forms_all": [
+            "Sundial rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "release packet"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_state_transition_boundary_v1_current_blocker_replaces_previous_1",
+      "category": "history_write_state_current_vs_previous",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_state_transition_boundary_v1:current_blocker_replaces_previous:write:0",
+      "payload": {
+        "context": "Sable clinic review 之前卡在 intake form 缺少 triage stamp。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Sable clinic review"
+          ],
+          "surface_forms_all": [
+            "Sable clinic review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_stress_openworld_v1_stress_three_way_same_surface_split_1",
+      "category": "history_write_stress_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_stress_openworld_v1:stress_three_way_same_surface_split:write:0",
+      "payload": {
+        "context": "Orbit rollout 当前主阻塞是审批链说明缺失。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Orbit rollout"
+          ],
+          "surface_forms_all": [
+            "Orbit rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_stress_targeted_v1_stress_same_surface_document_project_require_1",
+      "category": "history_write_stress_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_stress_targeted_v1:stress_same_surface_document_project_requirement:write:0",
+      "payload": {
+        "context": "Prism plan 当前不能进入审批，因为 owner note 还没有补齐。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Prism plan"
+          ],
+          "surface_forms_all": [
+            "Prism plan"
+          ],
+          "stable_qualifiers_any": [
+            "plan"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "owner note"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_stress_targeted_v2_stress_history_with_external_requirement_cur_1",
+      "category": "history_write_stress_history_dependency",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_stress_targeted_v2:stress_history_with_external_requirement_current:write:0",
+      "payload": {
+        "context": "Nova review 之前卡在 schema freeze mismatch。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Nova review"
+          ],
+          "surface_forms_all": [
+            "Nova review"
+          ],
+          "stable_qualifiers_any": [
+            "review"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_temporal_reasoning_v1_temporal_sequence_order_1",
+      "category": "history_write_temporal_sequence",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_temporal_reasoning_v1:temporal_sequence_order:write:0",
+      "payload": {
+        "context": "Project Aurora 时间线：第一阶段需求评审在3月完成，第二阶段架构设计在4月完成，第三阶段开发实现在6月完成，第四阶段上线部署在7月完成。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Project Aurora"
+          ],
+          "surface_forms_all": [
+            "Project Aurora"
+          ],
+          "stable_qualifiers_any": [
+            "project"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_accuracy_v1_gate_ingest_accept_person_1",
+      "category": "history_write_gate_ingest",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_accuracy_v1:gate_ingest_accept_person:write:0",
+      "payload": {
+        "context": "Jordan Lee 偏好把事故复盘安排在周一上午。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Jordan Lee"
+          ],
+          "surface_forms_all": [
+            "Jordan Lee"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_answer_boundary_v1_direct_vs_dependency_answer_split_2",
+      "category": "history_write_answer_direct_vs_dependency",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_answer_boundary_v1:direct_vs_dependency_answer_split:write:1",
+      "payload": {
+        "context": "Briar compliance guide 要求所有 gate stamp 必须包含 approver code。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Briar compliance guide"
+          ],
+          "surface_forms_all": [
+            "Briar compliance guide"
+          ],
+          "stable_qualifiers_any": [
+            "guide"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_broad_coverage_v1_broad_three_hop_requirement_chain_2",
+      "category": "history_write_broad_deep_association",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_broad_coverage_v1:broad_three_hop_requirement_chain:write:1",
+      "payload": {
+        "context": "Readiness checklist 要求所有 readiness packet 在进入执行阶段前补齐 approval matrix。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Readiness checklist"
+          ],
+          "surface_forms_all": [
+            "Readiness checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_broad_targeted_v1_broad_four_way_same_surface_disambiguation_2",
+      "category": "history_write_broad_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_broad_targeted_v1:broad_four_way_same_surface_disambiguation:write:1",
+      "payload": {
+        "context": "Aurora manual 当前要求所有 cert rotation 记录附上 reviewer signature。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aurora manual"
+          ],
+          "surface_forms_all": [
+            "Aurora manual"
+          ],
+          "stable_qualifiers_any": [
+            "manual"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_concurrency_consistency_v1_concurrency_same_entity_parallel_facts_2",
+      "category": "history_write_concurrency_same_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_concurrency_consistency_v1:concurrency_same_entity_parallel_facts:write:1",
+      "payload": {
+        "context": "Deltaframe service 当前主阻塞是 cert bundle missing。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Deltaframe service"
+          ],
+          "surface_forms_all": [
+            "Deltaframe service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_cross_domain_transfer_v1_cross_domain_procedure_analogy_1",
+      "category": "history_write_cross_domain_procedure",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_domain_transfer_v1:cross_domain_procedure_analogy:write:0",
+      "payload": {
+        "context": "在软件开发中，System rollback procedure 要求先停止服务、恢复数据库快照、重新部署上一个稳定版本、验证核心功能。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "System rollback procedure"
+          ],
+          "surface_forms_all": [
+            "System rollback procedure"
+          ],
+          "stable_qualifiers_any": [
+            "procedure"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_deep_association_v1_deep_four_hop_requirement_chain_2",
+      "category": "history_write_deep_requirement_chain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_deep_association_v1:deep_four_hop_requirement_chain:write:1",
+      "payload": {
+        "context": "Release checklist 要求所有 release packet 在进入执行阶段前补齐 rollback annex。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Release checklist"
+          ],
+          "surface_forms_all": [
+            "Release checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_deeper_dependency_chain_v1_deeper_five_hop_requirement_chain_2",
+      "category": "history_write_deep_requirement_chain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_deeper_dependency_chain_v1:deeper_five_hop_requirement_chain:write:1",
+      "payload": {
+        "context": "Aetherpoint checklist 要求所有 release packet 在进入 cutover 前补齐 dock seal note。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aetherpoint checklist"
+          ],
+          "surface_forms_all": [
+            "Aetherpoint checklist"
+          ],
+          "stable_qualifiers_any": [
+            "checklist"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_extreme_dependency_v1_same_surface_checklist_query_after_project_c_1",
+      "category": "history_write_same_surface_cross_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_extreme_dependency_v1:same_surface_checklist_query_after_project_context:write:0",
+      "payload": {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_extreme_targeted_v11_noisy_meeting_note_with_second_entity_2",
+      "category": "history_write_noisy_cross_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_extreme_targeted_v11:noisy_meeting_note_with_second_entity:write:1",
+      "payload": {
+        "context": "Billing service 当前负责人是 Owen Tan。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Billing service"
+          ],
+          "surface_forms_all": [
+            "Billing service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_extreme_targeted_v9_cross_entity_upstream_with_distractor_handbo_2",
+      "category": "history_write_noisy_cross_entity",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_extreme_targeted_v9:cross_entity_upstream_with_distractor_handbook:write:1",
+      "payload": {
+        "context": "Data sync service 当前仍处于批量补数状态，尚未恢复稳定输出。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Data sync service"
+          ],
+          "surface_forms_all": [
+            "Data sync service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_far_deep_targeted_v1_farfield_herbarium_accession_requirement_2",
+      "category": "history_write_farfield_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_far_deep_targeted_v1:farfield_herbarium_accession_requirement:write:1",
+      "payload": {
+        "context": "Custody register 要求所有 herbarium accession request 在归档前补齐 specimen custody folio。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Custody register"
+          ],
+          "surface_forms_all": [
+            "Custody register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_farfield_openworld_v1_farfield_herbarium_accession_requirement_2",
+      "category": "history_write_farfield_unknown_domain",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_farfield_openworld_v1:farfield_herbarium_accession_requirement:write:1",
+      "payload": {
+        "context": "Custody register 要求所有 herbarium accession request 在归档前补齐 specimen custody folio。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Custody register"
+          ],
+          "surface_forms_all": [
+            "Custody register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_reject_write_generic_accuracy_v1_gate_ingest_reject_subjectless_1",
+      "category": "history_reject_gate_ingest",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_accuracy_v1:gate_ingest_reject_subjectless:write:0",
+      "payload": {
+        "context": "现在的情况比较复杂，需要尽快处理。"
+      },
+      "expected_gate_status": "rejected_no_identity_profile",
+      "expected_identities": [],
+      "profile_count": 0,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_reject_write_generic_accuracy_v1_gate_ingest_reject_noise_1",
+      "category": "history_reject_gate_ingest",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_accuracy_v1:gate_ingest_reject_noise:write:0",
+      "payload": {
+        "context": "流程、规范、注意事项都还没统一，但这里没有明确主体。"
+      },
+      "expected_gate_status": "rejected_no_identity_profile",
+      "expected_identities": [],
+      "profile_count": 0,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_accuracy_v1_gate_query_accept_issue_1",
+      "category": "history_write_gate_query",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_accuracy_v1:gate_query_accept_issue:write:0",
+      "payload": {
+        "context": "Atlas rollout 当前主阻塞是数据库迁移失败，需要先回滚。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Atlas rollout"
+          ],
+          "surface_forms_all": [
+            "Atlas rollout"
+          ],
+          "stable_qualifiers_any": [
+            "rollout"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_answer_boundary_v1_direct_vs_dependency_answer_split_3",
+      "category": "history_write_answer_direct_vs_dependency",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_answer_boundary_v1:direct_vs_dependency_answer_split:write:2",
+      "payload": {
+        "context": "Briar training roster 显示周二完成 forklift drill。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Briar training roster"
+          ],
+          "surface_forms_all": [
+            "Briar training roster"
+          ],
+          "stable_qualifiers_any": [
+            "roster"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_broad_coverage_v1_broad_four_way_same_surface_disambiguation_1",
+      "category": "history_write_broad_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_broad_coverage_v1:broad_four_way_same_surface_disambiguation:write:0",
+      "payload": {
+        "context": "Aurora service 当前主阻塞是 cert rotation missing。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aurora service"
+          ],
+          "surface_forms_all": [
+            "Aurora service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_broad_targeted_v1_broad_four_way_same_surface_disambiguation_3",
+      "category": "history_write_broad_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_broad_targeted_v1:broad_four_way_same_surface_disambiguation:write:2",
+      "payload": {
+        "context": "Aurora plan 当前负责人是 Devin Cole。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aurora plan"
+          ],
+          "surface_forms_all": [
+            "Aurora plan"
+          ],
+          "stable_qualifiers_any": [
+            "plan"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_concurrency_consistency_v1_concurrency_same_surface_split_parallel_1",
+      "category": "history_write_concurrency_same_surface",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_concurrency_consistency_v1:concurrency_same_surface_split_parallel:write:0",
+      "payload": {
+        "context": "Seaborne service 当前主阻塞是 rollback packet missing。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Seaborne service"
+          ],
+          "surface_forms_all": [
+            "Seaborne service"
+          ],
+          "stable_qualifiers_any": [
+            "service"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "history_write_generic_cross_domain_transfer_v1_cross_domain_procedure_analogy_2",
+      "category": "history_write_cross_domain_procedure",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_domain_transfer_v1:cross_domain_procedure_analogy:write:1",
+      "payload": {
+        "context": "在手术医疗中，Surgical rollback procedure 要求先稳定患者生命体征、移除植入物、恢复原始生理结构、监测术后反应。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Surgical rollback procedure"
+          ],
+          "surface_forms_all": [
+            "Surgical rollback procedure"
+          ],
+          "stable_qualifiers_any": [
+            "procedure"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_mixed_v1"
+    },
+    {
+      "case_id": "zh_write_project_missing_attachment_owner",
+      "category": "zh_write_owner_boundary",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "松岭上线计划当前不能进入验收，因为回滚说明还没有补齐。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "松岭上线计划"
+          ],
+          "surface_forms_all": [
+            "松岭上线计划"
+          ],
+          "stable_qualifiers_any": [
+            "上线计划",
+            "计划"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "回滚说明"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_policy_requirement_owner",
+      "category": "zh_write_governing_document",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "临时权限回收制度要求所有临时权限在二十四小时内关闭，延期必须单独审批。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "临时权限回收制度"
+          ],
+          "surface_forms_all": [
+            "临时权限回收制度"
+          ],
+          "stable_qualifiers_any": [
+            "制度"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "临时权限"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_person_preference",
+      "category": "zh_write_person",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "周明偏好每周三下午集中查看事故复盘，不希望拆成多次会议。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "周明"
+          ],
+          "surface_forms_all": [
+            "周明"
+          ],
+          "definition_required": true
+        }
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_team_delivery_blocker",
+      "category": "zh_write_organization",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "北桥运维组当前无法交付巡检包，因为电池审计表还缺两项签名。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "北桥运维组"
+          ],
+          "surface_forms_all": [
+            "北桥运维组"
+          ],
+          "stable_qualifiers_any": [
+            "运维组"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "电池审计表"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_service_owner",
+      "category": "zh_write_system",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "青岚结算服务当前负责人是林舟，负责处理月底对账窗口。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "青岚结算服务"
+          ],
+          "surface_forms_all": [
+            "青岚结算服务"
+          ],
+          "stable_qualifiers_any": [
+            "服务"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "林舟"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_event_decision",
+      "category": "zh_write_event",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "槐庭评审会第二轮决定暂缓发布，直到安全检查单补齐责任人签字。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "槐庭评审会"
+          ],
+          "surface_forms_all": [
+            "槐庭评审会"
+          ],
+          "stable_qualifiers_any": [
+            "评审会"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "安全检查单"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_artifact_threshold",
+      "category": "zh_write_artifact",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "流量告警看板的红色阈值调整为错误率超过百分之一，黄色阈值保持不变。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "流量告警看板"
+          ],
+          "surface_forms_all": [
+            "流量告警看板"
+          ],
+          "stable_qualifiers_any": [
+            "看板"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "红色阈值",
+        "黄色阈值"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_market_object_risk",
+      "category": "zh_write_market_object",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "海岳电池当前主风险是渠道库存周转放慢，毛利修复还没有确认。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "海岳电池"
+          ],
+          "surface_forms_all": [
+            "海岳电池"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "渠道库存",
+        "毛利修复"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_work_item_ticket",
+      "category": "zh_write_work_item",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "南仓工单甲十七当前卡在设备铭牌复核，完成后才能移交给值班组。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "南仓工单甲十七"
+          ],
+          "surface_forms_all": [
+            "南仓工单甲十七"
+          ],
+          "stable_qualifiers_any": [
+            "工单"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "设备铭牌",
+        "值班组"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_workflow_current_state",
+      "category": "zh_write_workflow",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "白塔换班流程当前要求交接前完成封签核对和异常照片归档。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "白塔换班流程"
+          ],
+          "surface_forms_all": [
+            "白塔换班流程"
+          ],
+          "stable_qualifiers_any": [
+            "流程",
+            "换班流程"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "封签核对",
+        "异常照片"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_document_revision",
+      "category": "zh_write_document",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "霞港交接手册当前版本新增要求，所有交接包必须附上值班长确认页。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "霞港交接手册"
+          ],
+          "surface_forms_all": [
+            "霞港交接手册"
+          ],
+          "stable_qualifiers_any": [
+            "手册"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "交接包",
+        "值班长确认页"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_write_strategy_update",
+      "category": "zh_write_strategy",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "春谷防守策略当前改为先降低仓位，再等待成交量恢复后分批回补。"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "春谷防守策略"
+          ],
+          "surface_forms_all": [
+            "春谷防守策略"
+          ],
+          "stable_qualifiers_any": [
+            "策略",
+            "防守策略"
+          ],
+          "definition_required": true
+        }
+      ],
+      "forbidden_identity_who": [
+        "仓位",
+        "成交量"
+      ],
+      "profile_count": 1,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_reject_subjectless_write",
+      "category": "zh_reject_subjectless",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "现在情况比较复杂，需要尽快确认责任人和时间表。"
+      },
+      "expected_gate_status": "rejected_no_identity_profile",
+      "expected_identities": [],
+      "profile_count": 0,
+      "source_suite": "identity_profile_rules_zh_v1"
+    },
+    {
+      "case_id": "zh_reject_abstract_process_write",
+      "category": "zh_reject_abstract",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "流程、规范、表格和审批都还没有统一，但文本没有说明具体属于哪个对象。"
+      },
+      "expected_gate_status": "rejected_no_identity_profile",
+      "expected_identities": [],
+      "profile_count": 0,
+      "source_suite": "identity_profile_rules_zh_v1"
+    }
+  ]
+}

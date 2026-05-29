@@ -6,7 +6,7 @@
     {
       "case_id": "write_gate_missing_item_owner",
       "category": "causal_missing_item_boundary",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "Lanturn deployment cannot enter final validation because the escrow approval form is still missing."
       },
@@ -25,12 +25,13 @@
       "forbidden_identity_who": [
         "escrow approval form"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "write_gate_governing_policy_owner",
       "category": "governing_artifact_owner",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "Cedar QA policy requires every release ticket to attach a parity matrix before manager signoff."
       },
@@ -50,12 +51,13 @@
         "parity matrix",
         "release ticket"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "extractor_same_prefix_roles",
       "category": "same_prefix_role_boundary",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "Ravel import service is owned by Priya. Ravel import checklist is maintained by Tomas and tracks customs packet readiness."
       },
@@ -83,12 +85,13 @@
       "forbidden_identity_who": [
         "Ravel import"
       ],
-      "profile_count": 2
+      "profile_count": 2,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "query_planner_market_record_word",
       "category": "market_record_scope",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "What does the latest analyst note say about STP.N?"
       },
@@ -108,12 +111,13 @@
         "latest analyst note",
         "STP.N latest analyst note"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "query_planner_record_marker_not_identity",
       "category": "record_marker_boundary",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "payload": {
         "query": "For Meridian onboarding, what changed in the phase 3 review?"
       },
@@ -133,12 +137,13 @@
         "phase 3 review",
         "Meridian onboarding phase 3 review"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "write_gate_background_name_ignored",
       "category": "background_name_boundary",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "payload": {
         "context": "During the Nexus sync, Vireo billing migration moved to amber because invoice replay tests failed overnight."
       },
@@ -158,12 +163,13 @@
         "Nexus sync",
         "invoice replay tests"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "history_format_table_register_checklist",
       "category": "history_format_shift_table",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "source_case": "generic_format_shift_v1:format_table_record",
       "payload": {
         "context": "artifact | state | note\nTideline register | blocked | cannot close because crate note is missing\n\nartifact | rule | note\nTideline checklist | requirement | every register must include crate note before closure\n"
@@ -192,12 +198,13 @@
       "forbidden_identity_who": [
         "crate note"
       ],
-      "profile_count": 2
+      "profile_count": 2,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "history_realworld_ticket_row",
       "category": "history_realworld_ticket",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "source_case": "generic_realworld_adversarial_v1:ticket_rows_owner_boundary",
       "payload": {
         "context": "Ops table row: ticket=MX-17A; asset=freezer bay; blocker=missing gasket photo; owner=Rui."
@@ -219,12 +226,13 @@
         "missing gasket photo",
         "Rui"
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "history_field_record_many_named_objects",
       "category": "history_format_field_record",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "source_case": "generic_format_shift_v1:format_field_record_many_named_objects",
       "payload": {
         "context": "name: Aster observatory docket\nowner: Ilya North\n\nname: Aster observatory ledger\nowner: Mara Pike\n\nname: Aster observatory queue\nowner: Soren Vale\n\nname: Aster observatory bulletin\nowner: Nira Holt\n"
@@ -275,12 +283,13 @@
         "Soren Vale",
         "Nira Holt"
       ],
-      "profile_count": 4
+      "profile_count": 4,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "history_write_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment_1",
       "category": "history_write_cross_format_correction_note",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "source_case": "generic_cross_format_longform_targeted_v1:cross_format_correction_note_amendment:write:0",
       "payload": {
         "context": "Morrowfield register earlier allowed teams to file quay note within 10 hours after release."
@@ -300,12 +309,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "history_write_generic_cross_format_longform_v1_cross_format_yamlish_phase_record_1",
       "category": "history_write_cross_format_yamlish",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "source_case": "generic_cross_format_longform_v1:cross_format_yamlish_phase_record:write:0",
       "payload": {
         "context": "artifact: Siltmere bulletin\nphase: history\nrule: teams could attach berth sheet within 18 hours after shift"
@@ -325,12 +335,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "history_write_generic_format_shift_targeted_v1_format_chat_history_with_requirement_1",
       "category": "history_write_format_chat_transcript",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "source_case": "generic_format_shift_targeted_v1:format_chat_history_with_requirement:write:0",
       "payload": {
         "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window"
@@ -350,12 +361,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "history_write_generic_format_shift_v1_format_yaml_rule_evolution_1",
       "category": "history_write_format_yaml_record",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "source_case": "generic_format_shift_v1:format_yaml_rule_evolution:write:0",
       "payload": {
         "context": "record: Willow handover notice\nphase: history\nrule: teams could attach seal note within 24 hours after shift"
@@ -375,12 +387,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "history_write_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment_2",
       "category": "history_write_cross_format_correction_note",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "source_case": "generic_cross_format_longform_targeted_v1:cross_format_correction_note_amendment:write:1",
       "payload": {
         "context": "Correction note for Morrowfield register: the earlier 10-hour grace window is withdrawn; every quay note must be filed before release."
@@ -389,23 +402,27 @@
       "expected_identities": [
         {
           "who_any": [
-            "Correction note for Morrowfield register"
+            "Morrowfield register"
           ],
           "surface_forms_all": [
-            "Correction note for Morrowfield register"
+            "Morrowfield register"
           ],
           "stable_qualifiers_any": [
-            "note"
+            "register"
           ],
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "forbidden_identity_who": [
+        "Correction note for Morrowfield register"
+      ],
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "history_write_generic_cross_format_longform_v1_cross_format_yamlish_phase_record_2",
       "category": "history_write_cross_format_yamlish",
-      "prompt_key": "write_gate",
+      "prompt_key": "identity_profile",
       "source_case": "generic_cross_format_longform_v1:cross_format_yamlish_phase_record:write:1",
       "payload": {
         "context": "artifact: Siltmere bulletin\nphase: current\nrule: every berth sheet must be completed before handoff"
@@ -425,12 +442,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "write_gate"
     },
     {
       "case_id": "history_query_generic_deeper_dependency_chain_v1_deeper_mixed_language_six_hop_1",
       "category": "history_query_deep_mixed_language",
-      "prompt_key": "query_planner",
+      "prompt_key": "identity_profile",
       "source_case": "generic_deeper_dependency_chain_v1:deeper_mixed_language_six_hop:query:0",
       "payload": {
         "query": "Why can’t Blackthorn packet release now?"
@@ -439,23 +457,28 @@
       "expected_identities": [
         {
           "who_any": [
-            "Why can’t Blackthorn packet release"
+            "Blackthorn packet release"
           ],
           "surface_forms_all": [
-            "Why can’t Blackthorn packet release"
+            "Blackthorn packet release"
           ],
           "stable_qualifiers_any": [
+            "packet release",
             "packet"
           ],
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "forbidden_identity_who": [
+        "Why can’t Blackthorn packet release"
+      ],
+      "target_prompt_key": "query_planner"
     },
     {
       "case_id": "history_multi_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment",
       "category": "history_multi_cross_format_correction_note",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "source_case": "generic_cross_format_longform_targeted_v1:cross_format_correction_note_amendment:writes",
       "payload": {
         "context": "Morrowfield register earlier allowed teams to file quay note within 10 hours after release.\nCorrection note for Morrowfield register: the earlier 10-hour grace window is withdrawn; every quay note must be filed before release.\nAppendix to Morrowfield register: every quay note must also include berth owner signature."
@@ -473,38 +496,19 @@
             "register"
           ],
           "definition_required": true
-        },
-        {
-          "who_any": [
-            "Correction note for Morrowfield register"
-          ],
-          "surface_forms_all": [
-            "Correction note for Morrowfield register"
-          ],
-          "stable_qualifiers_any": [
-            "note"
-          ],
-          "definition_required": true
-        },
-        {
-          "who_any": [
-            "Appendix to Morrowfield register"
-          ],
-          "surface_forms_all": [
-            "Appendix to Morrowfield register"
-          ],
-          "stable_qualifiers_any": [
-            "register"
-          ],
-          "definition_required": true
         }
       ],
-      "profile_count": 3
+      "profile_count": 1,
+      "forbidden_identity_who": [
+        "Correction note for Morrowfield register",
+        "Appendix to Morrowfield register"
+      ],
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "history_multi_generic_format_shift_targeted_v1_format_chat_history_with_requirement",
       "category": "history_multi_format_chat_transcript",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "source_case": "generic_format_shift_targeted_v1:format_chat_history_with_requirement:writes",
       "payload": {
         "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window\n[10:20] coordinator: Kestrel transit review current decision has shifted to attach the ballast memo before re-scheduling transfer"
@@ -524,12 +528,13 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "extractor"
     },
     {
       "case_id": "history_multi_generic_format_shift_v1_format_chat_history_with_requirement",
       "category": "history_multi_format_chat_transcript",
-      "prompt_key": "extractor",
+      "prompt_key": "identity_profile",
       "source_case": "generic_format_shift_v1:format_chat_history_with_requirement:writes",
       "payload": {
         "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window\n[10:20] coordinator: Kestrel transit review current decision has shifted to attach the ballast memo before re-scheduling transfer"
@@ -549,7 +554,8 @@
           "definition_required": true
         }
       ],
-      "profile_count": 1
+      "profile_count": 1,
+      "target_prompt_key": "extractor"
     }
   ]
 }
