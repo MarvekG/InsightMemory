@@ -50,7 +50,7 @@
             "临时权限回收制度"
           ],
           "stable_qualifiers_any": [
-            "制度"
+            "回收制度"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -194,7 +194,7 @@
             "流量告警看板"
           ],
           "stable_qualifiers_any": [
-            "看板"
+            "告警看板"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -482,7 +482,7 @@
             "流量告警看板"
           ],
           "stable_qualifiers_any": [
-            "看板"
+            "告警看板"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -949,9 +949,6 @@
           ],
           "surface_forms_all": [
             "星河门户"
-          ],
-          "stable_qualifiers_any": [
-            "门户"
           ],
           "definition_required": true,
           "definition_semantics_any": [
