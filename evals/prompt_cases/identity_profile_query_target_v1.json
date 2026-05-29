@@ -202,7 +202,7 @@
             "Briar release card"
           ],
           "stable_qualifiers_any": [
-            "card"
+            "release card"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -231,7 +231,7 @@
             "Quartz relay service"
           ],
           "stable_qualifiers_any": [
-            "service"
+            "relay service"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -318,7 +318,7 @@
             "Code review pipeline"
           ],
           "stable_qualifiers_any": [
-            "pipeline"
+            "review pipeline"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -492,7 +492,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -521,7 +521,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -550,7 +550,7 @@
             "Everpoint sector note"
           ],
           "stable_qualifiers_any": [
-            "note"
+            "sector note"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -668,7 +668,7 @@
             "Access recovery policy"
           ],
           "stable_qualifiers_any": [
-            "policy"
+            "recovery policy"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -697,7 +697,7 @@
             "Access recovery policy"
           ],
           "stable_qualifiers_any": [
-            "policy"
+            "recovery policy"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -726,7 +726,7 @@
             "Nacre berth queue"
           ],
           "stable_qualifiers_any": [
-            "queue"
+            "berth queue"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -755,7 +755,7 @@
             "Nacre berth queue"
           ],
           "stable_qualifiers_any": [
-            "queue"
+            "berth queue"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -784,7 +784,7 @@
             "Orchid transfer checklist"
           ],
           "stable_qualifiers_any": [
-            "checklist"
+            "transfer checklist"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1045,7 +1045,7 @@
             "Access retention policy"
           ],
           "stable_qualifiers_any": [
-            "policy"
+            "retention policy"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1104,7 +1104,7 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1133,7 +1133,7 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1162,7 +1162,7 @@
             "Coral exhibit manual"
           ],
           "stable_qualifiers_any": [
-            "manual"
+            "exhibit manual"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1191,7 +1191,7 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1278,7 +1278,7 @@
             "Willow kitchen renovation"
           ],
           "stable_qualifiers_any": [
-            "renovation"
+            "kitchen renovation"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1482,7 +1482,7 @@
             "Lumen ferry dossier"
           ],
           "stable_qualifiers_any": [
-            "dossier"
+            "ferry dossier"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1540,7 +1540,7 @@
             "Sable clinic review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "clinic review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1737,7 +1737,7 @@
             "Briar release card"
           ],
           "stable_qualifiers_any": [
-            "card"
+            "release card"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1853,7 +1853,7 @@
             "Quality gate process"
           ],
           "stable_qualifiers_any": [
-            "process"
+            "gate process"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2057,7 +2057,7 @@
             "Pinecrest portfolio review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "portfolio review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2086,7 +2086,7 @@
             "Willow handover notice"
           ],
           "stable_qualifiers_any": [
-            "notice"
+            "handover notice"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2277,7 +2277,7 @@
             "青岚结算服务"
           ],
           "stable_qualifiers_any": [
-            "服务"
+            "结算服务"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2305,7 +2305,7 @@
             "流量告警看板"
           ],
           "stable_qualifiers_any": [
-            "看板"
+            "告警看板"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2450,7 +2450,7 @@
             "青竹迁移清单"
           ],
           "stable_qualifiers_any": [
-            "清单"
+            "迁移清单"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2481,7 +2481,7 @@
             "南仓工单甲十七"
           ],
           "stable_qualifiers_any": [
-            "工单"
+            "工单甲十七"
           ],
           "definition_required": true,
           "definition_semantics_any": [

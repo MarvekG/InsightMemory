@@ -196,7 +196,7 @@
             "Kestrel transit review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "transit review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -225,7 +225,7 @@
             "Willow handover notice"
           ],
           "stable_qualifiers_any": [
-            "notice"
+            "handover notice"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -373,7 +373,7 @@
             "Briar release card"
           ],
           "stable_qualifiers_any": [
-            "card"
+            "release card"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -492,7 +492,7 @@
             "Code review pipeline"
           ],
           "stable_qualifiers_any": [
-            "pipeline"
+            "review pipeline"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -678,7 +678,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -710,7 +710,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -742,7 +742,7 @@
             "Stonebridge ETF rebalance memo"
           ],
           "stable_qualifiers_any": [
-            "memo"
+            "etf rebalance memo"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -800,7 +800,7 @@
             "Access recovery policy"
           ],
           "stable_qualifiers_any": [
-            "policy"
+            "recovery policy"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -829,7 +829,7 @@
             "Database failover runbook"
           ],
           "stable_qualifiers_any": [
-            "runbook"
+            "failover runbook"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -888,7 +888,7 @@
             "Mica transit review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "transit review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1284,7 +1284,7 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1316,7 +1316,7 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1348,7 +1348,7 @@
             "Coral exhibit manual"
           ],
           "stable_qualifiers_any": [
-            "manual"
+            "exhibit manual"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1377,7 +1377,7 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1470,7 +1470,7 @@
             "Willow kitchen renovation"
           ],
           "stable_qualifiers_any": [
-            "renovation"
+            "kitchen renovation"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1589,7 +1589,7 @@
             "Harbor printer procurement"
           ],
           "stable_qualifiers_any": [
-            "procurement"
+            "printer procurement"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1705,7 +1705,7 @@
             "Lumen ferry dossier"
           ],
           "stable_qualifiers_any": [
-            "dossier"
+            "ferry dossier"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1769,7 +1769,7 @@
             "Sable clinic review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "clinic review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1943,7 +1943,7 @@
             "Briar compliance guide"
           ],
           "stable_qualifiers_any": [
-            "guide"
+            "compliance guide"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2059,7 +2059,7 @@
             "System rollback procedure"
           ],
           "stable_qualifiers_any": [
-            "procedure"
+            "rollback procedure"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2204,7 +2204,7 @@
             "Data sync service"
           ],
           "stable_qualifiers_any": [
-            "service"
+            "sync service"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2346,7 +2346,7 @@
             "Briar training roster"
           ],
           "stable_qualifiers_any": [
-            "roster"
+            "training roster"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2462,7 +2462,7 @@
             "Surgical rollback procedure"
           ],
           "stable_qualifiers_any": [
-            "procedure"
+            "rollback procedure"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2522,7 +2522,7 @@
             "临时权限回收制度"
           ],
           "stable_qualifiers_any": [
-            "制度"
+            "回收制度"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2609,7 +2609,7 @@
             "青岚结算服务"
           ],
           "stable_qualifiers_any": [
-            "服务"
+            "结算服务"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2671,7 +2671,7 @@
             "流量告警看板"
           ],
           "stable_qualifiers_any": [
-            "看板"
+            "告警看板"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2732,7 +2732,7 @@
             "南仓工单甲十七"
           ],
           "stable_qualifiers_any": [
-            "工单"
+            "工单甲十七"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2797,7 +2797,7 @@
             "霞港交接手册"
           ],
           "stable_qualifiers_any": [
-            "手册"
+            "交接手册"
           ],
           "definition_required": true,
           "definition_semantics_any": [

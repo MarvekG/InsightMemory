@@ -334,7 +334,7 @@
             "Briar release card"
           ],
           "stable_qualifiers_any": [
-            "card"
+            "release card"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -449,7 +449,7 @@
             "Code review pipeline"
           ],
           "stable_qualifiers_any": [
-            "pipeline"
+            "review pipeline"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -629,7 +629,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -660,7 +660,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -691,7 +691,7 @@
             "Stonebridge ETF rebalance memo"
           ],
           "stable_qualifiers_any": [
-            "memo"
+            "etf rebalance memo"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -747,7 +747,7 @@
             "Access recovery policy"
           ],
           "stable_qualifiers_any": [
-            "policy"
+            "recovery policy"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -775,7 +775,7 @@
             "Database failover runbook"
           ],
           "stable_qualifiers_any": [
-            "runbook"
+            "failover runbook"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -832,7 +832,7 @@
             "Mica transit review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "transit review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1216,7 +1216,8 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request",
+            "digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1247,7 +1248,8 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request",
+            "digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1278,7 +1280,7 @@
             "Coral exhibit manual"
           ],
           "stable_qualifiers_any": [
-            "manual"
+            "exhibit manual"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1306,7 +1308,8 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request",
+            "digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1396,7 +1399,7 @@
             "Willow kitchen renovation"
           ],
           "stable_qualifiers_any": [
-            "renovation"
+            "kitchen renovation"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1511,7 +1514,7 @@
             "Harbor printer procurement"
           ],
           "stable_qualifiers_any": [
-            "procurement"
+            "printer procurement"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1623,7 +1626,7 @@
             "Lumen ferry dossier"
           ],
           "stable_qualifiers_any": [
-            "dossier"
+            "ferry dossier"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1685,7 +1688,7 @@
             "Sable clinic review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "clinic review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1853,7 +1856,7 @@
             "Briar compliance guide"
           ],
           "stable_qualifiers_any": [
-            "guide"
+            "compliance guide"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -1965,7 +1968,7 @@
             "System rollback procedure"
           ],
           "stable_qualifiers_any": [
-            "procedure"
+            "rollback procedure"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2105,7 +2108,7 @@
             "Data sync service"
           ],
           "stable_qualifiers_any": [
-            "service"
+            "sync service"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2217,7 +2220,7 @@
             "Briar release card"
           ],
           "stable_qualifiers_any": [
-            "card"
+            "release card"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2245,7 +2248,7 @@
             "Quartz relay service"
           ],
           "stable_qualifiers_any": [
-            "service"
+            "relay service"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2329,7 +2332,7 @@
             "Code review pipeline"
           ],
           "stable_qualifiers_any": [
-            "pipeline"
+            "review pipeline"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2497,7 +2500,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2525,7 +2528,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2553,7 +2556,7 @@
             "Everpoint sector note"
           ],
           "stable_qualifiers_any": [
-            "note"
+            "sector note"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2667,7 +2670,7 @@
             "Access recovery policy"
           ],
           "stable_qualifiers_any": [
-            "policy"
+            "recovery policy"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2695,7 +2698,7 @@
             "Access recovery policy"
           ],
           "stable_qualifiers_any": [
-            "policy"
+            "recovery policy"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2723,7 +2726,7 @@
             "Nacre berth queue"
           ],
           "stable_qualifiers_any": [
-            "queue"
+            "berth queue"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2751,7 +2754,7 @@
             "Nacre berth queue"
           ],
           "stable_qualifiers_any": [
-            "queue"
+            "berth queue"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2779,7 +2782,7 @@
             "Orchid transfer checklist"
           ],
           "stable_qualifiers_any": [
-            "checklist"
+            "transfer checklist"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3031,7 +3034,7 @@
             "Access retention policy"
           ],
           "stable_qualifiers_any": [
-            "policy"
+            "retention policy"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3088,7 +3091,8 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request",
+            "digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3116,7 +3120,8 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request",
+            "digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3144,7 +3149,7 @@
             "Coral exhibit manual"
           ],
           "stable_qualifiers_any": [
-            "manual"
+            "exhibit manual"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3172,7 +3177,8 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request",
+            "digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3256,7 +3262,7 @@
             "Willow kitchen renovation"
           ],
           "stable_qualifiers_any": [
-            "renovation"
+            "kitchen renovation"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3453,7 +3459,7 @@
             "Lumen ferry dossier"
           ],
           "stable_qualifiers_any": [
-            "dossier"
+            "ferry dossier"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3509,7 +3515,7 @@
             "Sable clinic review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "clinic review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3699,7 +3705,7 @@
             "Briar release card"
           ],
           "stable_qualifiers_any": [
-            "card"
+            "release card"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -3811,7 +3817,7 @@
             "Quality gate process"
           ],
           "stable_qualifiers_any": [
-            "process"
+            "gate process"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4008,7 +4014,7 @@
             "Pinecrest portfolio review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "portfolio review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4036,7 +4042,7 @@
             "Willow handover notice"
           ],
           "stable_qualifiers_any": [
-            "notice"
+            "handover notice"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4117,7 +4123,7 @@
             "Briar release card"
           ],
           "stable_qualifiers_any": [
-            "card"
+            "release card"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4132,7 +4138,7 @@
             "Briar compliance guide"
           ],
           "stable_qualifiers_any": [
-            "guide"
+            "compliance guide"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4147,7 +4153,7 @@
             "Briar training roster"
           ],
           "stable_qualifiers_any": [
-            "roster"
+            "training roster"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4349,7 +4355,7 @@
             "System rollback procedure"
           ],
           "stable_qualifiers_any": [
-            "procedure"
+            "rollback procedure"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4364,7 +4370,7 @@
             "Surgical rollback procedure"
           ],
           "stable_qualifiers_any": [
-            "procedure"
+            "rollback procedure"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4652,7 +4658,7 @@
             "Data sync service"
           ],
           "stable_qualifiers_any": [
-            "service"
+            "sync service"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4695,7 +4701,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4738,7 +4744,7 @@
             "Marlowe herbarium accession request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "herbarium accession request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4796,7 +4802,7 @@
             "Everpoint sector note"
           ],
           "stable_qualifiers_any": [
-            "note"
+            "sector note"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4941,7 +4947,7 @@
             "Rill custody guide"
           ],
           "stable_qualifiers_any": [
-            "guide"
+            "custody guide"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4956,7 +4962,7 @@
             "Rill custody register"
           ],
           "stable_qualifiers_any": [
-            "register"
+            "custody register"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -4984,7 +4990,7 @@
             "Mica transit review"
           ],
           "stable_qualifiers_any": [
-            "review"
+            "transit review"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5043,7 +5049,7 @@
             "Orchid transfer checklist"
           ],
           "stable_qualifiers_any": [
-            "checklist"
+            "transfer checklist"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5058,7 +5064,7 @@
             "Orchid transfer handbook"
           ],
           "stable_qualifiers_any": [
-            "handbook"
+            "transfer handbook"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5217,7 +5223,7 @@
             "Northfield earnings note"
           ],
           "stable_qualifiers_any": [
-            "note"
+            "earnings note"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5260,7 +5266,7 @@
             "Deployment approval policy"
           ],
           "stable_qualifiers_any": [
-            "policy"
+            "approval policy"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5288,7 +5294,8 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request",
+            "digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5331,7 +5338,8 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request",
+            "digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5403,7 +5411,8 @@
             "Kite archive digitization request"
           ],
           "stable_qualifiers_any": [
-            "request"
+            "archive digitization request",
+            "digitization request"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5504,7 +5513,7 @@
             "North Pier incident bulletin"
           ],
           "stable_qualifiers_any": [
-            "bulletin"
+            "incident bulletin"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5532,7 +5541,7 @@
             "Willow kitchen renovation"
           ],
           "stable_qualifiers_any": [
-            "renovation"
+            "kitchen renovation"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5547,7 +5556,7 @@
             "Willow contractor packet"
           ],
           "stable_qualifiers_any": [
-            "packet"
+            "contractor packet"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5575,7 +5584,7 @@
             "Archive Box K-17"
           ],
           "stable_qualifiers_any": [
-            "box"
+            "archive box"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5590,7 +5599,7 @@
             "K-17 gallery tour"
           ],
           "stable_qualifiers_any": [
-            "tour"
+            "gallery tour"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5739,7 +5748,7 @@
             "Briar training roster"
           ],
           "stable_qualifiers_any": [
-            "roster"
+            "training roster"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -5851,7 +5860,7 @@
             "Surgical rollback procedure"
           ],
           "stable_qualifiers_any": [
-            "procedure"
+            "rollback procedure"
           ],
           "definition_required": true,
           "definition_semantics_any": [
