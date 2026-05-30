@@ -38,35 +38,35 @@ class _FakeRetrievalIndex:
         return list(self.candidates)
 
 
-def _entity(entity_key: str, *, entity_type: str) -> SimpleNamespace:
+def _entity(entity_key: str, *, who: str = "Orion", surfaces: list[str] | None = None) -> SimpleNamespace:
+    surface_forms = surfaces or [who]
     return SimpleNamespace(
         entity_key=entity_key,
         memory_space="workspace:orion",
         identity_profile={
             "schema_version": 2,
-            "who": "Orion",
-            "entity_type": entity_type,
-            "surface_forms": ["Orion"],
+            "who": who,
+            "surface_forms": surface_forms,
             "stable_qualifiers": ["service"],
-            "evidence": ["identity evidence"],
+            "definition": "Named service.",
         },
     )
 
 
 @pytest.mark.asyncio
-async def test_detect_merge_candidates_skips_entity_type_conflicts(
+async def test_detect_merge_candidates_skips_identity_risk(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    target = _entity("ent_target", entity_type="system")
-    same_type = _entity("ent_same_type", entity_type="system")
-    type_conflict = _entity("ent_type_conflict", entity_type="document")
+    target = _entity("ent_target")
+    same_subject = _entity("ent_same_subject")
+    risky_subject = _entity("ent_risky_subject", who="Orion runbook", surfaces=["Orion runbook"])
     _FakeRepository.target = target
     _FakeRepository.tasks = []
     retrieval_index = _FakeRetrievalIndex()
     retrieval_index.candidates = [
         SimpleNamespace(entity=target),
-        SimpleNamespace(entity=same_type),
-        SimpleNamespace(entity=type_conflict),
+        SimpleNamespace(entity=same_subject),
+        SimpleNamespace(entity=risky_subject),
     ]
     monkeypatch.setattr(detect_graph_module, "MemoryRepository", _FakeRepository)
     monkeypatch.setattr(detect_graph_module, "retrieval_index", retrieval_index)
@@ -80,4 +80,4 @@ async def test_detect_merge_candidates_skips_entity_type_conflicts(
     )
 
     assert result == {"result": {"queued": 1}}
-    assert _FakeRepository.tasks[0]["payload"]["source_entity_key"] == same_type.entity_key
+    assert _FakeRepository.tasks[0]["payload"]["source_entity_key"] == same_subject.entity_key

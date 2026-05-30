@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from pydantic import BaseModel
 
 from insight_memory.storage.repository import MemoryRepository
+from insight_memory.workers import llm_provider as llm_provider_module
 from insight_memory.workers.llm_provider import StructuredLLMProvider
 from tests.utils import run_async
 
@@ -267,6 +268,28 @@ def test_memory_llm_provider_keeps_static_prompt_in_system_and_payload_in_user_m
     assert second_messages[1]["content"] == '{"value":"second"}'
     assert '"properties":{"value"' in first_messages[0]["content"]
     assert '"properties": {"value"' not in first_messages[0]["content"]
+
+
+def test_memory_llm_provider_uses_chinese_system_message_for_zh_language(monkeypatch) -> None:
+    monkeypatch.setattr(llm_provider_module.settings, "MEMORY_SYSTEM_LANGUAGE", "zh")
+    provider = StructuredLLMProvider()
+    client = _RecordingClient()
+    provider._client = client
+    provider._api_key = "test-key"
+
+    run_async(
+        provider.generate(
+            worker_type="extractor",
+            instructions="返回 JSON。",
+            payload={"value": "input"},
+            schema_type=_SimpleSchema,
+        )
+    )
+
+    system_message = client.completions.calls[0]["messages"][0]["content"]
+    assert "你是记忆系统的 extractor worker。" in system_message
+    assert "只返回一个 JSON 对象" in system_message
+    assert "You are the extractor worker" not in system_message
 
 
 class _FakeDeleteSession:

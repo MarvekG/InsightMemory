@@ -47,7 +47,6 @@ def _identity_profile_key(identity_profile: dict[str, Any]) -> str:
 
     payload = {
         "who": str(identity_profile.get("who") or "").strip(),
-        "entity_type": str(identity_profile.get("entity_type") or "").strip(),
         "surface_forms": [str(item).strip() for item in identity_profile.get("surface_forms") or []],
         "stable_qualifiers": [
             str(item).strip()

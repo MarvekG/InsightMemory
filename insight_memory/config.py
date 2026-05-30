@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Literal
 
 from pydantic import ConfigDict, Field
 from pydantic_settings import BaseSettings
@@ -29,6 +30,7 @@ ENV_FILES = _resolve_env_files()
 class Settings(BaseSettings):
     MEMORY_SERVICE_NAME: str = "insight_memory"
     MEMORY_SERVICE_PORT: int = 8010
+    MEMORY_SYSTEM_LANGUAGE: Literal["en", "zh"] = "zh"
     MEMORY_APP_RELOAD: bool = True
     MEMORY_DATABASE_URL: str = "postgresql+asyncpg://postgres:password@memory-postgres:5432/memory"
     MEMORY_DATABASE_SCHEMA: str = "memory"

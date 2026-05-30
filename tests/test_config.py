@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import pytest
+from pydantic import ValidationError
+
 from insight_memory import config as config_module
 from insight_memory.config import Settings
 from insight_memory.index.constants import MEMORY_VECTOR_TABLE
@@ -22,6 +25,23 @@ def test_local_embedding_runtime_defaults() -> None:
     assert settings.MEMORY_LOCAL_EMBEDDING_MAX_CONCURRENCY == 2
     assert settings.MEMORY_EMBEDDING_BATCH_SIZE == 32
     assert settings.MEMORY_EMBEDDING_PREWARM_MAX_ATTEMPTS == 5
+
+
+def test_system_language_defaults_to_zh() -> None:
+    settings = Settings(_env_file=None)
+
+    assert settings.MEMORY_SYSTEM_LANGUAGE == "zh"
+
+
+def test_system_language_accepts_en_override() -> None:
+    settings = Settings(MEMORY_SYSTEM_LANGUAGE="en")
+
+    assert settings.MEMORY_SYSTEM_LANGUAGE == "en"
+
+
+def test_system_language_rejects_unsupported_values() -> None:
+    with pytest.raises(ValidationError):
+        Settings(MEMORY_SYSTEM_LANGUAGE="fr")
 
 
 def test_openai_compatible_embedding_uses_static_runtime_defaults() -> None:

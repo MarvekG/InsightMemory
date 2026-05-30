@@ -85,7 +85,7 @@ class _FakeRetrievalIndex:
         self.refreshed_memories.append([memory.memory_id for memory in memories])
 
 
-def _entity(entity_key: str, *, entity_type: str, surface_forms: list[str]) -> SimpleNamespace:
+def _entity(entity_key: str, *, surface_forms: list[str]) -> SimpleNamespace:
     return SimpleNamespace(
         entity_key=entity_key,
         memory_space="workspace:orion",
@@ -93,10 +93,9 @@ def _entity(entity_key: str, *, entity_type: str, surface_forms: list[str]) -> S
         identity_profile={
             "schema_version": 2,
             "who": surface_forms[0],
-            "entity_type": entity_type,
             "surface_forms": list(surface_forms),
             "stable_qualifiers": ["service"],
-            "evidence": [f"{surface_forms[0]} evidence"],
+            "definition": f"Named subject {surface_forms[0]}.",
         },
         metadata_json={"profile_state": {"profile_revision": 1}},
     )
@@ -122,8 +121,8 @@ def _install_fakes(monkeypatch: pytest.MonkeyPatch) -> _FakeRetrievalIndex:
 async def test_apply_merge_uses_llm_merged_profile_without_code_append(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    source = _entity("ent_source", entity_type="system", surface_forms=["Orion API"])
-    target = _entity("ent_target", entity_type="system", surface_forms=["Orion service", "legacy Orion"])
+    source = _entity("ent_source", surface_forms=["Orion API"])
+    target = _entity("ent_target", surface_forms=["Orion service", "Orion old alias"])
     _FakeRepository.entities = {source.entity_key: source, target.entity_key: target}
     _FakeRepository.memories = {
         source.entity_key: [_memory("mem_source", source.entity_key)],
@@ -144,10 +143,9 @@ async def test_apply_merge_uses_llm_merged_profile_without_code_append(
                 merged_identity_profile=ProfileWriterOutput(
                     schema_version=2,
                     who="Orion service",
-                    entity_type="system",
                     surface_forms=["Orion service", "Orion API"],
                     stable_qualifiers=["api service"],
-                    evidence=["Merge judge identified Orion API as the same service."],
+                    definition="Named service.",
                 ),
                 reason="same subject",
             ),
@@ -156,9 +154,9 @@ async def test_apply_merge_uses_llm_merged_profile_without_code_append(
 
     assert result == {"result": {"merged": True}}
     assert target.identity_profile["surface_forms"] == ["Orion service", "Orion API"]
-    assert "legacy Orion" not in target.identity_profile["surface_forms"]
+    assert "Orion old alias" not in target.identity_profile["surface_forms"]
     assert target.identity_profile["stable_qualifiers"] == ["api service"]
-    assert target.identity_profile["evidence"] == ["Merge judge identified Orion API as the same service."]
+    assert target.identity_profile["definition"] == "Named service."
     assert target.metadata_json["profile_state"]["profile_revision"] == 2
     assert target.metadata_json["profile_history"][-1]["reason"] == "entity_merged:safe_additive_update"
     assert retrieval_index.deleted_entities[-1]["entity_keys"] == [source.entity_key]
@@ -167,11 +165,11 @@ async def test_apply_merge_uses_llm_merged_profile_without_code_append(
 
 
 @pytest.mark.asyncio
-async def test_apply_merge_keeps_survivor_profile_when_entity_type_conflicts(
+async def test_apply_merge_keeps_survivor_profile_when_who_changes_without_alias(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    source = _entity("ent_source", entity_type="document", surface_forms=["Orion runbook"])
-    target = _entity("ent_target", entity_type="system", surface_forms=["Orion service"])
+    source = _entity("ent_source", surface_forms=["Orion runbook"])
+    target = _entity("ent_target", surface_forms=["Orion service"])
     _FakeRepository.entities = {source.entity_key: source, target.entity_key: target}
     _FakeRepository.memories = {
         source.entity_key: [_memory("mem_source", source.entity_key)],
@@ -192,29 +190,28 @@ async def test_apply_merge_keeps_survivor_profile_when_entity_type_conflicts(
                 merged_identity_profile=ProfileWriterOutput(
                     schema_version=2,
                     who="Orion runbook",
-                    entity_type="document",
                     surface_forms=["Orion runbook"],
                     stable_qualifiers=["runbook"],
-                    evidence=["Merge judge proposed a document identity."],
+                    definition="Named runbook.",
                 ),
                 reason="same subject",
             ),
         }
     )
 
-    assert target.identity_profile["entity_type"] == "system"
+    assert target.identity_profile["who"] == "Orion service"
     assert target.identity_profile["surface_forms"] == ["Orion service"]
     assert target.metadata_json["profile_state"]["profile_revision"] == 1
     assert target.metadata_json["profile_state"]["last_refresh_status"] == "needs_identity_review"
-    assert target.metadata_json["profile_history"][-1]["reason"] == "entity_merged:entity_type_conflict"
+    assert target.metadata_json["profile_history"][-1]["reason"] == "entity_merged:who_changed_without_alias"
 
 
 @pytest.mark.asyncio
 async def test_apply_merge_keeps_survivor_profile_when_merged_profile_missing(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    source = _entity("ent_source", entity_type="system", surface_forms=["Orion API"])
-    target = _entity("ent_target", entity_type="system", surface_forms=["Orion service"])
+    source = _entity("ent_source", surface_forms=["Orion API"])
+    target = _entity("ent_target", surface_forms=["Orion service"])
     _FakeRepository.entities = {source.entity_key: source, target.entity_key: target}
     _FakeRepository.memories = {
         source.entity_key: [_memory("mem_source", source.entity_key)],

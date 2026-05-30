@@ -34,10 +34,9 @@ def _normalized_profile_draft(draft: IdentityProfileDraft) -> dict[str, Any]:
     return {
         "schema_version": 2,
         "who": normalize_text(draft.who),
-        "entity_type": draft.entity_type,
         "surface_forms": dedupe_preserve_order(draft.surface_forms, limit=3),
         "stable_qualifiers": dedupe_preserve_order(draft.stable_qualifiers, limit=4),
-        "evidence": dedupe_preserve_order(draft.evidence, limit=4),
+        "definition": normalize_text(draft.definition),
     }
 
 
@@ -166,10 +165,9 @@ class MemoryWorkers:
                     schema_version=2,
                     draft_id=draft.draft_id,
                     who=normalized["who"],
-                    entity_type=normalized["entity_type"],
                     surface_forms=normalized["surface_forms"],
                     stable_qualifiers=normalized["stable_qualifiers"],
-                    evidence=normalized["evidence"],
+                    definition=normalized["definition"],
                 )
             )
         gate_status = "passed" if normalized_drafts else "rejected_no_identity_profile"
@@ -266,10 +264,9 @@ class MemoryWorkers:
                     schema_version=2,
                     draft_id=draft.draft_id,
                     who=normalized["who"],
-                    entity_type=normalized["entity_type"],
                     surface_forms=normalized["surface_forms"],
                     stable_qualifiers=normalized["stable_qualifiers"],
-                    evidence=normalized["evidence"],
+                    definition=normalized["definition"],
                 )
             )
         valid_draft_ids = {draft.draft_id for draft in normalized_drafts}
@@ -592,10 +589,9 @@ class MemoryWorkers:
                     schema_version=2,
                     draft_id=draft.draft_id,
                     who=normalized["who"],
-                    entity_type=normalized["entity_type"],
                     surface_forms=normalized["surface_forms"],
                     stable_qualifiers=normalized["stable_qualifiers"],
-                    evidence=normalized["evidence"],
+                    definition=normalized["definition"],
                     query_text=query_text,
                 )
             )
@@ -718,10 +714,9 @@ class MemoryWorkers:
                 schema_version=2,
                 draft_id="profile_writer",
                 who=call.parsed.who,
-                entity_type=call.parsed.entity_type,
                 surface_forms=call.parsed.surface_forms,
                 stable_qualifiers=call.parsed.stable_qualifiers,
-                evidence=call.parsed.evidence,
+                definition=call.parsed.definition,
             )
         )
         logger.info(
@@ -781,10 +776,9 @@ class MemoryWorkers:
                     schema_version=2,
                     draft_id="merge_judge",
                     who=parsed.merged_identity_profile.who,
-                    entity_type=parsed.merged_identity_profile.entity_type,
                     surface_forms=parsed.merged_identity_profile.surface_forms,
                     stable_qualifiers=parsed.merged_identity_profile.stable_qualifiers,
-                    evidence=parsed.merged_identity_profile.evidence,
+                    definition=parsed.merged_identity_profile.definition,
                 )
             )
             parsed = MergeJudgeOutput(

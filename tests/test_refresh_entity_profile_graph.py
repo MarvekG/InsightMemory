@@ -77,10 +77,9 @@ def _entity() -> SimpleNamespace:
         identity_profile={
             "schema_version": 2,
             "who": "Orion service",
-            "entity_type": "system",
-            "surface_forms": ["Orion service", "legacy Orion"],
-            "stable_qualifiers": ["legacy service"],
-            "evidence": ["Original evidence."],
+            "surface_forms": ["Orion service", "Orion old alias"],
+            "stable_qualifiers": ["old service"],
+            "definition": "Named service.",
         },
         metadata_json={"profile_state": {"profile_revision": 1}},
     )
@@ -99,10 +98,9 @@ async def test_refresh_entity_profile_applies_llm_profile_without_code_append(
         ProfileWriterOutput(
             schema_version=2,
             who="Orion service",
-            entity_type="system",
             surface_forms=["Orion service", "Orion API"],
             stable_qualifiers=["service", "api service"],
-            evidence=["Recent memory identifies Orion API as an alias."],
+            definition="Named service.",
         )
     )
 
@@ -122,9 +120,9 @@ async def test_refresh_entity_profile_applies_llm_profile_without_code_append(
     assert result["result"] == {"refreshed": True, "entity_key": "ent_1", "refresh_status": "applied"}
     assert _FakeRepository.entity.identity_profile["surface_forms"] == ["Orion service", "Orion API"]
     assert _FakeRepository.entity.identity_profile["stable_qualifiers"] == ["service", "api service"]
-    assert "legacy Orion" not in _FakeRepository.entity.identity_profile["surface_forms"]
-    assert "legacy service" not in _FakeRepository.entity.identity_profile["stable_qualifiers"]
-    assert _FakeRepository.entity.identity_profile["evidence"] == ["Recent memory identifies Orion API as an alias."]
+    assert "Orion old alias" not in _FakeRepository.entity.identity_profile["surface_forms"]
+    assert "old service" not in _FakeRepository.entity.identity_profile["stable_qualifiers"]
+    assert _FakeRepository.entity.identity_profile["definition"] == "Named service."
     assert _FakeRepository.entity.metadata_json["profile_state"]["profile_revision"] == 2
     assert _FakeRepository.entity.metadata_json["profile_state"]["last_refresh_status"] == "applied"
     assert _FakeRepository.entity.metadata_json["profile_history"][-1]["risk"] == "safe"
@@ -132,7 +130,7 @@ async def test_refresh_entity_profile_applies_llm_profile_without_code_append(
 
 
 @pytest.mark.asyncio
-async def test_refresh_entity_profile_rejects_explicit_entity_type_conflict(
+async def test_refresh_entity_profile_rejects_who_change_without_alias(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _FakeRepository.entity = _entity()
@@ -143,11 +141,10 @@ async def test_refresh_entity_profile_rejects_explicit_entity_type_conflict(
     workers = _FakeWorkers(
         ProfileWriterOutput(
             schema_version=2,
-            who="Orion service",
-            entity_type="document",
-            surface_forms=["Orion service"],
+            who="Orion runbook",
+            surface_forms=["Orion runbook"],
             stable_qualifiers=["runbook"],
-            evidence=["The proposal looks like a document."],
+            definition="Named runbook.",
         )
     )
 
@@ -165,7 +162,7 @@ async def test_refresh_entity_profile_rejects_explicit_entity_type_conflict(
     )
 
     assert result["result"] == {"refreshed": False, "entity_key": "ent_1", "refresh_status": "needs_identity_review"}
-    assert _FakeRepository.entity.identity_profile["entity_type"] == "system"
+    assert _FakeRepository.entity.identity_profile["who"] == "Orion service"
     assert _FakeRepository.entity.metadata_json["profile_state"]["profile_revision"] == 1
     assert _FakeRepository.entity.metadata_json["profile_state"]["last_refresh_status"] == "needs_identity_review"
     assert _FakeRepository.entity.metadata_json["profile_history"][-1]["risk"] == "needs_identity_review"

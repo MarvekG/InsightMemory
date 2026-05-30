@@ -1,0 +1,584 @@
+{
+  "suite_id": "identity_profile_rules_v1",
+  "description": "English-only baseline suite for identity_profile extraction. It calls /memory/prompt-evals/run and scores only identity fields from the raw output.",
+  "minimum_pass_rate": 1.0,
+  "cases": [
+    {
+      "case_id": "write_gate_missing_item_owner",
+      "category": "causal_missing_item_boundary",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "Lanturn deployment cannot enter final validation because the escrow approval form is still missing."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Lanturn deployment"
+          ],
+          "surface_forms_all": [
+            "Lanturn deployment"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Lanturn deployment is a deployment subject named Lanturn deployment."
+          ]
+        }
+      ],
+      "forbidden_identity_who": [
+        "escrow approval form"
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "write_gate_governing_policy_owner",
+      "category": "governing_artifact_owner",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "Cedar QA policy requires every release ticket to attach a parity matrix before manager signoff."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Cedar QA policy"
+          ],
+          "surface_forms_all": [
+            "Cedar QA policy"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Cedar QA policy is a policy subject named Cedar QA policy."
+          ]
+        }
+      ],
+      "forbidden_identity_who": [
+        "parity matrix",
+        "release ticket"
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "extractor_same_prefix_roles",
+      "category": "same_prefix_role_boundary",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "Ravel import service is owned by Priya. Ravel import checklist is maintained by Tomas and tracks customs packet readiness."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Ravel import service"
+          ],
+          "surface_forms_all": [
+            "Ravel import service"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Ravel import service is a service subject named Ravel import service."
+          ]
+        },
+        {
+          "who_any": [
+            "Ravel import checklist"
+          ],
+          "surface_forms_all": [
+            "Ravel import checklist"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Ravel import checklist is a checklist subject named Ravel import checklist."
+          ]
+        }
+      ],
+      "forbidden_identity_who": [
+        "Ravel import"
+      ],
+      "profile_count": 2
+    },
+    {
+      "case_id": "query_planner_market_record_word",
+      "category": "market_record_scope",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "query": "What does the latest analyst note say about STP.N?"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "STP.N"
+          ],
+          "surface_forms_all": [
+            "STP.N"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "STP.N is the stock or market object named STP.N."
+          ]
+        }
+      ],
+      "forbidden_identity_who": [
+        "latest analyst note",
+        "STP.N latest analyst note"
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "query_planner_record_marker_not_identity",
+      "category": "record_marker_boundary",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "query": "For Meridian onboarding, what changed in the phase 3 review?"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Meridian onboarding"
+          ],
+          "surface_forms_all": [
+            "Meridian onboarding"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Meridian onboarding is an onboarding subject named Meridian onboarding."
+          ]
+        }
+      ],
+      "forbidden_identity_who": [
+        "phase 3 review",
+        "Meridian onboarding phase 3 review"
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "write_gate_background_name_ignored",
+      "category": "background_name_boundary",
+      "prompt_key": "identity_profile",
+      "payload": {
+        "context": "During the Nexus sync, Vireo billing migration moved to amber because invoice replay tests failed overnight."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Vireo billing migration"
+          ],
+          "surface_forms_all": [
+            "Vireo billing migration"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Vireo billing migration is a migration subject named Vireo billing migration."
+          ]
+        }
+      ],
+      "forbidden_identity_who": [
+        "Nexus sync",
+        "invoice replay tests"
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "history_format_table_register_checklist",
+      "category": "history_format_shift_table",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_v1:format_table_record",
+      "payload": {
+        "context": "artifact | state | note\nTideline register | blocked | cannot close because crate note is missing\n\nartifact | rule | note\nTideline checklist | requirement | every register must include crate note before closure\n"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Tideline register"
+          ],
+          "surface_forms_all": [
+            "Tideline register"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Tideline register is a register subject named Tideline register."
+          ]
+        },
+        {
+          "who_any": [
+            "Tideline checklist"
+          ],
+          "surface_forms_all": [
+            "Tideline checklist"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Tideline checklist is a checklist subject named Tideline checklist."
+          ]
+        }
+      ],
+      "forbidden_identity_who": [
+        "crate note"
+      ],
+      "profile_count": 2
+    },
+    {
+      "case_id": "history_field_record_many_named_objects",
+      "category": "history_format_field_record",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_v1:format_field_record_many_named_objects",
+      "payload": {
+        "context": "name: Aster observatory docket\nowner: Ilya North\n\nname: Aster observatory ledger\nowner: Mara Pike\n\nname: Aster observatory queue\nowner: Soren Vale\n\nname: Aster observatory bulletin\nowner: Nira Holt\n"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Aster observatory docket"
+          ],
+          "surface_forms_all": [
+            "Aster observatory docket"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Aster observatory docket is a docket subject named Aster observatory docket."
+          ]
+        },
+        {
+          "who_any": [
+            "Aster observatory ledger"
+          ],
+          "surface_forms_all": [
+            "Aster observatory ledger"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Aster observatory ledger is a ledger subject named Aster observatory ledger."
+          ]
+        },
+        {
+          "who_any": [
+            "Aster observatory queue"
+          ],
+          "surface_forms_all": [
+            "Aster observatory queue"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Aster observatory queue is a queue subject named Aster observatory queue."
+          ]
+        },
+        {
+          "who_any": [
+            "Aster observatory bulletin"
+          ],
+          "surface_forms_all": [
+            "Aster observatory bulletin"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Aster observatory bulletin is a bulletin subject named Aster observatory bulletin."
+          ]
+        }
+      ],
+      "forbidden_identity_who": [
+        "Aster observatory",
+        "Ilya North",
+        "Mara Pike",
+        "Soren Vale",
+        "Nira Holt"
+      ],
+      "profile_count": 4
+    },
+    {
+      "case_id": "history_write_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment_1",
+      "category": "history_write_cross_format_correction_note",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_targeted_v1:cross_format_correction_note_amendment:write:0",
+      "payload": {
+        "context": "Morrowfield register earlier allowed teams to file quay note within 10 hours after release."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Morrowfield register"
+          ],
+          "surface_forms_all": [
+            "Morrowfield register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Morrowfield register is a register subject named Morrowfield register."
+          ]
+        }
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "history_write_generic_cross_format_longform_v1_cross_format_yamlish_phase_record_1",
+      "category": "history_write_cross_format_yamlish",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_v1:cross_format_yamlish_phase_record:write:0",
+      "payload": {
+        "context": "artifact: Siltmere bulletin\nphase: history\nrule: teams could attach berth sheet within 18 hours after shift"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Siltmere bulletin"
+          ],
+          "surface_forms_all": [
+            "Siltmere bulletin"
+          ],
+          "stable_qualifiers_any": [
+            "bulletin"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Siltmere bulletin is a bulletin subject named Siltmere bulletin."
+          ]
+        }
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "history_write_generic_format_shift_targeted_v1_format_chat_history_with_requirement_1",
+      "category": "history_write_format_chat_transcript",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_targeted_v1:format_chat_history_with_requirement:write:0",
+      "payload": {
+        "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kestrel transit review"
+          ],
+          "surface_forms_all": [
+            "Kestrel transit review"
+          ],
+          "stable_qualifiers_any": [
+            "transit review"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Kestrel transit review is a review subject named Kestrel transit review."
+          ]
+        }
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "history_write_generic_format_shift_v1_format_yaml_rule_evolution_1",
+      "category": "history_write_format_yaml_record",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_v1:format_yaml_rule_evolution:write:0",
+      "payload": {
+        "context": "record: Willow handover notice\nphase: history\nrule: teams could attach seal note within 24 hours after shift"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Willow handover notice"
+          ],
+          "surface_forms_all": [
+            "Willow handover notice"
+          ],
+          "stable_qualifiers_any": [
+            "handover notice"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Willow handover notice is a notice subject named Willow handover notice."
+          ]
+        }
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "history_write_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment_2",
+      "category": "history_write_cross_format_correction_note",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_targeted_v1:cross_format_correction_note_amendment:write:1",
+      "payload": {
+        "context": "Correction note for Morrowfield register: the earlier 10-hour grace window is withdrawn; every quay note must be filed before release."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Morrowfield register"
+          ],
+          "surface_forms_all": [
+            "Morrowfield register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Morrowfield register is a register subject named Morrowfield register."
+          ]
+        }
+      ],
+      "profile_count": 1,
+      "forbidden_identity_who": [
+        "Correction note for Morrowfield register"
+      ]
+    },
+    {
+      "case_id": "history_write_generic_cross_format_longform_v1_cross_format_yamlish_phase_record_2",
+      "category": "history_write_cross_format_yamlish",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_v1:cross_format_yamlish_phase_record:write:1",
+      "payload": {
+        "context": "artifact: Siltmere bulletin\nphase: current\nrule: every berth sheet must be completed before handoff"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Siltmere bulletin"
+          ],
+          "surface_forms_all": [
+            "Siltmere bulletin"
+          ],
+          "stable_qualifiers_any": [
+            "bulletin"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Siltmere bulletin is a bulletin subject named Siltmere bulletin."
+          ]
+        }
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "history_query_generic_deeper_dependency_chain_v1_deeper_mixed_language_six_hop_1",
+      "category": "history_query_deep_mixed_language",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_deeper_dependency_chain_v1:deeper_mixed_language_six_hop:query:0",
+      "payload": {
+        "query": "Why can’t Blackthorn packet release now?"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Blackthorn packet release"
+          ],
+          "surface_forms_all": [
+            "Blackthorn packet release"
+          ],
+          "stable_qualifiers_any": [
+            "packet release",
+            "packet"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Blackthorn packet release is a packet release subject named Blackthorn packet release."
+          ]
+        }
+      ],
+      "profile_count": 1,
+      "forbidden_identity_who": [
+        "Why can’t Blackthorn packet release"
+      ]
+    },
+    {
+      "case_id": "history_multi_generic_cross_format_longform_targeted_v1_cross_format_correction_note_amendment",
+      "category": "history_multi_cross_format_correction_note",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_cross_format_longform_targeted_v1:cross_format_correction_note_amendment:writes",
+      "payload": {
+        "context": "Morrowfield register earlier allowed teams to file quay note within 10 hours after release.\nCorrection note for Morrowfield register: the earlier 10-hour grace window is withdrawn; every quay note must be filed before release.\nAppendix to Morrowfield register: every quay note must also include berth owner signature."
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Morrowfield register"
+          ],
+          "surface_forms_all": [
+            "Morrowfield register"
+          ],
+          "stable_qualifiers_any": [
+            "register"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Morrowfield register is a register subject named Morrowfield register."
+          ]
+        }
+      ],
+      "profile_count": 1,
+      "forbidden_identity_who": [
+        "Correction note for Morrowfield register",
+        "Appendix to Morrowfield register"
+      ]
+    },
+    {
+      "case_id": "history_multi_generic_format_shift_targeted_v1_format_chat_history_with_requirement",
+      "category": "history_multi_format_chat_transcript",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_targeted_v1:format_chat_history_with_requirement:writes",
+      "payload": {
+        "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window\n[10:20] coordinator: Kestrel transit review current decision has shifted to attach the ballast memo before re-scheduling transfer"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kestrel transit review"
+          ],
+          "surface_forms_all": [
+            "Kestrel transit review"
+          ],
+          "stable_qualifiers_any": [
+            "transit review"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Kestrel transit review is a review subject named Kestrel transit review."
+          ]
+        }
+      ],
+      "profile_count": 1
+    },
+    {
+      "case_id": "history_multi_generic_format_shift_v1_format_chat_history_with_requirement",
+      "category": "history_multi_format_chat_transcript",
+      "prompt_key": "identity_profile",
+      "source_case": "generic_format_shift_v1:format_chat_history_with_requirement:writes",
+      "payload": {
+        "context": "[09:10] lead: Subject = Kestrel transit review\n[09:11] analyst: round 1 still supports proceeding on the original window\n[10:20] coordinator: Kestrel transit review current decision has shifted to attach the ballast memo before re-scheduling transfer"
+      },
+      "expected_gate_status": "passed",
+      "expected_identities": [
+        {
+          "who_any": [
+            "Kestrel transit review"
+          ],
+          "surface_forms_all": [
+            "Kestrel transit review"
+          ],
+          "stable_qualifiers_any": [
+            "transit review"
+          ],
+          "definition_required": true,
+          "definition_semantics_any": [
+            "Kestrel transit review is a review subject named Kestrel transit review."
+          ]
+        }
+      ],
+      "profile_count": 1
+    }
+  ]
+}

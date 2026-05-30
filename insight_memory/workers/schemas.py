@@ -1,74 +1,96 @@
 from __future__ import annotations
 
-from typing import get_args
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-EntityType = Literal[
-    "person",
-    "organization",
-    "market_object",
-    "system",
-    "document",
-    "artifact",
-    "project",
-    "work_item",
-    "workflow",
-    "event",
-    "decision",
-    "strategy",
-    "concept",
-    "unknown",
-]
-ENTITY_TYPE_VALUES = tuple(get_args(EntityType))
-ENTITY_TYPES = set(ENTITY_TYPE_VALUES)
 
-
-def normalize_entity_type(value: object) -> str:
-    """将 LLM 输出的实体类型规范化为受支持枚举。
+def _lower_text(value: object) -> object:
+    """将字符串转为小写，非字符串保持原值。
 
     Args:
-        value: LLM 输出的原始实体类型。
+        value: 待规范化的原始值。
 
     Returns:
-        合法的实体类型；未知或非法时返回 `unknown`，避免 schema 错误变成 HTTP 500。
+        字符串小写结果；非字符串原样返回。
     """
 
-    text = str(value or "").strip().lower()
-    return text if text in ENTITY_TYPES else "unknown"
+    if isinstance(value, str):
+        return value.lower()
+    return value
+
+
+def _lower_text_list(value: object) -> object:
+    """将字符串列表中的每个元素转为小写。
+
+    Args:
+        value: 待规范化的原始列表值。
+
+    Returns:
+        字符串列表的小写结果；非列表原样返回。
+    """
+
+    if not isinstance(value, list):
+        return value
+    return [item.lower() if isinstance(item, str) else item for item in value]
 
 
 class IdentityProfileDraft(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[2]
+    schema_version: Literal[2] = 2
     draft_id: str = Field(..., min_length=1)
     who: str = Field(..., min_length=1, max_length=255)
-    entity_type: EntityType
-    surface_forms: list[str] = Field(default_factory=list)
+    surface_forms: list[str] = Field(
+        default_factory=list,
+        description="Exact source mentions of `who`; exclude record-scope markers such as round, stage, time, or version.",
+    )
     stable_qualifiers: list[str] = Field(default_factory=list)
-    evidence: list[str] = Field(default_factory=list)
+    definition: str = Field(
+        default="",
+        max_length=512,
+        description=(
+            "Answer what `who` is with a concrete natural-language definition; "
+            "omit memory facts and do not merely repeat `who` or use a generic placeholder."
+        ),
+    )
 
-    @field_validator("entity_type", mode="before")
+    @model_validator(mode="before")
     @classmethod
-    def normalize_entity_type_field(cls, value: object) -> str:
-        """将 profile draft 的非法实体类型降级为 `unknown`。
+    def normalize_identity_profile_fields(cls, value: object) -> object:
+        """在服务端固定结构版本，并规范化 identity_profile 字符串字段。
 
         Args:
-            value: LLM 输出的原始实体类型。
+            value: LLM 输出的原始 identity profile draft。
 
         Returns:
-            合法的实体类型枚举值。
+            补齐结构版本且将 identity_profile 字符串字段转为小写后的原始结构。
         """
 
-        return normalize_entity_type(value)
+        if not isinstance(value, dict):
+            return value
+        return {
+            **value,
+            "schema_version": 2,
+            "who": _lower_text(value.get("who")),
+            "surface_forms": _lower_text_list(value.get("surface_forms")),
+            "stable_qualifiers": _lower_text_list(value.get("stable_qualifiers")),
+            "definition": _lower_text(value.get("definition")),
+        }
 
 
 class QueryIdentityProfileDraft(IdentityProfileDraft):
     model_config = ConfigDict(extra="forbid")
 
     query_text: str = Field(..., min_length=1)
+
+
+class IdentityProfileExtractionOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    identity_gate_status: Literal["passed", "rejected_no_identity_profile"]
+    identity_profile_drafts: list[IdentityProfileDraft] = Field(default_factory=list)
+    rejection_reason: str | None = None
 
 
 class RecordMarkers(BaseModel):
@@ -210,29 +232,47 @@ class AnswerJudgeOutput(BaseModel):
     reason: str = ""
 
 
+class IdentityDefinitionJudgeOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    verdict: Literal["pass", "fail"]
+    matched_expected: str = ""
+    reason: str = ""
+    missing_identity_boundary: list[str] = Field(default_factory=list)
+    included_memory_fact: bool = False
+
+
 class ProfileWriterOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[2]
+    schema_version: Literal[2] = 2
     who: str = Field(..., min_length=1, max_length=255)
-    entity_type: EntityType
     surface_forms: list[str] = Field(default_factory=list)
     stable_qualifiers: list[str] = Field(default_factory=list)
-    evidence: list[str] = Field(default_factory=list)
+    definition: str = Field(default="", max_length=512)
 
-    @field_validator("entity_type", mode="before")
+    @model_validator(mode="before")
     @classmethod
-    def normalize_entity_type_field(cls, value: object) -> str:
-        """将 profile writer 的非法实体类型降级为 `unknown`。
+    def normalize_identity_profile_fields(cls, value: object) -> object:
+        """在服务端固定结构版本，并规范化完整 identity profile 字符串字段。
 
         Args:
-            value: LLM 输出的原始实体类型。
+            value: LLM 输出的原始 profile writer 结果。
 
         Returns:
-            合法的实体类型枚举值。
+            补齐结构版本且将 identity_profile 字符串字段转为小写后的原始结构。
         """
 
-        return normalize_entity_type(value)
+        if not isinstance(value, dict):
+            return value
+        return {
+            **value,
+            "schema_version": 2,
+            "who": _lower_text(value.get("who")),
+            "surface_forms": _lower_text_list(value.get("surface_forms")),
+            "stable_qualifiers": _lower_text_list(value.get("stable_qualifiers")),
+            "definition": _lower_text(value.get("definition")),
+        }
 
 
 class EdgeRelation(BaseModel):

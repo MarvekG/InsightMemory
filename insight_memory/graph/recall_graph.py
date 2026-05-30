@@ -267,7 +267,6 @@ def _graph_first_identity_matches(*, draft_payload: dict[str, Any], scored_candi
         return []
     draft_profile = {
         "who": draft_payload.get("who", ""),
-        "entity_type": draft_payload.get("entity_type", ""),
         "surface_forms": list(draft_payload.get("surface_forms", []) or []),
         "stable_qualifiers": list(draft_payload.get("stable_qualifiers", []) or []),
     }
@@ -297,7 +296,6 @@ def _identity_profile_structurally_matches(
         当 draft 的稳定主体或稳定限定符能唯一落在候选 profile 中时返回 `True`。
     """
     draft_who = normalize_text(draft_profile.get("who")).casefold()
-    draft_entity_type = normalize_text(draft_profile.get("entity_type")).casefold()
     draft_surfaces = {
         normalize_text(item).casefold()
         for item in draft_profile.get("surface_forms") or []
@@ -309,7 +307,6 @@ def _identity_profile_structurally_matches(
         if normalize_text(item)
     ]
     candidate_who = normalize_text(candidate_profile.get("who")).casefold()
-    candidate_entity_type = normalize_text(candidate_profile.get("entity_type")).casefold()
     candidate_surfaces = {
         normalize_text(item).casefold()
         for item in candidate_profile.get("surface_forms") or []
@@ -320,20 +317,10 @@ def _identity_profile_structurally_matches(
         for item in candidate_profile.get("stable_qualifiers") or []
         if normalize_text(item)
     ]
-    type_compatible = (
-        not draft_entity_type
-        or not candidate_entity_type
-        or draft_entity_type == "unknown"
-        or candidate_entity_type == "unknown"
-        or draft_entity_type == candidate_entity_type
-    )
-    if not type_compatible:
-        return False
     candidate_identity_text = " ".join(
         item
         for item in [
             candidate_who,
-            candidate_entity_type,
             *sorted(candidate_surfaces),
             *candidate_qualifiers,
         ]
@@ -441,10 +428,9 @@ class RecallGraph:
         draft_payloads = [
             {
                 "who": draft.who,
-                "entity_type": draft.entity_type,
                 "surface_forms": draft.surface_forms,
                 "stable_qualifiers": draft.stable_qualifiers,
-                "evidence": draft.evidence,
+                "definition": draft.definition,
                 "query_text": draft.query_text,
             }
             for draft in planner.query_identity_profile_drafts
@@ -794,7 +780,6 @@ class RecallGraph:
                     original_query=str(state.get("original_query") or state.get("query") or ""),
                     query_identity_profile={
                         "who": str(state["draft_payload"].get("who") or "").strip(),
-                        "entity_type": str(state["draft_payload"].get("entity_type") or "").strip(),
                         "surface_forms": [str(item) for item in state["draft_payload"].get("surface_forms") or []],
                         "stable_qualifiers": [
                             str(item) for item in state["draft_payload"].get("stable_qualifiers") or []
