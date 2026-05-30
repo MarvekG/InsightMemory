@@ -8,107 +8,48 @@ from __future__ import annotations
 # 每条规则后必须紧跟 2 到 3 个例子，避免规则和例子分离。
 
 IDENTITY_PROFILE_RULES = """
-[identity_profile提取规则]
-任务：判断“这条记忆或查询属于谁”，抽取承接该事实或问题的完整命名名词。
-identity_profile 只描述主体是谁，不描述主体发生了什么。
+[identity_profile提取协议]
+任务：判断“这条记忆或查询属于谁”。只抽取承接事实或问题的稳定命名主体，不回答发生了什么、为什么、缺什么或结论是什么。
 输出格式：所有 identity_profile 字符串字段都应输出为小写；中文字符小写后不变，英文、代码和混合文本统一小写。
 
-主体判定优先级：
-- 先读完整输入或查询，再找被直接陈述或直接询问、且可被后续稳定复指的完整命名主体。
+主体判断：
+- 先读完整输入，再回答“这条事实或问题最终挂在哪个稳定命名对象上”。稳定主体可以是人、团队、系统、服务、项目、流程、文档、规则工件、事件、市场对象、短代码或编号；只要能被后续稳定复指，就不要因为形式不像标题而拒绝。
   例：“岚庭交付流程当前暂停”，主体是“岚庭交付流程”。
-  例：“白塔检修窗口需要等供应商确认”，主体是“白塔检修窗口”。
-- 一条输入中多个命名主体各自承接独立持久事实时，都要抽取；不要因共享前缀、短码或位置靠前而合并或忽略。
-  例：“霁川发布计划延期；霁川发布手册改为双签”，抽取“霁川发布计划”和“霁川发布手册”。
-  例：“禾川巡检表缺照片；禾川值班规程要求主管复核”，抽取“禾川巡检表”和“禾川值班规程”。
-- 查询状态、原因、阻塞、历史或要求时，被询问的完整命名主体就是主体；疑问词、时间副词和被询问属性不是主体。
-  例：“为什么栖木交接现在卡住？”主体是“栖木交接”。
-  例：“松桥退场方案之前允许什么？”主体是“松桥退场方案”。
-- 命名主体可以是个人、团队、系统、服务、市场对象、工作项、流程、文档、规则工件、事件或短代码；不要因形式不像标题而拒绝。
-  例：“北岬值班组下周接手巡检”，主体是“北岬值班组”。
-  例：“v-72 当前状态是什么？”，主体是“v-72”。
-- 只有完全没有稳定命名主体时，才拒绝身份抽取。
-  例：“今晚感觉风险很高”没有命名主体，可拒绝。
-  例：“这件事要尽快推进，但还没有对象名称”没有命名主体，可拒绝。
-
-结构化记录中的主体判定：
-- 当输入以字段、表格、日志、清单或类似结构表达时，不要只按自然句主谓结构判断主体；应先理解每个片段在整条记录中的语义角色。
-  例：“对象：橙岭交接通知；阶段：历史；约束：班组过去可在换班后补封签记录”，主体是“橙岭交接通知”。
-  例：“清单项：鹤湾迁移备忘录；当前状态：暂停；原因：审批说明未补齐”，主体是“鹤湾迁移备忘录”。
-- 如果某个片段给出了一个可被后续稳定复指的完整命名名词，而其他片段围绕它描述规则、状态、阻塞、负责人、要求、历史变化或当前结论，则这个完整命名名词就是 identity_profile 的主体；负责人值只是该主体的事实，不是主体本身。
-  例：“工作项：霜港验收单；阻塞：等待二次确认；目标：本周内关闭”，主体是“霜港验收单”。
-  例：“文档：青岚回滚手册；当前要求：发布前完成双人复核”，主体是“青岚回滚手册”。
-- 记录阶段、历史/当前状态、轮次、版本、时间等信息只限定事实背景，不是否定主体存在的理由，也不应并入 `who`。
-  例：“事项：北棠同步方案；版本：第三轮；结论：继续等待接口冻结”，主体是“北棠同步方案”，`who` 不写“第三轮”。
-  例：“档案：星桥值班规程；时间：上季度；规则：交接后可补签巡检页”，主体是“星桥值班规程”，`who` 不写“上季度”。
-- 如果后续事实没有重复主体名称，但从结构上明显是在描述同一条记录中已命名的对象，仍应把事实归属到该命名对象。
-  例：“对象：云岭分发计划；阻塞：审批链说明缺失；目标：周五前恢复”，主体是“云岭分发计划”。
-  例：“条目：河湾巡检公告；规则：所有班次必须附照片；补充：夜班也适用”，主体是“河湾巡检公告”。
-- 只有当结构化输入中没有任何可稳定复指的完整命名对象，或所有名称都只是属性值、缺失项、负责人值、位置、原因、材料、附件、指标或状态值时，才返回 `rejected_no_identity_profile`。
-  例：“阶段：历史；状态：需要复核；说明：必须在发布前确认”没有可稳定复指的完整命名对象，可拒绝。
-  例：“背景：临时调整；问题：材料还缺一项；处理：明天再确认”只有泛化背景、问题和处理描述，没有可稳定复指的完整命名对象，可拒绝。
-- 不要把字段名、标签名或格式标记本身当作主体；主体来自承接事实的完整命名对象。
+  例：“v-72 现在要等谁确认？”主体是“v-72”。
+  例：“青岚结算服务当前负责人是谁？”主体是“青岚结算服务”。
+- 查询时，主体是用户想查的对象；疑问词、时间范围、记录范围、来源说明、分析视角和被询问属性不属于主体。只有问题明确询问某份记录、报告、部件或材料本身的状态、版本、负责人、规则或生命周期时，才把它作为主体。
+  例：“岚杉仓库的部署检查当前失败在哪里？”主体是“岚杉仓库”，不是“岚杉仓库部署检查”。
+  例：“t-84 这条复核纪要的最终结论是什么？”主体是“t-84”，不是“t-84 复核纪要”。
+  例：“海湾交接报告当前版本是什么？”主体是“海湾交接报告”。
+- 写入时，主体是承接陈述的对象。原因、缺口、附件、材料、负责人值、指标、地点、状态值、前置条件、依赖、要求项和被治理类别留在事实内容里；只有文本也给这些对象自己的独立事实时，才另建主体。
+  例：“棠湾交付包无法提交，因为封存确认页还少签章”，主体是“棠湾交付包”，不是“封存确认页”。
+  例：“松岭切换计划负责人改为叶宁”，主体是“松岭切换计划”，不是“叶宁”。
+  例：“封存确认页当前版本已冻结”，主体可以是“封存确认页”。
+- 结构化输入中，字段名、标签名和格式标记不是主体；主体来自承接事实的命名字段值。阶段、版本、日期、状态、原因、负责人、要求等字段是范围或事实内容，不并入 `who`。
   例：“任务：松庭发布计划；状态：延期”，主体是“松庭发布计划”，不是“任务”或“状态”。
   例：“记录：柏溪权限制度；版本：当前；要求：延期必须单独审批”，主体是“柏溪权限制度”，不是“记录”或“版本”。
-
-从属提及归属规则：
-- 当整句主要说明 X 的状态、决定、阻塞、目标或要求，而 Y 只是原因、缺口、附件、材料、前置条件、依赖、输入输出、被治理类别或要求项时，主体是 X，Y 留在事实内容里；“直到/等待/因为 Y 补齐、签字、提交、可用”这类条件仍归属 X，不把 Y 建为主体。
-  例：“棠湾交付包无法提交，因为封存确认页还少签章”，主体是“棠湾交付包”，不是“封存确认页”。
-  例：“松岭切换计划不能开始，因为审批截图缺失”，主体是“松岭切换计划”，不是“审批截图”。
-  例：“柏川复盘会决定暂缓归档，直到封存确认页补齐主管签章”，主体是“柏川复盘会”，不是“封存确认页”。
-- 从属对象即使带有缺失、未完成、未提交、未签名、可用性或完整性状态，也不因此拥有独立身份；更正说明中“实际缺少的是 Y，不是 Z”里的 Y/Z 也是 X 的缺口值，不是主体。只有事实直接落在它自身的负责人、规则、生命周期、版本、职责或独立状态/决定上，而不是作为 X 的条件或缺口时，才把它建主体；负责人值仍只是事实内容，不是被建的主体。
-  例：“封存确认页当前版本是什么？”这时“封存确认页”可作查询主体。
-  例：“审批截图当前版本已冻结”，这时“审批截图”可作主体。
-  例：“青羽归档夹更正：当前实际缺少的是湾口通行页，不是旧收据”，主体是“青羽归档夹”，不是“湾口通行页”或“旧收据”。
-- 命名规则、手册、清单、制度、公告或记录本身陈述规则时，它可以是主体；规则正文中 “所有/每个/all/every Y 必须/需要/include/provide Z” 里的 Y 是被治理类别，Z 是要求项，默认都不是主体；即使同一个 packet、form、folio、slip、说明页、材料包等要求项同时出现在另一个主体的缺口和治理工件的规则正文中，也只是连接事实，不因此独立建主体。
-  例：“澄湾准入手册要求候选包附备案页”，主体是“澄湾准入手册”，不是“候选包”或“备案页”。
-  例：“栎港巡检制度要求夜班补设备照片”，主体是“栎港巡检制度”，不是“夜班”或“设备照片”。
-  例：“岚溪登记册要求所有采样申请归档前补齐样本托管页”，主体是“岚溪登记册”，不是“采样申请”或“样本托管页”。
-- 如果某个名称只是在交代场景、来源、属性值、范围限定或顺带信息，没有承接自己的独立持久事实，不单独建主体；文本明确说某个顺带对象只是背景、没有形成可保存结论或没有独立结论时，即使它带有近期活动状态，也不要抽取。
-  例：“北岸值班记录：松林发布暂停”，主体是“松林发布”，不是“北岸值班记录”。
-  例：“周会备注：云台迁移仍等回滚说明”，主体是“云台迁移”，不是“周会备注”。
-  例：“旁听记录提到雾湾通知通道最近在排班试验，但只是背景，没有形成可保存结论；主结论是蓝桥切换计划继续等待审批”，主体是“蓝桥切换计划”，不是“雾湾通知通道”。
-- 当一个名称只是承载后续内容的来源或容器时，不因出现在开头就成为主体；只有事实直接落在这个名称本身时，才把它作为主体。
+- 一条输入里只有多个命名对象各自承接独立持久事实时，才输出多个主体；顺带提及、来源容器、背景对象或共享前缀不自动成为主体。同前缀对象若角色词不同且各自有事实，应保持分离。
+  例：“霁川发布计划延期；霁川发布手册改为双签”，抽取“霁川发布计划”和“霁川发布手册”。
   例：“月度摘要：柏港计划延期”，主体是“柏港计划”，不是“月度摘要”。
-  例：“柏港交接记录需要季度归档”，主体是“柏港交接记录”。
-
-主体边界：
-- `who` 必须保留完整命名短语和区分身份的角色词，不要拆成裸名称或泛化描述；但个人的偏好、习惯或要求归属个人名，不把属性词并入主体；同前缀不同角色的主体不能合并。
+  例：“旁听记录提到雾湾通知通道，但主结论是蓝桥切换计划继续等审批”，主体是“蓝桥切换计划”。
+- 主体边界要保留完整命名短语和必要角色词，不要缩成裸前缀；也不要把状态、动作、原因、结论、指标、时间变化、记录标记、查询范围或被询问属性扩进主体。短代码、股票代码、人名和无角色词专名可以单独作为主体。
   例：“云脊结算服务”和“云脊结算手册”是两个主体，不要合并成“云脊结算”。
-  例：“白鹿调度计划”和“白鹿调度清单”是两个主体，不要合并成“白鹿调度”。
-- 父主体和更长同前缀子主体各自有事实时，分别抽取；更长名称被直接描述时单独成主体，不要把子主体状态合并进父主体定义。
-  例：“岚河平台可登录；岚河平台审计台超时”，抽取“岚河平台”和“岚河平台审计台”。
-  例：“星澜系统运行正常；星澜系统报表模块延迟”，抽取“星澜系统”和“星澜系统报表模块”。
-- 表达历史、当前、最新、阶段、轮次或版本的记录标记只限定记忆内容；同一命名主体的历史和当前记录使用同一个 identity_profile。
   例：“南枝策略之前宽松、当前收紧”，主体仍是“南枝策略”。
-  例：“琥珀交接手册第一版允许补交、当前版要求提前提交”，主体仍是“琥珀交接手册”。
-- 共享编号、短码、别名或前缀不是同一主体的充分证据；完整命名短语的身份边界不同且各自有事实时，应保持分离。
-  例：“archive box q-31 已归档；q-31 visitor tour 取消”是两个主体。
-  例：“r-18 维修单关闭；r-18 访客预约延期”是两个主体。
+  例：“q-19 这条风险复盘的主要结论是什么？”主体是“q-19”。
 
-字段规则：
-- `who`：写完整主体名词，不写状态、动作、原因、阻塞、结论、指标、时间变化、疑问词或助动词。
-  例：“枫桥上线计划当前卡在回归窗口”的 `who` 写“枫桥上线计划”。
-  例：“为什么河杉调拨清单还没关闭？”的 `who` 写“河杉调拨清单”。
-- `surface_forms`：只能使用输入或查询原文中能无歧义指向同一主体的完整称呼；不要发明别名，不要抽取完整名称内部的局部片段，不要把记录范围标记或共享短码强行加入。若同一个短码、编号或片段同时出现在两个不同完整主体中，不能把该短码单独作为任何一方的 surface form。
-  例：“榆岭交接单第四轮”保留“榆岭交接单”，不是带轮次的完整短语。
-  例：“最新的石泉回滚说明”保留“石泉回滚说明”，不是“最新的石泉回滚说明”。
-  例：“archive box q-31”和“q-31 visitor booking”同时出现时，前者的 `surface_forms` 不要加入单独的“q-31”。
-- `stable_qualifiers`：只写一个来自 `who` 或 `surface_forms`、短于完整 `who` 的最长连续角色/类型边界短语，用于区分同名或同前缀主体；不要从 `definition` 推断，不写状态、事实摘要、记录标记或句子。中文复合类型词不能缩成过泛的尾词，也不要漏掉团队、服务、流程、计划、制度、手册、清单、看板、门户、工单、rollout 等角色/类型边界；如果候选短语等于完整 `who`，必须缩短到仍能表示角色/类型的词。仅由领域描述词加角色词组成的两词英文主体，限定词取角色词，不复制完整主体。
+字段填写：
+- `who` 写主体名词本身；`surface_forms` 只写原文中能无歧义指向同一主体的称呼。不要发明别名，不抽取完整名称内部的局部片段，不把最新/历史/当前/轮次/版本/记录范围/分析视角/问题属性放进 `who` 或 `surface_forms`。
+  例：“榆岭交接单第四轮”保留“榆岭交接单”。
+  例：“最新的石泉回滚说明”保留“石泉回滚说明”。
+  例：“archive box q-31”和“q-31 visitor booking”同时出现时，不要把单独的“q-31”加给任何一方。
+- `stable_qualifiers` 只写一个短于 `who` 的角色/类型边界短语；没有可用角色词时留空。优先保留最长连续复合类型词，不要缩成过泛尾词；前置角色词本身也可以是限定词。不要写状态、事实摘要、记录标记或句子。
   例：“柏溪权限回收制度”只放“权限回收制度”，不要缩成“制度”。
-  例：“北岬巡检运维组”只放“巡检运维组”，不要漏写限定词或缩成“组”。
-  例：“plover rollout”只放“rollout”；“harbor archive box t-8”只放“archive box”；“data sync service”只放“sync service”，不要缩成“service”。
-- 多词或复合主体只保留最长角色/类型边界短语；没有角色限定词的唯一名称、纯人名或短代码可以为空。
-  例：“market alert endpoint”只放“alert endpoint”。
-  例：“孟澜偏好周一看周报”的主体是“孟澜”，限定词可为空。
-- `definition` 要回答“这个主体是什么”，用自然语言解释主体本身和身份边界；不要只重复 `who`，不要写空泛占位词。
-  例：“碧湾发布公告指碧湾相关的发布公告”可以；“碧湾发布公告这个对象”不可以。
-  例：“松涧回滚手册指松涧相关的回滚手册”可以；“松涧回滚手册这个东西”不可以。
-- `definition` 不写这条记忆里的状态、结果、阻塞、负责人值、要求内容或当前变化；不要为了定义主体而发明原文没有支持的用途。
-  例：“云脊结算服务指云脊相关的结算服务”可以；“当前已暂停”不可以。
-  例：“白塔巡检清单指白塔相关的巡检清单”可以；“当前缺照片”不可以。
-- 对纯人名、短代码或无可解释角色词的专名，可用“名为 X 的个人/代码/对象”这类自然定义；含角色词、工件词、编号或序号时，定义要保留整个身份边界。
-  例：“鹤湾任务乙二”要定义为鹤湾相关的任务乙二，不要只写“鹤湾任务”。
-  例：“r-18”可定义为名为 r-18 的代码；“r-18 维修单”要定义为 r-18 维修单，不要只写 r-18。
+  例：“riven herbarium accession request”只放“herbarium accession request”，不要缩成“accession request”。
+  例：“project lumina”只放“project”；“data sync service”只放“sync service”。
+- `definition` 用自然语言解释主体是什么和身份边界，不写本条记忆里的状态、结果、阻塞、负责人值、要求内容或当前变化。只有完全没有稳定命名主体时，才返回 `rejected_no_identity_profile`。
+  例：“碧湾发布公告指碧湾相关的发布公告”可以；“当前已暂停”不可以。
+  例：“r-18”可定义为名为 r-18 的代码；“r-18 维修单”要定义为 r-18 维修单。
+  例：“今晚感觉风险很高”没有命名主体，可拒绝。
 """.strip()
 
 
@@ -403,107 +344,48 @@ WORKER_INSTRUCTIONS["same_batch_resolver"] = SAME_BATCH_RESOLVER_INSTRUCTIONS
 
 
 IDENTITY_PROFILE_RULES_EN = """
-[identity_profile extraction rules]
-Task: decide "who does this memory or query belong to" by extracting the complete named noun that owns the fact or question.
-identity_profile describes only who the subject is, not what happened to it.
+[identity_profile extraction protocol]
+Task: decide "who does this memory or query belong to". Extract only the stable named subject that owns the fact or question; do not answer what happened, why, what is missing, or what the conclusion is.
 Output format: all identity_profile string fields must be lowercase; Chinese characters are unchanged by lowercase, while English, codes, and mixed text must be normalized to lowercase.
 
-Subject priority:
-- Read the full input or query first, then find complete named subjects that are directly stated or directly queried and can be referred to again stably.
+Subject decision:
+- Read the full input first, then answer: "which stable named object does this fact or question ultimately attach to?" A stable subject may be a person, team, system, service, project, workflow, document, rule artifact, event, market object, short code, or number. If it can be referred to again stably, do not reject it just because it does not look like a title.
   Example: `Harborlane delivery flow is paused` belongs to `Harborlane delivery flow`.
-  Example: `White Tower maintenance window waits for vendor confirmation` belongs to `White Tower maintenance window`.
-- If several named subjects each carry an independent durable fact, extract all of them. Do not merge or ignore subjects only because they share a prefix, short code, or earlier mention.
-  Example: `Ridgefield release plan slipped; Ridgefield release handbook moved to dual signoff` extracts `Ridgefield release plan` and `Ridgefield release handbook`.
-  Example: `Pinefield inspection sheet lacks photos; Pinefield duty policy requires manager review` extracts `Pinefield inspection sheet` and `Pinefield duty policy`.
-- For questions about state, reason, blocker, history, or requirement, the queried complete named subject is the subject. Question words, time adverbs, and requested properties are not part of the subject.
-  Example: `Why is Cedar handoff blocked now?` belongs to `Cedar handoff`.
-  Example: `What did Stonebridge exit plan allow before?` belongs to `Stonebridge exit plan`.
-- A named subject may be a person, team, system, service, market object, work item, workflow, document, rule artifact, event, or short code. Do not reject it just because its form is unusual.
-  Example: `Northbay duty crew takes over checks next week` belongs to `Northbay duty crew`.
-  Example: `v-72 current status?` belongs to `v-72`.
-- Reject identity extraction only when no stable named subject exists.
-  Example: `The risk feels high tonight` has no named subject.
-  Example: `This should move quickly, but no object name is provided` has no named subject.
-
-Structured record subject rules:
-- When the input is expressed as fields, a table, a log, a checklist, or a similar structure, do not rely only on natural sentence subject-verb form; first understand each fragment's semantic role in the whole record.
-  Example: `object: Orange Ridge handover notice; phase: history; constraint: crews used to add seal notes after shift` belongs to `Orange Ridge handover notice`.
-  Example: `checklist item: Crane Bay migration memo; current state: paused; reason: approval note missing` belongs to `Crane Bay migration memo`.
-- If one fragment provides a complete named noun that can be referred to again stably, and other fragments describe its rule, state, blocker, owner, requirement, historical change, or current conclusion, that complete named noun is the identity_profile subject; the owner value is only a fact about that subject, not the subject itself.
-  Example: `work item: Frost Harbor acceptance sheet; blocker: waiting for second confirmation; target: close this week` belongs to `Frost Harbor acceptance sheet`.
-  Example: `document: Blue Ridge rollback handbook; current requirement: complete dual review before release` belongs to `Blue Ridge rollback handbook`.
-- Record phase, historical/current status, round, version, time, and similar metadata only scope the fact background. They do not negate subject existence and must not be included in `who`.
-  Example: `item: Northbranch sync plan; version: third round; conclusion: keep waiting for API freeze` belongs to `Northbranch sync plan`; `who` does not include `third round`.
-  Example: `file: Starbridge duty policy; time: last quarter; rule: handoff pages could be signed after transfer` belongs to `Starbridge duty policy`; `who` does not include `last quarter`.
-- If later facts do not repeat the subject name, but the structure clearly describes the named object in the same record, still attribute the fact to that named object.
-  Example: `object: Cloudridge distribution plan; blocker: approval chain note missing; target: recover by Friday` belongs to `Cloudridge distribution plan`.
-  Example: `entry: Riverbend inspection bulletin; rule: every shift must attach photos; addition: night shift also applies` belongs to `Riverbend inspection bulletin`.
-- Return `rejected_no_identity_profile` only when the structured input has no complete named object that can be referred to again stably, or all names are only attribute values, missing items, owner values, locations, reasons, materials, attachments, metrics, or status values.
-  Example: `phase: history; state: needs review; note: must be confirmed before release` has no complete named object.
-  Example: `background: temporary adjustment; problem: one material is still missing; handling: confirm again tomorrow` has only generic background, problem, and handling descriptions.
-- Do not treat field names, labels, or formatting markers themselves as subjects. The subject comes from the complete named object that owns the fact.
+  Example: `Who needs to confirm v-72 now?` belongs to `v-72`.
+  Example: `Who currently owns Cloudridge settlement service?` belongs to `Cloudridge settlement service`.
+- For queries, the subject is the object the user wants to look up. Question words, time scope, record scope, source wording, analysis perspective, and requested properties are not part of the subject. Create a record, report, component, or material as the subject only when the query explicitly asks about that object's own state, version, owner, rule, or lifecycle.
+  Example: `Where is Larch repository's deploy check failing now?` belongs to `Larch repository`, not `Larch repository deploy check`.
+  Example: `What was the final conclusion in this review note for t-84?` belongs to `t-84`, not `t-84 review note`.
+  Example: `What is the current version of Bay handover report?` belongs to `Bay handover report`.
+- For writes, the subject is the object that owns the statement. Reasons, gaps, attachments, materials, owner values, metrics, locations, status values, prerequisites, dependencies, required items, and governed classes stay inside fact content; create them as subjects only when the text also gives them their own independent fact.
+  Example: `Maple delivery packet cannot be submitted because the sealing confirmation page lacks signatures` belongs to `Maple delivery packet`, not `sealing confirmation page`.
+  Example: `Pine Ridge cutover plan owner changed to Lea Ning` belongs to `Pine Ridge cutover plan`, not `Lea Ning`.
+  Example: `The sealing confirmation page version is now frozen` may belong to `sealing confirmation page`.
+- In structured input, field names, labels, and formatting markers are not subjects; the subject comes from the named field value that owns the fact. Fields such as phase, version, date, status, reason, owner, and requirement are scope or fact content and must not be included in `who`.
   Example: `task: Pinecourt release plan; state: delayed` belongs to `Pinecourt release plan`, not `task` or `state`.
   Example: `record: Cypress Creek access policy; version: current; requirement: delay needs separate approval` belongs to `Cypress Creek access policy`, not `record` or `version`.
-
-Subordinate mention ownership rules:
-- When the full sentence mainly describes X's state, decision, blocker, target, or requirement, and Y is only a reason, gap, attachment, material, prerequisite, dependency, input/output, governed class, or required item, X is the subject and Y stays in the fact content. Conditions like `until/waiting for/because Y is completed, signed, submitted, or available` still belong to X; do not create Y as the subject.
-  Example: `Maple delivery packet cannot be submitted because the sealing confirmation page lacks signatures` belongs to `Maple delivery packet`, not `sealing confirmation page`.
-  Example: `Pine Ridge cutover plan cannot start because the approval screenshot is missing` belongs to `Pine Ridge cutover plan`, not `approval screenshot`.
-  Example: `Brookfield review paused archiving until the sealing confirmation page gets manager signoff` belongs to `Brookfield review`, not `sealing confirmation page`.
-- A subordinate item does not become an independent identity only because it has missing, incomplete, unavailable, unsigned, or unsubmitted state. In correction notes, `the actual missing item is Y, not Z` still makes Y/Z gap values for X, not subjects. Create Y only when the fact lands directly on Y's own owner, rule, lifecycle, version, responsibility, or independent state/decision, not when Y is a condition or gap for X; the owner value is still fact content, not the created subject.
-  Example: `What is the current version of the sealing confirmation page?` can make `sealing confirmation page` the query subject.
-  Example: `The approval screenshot version is now frozen` can make `approval screenshot` the subject.
-  Example: `Granite binder correction: the actual missing item is signed berth waiver, not the old receipt` belongs to `Granite binder`, not `signed berth waiver` or `old receipt`.
-- A named rule, handbook, checklist, policy, bulletin, or record can be the subject when it states a rule. In a rule body like `all/every Y must/needs to/include/provide Z`, Y is a governed class and Z is a required item; neither is a subject by default. Even if the same required packet, form, folio, slip, note page, or material bundle appears both as another subject's gap and inside a governing artifact's rule body, it remains connecting fact content rather than an independent subject.
-  Example: `Clearbay admission handbook says candidate packets need a filing page` belongs to `Clearbay admission handbook`, not `candidate packets` or `filing page`.
-  Example: `Oakport inspection policy requires night shifts to add equipment photos` belongs to `Oakport inspection policy`, not `night shifts` or `equipment photos`.
-  Example: `Larkspur register requires every sampling request to include a custody folio before filing` belongs to `Larkspur register`, not `sampling request` or `custody folio`.
-- If a name only provides context, source, attribute value, scope boundary, or incidental information, and does not own an independent durable fact, do not create a separate subject for it. When the text explicitly says an incidental object is background, has no stored conclusion, or has no independent conclusion, do not extract it even if it carries recent activity wording.
-  Example: `Northbank duty log: Cairn rollout paused` belongs to `Cairn rollout`, not `Northbank duty log`.
-  Example: `Weekly note: Cloudtable migration still waits for rollback notes` belongs to `Cloudtable migration`, not `Weekly note`.
-  Example: `Observer notes mention Fogbay alert channel running schedule experiments, but only as background with no durable conclusion; the main conclusion is Bluebridge cutover still waits for approval` belongs to `Bluebridge cutover`, not `Fogbay alert channel`.
-- When a name only acts as the source or container for later content, it is not the subject merely because it appears first. Extract it only when the fact directly lands on that name itself.
+- Output multiple subjects only when multiple named objects each own independent durable facts. Side mentions, source containers, background objects, or shared prefixes do not become subjects by themselves. Same-prefix objects with different role words should remain separate when each has its own fact.
+  Example: `Ridgefield release plan slipped; Ridgefield release handbook moved to dual signoff` extracts `Ridgefield release plan` and `Ridgefield release handbook`.
   Example: `Monthly summary: Alder plan slipped` belongs to `Alder plan`, not `Monthly summary`.
-  Example: `Alder handover record needs quarterly archiving` belongs to `Alder handover record`.
-
-Subject boundaries:
-- `who` must keep the complete named phrase and role words that separate identities. Do not split a subject into a bare name or generic description; a person's own preference, habit, or requirement belongs to the person name and should not absorb the property word; same-prefix subjects with different roles must remain separate.
+  Example: `Observer notes mention Fogbay alert channel, but the main conclusion is Bluebridge cutover still waits for approval` belongs to `Bluebridge cutover`.
+- Keep the full named phrase and necessary role words for the subject boundary; do not shrink it to a bare prefix. Also do not expand the subject with state, action, reason, conclusion, metric, time change, record marker, query scope, or requested property. Short codes, stock codes, person names, and proper names without role words may stand alone as subjects.
   Example: `Cloudridge settlement service` and `Cloudridge settlement handbook` are different subjects, not one `Cloudridge settlement` subject.
-  Example: `White Elk dispatch plan` and `White Elk dispatch checklist` are different subjects, not one `White Elk dispatch` subject.
-- If a parent subject and a longer same-prefix child subject each have facts, extract both. A longer name becomes separate when it is directly described; do not fold child-subject state into the parent definition.
-  Example: `Mistvale platform works; Mistvale platform audit panel times out` extracts `Mistvale platform` and `Mistvale platform audit panel`.
-  Example: `Starlake system is healthy; Starlake system report module is delayed` extracts `Starlake system` and `Starlake system report module`.
-- Historical, current, latest, phase, round, or version wording limits memory content. Historical and current records for the same named subject use the same identity_profile.
   Example: `Southbranch policy was loose before but is stricter now` still belongs to `Southbranch policy`.
-  Example: `Amber handover handbook version one allowed late submission, but the current version requires early submission` still belongs to `Amber handover handbook`.
-- Shared numbers, short codes, aliases, or prefixes are not enough to prove two complete named phrases are the same subject. If identity boundaries differ and each has its own fact, keep them separate.
-  Example: `archive box q-31 is filed; q-31 visitor tour was canceled` extracts `archive box q-31` and `q-31 visitor tour`.
-  Example: `r-18 repair ticket is closed; r-18 visitor booking slipped` extracts `r-18 repair ticket` and `r-18 visitor booking`.
+  Example: `What was the main conclusion in this risk review for q-19?` belongs to `q-19`.
 
-Field rules:
-- `who`: write the complete subject noun only. Do not include state, action, reason, blocker, conclusion, metric, time change, question word, or auxiliary.
-  Example: for `Maplebridge launch plan waits for regression window`, write `Maplebridge launch plan`.
-  Example: for `Why is Rivercedar transfer checklist still open?`, write `Rivercedar transfer checklist`.
-- `surface_forms`: use only complete source mentions from the input or query that unambiguously point to the same subject. Do not invent aliases, extract partial spans from inside a complete name, include record-scope markers, or add shared short codes unless the context uses them as unambiguous references. If the same short code, number, or fragment appears inside two different complete subjects, do not add that short code alone as a surface form for either subject.
-  Example: for `Elm handover record round four`, keep `Elm handover record`, not the phrase with the round marker.
-  Example: for `latest Stone Spring rollback note`, keep `Stone Spring rollback note`, not the phrase with `latest`.
-  Example: when `archive box q-31` and `q-31 visitor booking` both appear, do not add bare `q-31` to the surface forms of `archive box q-31`.
-- `stable_qualifiers`: use exactly one longest contiguous role/type boundary phrase from `who` or `surface_forms`, shorter than the full `who`, to distinguish same-name or same-prefix subjects. Do not infer it from `definition`, and do not include states, fact summaries, record markers, or sentences. Do not collapse compound type phrases to an over-broad tail noun, and do not omit team, service, workflow, rollout, plan, policy, handbook, checklist, dashboard, portal, ticket, or similar role/type boundaries. If the candidate phrase equals the full `who`, shorten it to a still-meaningful role/type word. For a two-word English subject made only of a domain descriptor plus a role noun, the qualifier is the role noun, not the full subject.
-  Example: for `brookfield access retirement policy`, use only `access retirement policy`; do not shorten it to `policy`.
-  Example: for `northbay inspection operations crew`, use only `inspection operations crew`; do not omit the qualifier or shorten it to `crew`.
-  Example: for `plover rollout`, use only `rollout`; for `harbor archive box t-8`, use only `archive box`; for `data sync service`, use only `sync service`, not `service`.
-- For multi-word or compound subjects, keep only the longest role/type boundary phrase. Unique names, pure person names, or short codes with no role word may have empty qualifiers.
-  Example: for `market alert endpoint`, include only `alert endpoint`.
-  Example: for `mira lin prefers monday summaries`, the subject is `mira lin` and may have no qualifier.
-- `definition` answers "what is this subject?" in natural language and explains the subject itself and its identity boundary. Do not only repeat `who` or use a vague placeholder.
-  Example: `Jadebay release bulletin refers to the release bulletin for Jadebay` is valid; `Jadebay release bulletin is a named item` is not.
-  Example: `Pinebrook rollback handbook refers to the rollback handbook for Pinebrook` is valid; `Pinebrook rollback handbook is an object` is not.
-- `definition` must not include current state, result, blocker, owner value, requirement content, or time change from this memory. Do not invent an unsupported purpose just to define the subject.
-  Example: `Cloudridge settlement service refers to the settlement service for Cloudridge` is valid; `currently paused` is not.
-  Example: `White Tower inspection checklist refers to the inspection checklist for White Tower` is valid; `currently lacks photos` is not.
-- For person names, short codes, or proper names without an interpretable role word, fallback definitions like `the individual/code/object named X` are acceptable. If `who` contains a role word, artifact word, number, or serial label, the definition must preserve the whole identity boundary.
-  Example: `Harbor task B2` should be defined as the task B2 for Harbor, not only as `Harbor task`.
-  Example: `r-18` may be defined as the code named r-18; `r-18 repair ticket` should be defined as the repair ticket r-18, not only as `r-18`.
+Field output:
+- `who` contains only the subject noun itself; `surface_forms` contains only source mentions that unambiguously refer to the same subject. Do not invent aliases, extract partial spans from inside a complete name, or include latest/history/current/round/version/record scope/analysis perspective/requested property in `who` or `surface_forms`.
+  Example: for `Elm handover record round four`, keep `Elm handover record`.
+  Example: for `latest Stone Spring rollback note`, keep `Stone Spring rollback note`.
+  Example: when `archive box q-31` and `q-31 visitor booking` both appear, do not add bare `q-31` to either subject.
+- `stable_qualifiers` contains exactly one role/type boundary phrase shorter than `who`; leave it empty when no role word is available. Prefer the longest contiguous compound type phrase, not an over-broad tail noun; a leading role word may also be the qualifier. Do not write states, fact summaries, record markers, or sentences.
+  Example: for `brookfield access retirement policy`, use `access retirement policy`, not `policy`.
+  Example: for `riven herbarium accession request`, use `herbarium accession request`, not `accession request`.
+  Example: for `project lumina`, use `project`; for `data sync service`, use `sync service`.
+- `definition` explains what the subject is and where its identity boundary is, in natural language. Do not include this memory's state, result, blocker, owner value, requirement content, or current change. Return `rejected_no_identity_profile` only when there is no stable named subject.
+  Example: `Jadebay release bulletin refers to the release bulletin for Jadebay` is valid; `currently paused` is not.
+  Example: `r-18` may be defined as the code named r-18; `r-18 repair ticket` should be defined as the repair ticket r-18.
+  Example: `The risk feels high tonight` has no named subject and may be rejected.
 """.strip()
 
 
