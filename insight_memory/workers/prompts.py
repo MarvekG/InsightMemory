@@ -17,21 +17,21 @@ IDENTITY_PROFILE_RULES = """
   例：“岚庭交付流程当前暂停”，主体是“岚庭交付流程”。
   例：“v-72 现在要等谁确认？”主体是“v-72”。
   例：“青岚结算服务当前负责人是谁？”主体是“青岚结算服务”。
-- 查询时，主体是用户想查的对象；疑问词、时间范围、记录范围、来源说明、分析视角和被询问属性不属于主体。只有问题明确询问某份记录、报告、部件或材料本身的状态、版本、负责人、规则或生命周期时，才把它作为主体。
-  例：“岚杉仓库的部署检查当前失败在哪里？”主体是“岚杉仓库”，不是“岚杉仓库部署检查”。
-  例：“t-84 这条复核纪要的最终结论是什么？”主体是“t-84”，不是“t-84 复核纪要”。
-  例：“海湾交接报告当前版本是什么？”主体是“海湾交接报告”。
-- 写入时，主体是承接陈述的对象。原因、缺口、附件、材料、负责人值、指标、地点、状态值、前置条件、依赖、要求项和被治理类别留在事实内容里；只有文本也给这些对象自己的独立事实时，才另建主体。
-  例：“棠湾交付包无法提交，因为封存确认页还少签章”，主体是“棠湾交付包”，不是“封存确认页”。
-  例：“松岭切换计划负责人改为叶宁”，主体是“松岭切换计划”，不是“叶宁”。
+- 查询时，主体是用户想查的对象；命名对象直接承接被问谓词时，即使没有“的”，也仍是主体。疑问词、时间范围、记录范围、来源说明、分析视角和被询问属性不属于主体。材料、证书、部件等如果只是 X 的下属项或被问属性，不另建主体；只有问题明确询问它本身的状态、版本、负责人、规则或生命周期时，才把它作为主体。
+  例：“Payment Gateway 的红色阈值比黄色阈值高多少？”主体是“Payment Gateway”。
+  例：“林岚更习惯什么时候看周报？”主体是“林岚”。
+  例：“墨湾档案的靠泊证明为什么还不能归档？”主体是“墨湾档案”，不是“靠泊证明”。
+- 写入时，主体是承接陈述的对象。原因、缺口、附件、材料、交付物、输出物、负责人值、指标、地点、状态值、前置条件、依赖、要求项和被治理类别留在事实内容里；只有文本也给这些对象自己的独立事实时，才另建主体。某对象只是解释 X 为什么暂停、无法交付、需要等待、需要补齐或先恢复时，不因自身缺失、缺签或待恢复而单独建主体。
+  例：“北汀运维组无法交付巡检包，因为设备审计表缺签章”，主体是“北汀运维组”，不是“巡检包”或“设备审计表”。
+  例：“鹤湾评审会决定暂缓发布，直到合规检查单补齐签字”，主体是“鹤湾评审会”，不是“合规检查单”。
   例：“封存确认页当前版本已冻结”，主体可以是“封存确认页”。
 - 结构化输入中，字段名、标签名和格式标记不是主体；主体来自承接事实的命名字段值。阶段、版本、日期、状态、原因、负责人、要求等字段是范围或事实内容，不并入 `who`。
   例：“任务：松庭发布计划；状态：延期”，主体是“松庭发布计划”，不是“任务”或“状态”。
   例：“记录：柏溪权限制度；版本：当前；要求：延期必须单独审批”，主体是“柏溪权限制度”，不是“记录”或“版本”。
-- 一条输入里只有多个命名对象各自承接独立持久事实时，才输出多个主体；顺带提及、来源容器、背景对象或共享前缀不自动成为主体。同前缀对象若角色词不同且各自有事实，应保持分离。
+- 一条输入里只有多个命名对象各自承接独立持久事实时，才输出多个主体；顺带提及、来源容器、背景对象或共享前缀不自动成为主体。同前缀对象或父子组件若各自有事实，应保持分离，不要把更长子主体的状态并入父主体定义。
   例：“霁川发布计划延期；霁川发布手册改为双签”，抽取“霁川发布计划”和“霁川发布手册”。
   例：“月度摘要：柏港计划延期”，主体是“柏港计划”，不是“月度摘要”。
-  例：“旁听记录提到雾湾通知通道，但主结论是蓝桥切换计划继续等审批”，主体是“蓝桥切换计划”。
+  例：“岚河平台可登录；岚河平台审计台超时”，抽取“岚河平台”和“岚河平台审计台”。
 - 主体边界要保留完整命名短语和必要角色词，不要缩成裸前缀；也不要把状态、动作、原因、结论、指标、时间变化、记录标记、查询范围或被询问属性扩进主体。短代码、股票代码、人名和无角色词专名可以单独作为主体。
   例：“云脊结算服务”和“云脊结算手册”是两个主体，不要合并成“云脊结算”。
   例：“南枝策略之前宽松、当前收紧”，主体仍是“南枝策略”。
@@ -42,10 +42,10 @@ IDENTITY_PROFILE_RULES = """
   例：“榆岭交接单第四轮”保留“榆岭交接单”。
   例：“最新的石泉回滚说明”保留“石泉回滚说明”。
   例：“archive box q-31”和“q-31 visitor booking”同时出现时，不要把单独的“q-31”加给任何一方。
-- `stable_qualifiers` 只写一个短于 `who` 的角色/类型边界短语；没有可用角色词时留空。优先保留最长连续复合类型词，不要缩成过泛尾词；前置角色词本身也可以是限定词。不要写状态、事实摘要、记录标记或句子。
+- `stable_qualifiers` 只写一个短于 `who` 的角色/类型边界短语；没有可用角色词时留空。优先保留最长连续复合类型词，不要缩成过泛尾词。英文主体若是“名称/领域词 + 类型修饰词 + 通用头词”，限定词通常是“类型修饰词 + 通用头词”，不是单独头词；如果完整英文主体本身全是描述性词，通常只去掉最宽泛的首个领域词，保留后续类型边界。若 `who` 中通用英文头词前还有相邻子类型词，单独的 pipeline、process、policy、request、ticket、service 这类头词过泛。中文主体若头词前后的紧邻词说明子类型、用途、流程类别、编号或序号，应一起保留。前置角色词本身也可以是限定词。不要写状态、事实摘要、记录标记或句子。
   例：“柏溪权限回收制度”只放“权限回收制度”，不要缩成“制度”。
-  例：“riven herbarium accession request”只放“herbarium accession request”，不要缩成“accession request”。
-  例：“project lumina”只放“project”；“data sync service”只放“sync service”。
+  例：“release audit pipeline”只放“audit pipeline”，不要缩成“pipeline”；“shipment gate process”只放“gate process”，不要缩成“process”。
+  例：“北桥巡检单乙二”只放“巡检单乙二”；“松湖调研纪要”只放“调研纪要”；“project lumina”只放“project”。
 - `definition` 用自然语言解释主体是什么和身份边界，不写本条记忆里的状态、结果、阻塞、负责人值、要求内容或当前变化。只有完全没有稳定命名主体时，才返回 `rejected_no_identity_profile`。
   例：“碧湾发布公告指碧湾相关的发布公告”可以；“当前已暂停”不可以。
   例：“r-18”可定义为名为 r-18 的代码；“r-18 维修单”要定义为 r-18 维修单。
@@ -353,21 +353,21 @@ Subject decision:
   Example: `Harborlane delivery flow is paused` belongs to `Harborlane delivery flow`.
   Example: `Who needs to confirm v-72 now?` belongs to `v-72`.
   Example: `Who currently owns Cloudridge settlement service?` belongs to `Cloudridge settlement service`.
-- For queries, the subject is the object the user wants to look up. Question words, time scope, record scope, source wording, analysis perspective, and requested properties are not part of the subject. Create a record, report, component, or material as the subject only when the query explicitly asks about that object's own state, version, owner, rule, or lifecycle.
-  Example: `Where is Larch repository's deploy check failing now?` belongs to `Larch repository`, not `Larch repository deploy check`.
-  Example: `What was the final conclusion in this review note for t-84?` belongs to `t-84`, not `t-84 review note`.
-  Example: `What is the current version of Bay handover report?` belongs to `Bay handover report`.
-- For writes, the subject is the object that owns the statement. Reasons, gaps, attachments, materials, owner values, metrics, locations, status values, prerequisites, dependencies, required items, and governed classes stay inside fact content; create them as subjects only when the text also gives them their own independent fact.
-  Example: `Maple delivery packet cannot be submitted because the sealing confirmation page lacks signatures` belongs to `Maple delivery packet`, not `sealing confirmation page`.
-  Example: `Pine Ridge cutover plan owner changed to Lea Ning` belongs to `Pine Ridge cutover plan`, not `Lea Ning`.
+- For queries, the subject is the object the user wants to look up. When a named object directly carries the queried predicate, it remains the subject even without possessive wording. Question words, time scope, record scope, source wording, analysis perspective, and requested properties are not part of the subject. If a material, certificate, component, or similar item is only a subordinate item or requested property of X, do not create it separately; create it only when the query explicitly asks about its own state, version, owner, rule, or lifecycle.
+  Example: `How much higher is Payment Gateway's red threshold than its yellow threshold?` belongs to `Payment Gateway`.
+  Example: `When does Mira Chen prefer to review weekly notes?` belongs to `Mira Chen`.
+  Example: `Why can Moorbay dossier's berth certificate not be archived yet?` belongs to `Moorbay dossier`, not `berth certificate`.
+- For writes, the subject is the object that owns the statement. Reasons, gaps, attachments, materials, deliverables, outputs, owner values, metrics, locations, status values, prerequisites, dependencies, required items, and governed classes stay inside fact content; create them as subjects only when the text also gives them their own independent fact. If an object only explains why X is paused, cannot deliver, must wait, must be completed, or must be restored first, do not create that object as a separate subject merely because it is missing, unsigned, or unrecovered.
+  Example: `Northbank ops team cannot deliver the inspection packet because the device audit sheet lacks signatures` belongs to `Northbank ops team`, not `inspection packet` or `device audit sheet`.
+  Example: `Crane review meeting paused launch until the compliance checklist gets signatures` belongs to `Crane review meeting`, not `compliance checklist`.
   Example: `The sealing confirmation page version is now frozen` may belong to `sealing confirmation page`.
 - In structured input, field names, labels, and formatting markers are not subjects; the subject comes from the named field value that owns the fact. Fields such as phase, version, date, status, reason, owner, and requirement are scope or fact content and must not be included in `who`.
   Example: `task: Pinecourt release plan; state: delayed` belongs to `Pinecourt release plan`, not `task` or `state`.
   Example: `record: Cypress Creek access policy; version: current; requirement: delay needs separate approval` belongs to `Cypress Creek access policy`, not `record` or `version`.
-- Output multiple subjects only when multiple named objects each own independent durable facts. Side mentions, source containers, background objects, or shared prefixes do not become subjects by themselves. Same-prefix objects with different role words should remain separate when each has its own fact.
+- Output multiple subjects only when multiple named objects each own independent durable facts. Side mentions, source containers, background objects, or shared prefixes do not become subjects by themselves. Same-prefix objects or parent-child components should remain separate when each has its own fact; do not fold the longer child subject's state into the parent definition.
   Example: `Ridgefield release plan slipped; Ridgefield release handbook moved to dual signoff` extracts `Ridgefield release plan` and `Ridgefield release handbook`.
   Example: `Monthly summary: Alder plan slipped` belongs to `Alder plan`, not `Monthly summary`.
-  Example: `Observer notes mention Fogbay alert channel, but the main conclusion is Bluebridge cutover still waits for approval` belongs to `Bluebridge cutover`.
+  Example: `Mistvale platform works; Mistvale platform audit panel times out` extracts `Mistvale platform` and `Mistvale platform audit panel`.
 - Keep the full named phrase and necessary role words for the subject boundary; do not shrink it to a bare prefix. Also do not expand the subject with state, action, reason, conclusion, metric, time change, record marker, query scope, or requested property. Short codes, stock codes, person names, and proper names without role words may stand alone as subjects.
   Example: `Cloudridge settlement service` and `Cloudridge settlement handbook` are different subjects, not one `Cloudridge settlement` subject.
   Example: `Southbranch policy was loose before but is stricter now` still belongs to `Southbranch policy`.
@@ -378,10 +378,10 @@ Field output:
   Example: for `Elm handover record round four`, keep `Elm handover record`.
   Example: for `latest Stone Spring rollback note`, keep `Stone Spring rollback note`.
   Example: when `archive box q-31` and `q-31 visitor booking` both appear, do not add bare `q-31` to either subject.
-- `stable_qualifiers` contains exactly one role/type boundary phrase shorter than `who`; leave it empty when no role word is available. Prefer the longest contiguous compound type phrase, not an over-broad tail noun; a leading role word may also be the qualifier. Do not write states, fact summaries, record markers, or sentences.
+- `stable_qualifiers` contains exactly one role/type boundary phrase shorter than `who`; leave it empty when no role word is available. Prefer the longest contiguous compound type phrase, not an over-broad tail noun. For English subjects shaped like `name/domain word + type modifier + generic head noun`, the qualifier is usually `type modifier + generic head noun`, not the head noun alone. If the full English subject is entirely descriptive words, usually drop only the broadest first domain word and keep the remaining type boundary. If `who` has an adjacent subtype word before a generic English head noun, a bare head such as pipeline, process, policy, request, ticket, or service is too broad. For Chinese subjects, if adjacent words around the head noun express subtype, purpose, process class, number, or serial label, keep them together. A leading role word may also be the qualifier. Do not write states, fact summaries, record markers, or sentences.
   Example: for `brookfield access retirement policy`, use `access retirement policy`, not `policy`.
-  Example: for `riven herbarium accession request`, use `herbarium accession request`, not `accession request`.
-  Example: for `project lumina`, use `project`; for `data sync service`, use `sync service`.
+  Example: for `release audit pipeline`, use `audit pipeline`, not `pipeline`; for `shipment gate process`, use `gate process`, not `process`.
+  Example: for `northbridge inspection ticket b2`, use `inspection ticket b2`; for `harbor research note`, use `research note`; for `project lumina`, use `project`.
 - `definition` explains what the subject is and where its identity boundary is, in natural language. Do not include this memory's state, result, blocker, owner value, requirement content, or current change. Return `rejected_no_identity_profile` only when there is no stable named subject.
   Example: `Jadebay release bulletin refers to the release bulletin for Jadebay` is valid; `currently paused` is not.
   Example: `r-18` may be defined as the code named r-18; `r-18 repair ticket` should be defined as the repair ticket r-18.

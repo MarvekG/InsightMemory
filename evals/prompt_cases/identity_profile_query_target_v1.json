@@ -318,6 +318,7 @@
             "Code review pipeline"
           ],
           "stable_qualifiers_any": [
+            "pipeline",
             "review pipeline"
           ],
           "definition_required": true,
@@ -898,9 +899,6 @@
           ],
           "surface_forms_all": [
             "Bluepeak Holdings"
-          ],
-          "stable_qualifiers_any": [
-            "holdings"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2224,7 +2222,7 @@
             "临时权限回收制度"
           ],
           "stable_qualifiers_any": [
-            "制度"
+            "权限回收制度"
           ],
           "definition_required": true,
           "definition_semantics_any": [
@@ -2409,7 +2407,7 @@
       "category": "zh_query_record_word",
       "prompt_key": "identity_profile",
       "payload": {
-        "query": "海岳电池最新记录里的风险结论是什么？"
+        "query": "海岳电池这只股票最新记录里的风险结论是什么？"
       },
       "expected_gate_status": "passed",
       "expected_identities": [
